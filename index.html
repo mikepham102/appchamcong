@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>Quản Lý Nhân Sự Quán — V8</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--primary:#111827;--green:#15803d;--amber:#b45309;--red:#b91c1c;--blue:#2563eb}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+button,input{font:inherit}button{cursor:pointer}.app{max-width:760px;margin:auto;min-height:100vh;padding-bottom:86px}
+header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:14px 16px}.head{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:850;font-size:18px}.sub{font-size:12px;color:var(--muted);margin-top:2px}
+main{padding:16px}.view{display:none}.view.active{display:block}h1{font-size:24px;margin:4px 0 6px}.lead{color:var(--muted);margin:0 0 18px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:0 3px 14px rgba(17,24,39,.04);margin-bottom:12px}.stat b{font-size:25px;display:block}.stat span{font-size:12px;color:var(--muted)}
+.section-title{font-weight:800;margin:20px 0 10px}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.stack{display:grid;gap:10px}.muted{color:var(--muted)}.center{text-align:center}
+.badge{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:700;background:#f3f4f6}.ok{background:#dcfce7;color:var(--green)}.wait{background:#fef3c7;color:var(--amber)}.bad{background:#fee2e2;color:var(--red)}.info{background:#dbeafe;color:#1d4ed8}
+.btn{border:0;border-radius:11px;padding:10px 13px;font-weight:750}.primary{background:var(--primary);color:#fff}.light{background:#f3f4f6;color:var(--text)}.danger{background:#fee2e2;color:var(--red)}.green{background:#dcfce7;color:var(--green)}.btn:disabled{opacity:.45}
+.field{display:grid;gap:6px}.field label{font-size:12px;font-weight:750;color:#374151}.field input{width:100%;border:1px solid #d1d5db;border-radius:10px;padding:11px;background:#fff}.notice{padding:11px 12px;border-radius:11px;background:#f3f4f6;font-size:13px;line-height:1.45}.notice.warn{background:#fff7ed;color:#9a3412}.notice.ok{background:#ecfdf5;color:#166534}
+.item{border:1px solid var(--line);border-radius:13px;padding:12px;background:#fff}.item+.item{margin-top:8px}.time{font-size:28px;font-weight:850}.bigcheck{width:150px;height:150px;border-radius:50%;border:10px solid #e5e7eb;margin:20px auto;display:grid;place-items:center}.bigcheck button{width:118px;height:118px;border-radius:50%;border:0;background:#111827;color:#fff;font-weight:900}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(760px,100%);display:grid;grid-template-columns:repeat(6,1fr);background:rgba(255,255,255,.97);border-top:1px solid var(--line);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:20}.nav{border:0;background:none;padding:7px 3px;color:#6b7280;font-size:10px}.nav strong{display:block;font-size:19px;line-height:20px;margin-bottom:3px}.nav.active{color:#111827;font-weight:800}
+.modal{display:none;position:fixed;inset:0;background:rgba(17,24,39,.55);z-index:50;padding:18px;overflow:auto}.modalbox{max-width:460px;margin:35px auto;background:#fff;border-radius:18px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+@media(max-width:420px){main{padding:13px}.card{padding:13px}}
+</style>
+
+<style>
+.admin-tabs{display:flex;gap:7px;overflow:auto;margin:0 0 14px;padding-bottom:3px}.admin-tabs button{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;font-weight:750}.admin-tabs button.active{background:#111827;color:#fff;border-color:#111827}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}
+.table{width:100%;border-collapse:collapse;font-size:12px}.table th,.table td{padding:10px 7px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.table th{color:var(--muted);font-size:11px}
+.admin-actions{display:flex;gap:7px;flex-wrap:wrap}.empty{padding:20px;text-align:center;color:var(--muted);border:1px dashed #d1d5db;border-radius:12px}
+.switch{display:flex;align-items:center;gap:8px;font-size:13px}.switch input{width:auto}
+@media(max-width:520px){.formgrid{grid-template-columns:1fr}.full{grid-column:auto}.table{min-width:650px}.scroll{overflow:auto}}
+</style>
+
+<style>
+.v7-device{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}.device-id{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;word-break:break-all;background:#f3f4f6;padding:8px;border-radius:9px}.gps-dot{width:9px;height:9px;border-radius:50%;display:inline-block;background:#9ca3af;margin-right:6px}.gps-dot.ok{background:#16a34a}.gps-dot.bad{background:#dc2626}.check-status{font-size:13px;line-height:1.5}.attendance-list .item{display:flex;justify-content:space-between;gap:12px;align-items:center}.mini{font-size:11px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="head"><div><div class="brand">Quản Lý Nhân Sự Quán</div><div class="sub" id="roleLabel">Chưa đăng nhập</div></div><button id="accountBtn" class="btn light" onclick="openLogin()">Đăng nhập</button></div></header>
+
+<main>
+<section id="dashboard" class="view active">
+<h1>Tổng quan</h1><p class="lead">Hệ thống nhân sự của quán.</p>
+<div id="notLogged" class="card notice">Bạn chưa đăng nhập. Hãy đăng nhập để tải dữ liệu từ Supabase.</div>
+<div id="dashboardData" style="display:none">
+<div class="grid">
+<div class="card stat"><b id="statHours">0h</b><span>Giờ công tháng này</span></div>
+<div class="card stat"><b id="statSalary">0đ</b><span>Lương tạm tính</span></div>
+<div class="card stat"><b id="statShift">0</b><span>Ca sắp tới</span></div>
+<div class="card stat"><b id="statPending">0</b><span>Ca chờ duyệt</span></div>
+</div>
+<div id="ownerPanel" style="display:none"><div class="section-title">Quản trị</div><div class="card stack">
+<div class="row"><b>Nhân viên</b><span class="badge info">Owner</span></div>
+<div class="row"><b>Lịch & ca</b><span class="badge info">Quản lý</span></div>
+<div class="row"><b>Thiết bị chấm công</b><span class="badge wait">Duyệt</span></div>
+<div class="row"><b>Chấm công & lương</b><span class="badge info">Xem</span></div>
+</div></div>
+<div class="section-title">Trạng thái</div><div id="todayState" class="card"></div>
+</div>
+</section>
+
+<section id="schedule" class="view"><h1>Lịch làm</h1><p class="lead">Ca làm sẽ được lấy trực tiếp từ Supabase.</p><div id="shiftList"><div class="card muted">Đăng nhập để xem lịch.</div></div></section>
+
+
+<section id="attendance" class="view">
+<h1>Chấm công</h1>
+<p class="lead">Thiết bị được Owner duyệt + GPS tại vị trí quán + đúng ca đã được xếp.</p>
+
+<div class="card center">
+  <div class="time" id="clock">--:--:--</div>
+  <div class="muted" id="dateText"></div>
+  <div class="bigcheck"><button id="checkBtn" disabled onclick="punchAttendance()">CHECK-IN</button></div>
+  <div id="attendanceMsg" class="notice warn">Đang kiểm tra trạng thái...</div>
+</div>
+
+<div class="card">
+  <div class="row"><b>Thiết bị chấm công</b><button class="btn light" onclick="registerDevice()">Đăng ký thiết bị này</button></div>
+  <div id="myDevice" style="margin-top:10px"><div class="muted">Đăng nhập để xem thiết bị.</div></div>
+  <div class="notice" style="margin-top:10px"><b>Lưu ý:</b> WebApp/PWA không thể đọc IMEI thật của iPhone/Android. Hệ thống dùng một <b>Device ID</b> riêng được tạo trên trình duyệt và Owner phải duyệt trước khi thiết bị được phép chấm công.</div>
+</div>
+
+<div class="card">
+  <div class="row"><b>GPS</b><span id="gpsState"><span class="gps-dot"></span>Chưa lấy vị trí</span></div>
+  <div class="mini" id="gpsDetail" style="margin-top:7px">Khi bấm chấm công, trình duyệt sẽ xin quyền vị trí.</div>
+</div>
+
+<div class="card">
+  <div class="row"><b>Chấm công gần đây</b><button class="btn light" onclick="loadAttendanceHistory()">Làm mới</button></div>
+  <div id="attendanceHistory" class="attendance-list" style="margin-top:10px"><div class="empty">Chưa có dữ liệu.</div></div>
+</div>
+</section>
+
+
+<section id="salary" class="view"><h1>Lương</h1><p class="lead">Dữ liệu lương sẽ lấy từ kỳ lương Supabase.</p><div class="card"><div class="row"><span>Đơn giá giờ</span><b id="hourly">—</b></div><hr><div class="row"><span>Giờ công</span><b>—</b></div><hr><div class="row"><b>Thực nhận</b><b>—</b></div></div></section>
+
+
+<section id="admin" class="view">
+<h1>Quản trị</h1><p class="lead">Khu vực Owner/Manager. Dữ liệu đọc/ghi trực tiếp qua RLS Supabase.</p>
+<div class="admin-tabs">
+<button class="active" onclick="adminTab('employees',this)">Nhân viên</button>
+<button onclick="adminTab('templates',this)">Mẫu ca</button>
+<button onclick="adminTab('schedules',this)">Lịch ca</button>
+<button onclick="adminTab('registrations',this)">Duyệt ca</button>
+<button onclick="adminTab('devices',this)">Thiết bị</button>
+<button onclick="adminTab('store',this)">Cửa hàng</button>
+</div>
+
+<div id="adminEmployees" class="admin-pane">
+<div class="card"><div class="row"><div><b>Nhân viên</b><div class="muted">Quản lý hồ sơ, trạng thái và lương/giờ.</div></div><button class="btn primary" onclick="loadEmployees()">Làm mới</button></div><hr><div id="employeeTable" class="scroll"><div class="empty">Đang tải...</div></div></div>
+<div class="card"><div class="notice warn"><b>Tạo tài khoản đăng nhập:</b> V6 chưa đặt Service Role Key trong trình duyệt. Vì vậy tài khoản Auth mới vẫn tạo/invite trong Supabase Authentication; sau đó nhân viên xuất hiện ở đây để Owner hoàn thiện hồ sơ. Đây là chủ ý bảo mật.</div></div>
+</div>
+
+<div id="adminTemplates" class="admin-pane" style="display:none">
+<div class="card"><b>Tạo mẫu ca</b><div class="stack" style="margin-top:12px">
+<div class="formgrid"><div class="field"><label>Tên ca</label><input id="tplName" placeholder="Ca sáng"></div><div class="field"><label>Số vị trí mặc định</label><input id="tplCapacity" type="number" value="1" min="1" max="10"></div><div class="field"><label>Bắt đầu</label><input id="tplStart" type="time" value="08:00"></div><div class="field"><label>Kết thúc</label><input id="tplEnd" type="time" value="14:00"></div><div class="field"><label>Nghỉ giữa ca (phút)</label><input id="tplBreak" type="number" value="0" min="0"></div></div>
+<button class="btn primary" onclick="createTemplate()">Tạo mẫu ca</button><div class="muted" style="font-size:12px">Khi tạo lịch, bạn có thể tạo 1–10 vị trí cho cùng một ca.</div><div id="tplMsg"></div></div></div>
+<div class="card"><b>Danh sách mẫu ca</b><div id="templateList" style="margin-top:10px"></div></div>
+</div>
+
+<div id="adminSchedules" class="admin-pane" style="display:none">
+<div class="card"><b>Tạo lịch ca</b><div class="stack" style="margin-top:12px">
+<div class="formgrid"><div class="field"><label>Ngày</label><input id="schDate" type="date"></div><div class="field"><label>Mẫu ca</label><select id="schTemplate"><option value="">-- Chọn mẫu --</option></select></div><div class="field"><label>Số vị trí</label><input id="schSlots" type="number" value="1" min="1" max="10"></div><div class="field full"><label>Ghi chú</label><input id="schNote" placeholder="Ví dụ: cần 2 người"></div></div>
+<button class="btn primary" onclick="createSchedule()">Tạo ca mở đăng ký</button><div id="schMsg"></div></div></div>
+<div class="card"><b>Lịch sắp tới</b><div id="adminScheduleList" style="margin-top:10px"></div></div>
+</div>
+
+<div id="adminRegistrations" class="admin-pane" style="display:none">
+<div class="card"><div class="row"><b>Đăng ký ca chờ duyệt</b><button class="btn light" onclick="loadRegistrations()">Làm mới</button></div><div id="registrationList" style="margin-top:10px"></div></div>
+</div>
+
+<div id="adminDevices" class="admin-pane" style="display:none">
+<div class="card"><div class="notice">Owner duyệt thiết bị tại đây. Mỗi nhân viên chỉ có 1 thiết bị <b>approved</b> tại một thời điểm.</div></div>
+<div class="card"><div class="row"><b>Thiết bị chờ duyệt</b><button class="btn light" onclick="loadDevices()">Làm mới</button></div><div id="deviceList" style="margin-top:10px"></div></div>
+</div>
+
+<div id="adminStore" class="admin-pane" style="display:none">
+<div class="card"><b>Cài đặt cửa hàng</b><div class="notice ok" style="margin-top:10px">Tọa độ quán đã được xác định: <b>10.812988570529894, 106.5995762714964</b>. Bán kính GPS mặc định của V9 là <b>80m</b>.</div><div class="stack" style="margin-top:12px">
+<div class="formgrid"><div class="field"><label>Tên quán</label><input id="storeName"></div><div class="field"><label>Địa chỉ</label><input id="storeAddress"></div><div class="field"><label>Latitude</label><input id="storeLat" type="number" step="any"></div><div class="field"><label>Longitude</label><input id="storeLng" type="number" step="any"></div><div class="field"><label>Bán kính GPS (m)</label><input id="storeRadius" type="number" min="20" max="1000"></div><div class="field"><label>Cho phép trễ (phút)</label><input id="storeGrace" type="number" min="0" max="60"></div><div class="field"><label>Giờ bắt đầu được check-in sớm</label><input id="storeEarly" type="number" min="0" max="360"></div><div class="field"><label>Đơn giá giờ mặc định</label><input id="storeRate" type="number" min="0"></div></div>
+<button class="btn primary" onclick="saveStore()">Lưu cài đặt</button><div id="storeMsg"></div>
+<div class="notice">Chưa cấu hình Wi‑Fi ở V5 vì trình duyệt không đọc SSID/BSSID đáng tin cậy. GPS + thiết bị được duyệt sẽ là lớp xác thực chính.</div>
+</div></div>
+</div>
+</section>
+
+<section id="profile" class="view"><h1>Hồ sơ</h1><p class="lead">Thông tin tài khoản đang đăng nhập.</p><div class="card stack">
+<div class="field"><label>Họ và tên</label><input id="fullName"></div><div class="field"><label>Email</label><input id="email" readonly></div>
+<div class="field"><label>Số điện thoại</label><input id="phone"></div><div class="field"><label>Địa chỉ</label><input id="address"></div>
+<button class="btn primary" onclick="saveProfile()">Lưu hồ sơ</button><div id="profileMsg"></div></div></section>
+</main>
+
+<nav class="bottom">
+<button class="nav active" onclick="show('dashboard',this)"><strong>⌂</strong>Tổng quan</button>
+<button class="nav" onclick="show('schedule',this)"><strong>▣</strong>Lịch ca</button>
+<button class="nav" onclick="show('attendance',this)"><strong>◉</strong>Chấm công</button>
+<button class="nav" onclick="show('salary',this)"><strong>₫</strong>Lương</button>
+<button id="adminNav" class="nav" style="display:none" onclick="show('admin',this)"><strong>⚙</strong>Quản trị</button>
+<button class="nav" onclick="show('profile',this)"><strong>●</strong>Hồ sơ</button>
+</nav>
+</div>
+
+<div id="employeeModal" class="modal"><div class="modalbox">
+<div class="row"><div><h2 style="margin:0">Sửa nhân viên</h2><div class="muted">Owner có thể thay đổi thông tin quản lý.</div></div><button class="btn light" onclick="closeEmployeeModal()">Đóng</button></div>
+<div class="stack" style="margin-top:18px">
+<input id="editEmployeeId" type="hidden">
+<div class="field"><label>Họ và tên</label><input id="editEmployeeName"></div>
+<div class="field"><label>Số điện thoại</label><input id="editEmployeePhone"></div>
+<div class="formgrid"><div class="field"><label>Vai trò</label><select id="editEmployeeRole"><option value="employee">Employee</option><option value="manager">Manager</option><option value="owner">Owner</option></select></div><div class="field"><label>Trạng thái</label><select id="editEmployeeStatus"><option value="active">Active</option><option value="inactive">Inactive</option><option value="invited">Invited</option><option value="terminated">Terminated</option></select></div></div>
+<div class="field"><label>Lương/giờ (đ)</label><input id="editEmployeeRate" type="number" min="0" step="1000"></div>
+<button class="btn primary" onclick="saveEmployee()">Lưu thay đổi</button><div id="employeeMsg"></div>
+</div></div></div>
+<div id="loginModal" class="modal"><div class="modalbox">
+<div class="row"><div><h2 style="margin:0">Đăng nhập</h2><div class="muted">Supabase Auth</div></div><button class="btn light" onclick="closeLogin()">Đóng</button></div>
+<div class="stack" style="margin-top:18px">
+<div class="field"><label>Email</label><input id="loginEmail" type="email" autocomplete="email" placeholder="email của bạn"></div>
+<div class="field"><label>Mật khẩu</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="mật khẩu Supabase"></div>
+<button class="btn primary" onclick="signIn()">Đăng nhập</button>
+<button class="btn light" onclick="sendMagicLink()">Gửi link đăng nhập qua email</button>
+<div id="loginMsg" class="notice">Cấu hình Supabase nằm trong phần Cấu hình.</div>
+<hr>
+<button class="btn light" onclick="openConfig()">Cấu hình kết nối Supabase</button>
+</div></div></div>
+
+<div id="configModal" class="modal"><div class="modalbox">
+<div class="row"><div><h2 style="margin:0">Cấu hình Supabase</h2><div class="muted">Lưu trên trình duyệt này</div></div><button class="btn light" onclick="closeConfig()">Đóng</button></div>
+<div class="stack" style="margin-top:18px">
+<div class="field"><label>Project URL</label><input id="sbUrl" placeholder="https://xxxxxxxx.supabase.co"></div>
+<div class="field"><label>Publishable key / anon key</label><input id="sbKey" placeholder="eyJ..."></div>
+<button class="btn primary" onclick="saveConfig()">Lưu & kết nối</button>
+<div class="notice warn">Không nhập Service Role Key. Chỉ dùng Publishable/anon key ở phía trình duyệt.</div>
+</div></div></div>
+
+<script>
+let sb=null, session=null, profile=null;
+const cfgKey='hr_supabase_config_v4';
+function cfg(){try{return JSON.parse(localStorage.getItem(cfgKey)||'{}')}catch{return {}}}
+function init(){
+ const c=cfg(); if(c.url&&c.key){try{sb=window.supabase.createClient(c.url,c.key);document.getElementById('sbUrl').value=c.url;document.getElementById('sbKey').value=c.key;restoreSession()}catch(e){console.error(e)}}
+}
+async function restoreSession(){if(!sb)return;const {data}=await sb.auth.getSession();session=data.session||null;if(session)await loadApp()}
+async function signIn(){
+ if(!sb){openConfig();return}
+ const email=document.getElementById('loginEmail').value.trim(), password=document.getElementById('loginPassword').value;
+ const {data,error}=await sb.auth.signInWithPassword({email,password});
+ if(error){document.getElementById('loginMsg').textContent='Đăng nhập lỗi: '+error.message;return}
+ session=data.session;closeLogin();await loadApp();
+}
+async function sendMagicLink(){
+ if(!sb){openConfig();return}
+ const email=document.getElementById('loginEmail').value.trim();if(!email){alert('Nhập email trước.');return}
+ const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.href}});
+ document.getElementById('loginMsg').textContent=error?'Lỗi: '+error.message:'Đã gửi link đăng nhập. Hãy kiểm tra email.';
+}
+async function loadApp(){
+ const {data,error}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
+ if(error){document.getElementById('loginMsg').textContent='Đã đăng nhập nhưng chưa đọc được hồ sơ: '+error.message;return}
+ profile=data;
+ document.getElementById('roleLabel').textContent=(data.role||'employee').toUpperCase()+' · '+(data.full_name||session.user.email);
+ document.getElementById('accountBtn').textContent='Đăng xuất';
+ document.getElementById('accountBtn').onclick=signOut;
+ document.getElementById('notLogged').style.display='none';document.getElementById('dashboardData').style.display='block';
+ document.getElementById('ownerPanel').style.display=(data.role==='owner'||data.role==='manager')?'block':'none';
+ document.getElementById('adminNav').style.display=(data.role==='owner'||data.role==='manager')?'block':'none';
+
+ document.getElementById('fullName').value=data.full_name||'';document.getElementById('email').value=session.user.email||data.email||'';document.getElementById('phone').value=data.phone||'';document.getElementById('address').value=data.address||'';
+ document.getElementById('hourly').textContent=Number(data.hourly_rate||0).toLocaleString('vi-VN')+'đ/giờ';
+ await loadSchedules();
+ if(data.role==='owner'||data.role==='manager'){await loadEmployees();}
+}
+async function loadSchedules(){
+ const el=document.getElementById('shiftList');if(!profile){return}
+ let q=sb.from('work_schedules').select('id,work_date,start_time,end_time,status,note,employee_id').gte('work_date',new Date().toISOString().slice(0,10)).order('work_date').order('start_time').limit(50);
+ if(profile.role==='employee')q=q.or('employee_id.eq.'+session.user.id+',employee_id.is.null');
+ const {data,error}=await q;
+ if(error){el.innerHTML='<div class="card notice warn">Chưa đọc được lịch: '+escapeHtml(error.message)+'</div>';return}
+ let regs=[];
+ if(profile.role==='employee' && data?.length){
+   const r=await sb.from('shift_registrations').select('id,schedule_id,status,rejection_reason').eq('employee_id',session.user.id);
+   regs=r.data||[];
+ }
+ const rm=new Map(regs.map(r=>[r.schedule_id,r]));
+ if(!data?.length){el.innerHTML='<div class="card muted">Chưa có ca trong thời gian tới.</div>';return}
+ el.innerHTML=data.map(s=>{
+   const reg=rm.get(s.id);
+   let action='';
+   if(profile.role==='employee' && s.employee_id===session.user.id) action='<span class="badge ok">Ca của bạn</span>';
+   else if(profile.role==='employee' && s.status==='open'){
+     if(reg?.status==='pending') action='<span class="badge wait">Đang chờ duyệt</span>';
+     else if(reg?.status==='rejected') action='<span class="badge bad">Đã từ chối</span>';
+     else action=`<button class="btn primary" onclick="registerForShift('${s.id}')">Đăng ký ca</button>`;
+   }
+   return `<div class="item"><div class="row"><div><b>${escapeHtml(s.work_date)}</b><div class="muted">${escapeHtml(s.start_time)} – ${escapeHtml(s.end_time)}</div>${s.note?`<div class="muted">${escapeHtml(s.note)}</div>`:''}</div><span class="badge ${s.status==='assigned'?'ok':s.status==='open'?'info':'wait'}">${escapeHtml(s.status)}</span></div><div class="row" style="margin-top:9px">${action}</div></div>`;
+ }).join('');
+ document.getElementById('statShift').textContent=data.filter(x=>x.status!=='cancelled').length;
+}
+async function registerForShift(scheduleId){
+ const note=prompt('Ghi chú cho quản lý (có thể bỏ trống):','') ?? '';
+ const {error}=await sb.rpc('register_for_shift',{p_schedule_id:scheduleId,p_note:note});
+ if(error){alert(error.message);return}
+ alert('Đã gửi đăng ký ca. Chờ Owner/Manager duyệt.');
+ await loadSchedules();
+}
+
+async function saveProfile(){
+ if(!sb||!session)return;
+ const payload={full_name:document.getElementById('fullName').value.trim(),phone:document.getElementById('phone').value.trim(),address:document.getElementById('address').value.trim()};
+ const {error}=await sb.from('profiles').update(payload).eq('id',session.user.id);
+ document.getElementById('profileMsg').innerHTML=error?'<div class="notice warn">'+escapeHtml(error.message)+'</div>':'<div class="notice ok">Đã lưu hồ sơ.</div>';
+ if(!error){profile={...profile,...payload};document.getElementById('roleLabel').textContent=(profile.role||'employee').toUpperCase()+' · '+(profile.full_name||session.user.email)}
+}
+async function signOut(){if(sb)await sb.auth.signOut();session=null;profile=null;document.getElementById('roleLabel').textContent='Chưa đăng nhập';document.getElementById('accountBtn').textContent='Đăng nhập';document.getElementById('accountBtn').onclick=openLogin;document.getElementById('notLogged').style.display='block';document.getElementById('dashboardData').style.display='none'}
+function openLogin(){document.getElementById('loginModal').style.display='block'}function closeLogin(){document.getElementById('loginModal').style.display='none'}
+function openConfig(){closeLogin();document.getElementById('configModal').style.display='block'}function closeConfig(){document.getElementById('configModal').style.display='none'}
+function saveConfig(){const url=document.getElementById('sbUrl').value.trim().replace(/\/$/,''),key=document.getElementById('sbKey').value.trim();if(!url||!key){alert('Cần Project URL và Publishable/anon key.');return}localStorage.setItem(cfgKey,JSON.stringify({url,key}));try{sb=window.supabase.createClient(url,key);closeConfig();openLogin();document.getElementById('loginMsg').textContent='Đã kết nối Supabase trên trình duyệt này.'}catch(e){alert(e.message)}}
+function show(id,el){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));el.classList.add('active')}
+function tick(){const d=new Date();document.getElementById('clock').textContent=d.toLocaleTimeString('vi-VN');document.getElementById('dateText').textContent=d.toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'})}setInterval(tick,1000);tick();
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+init();
+async function adminTab(tab,btn){
+ document.querySelectorAll('.admin-pane').forEach(x=>x.style.display='none');
+ document.getElementById('admin'+tab.charAt(0).toUpperCase()+tab.slice(1)).style.display='block';
+ document.querySelectorAll('.admin-tabs button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');
+ if(tab==='employees')await loadEmployees();
+ if(tab==='templates')await loadTemplates();
+ if(tab==='schedules'){if(!document.getElementById('schDate').value)document.getElementById('schDate').value=new Date().toISOString().slice(0,10);await loadTemplates();await loadAdminSchedules();}
+ if(tab==='registrations')await loadRegistrations();
+ if(tab==='devices')await loadDevices();
+ if(tab==='store')await loadStore();
+}
+async function loadEmployees(){
+ const el=document.getElementById('employeeTable');if(!sb||!profile)return;
+ const {data,error}=await sb.from('profiles').select('id,full_name,email,phone,role,employment_status,hourly_rate,store_id').eq('store_id',profile.store_id).order('full_name');
+ if(error){el.innerHTML='<div class="notice warn">'+escapeHtml(error.message)+'</div>';return}
+ if(!data?.length){el.innerHTML='<div class="empty">Chưa có nhân viên nào thuộc cửa hàng. Hãy tạo/invite Auth user trong Supabase rồi đăng nhập lần đầu để trigger tạo profile.</div>';return}
+ el.innerHTML='<table class="table"><thead><tr><th>Nhân viên</th><th>Vai trò</th><th>Trạng thái</th><th>Lương/giờ</th><th></th></tr></thead><tbody>'+
+ data.map(x=>`<tr><td><b>${escapeHtml(x.full_name||'(Chưa đặt tên)')}</b><br><span class="muted">${escapeHtml(x.email||'')}</span><br><span class="muted">${escapeHtml(x.phone||'')}</span></td><td>${escapeHtml(x.role)}</td><td>${escapeHtml(x.employment_status)}</td><td>${Number(x.hourly_rate||0).toLocaleString('vi-VN')}đ</td><td>${profile.role==='owner'?`<button class="btn light" onclick='openEmployeeModal(${JSON.stringify(x)})'>Sửa</button>`:''}</td></tr>`).join('')+'</tbody></table>';
+}
+function openEmployeeModal(x){
+ document.getElementById('editEmployeeId').value=x.id;document.getElementById('editEmployeeName').value=x.full_name||'';document.getElementById('editEmployeePhone').value=x.phone||'';document.getElementById('editEmployeeRole').value=x.role||'employee';document.getElementById('editEmployeeStatus').value=x.employment_status||'active';document.getElementById('editEmployeeRate').value=x.hourly_rate||0;document.getElementById('employeeMsg').innerHTML='';document.getElementById('employeeModal').style.display='block';
+}
+function closeEmployeeModal(){document.getElementById('employeeModal').style.display='none'}
+async function saveEmployee(){
+ if(profile.role!=='owner'){alert('Chỉ Owner được sửa hồ sơ nhân viên.');return}
+ const id=document.getElementById('editEmployeeId').value;
+ const payload={full_name:document.getElementById('editEmployeeName').value.trim(),phone:document.getElementById('editEmployeePhone').value.trim(),role:document.getElementById('editEmployeeRole').value,employment_status:document.getElementById('editEmployeeStatus').value,hourly_rate:Number(document.getElementById('editEmployeeRate').value||0)};
+ if(!payload.full_name){alert('Họ tên không được để trống.');return}
+ const {error}=await sb.from('profiles').update(payload).eq('id',id);
+ document.getElementById('employeeMsg').innerHTML=error?'<div class="notice warn">'+escapeHtml(error.message)+'</div>':'<div class="notice ok">Đã lưu.</div>';
+ if(!error){closeEmployeeModal();await loadEmployees();}
+}
+
+async function loadTemplates(){
+ const el=document.getElementById('templateList'),sel=document.getElementById('schTemplate');if(!sb||!profile)return;
+ const {data,error}=await sb.from('shift_templates').select('id,name,start_time,end_time,break_minutes,capacity,is_active').eq('store_id',profile.store_id).order('start_time');
+ if(error){el.innerHTML='<div class="notice warn">'+escapeHtml(error.message)+'</div>';return}
+ sel.innerHTML='<option value="">-- Chọn mẫu --</option>';
+ data.forEach(x=>{sel.insertAdjacentHTML('beforeend',`<option value="${x.id}">${escapeHtml(x.name)} · ${x.start_time.slice(0,5)}-${x.end_time.slice(0,5)}</option>`)});
+ el.innerHTML=data.length?data.map(x=>`<div class="item"><div class="row"><div><b>${escapeHtml(x.name)}</b><div class="muted">${x.start_time.slice(0,5)} – ${x.end_time.slice(0,5)} · tối đa ${x.capacity} người</div></div><span class="badge ${x.is_active?'ok':'bad'}">${x.is_active?'Đang dùng':'Tắt'}</span></div></div>`).join(''):'<div class="empty">Chưa có mẫu ca.</div>';
+}
+async function createTemplate(){
+ if(!profile?.store_id){alert('Owner chưa có store_id. Hãy cấu hình cửa hàng trước.');return}
+ const p={store_id:profile.store_id,name:document.getElementById('tplName').value.trim(),start_time:document.getElementById('tplStart').value,end_time:document.getElementById('tplEnd').value,break_minutes:Number(document.getElementById('tplBreak').value||0),capacity:Math.max(1,Math.min(10,Number(document.getElementById('tplCapacity').value||1)))};
+ if(!p.name||!p.start_time||!p.end_time){alert('Điền đủ tên ca, giờ bắt đầu và kết thúc.');return}
+ const {error}=await sb.from('shift_templates').insert(p);document.getElementById('tplMsg').innerHTML=error?'<div class="notice warn">'+escapeHtml(error.message)+'</div>':'<div class="notice ok">Đã tạo mẫu ca.</div>';if(!error)await loadTemplates();
+}
+async function createSchedule(){
+ if(!profile?.store_id){alert('Chưa có cửa hàng.');return}
+ const tid=document.getElementById('schTemplate').value,date=document.getElementById('schDate').value;
+ const slots=Math.max(1,Math.min(10,Number(document.getElementById('schSlots').value||1)));
+ if(!tid||!date){alert('Chọn ngày và mẫu ca.');return}
+ const {data,error}=await sb.rpc('create_schedule_slots',{p_store_id:profile.store_id,p_shift_template_id:tid,p_work_date:date,p_note:document.getElementById('schNote').value.trim(),p_slots:slots});
+ document.getElementById('schMsg').innerHTML=error?'<div class="notice warn">'+escapeHtml(error.message)+'</div>':'<div class="notice ok">Đã tạo '+data+' vị trí ca mở đăng ký.</div>';
+ if(!error)await loadAdminSchedules();
+}
+
+async function loadAdminSchedules(){
+ const el=document.getElementById('adminScheduleList');
+ const {data,error}=await sb.from('work_schedules').select('id,work_date,start_time,end_time,status,note,employee_id,profiles:employee_id(full_name)').eq('store_id',profile.store_id).gte('work_date',new Date().toISOString().slice(0,10)).order('work_date').order('start_time').limit(50);
+ if(error){el.innerHTML='<div class="notice warn">'+escapeHtml(error.message)+'</div>';return}
+ el.innerHTML=data?.length?data.map(x=>`<div class="item"><div class="row"><div><b>${escapeHtml(x.work_date)}</b><div class="muted">${x.start_time.slice(0,5)} – ${x.end_time.slice(0,5)}</div><div class="muted">${escapeHtml(x.profiles?.full_name||'Ca mở đăng ký')}</div></div><span class="badge ${x.status==='assigned'?'ok':x.status==='open'?'info':'wait'}">${escapeHtml(x.status)}</span></div></div>`).join(''):'<div class="empty">Chưa có lịch.</div>';
+}
+async function loadRegistrations(){
+ const el=document.getElementById('registrationList');
+ const {data,error}=await sb.from('shift_registrations').select('id,status,note,requested_at,schedule_id,employee_id,profiles:employee_id(full_name,email),work_schedules: schedule_id(work_date,start_time,end_time,status)').eq('status','pending').order('requested_at');
+ if(error){el.innerHTML='<div class="notice warn">'+escapeHtml(error.message)+'</div>';return}
+ el.innerHTML=data?.length?data.map(x=>`<div class="item"><div class="row"><div><b>${escapeHtml(x.profiles?.full_name||'Nhân viên')}</b><div class="muted">${escapeHtml(x.work_schedules?.work_date||'')} · ${escapeHtml(x.work_schedules?.start_time||'').slice(0,5)} – ${escapeHtml(x.work_schedules?.end_time||'').slice(0,5)}</div></div><span class="badge wait">Chờ duyệt</span></div><div class="admin-actions" style="margin-top:9px"><button class="btn green" onclick="reviewRegistration('${x.id}','approve','${x.schedule_id}','${x.employee_id}')">Duyệt</button><button class="btn danger" onclick="reviewRegistration('${x.id}','reject')">Từ chối</button></div></div>`).join(''):'<div class="empty">Không có đăng ký chờ duyệt.</div>';
+}
+async function reviewRegistration(id,action,scheduleId,employeeId){
+ const reason=action==='reject'?(prompt('Lý do từ chối (có thể bỏ trống):','') ?? ''):'';
+ const {error}=await sb.rpc('review_shift_registration',{p_registration_id:id,p_action:action,p_reason:reason});
+ if(error){alert(error.message);return}
+ await loadRegistrations();await loadAdminSchedules();await loadSchedules();
+}
+
+async function loadDevices(){
+ const el=document.getElementById('deviceList');
+ const {data,error}=await sb.from('devices').select('id,device_name,platform,status,requested_at,last_seen_at,employee_id,profiles:employee_id(full_name,email)').eq('status','pending').order('requested_at');
+ if(error){el.innerHTML='<div class="notice warn">'+escapeHtml(error.message)+'</div>';return}
+ el.innerHTML=data?.length?data.map(x=>`<div class="item"><div class="row"><div><b>${escapeHtml(x.profiles?.full_name||'Nhân viên')}</b><div class="muted">${escapeHtml(x.device_name||'Thiết bị')} · ${escapeHtml(x.platform||'')}</div></div><span class="badge wait">Chờ duyệt</span></div><div class="admin-actions" style="margin-top:9px">${profile.role==='owner'?`<button class="btn green" onclick="reviewDevice('${x.id}','approved')">Duyệt</button>`:''}<button class="btn danger" onclick="reviewDevice('${x.id}','rejected')">Từ chối</button></div></div>`).join(''):'<div class="empty">Không có thiết bị chờ duyệt.</div>';
+}
+async function reviewDevice(id,status){const action=status==='approved'?'approve':status==='rejected'?'reject':'revoke';if(action==='approve'&&profile.role!=='owner'){alert('Chỉ Owner được duyệt thiết bị.');return}const reason=action==='reject'?(prompt('Lý do từ chối (có thể bỏ trống):','')??''):'';const {error}=await sb.rpc('review_attendance_device',{p_device_id:id,p_action:action,p_reason:reason});if(error)alert(error.message);else await loadDevices()}
+async function loadStore(){
+ if(!profile?.store_id){document.getElementById('storeMsg').innerHTML='<div class="notice warn">Tài khoản Owner chưa được gán cửa hàng.</div>';return}
+ const {data,error}=await sb.from('stores').select('*').eq('id',profile.store_id).single();if(error){document.getElementById('storeMsg').innerHTML='<div class="notice warn">'+escapeHtml(error.message)+'</div>';return}
+ const lat=(data.latitude===null||data.latitude===undefined||data.latitude==='')?DEFAULT_STORE_LAT:data.latitude;const lng=(data.longitude===null||data.longitude===undefined||data.longitude==='')?DEFAULT_STORE_LNG:data.longitude;
+document.getElementById('storeName').value=data.name||'';document.getElementById('storeAddress').value=data.address||'';document.getElementById('storeLat').value=lat;document.getElementById('storeLng').value=lng;document.getElementById('storeRadius').value=data.gps_radius_m??DEFAULT_STORE_RADIUS;document.getElementById('storeGrace').value=data.late_grace_minutes??5;document.getElementById('storeEarly').value=data.checkin_early_minutes??60;document.getElementById('storeRate').value=data.hourly_default_rate??30000;
+if(data.latitude===null||data.latitude===undefined||data.longitude===null||data.longitude===undefined){document.getElementById('storeMsg').innerHTML='<div class="notice ok">Đã điền sẵn tọa độ quán: '+DEFAULT_STORE_LAT+', '+DEFAULT_STORE_LNG+'. Hãy bấm <b>Lưu cài đặt</b> để ghi vào Supabase.</div>';}
+}
+async function saveStore(){
+ if(profile.role!=='owner'){alert('Chỉ Owner được sửa cài đặt cửa hàng.');return}
+ const payload={name:document.getElementById('storeName').value.trim(),address:document.getElementById('storeAddress').value.trim(),latitude:Number(document.getElementById('storeLat').value),longitude:Number(document.getElementById('storeLng').value),gps_radius_m:Number(document.getElementById('storeRadius').value),late_grace_minutes:Number(document.getElementById('storeGrace').value),checkin_early_minutes:Number(document.getElementById('storeEarly').value),hourly_default_rate:Number(document.getElementById('storeRate').value)};
+ const {error}=await sb.from('stores').update(payload).eq('id',profile.store_id);document.getElementById('storeMsg').innerHTML=error?'<div class="notice warn">'+escapeHtml(error.message)+'</div>':'<div class="notice ok">Đã lưu cài đặt cửa hàng.</div>';
+}
+
+
+// ===================== V7: DEVICE + GPS ATTENDANCE =====================
+const DEVICE_KEY_STORAGE='hr_device_key_v7';
+// V8: Tọa độ quán do Owner cung cấp. Chỉ dùng làm giá trị mặc định khi DB chưa có tọa độ.
+const DEFAULT_STORE_LAT=10.812988570529894;
+const DEFAULT_STORE_LNG=106.5995762714964;
+const DEFAULT_STORE_RADIUS=80;
+function getDeviceKey(){
+  let k=localStorage.getItem(DEVICE_KEY_STORAGE);
+  if(!k){
+    k=(crypto&&crypto.randomUUID)?crypto.randomUUID():('dev-'+Date.now()+'-'+Math.random().toString(36).slice(2));
+    localStorage.setItem(DEVICE_KEY_STORAGE,k);
+  }
+  return k;
+}
+function deviceInfo(){
+  const ua=navigator.userAgent||'';
+  const platform=navigator.userAgentData?.platform||navigator.platform||'unknown';
+  let name='Thiết bị trình duyệt';
+  if(/iPhone/i.test(ua))name='iPhone';
+  else if(/iPad/i.test(ua))name='iPad';
+  else if(/Android/i.test(ua))name='Android';
+  else if(/Macintosh/i.test(ua))name='Mac';
+  else if(/Windows/i.test(ua))name='Windows';
+  return {device_key:getDeviceKey(),device_name:name,platform:String(platform).slice(0,80),user_agent:ua.slice(0,500)};
+}
+async function registerDevice(){
+  if(!sb||!session||!profile){alert('Hãy đăng nhập trước.');return}
+  if(profile.role!=='employee'){alert('Tính năng này dành cho tài khoản Employee.');return}
+  const d=deviceInfo();
+  const {data,error}=await sb.rpc('request_attendance_device',{p_device_key:d.device_key,p_device_name:d.device_name,p_platform:d.platform,p_user_agent:d.user_agent});
+  if(error){alert(error.message);return}
+  alert(data?.status==='approved'?'Thiết bị này đã được duyệt.':'Đã gửi yêu cầu đăng ký thiết bị. Owner cần duyệt trước khi chấm công.');
+  await loadMyDevice();await refreshAttendanceState();
+}
+async function loadMyDevice(){
+  const el=document.getElementById('myDevice');if(!el||!sb||!session)return;
+  if(profile?.role!=='employee'){el.innerHTML='<div class="notice">Tài khoản Owner/Manager không cần đăng ký thiết bị để chấm công nhân viên.</div>';return}
+  const key=getDeviceKey();
+  const {data,error}=await sb.from('devices').select('id,device_key,device_name,platform,status,requested_at,approved_at,rejected_reason,last_seen_at').eq('employee_id',session.user.id).eq('device_key',key).maybeSingle();
+  if(error){el.innerHTML='<div class="notice warn">'+escapeHtml(error.message)+'</div>';return}
+  if(!data){el.innerHTML=`<div class="v7-device"><div class="row"><div><b>Thiết bị chưa đăng ký</b><div class="muted">Mã thiết bị của trình duyệt này</div></div><span class="badge wait">Chưa đăng ký</span></div><div class="device-id" style="margin-top:9px">${escapeHtml(key)}</div></div>`;return}
+  const labels={pending:'Chờ Owner duyệt',approved:'Đã duyệt',rejected:'Bị từ chối',revoked:'Đã thu hồi'};
+  const cls={pending:'wait',approved:'ok',rejected:'bad',revoked:'bad'}[data.status]||'';
+  el.innerHTML=`<div class="v7-device"><div class="row"><div><b>${escapeHtml(data.device_name||'Thiết bị')}</b><div class="muted">${escapeHtml(data.platform||'')}</div></div><span class="badge ${cls}">${labels[data.status]||data.status}</span></div><div class="device-id" style="margin-top:9px">${escapeHtml(data.device_key)}</div>${data.rejected_reason?`<div class="notice warn" style="margin-top:9px">${escapeHtml(data.rejected_reason)}</div>`:''}</div>`;
+}
+function localDateVN(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Ho_Chi_Minh'}).format(new Date())}
+function formatTime(ts){return ts?new Date(ts).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'}):'—'}
+function formatDate(ts){return ts?new Date(ts).toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'}):'—'}
+function setGpsState(ok,text,detail){
+ const s=document.getElementById('gpsState'),d=document.getElementById('gpsDetail');if(!s)return;
+ s.innerHTML=`<span class="gps-dot ${ok?'ok':'bad'}"></span>${escapeHtml(text)}`;d.textContent=detail||'';
+}
+function getPosition(){
+ return new Promise((resolve,reject)=>{
+   if(!navigator.geolocation){reject(new Error('Trình duyệt không hỗ trợ GPS.'));return}
+   navigator.geolocation.getCurrentPosition(resolve,reject,{enableHighAccuracy:true,timeout:15000,maximumAge:0});
+ });
+}
+async function punchAttendance(){
+ if(!sb||!session||!profile){alert('Hãy đăng nhập trước.');return}
+ if(profile.role!=='employee'){alert('Tài khoản quản lý không thực hiện chấm công nhân viên tại đây.');return}
+ const btn=document.getElementById('checkBtn');btn.disabled=true;btn.textContent='ĐANG LẤY GPS...';
+ try{
+   setGpsState(false,'Đang lấy vị trí...','Vui lòng cho phép trình duyệt sử dụng vị trí.');
+   const pos=await getPosition();
+   const lat=pos.coords.latitude,lng=pos.coords.longitude,acc=pos.coords.accuracy;
+   setGpsState(true,'Đã lấy GPS',`Độ chính xác khoảng ${Math.round(acc)}m · ${lat.toFixed(6)}, ${lng.toFixed(6)}`);
+   const state=await getTodayAttendance();
+   const action=state?.check_in&&!state?.check_out?'checkout':'checkin';
+   btn.textContent=action==='checkin'?'ĐANG CHECK-IN...':'ĐANG CHECK-OUT...';
+   const {data,error}=await sb.rpc('attendance_punch',{p_action:action,p_device_key:getDeviceKey(),p_latitude:lat,p_longitude:lng,p_accuracy_m:acc});
+   if(error)throw error;
+   document.getElementById('attendanceMsg').className='notice ok';
+   document.getElementById('attendanceMsg').textContent=action==='checkin'?`Check-in thành công lúc ${formatTime(data.check_in)} · trễ ${data.late_minutes||0} phút.`:`Check-out thành công lúc ${formatTime(data.check_out)} · giờ công ${Math.floor((data.worked_minutes||0)/60)}h ${(data.worked_minutes||0)%60}p.`;
+   await refreshAttendanceState();await loadAttendanceHistory();await loadMyDevice();
+ }catch(e){
+   document.getElementById('attendanceMsg').className='notice warn';
+   document.getElementById('attendanceMsg').textContent=attendanceErrorText(e?.message||String(e));
+   await refreshAttendanceState();
+ }finally{btn.disabled=false;}
+}
+function attendanceErrorText(msg){
+ const map={
+  'THIET_BI_CHUA_DUYET':'Thiết bị chưa được Owner duyệt. Hãy đăng ký thiết bị và chờ Owner duyệt.',
+  'THIET_BI_KHONG_HOP_LE':'Thiết bị không hợp lệ hoặc đã bị thu hồi.',
+  'CA_HOM_NAY_NOT_FOUND':'Hôm nay bạn chưa có ca được xếp.',
+  'CHUA_DEN_GIO_CHECKIN':'Chưa đến thời gian được phép check-in.',
+  'DA_QUA_CUA_CHECKIN':'Đã quá thời gian cho phép check-in của ca.',
+  'NGOAI_VUNG_GPS':'Bạn đang ở ngoài bán kính chấm công của quán.',
+  'CHUA_CHECKIN':'Chưa check-in nên chưa thể check-out.',
+  'DA_CHECKOUT':'Ca này đã check-out.',
+  'QUA_GIO_CHECKOUT':'Đã quá thời gian cho phép check-out.',
+  'GPS_CHUA_CAU_HINH':'Quán chưa được cấu hình tọa độ GPS.',
+  'TOA_DO_KHONG_HOP_LE':'Tọa độ GPS không hợp lệ.',
+  'PROFILE_NOT_ACTIVE':'Tài khoản nhân viên chưa active.',
+  'FORBIDDEN':'Bạn không có quyền thực hiện thao tác này.'
+ };
+ return map[msg]||msg;
+}
+async function getTodayAttendance(){
+ if(!sb||!session)return null;
+ const today=localDateVN();
+ const {data,error}=await sb.from('attendance').select('id,schedule_id,check_in,check_out,late_minutes,worked_minutes,check_in_status,check_out_status,work_schedules: schedule_id(work_date,start_time,end_time,status)').eq('employee_id',session.user.id).eq('work_schedules.work_date',today).order('created_at',{ascending:false}).limit(1).maybeSingle();
+ if(error)return null;return data;
+}
+async function refreshAttendanceState(){
+ const btn=document.getElementById('checkBtn');if(!btn)return;
+ if(!sb||!session||!profile){btn.disabled=true;btn.textContent='CHECK-IN';return}
+ if(profile.role!=='employee'){btn.disabled=true;btn.textContent='DÀNH CHO NHÂN VIÊN';document.getElementById('attendanceMsg').className='notice';document.getElementById('attendanceMsg').textContent='Owner/Manager xem chấm công trong khu vực quản trị.';return}
+ const today=await getTodayAttendance();
+ if(today?.check_in&&!today?.check_out){btn.disabled=false;btn.textContent='CHECK-OUT';document.getElementById('attendanceMsg').className='notice ok';document.getElementById('attendanceMsg').textContent=`Đã check-in lúc ${formatTime(today.check_in)} · trễ ${today.late_minutes||0} phút.`;return}
+ if(today?.check_out){btn.disabled=true;btn.textContent='ĐÃ CHECK-OUT';document.getElementById('attendanceMsg').className='notice ok';document.getElementById('attendanceMsg').textContent=`Đã hoàn tất ca · ${Math.floor((today.worked_minutes||0)/60)}h ${(today.worked_minutes||0)%60}p.`;return}
+ btn.disabled=false;btn.textContent='CHECK-IN';document.getElementById('attendanceMsg').className='notice warn';document.getElementById('attendanceMsg').textContent='Sẵn sàng. Khi bấm CHECK-IN, hệ thống sẽ kiểm tra ca hôm nay, thiết bị đã được Owner duyệt và GPS.';
+}
+async function loadAttendanceHistory(){
+ const el=document.getElementById('attendanceHistory');if(!el||!sb||!session)return;
+ const {data,error}=await sb.from('attendance').select('id,check_in,check_out,late_minutes,worked_minutes,check_in_status,check_out_status,work_schedules: schedule_id(work_date,start_time,end_time)').eq('employee_id',session.user.id).order('check_in',{ascending:false}).limit(15);
+ if(error){el.innerHTML='<div class="notice warn">'+escapeHtml(error.message)+'</div>';return}
+ if(!data?.length){el.innerHTML='<div class="empty">Chưa có bản ghi chấm công.</div>';return}
+ el.innerHTML=data.map(x=>`<div class="item"><div><b>${escapeHtml(x.work_schedules?.work_date||'')}</b><div class="muted">Ca ${escapeHtml((x.work_schedules?.start_time||'').slice(0,5))} – ${escapeHtml((x.work_schedules?.end_time||'').slice(0,5))}</div><div class="mini">IN ${formatTime(x.check_in)} · OUT ${formatTime(x.check_out)}</div></div><div class="center"><b>${Math.floor((x.worked_minutes||0)/60)}h ${(x.worked_minutes||0)%60}p</b><div class="mini">Trễ ${x.late_minutes||0}p</div></div></div>`).join('');
+}
+
+// Patch V6 loadApp by wrapping it after the original function is declared.
+const _loadAppV6=loadApp;
+loadApp=async function(){await _loadAppV6();if(session){await loadMyDevice();await refreshAttendanceState();await loadAttendanceHistory();}};
+const _showV6=show;
+show=function(id,el){_showV6(id,el);if(id==='attendance'&&session){loadMyDevice();refreshAttendanceState();loadAttendanceHistory();}};
+
+</script>
+<script>/* V7: device binding + GPS attendance */</script>
+</body>
+</html>
