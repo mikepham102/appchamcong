@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111827">
-<title>Quản Lý Nhân Sự Quán — V10</title>
+<title>Quản Lý Nhân Sự Quán — V11</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#f5f7fb;--card:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--primary:#111827;--green:#15803d;--amber:#b45309;--red:#b91c1c;--blue:#2563eb}
@@ -299,7 +299,7 @@ async function createEmployee(){
  if(!/^\S+@\S+\.\S+$/.test(email)){msg.innerHTML='<div class="notice warn">Email chưa đúng định dạng.</div>';return}
  msg.innerHTML='<div class="notice">Đang tạo tài khoản và gửi email mời...</div>';
  try{
-  const c=cfg(); const res=await fetch(c.url.replace(/\/$/,'')+'/functions/v1/create-employee',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':c.key},body:JSON.stringify({full_name:name,email,phone,hourly_rate:rate,redirect_to:location.href.split('#')[0]})});
+  const c=cfg(); const res=await fetch(c.url.replace(/\/$/,'')+'/functions/v1/create-employee',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':c.key},body:JSON.stringify({full_name:name,email,phone,hourly_rate:rate,redirect_to:'https://mikepham102.github.io/appchamcong/'})});
   const j=await res.json().catch(()=>({})); if(!res.ok)throw new Error(j.error||j.message||('HTTP '+res.status));
   msg.innerHTML='<div class="notice ok">Đã tạo tài khoản cho <b>'+escapeHtml(name)+'</b> và gửi email mời đến <b>'+escapeHtml(email)+'</b>.</div>';
   await loadEmployees();
