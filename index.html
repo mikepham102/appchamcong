@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111827">
-<title>Quản Lý Nhân Sự Quán — V8</title>
+<title>Quản Lý Nhân Sự Quán — V10</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#f5f7fb;--card:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--primary:#111827;--green:#15803d;--amber:#b45309;--red:#b91c1c;--blue:#2563eb}
@@ -108,8 +108,8 @@ main{padding:16px}.view{display:none}.view.active{display:block}h1{font-size:24p
 </div>
 
 <div id="adminEmployees" class="admin-pane">
-<div class="card"><div class="row"><div><b>Nhân viên</b><div class="muted">Quản lý hồ sơ, trạng thái và lương/giờ.</div></div><button class="btn primary" onclick="loadEmployees()">Làm mới</button></div><hr><div id="employeeTable" class="scroll"><div class="empty">Đang tải...</div></div></div>
-<div class="card"><div class="notice warn"><b>Tạo tài khoản đăng nhập:</b> V6 chưa đặt Service Role Key trong trình duyệt. Vì vậy tài khoản Auth mới vẫn tạo/invite trong Supabase Authentication; sau đó nhân viên xuất hiện ở đây để Owner hoàn thiện hồ sơ. Đây là chủ ý bảo mật.</div></div>
+<div class="card"><div class="row"><div><b>Nhân viên</b><div class="muted">Tạo tài khoản, quản lý hồ sơ, trạng thái và lương/giờ.</div></div><button class="btn primary" onclick="openCreateEmployee()">+ Thêm nhân viên</button></div><hr><div id="employeeTable" class="scroll"><div class="empty">Đang tải...</div></div></div>
+<div class="card"><div class="notice ok"><b>V10:</b> Owner/Manager có thể tạo tài khoản ngay trong WebApp. Service Role Key chỉ nằm ở Edge Function của Supabase, <b>không bao giờ</b> đưa vào trình duyệt.</div></div>
 </div>
 
 <div id="adminTemplates" class="admin-pane" style="display:none">
@@ -170,13 +170,25 @@ main{padding:16px}.view{display:none}.view.active{display:block}h1{font-size:24p
 <div class="field"><label>Lương/giờ (đ)</label><input id="editEmployeeRate" type="number" min="0" step="1000"></div>
 <button class="btn primary" onclick="saveEmployee()">Lưu thay đổi</button><div id="employeeMsg"></div>
 </div></div></div>
-<div id="loginModal" class="modal"><div class="modalbox">
+<div id="createEmployeeModal" class="modal"><div class="modalbox">
+ <div class="row"><div><h2 style="margin:0">Thêm nhân viên</h2><div class="muted">Tạo tài khoản Auth + hồ sơ nhân viên và gửi email mời.</div></div><button class="btn light" onclick="closeCreateEmployee()">Đóng</button></div>
+ <div class="stack" style="margin-top:18px">
+  <div class="field"><label>Họ và tên *</label><input id="newEmployeeName" placeholder="Nguyễn Văn A" autocomplete="name"></div>
+  <div class="field"><label>Email đăng nhập *</label><input id="newEmployeeEmail" type="email" placeholder="nhanvien@email.com" autocomplete="email"></div>
+  <div class="field"><label>Số điện thoại</label><input id="newEmployeePhone" inputmode="tel" placeholder="09xxxxxxxx"></div>
+  <div class="field"><label>Lương/giờ (đ)</label><input id="newEmployeeRate" type="number" min="0" step="1000" value="30000"></div>
+  <button class="btn primary" onclick="createEmployee()">Tạo tài khoản & gửi email mời</button>
+  <div id="createEmployeeMsg"></div>
+  <div class="notice">Nhân viên nhận email mời, sau đó có thể đăng nhập bằng <b>email + mật khẩu</b> hoặc dùng <b>OTP qua email</b> nếu chưa đặt mật khẩu.</div>
+ </div></div></div>
+ <div id="loginModal" class="modal"><div class="modalbox">
 <div class="row"><div><h2 style="margin:0">Đăng nhập</h2><div class="muted">Supabase Auth</div></div><button class="btn light" onclick="closeLogin()">Đóng</button></div>
 <div class="stack" style="margin-top:18px">
 <div class="field"><label>Email</label><input id="loginEmail" type="email" autocomplete="email" placeholder="email của bạn"></div>
 <div class="field"><label>Mật khẩu</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="mật khẩu Supabase"></div>
 <button class="btn primary" onclick="signIn()">Đăng nhập</button>
-<button class="btn light" onclick="sendMagicLink()">Gửi link đăng nhập qua email</button>
+<button class="btn light" onclick="sendMagicLink()">Đăng nhập bằng email OTP</button>
+ <button class="btn light" onclick="sendResetPassword()">Quên/đặt lại mật khẩu</button>
 <div id="loginMsg" class="notice">Cấu hình Supabase nằm trong phần Cấu hình.</div>
 <hr>
 <button class="btn light" onclick="openConfig()">Cấu hình kết nối Supabase</button>
@@ -191,6 +203,14 @@ main{padding:16px}.view{display:none}.view.active{display:block}h1{font-size:24p
 <div class="notice warn">Không nhập Service Role Key. Chỉ dùng Publishable/anon key ở phía trình duyệt.</div>
 </div></div></div>
 
+<div id="passwordModal" class="modal"><div class="modalbox">
+ <div class="row"><div><h2 style="margin:0">Đặt mật khẩu</h2><div class="muted">Dùng sau khi mở email mời hoặc khi cần đổi mật khẩu.</div></div><button class="btn light" onclick="closePasswordModal()">Đóng</button></div>
+ <div class="stack" style="margin-top:18px">
+  <div class="field"><label>Mật khẩu mới</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" placeholder="Tối thiểu 8 ký tự"></div>
+  <div class="field"><label>Nhập lại mật khẩu</label><input id="newPassword2" type="password" autocomplete="new-password" minlength="8"></div>
+  <button class="btn primary" onclick="setNewPassword()">Lưu mật khẩu</button><div id="passwordMsg"></div>
+ </div></div></div>
+
 <script>
 let sb=null, session=null, profile=null;
 const cfgKey='hr_supabase_config_v4';
@@ -198,7 +218,7 @@ function cfg(){try{return JSON.parse(localStorage.getItem(cfgKey)||'{}')}catch{r
 function init(){
  const c=cfg(); if(c.url&&c.key){try{sb=window.supabase.createClient(c.url,c.key);document.getElementById('sbUrl').value=c.url;document.getElementById('sbKey').value=c.key;restoreSession()}catch(e){console.error(e)}}
 }
-async function restoreSession(){if(!sb)return;const {data}=await sb.auth.getSession();session=data.session||null;if(session)await loadApp()}
+async function restoreSession(){if(!sb)return;const {data}=await sb.auth.getSession();session=data.session||null;if(session)await loadApp(); sb.auth.onAuthStateChange(async (event,s)=>{session=s||null;if(session){if(event==='PASSWORD_RECOVERY')openPasswordModal();await loadApp()}else{profile=null;document.getElementById('roleLabel').textContent='Chưa đăng nhập';document.getElementById('accountBtn').textContent='Đăng nhập';document.getElementById('accountBtn').onclick=openLogin;document.getElementById('notLogged').style.display='block';document.getElementById('dashboardData').style.display='none'}})}
 async function signIn(){
  if(!sb){openConfig();return}
  const email=document.getElementById('loginEmail').value.trim(), password=document.getElementById('loginPassword').value;
@@ -215,6 +235,10 @@ async function sendMagicLink(){
 async function loadApp(){
  const {data,error}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
  if(error){document.getElementById('loginMsg').textContent='Đã đăng nhập nhưng chưa đọc được hồ sơ: '+error.message;return}
+ if(data.role==='employee' && data.employment_status==='invited'){
+  const act=await sb.rpc('activate_my_employee');
+  if(!act.error){const refreshed=await sb.from('profiles').select('*').eq('id',session.user.id).single();if(refreshed.data)data=refreshed.data;}
+ }
  profile=data;
  document.getElementById('roleLabel').textContent=(data.role||'employee').toUpperCase()+' · '+(data.full_name||session.user.email);
  document.getElementById('accountBtn').textContent='Đăng xuất';
@@ -260,6 +284,40 @@ async function registerForShift(scheduleId){
  if(error){alert(error.message);return}
  alert('Đã gửi đăng ký ca. Chờ Owner/Manager duyệt.');
  await loadSchedules();
+}
+
+
+function openCreateEmployee(){
+ if(!profile||!['owner','manager'].includes(profile.role)){alert('Chỉ Owner/Manager được tạo nhân viên.');return}
+ document.getElementById('newEmployeeName').value='';document.getElementById('newEmployeeEmail').value='';document.getElementById('newEmployeePhone').value='';document.getElementById('newEmployeeRate').value=30000;document.getElementById('createEmployeeMsg').innerHTML='';document.getElementById('createEmployeeModal').style.display='block';
+}
+function closeCreateEmployee(){document.getElementById('createEmployeeModal').style.display='none'}
+async function createEmployee(){
+ if(!sb||!session||!profile||!['owner','manager'].includes(profile.role)){alert('Bạn không có quyền.');return}
+ const name=document.getElementById('newEmployeeName').value.trim(),email=document.getElementById('newEmployeeEmail').value.trim().toLowerCase(),phone=document.getElementById('newEmployeePhone').value.trim(),rate=Number(document.getElementById('newEmployeeRate').value||0),msg=document.getElementById('createEmployeeMsg');
+ if(!name||!email){msg.innerHTML='<div class="notice warn">Cần nhập họ tên và email.</div>';return}
+ if(!/^\S+@\S+\.\S+$/.test(email)){msg.innerHTML='<div class="notice warn">Email chưa đúng định dạng.</div>';return}
+ msg.innerHTML='<div class="notice">Đang tạo tài khoản và gửi email mời...</div>';
+ try{
+  const c=cfg(); const res=await fetch(c.url.replace(/\/$/,'')+'/functions/v1/create-employee',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':c.key},body:JSON.stringify({full_name:name,email,phone,hourly_rate:rate,redirect_to:location.href.split('#')[0]})});
+  const j=await res.json().catch(()=>({})); if(!res.ok)throw new Error(j.error||j.message||('HTTP '+res.status));
+  msg.innerHTML='<div class="notice ok">Đã tạo tài khoản cho <b>'+escapeHtml(name)+'</b> và gửi email mời đến <b>'+escapeHtml(email)+'</b>.</div>';
+  await loadEmployees();
+ }catch(e){msg.innerHTML='<div class="notice warn">Tạo tài khoản lỗi: '+escapeHtml(e.message||String(e))+'</div>'}
+}
+function sendResetPassword(){
+ if(!sb){openConfig();return}
+ const email=document.getElementById('loginEmail').value.trim();if(!email){alert('Nhập email trước.');return}
+ sb.auth.resetPasswordForEmail(email,{redirectTo:location.href}).then(({error})=>{document.getElementById('loginMsg').textContent=error?'Lỗi: '+error.message:'Đã gửi email đặt lại mật khẩu. Hãy mở email và quay lại WebApp.'});
+}
+function openPasswordModal(){document.getElementById('passwordMsg').innerHTML='';document.getElementById('newPassword').value='';document.getElementById('newPassword2').value='';document.getElementById('passwordModal').style.display='block'}
+function closePasswordModal(){document.getElementById('passwordModal').style.display='none'}
+async function setNewPassword(){
+ if(!sb||!session){alert('Phiên đăng nhập chưa sẵn sàng.');return}
+ const p1=document.getElementById('newPassword').value,p2=document.getElementById('newPassword2').value;
+ if(p1.length<8){document.getElementById('passwordMsg').innerHTML='<div class="notice warn">Mật khẩu phải có ít nhất 8 ký tự.</div>';return}
+ if(p1!==p2){document.getElementById('passwordMsg').innerHTML='<div class="notice warn">Hai mật khẩu không giống nhau.</div>';return}
+ const {error}=await sb.auth.updateUser({password:p1});document.getElementById('passwordMsg').innerHTML=error?'<div class="notice warn">'+escapeHtml(error.message)+'</div>':'<div class="notice ok">Đã đặt mật khẩu thành công.</div>';if(!error)setTimeout(closePasswordModal,700);
 }
 
 async function saveProfile(){
@@ -376,7 +434,7 @@ async function saveStore(){
 
 // ===================== V7: DEVICE + GPS ATTENDANCE =====================
 const DEVICE_KEY_STORAGE='hr_device_key_v7';
-// V8: Tọa độ quán do Owner cung cấp. Chỉ dùng làm giá trị mặc định khi DB chưa có tọa độ.
+// V10: Tọa độ quán do Owner cung cấp. Chỉ dùng làm giá trị mặc định khi DB chưa có tọa độ.
 const DEFAULT_STORE_LAT=10.812988570529894;
 const DEFAULT_STORE_LNG=106.5995762714964;
 const DEFAULT_STORE_RADIUS=80;
@@ -503,6 +561,6 @@ const _showV6=show;
 show=function(id,el){_showV6(id,el);if(id==='attendance'&&session){loadMyDevice();refreshAttendanceState();loadAttendanceHistory();}};
 
 </script>
-<script>/* V7: device binding + GPS attendance */</script>
+<script>/* V10: device binding + GPS attendance */</script>
 </body>
 </html>
