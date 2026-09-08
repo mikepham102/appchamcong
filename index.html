@@ -1,4 +1,4 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0d73e8"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="HongCha HRM"><title>HongCha HRM V21.4</title><style>
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#146EF5"><meta name="color-scheme" content="light"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="HongCha HRM"><title>HongCha HRM V22 · Mobile</title><style>
 :root{--bg:#f5f7fb;--surface:#fff;--ink:#172033;--muted:#7a8596;--line:#e7ecf3;--primary:#1677ff;--primary2:#075fd0;--green:#16a34a;--amber:#d97706;--red:#dc2626;--shadow:0 6px 22px rgba(15,23,42,.055);--radius:18px}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}body{overscroll-behavior-y:none}button,input,select{font:inherit}button{border:0;cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}
 #bootScreen,#loginScreen{position:fixed;inset:0;z-index:100;background:linear-gradient(180deg,#f8fbff 0%,#f3f6fb 100%);display:flex;align-items:center;justify-content:center;padding:20px}#bootScreen.hidden,#loginScreen.hidden{display:none}
@@ -25,12 +25,12 @@ main{padding:0 16px}.view{display:none}.view.active{display:block}.page-head{hei
 .modal.open .modalbox{animation:hcModalUp .18s ease-out}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 .btn,.nav,.quick-card,.owner-action,.check-button,.gate-button,.gate-secondary,.modal-close{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.view.active{animation:hcFadeUp .18s ease-out}
+.view.active{animation:none}
 .card,.item,.quick-card,.owner-action,.shift-item,.metric,.status-card{transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
 .quick-card:active,.owner-action:active,.shift-item:active{transform:scale(.985)}
 .btn:not(:disabled),.nav:not(.hidden),.check-button:not(:disabled),.gate-button:not(:disabled),.gate-secondary{transition:transform .12s ease,filter .12s ease,box-shadow .12s ease}
 .btn:not(:disabled):active,.nav:not(.hidden):active,.gate-button:not(:disabled):active,.gate-secondary:active{transform:scale(.97);filter:brightness(.97)}
-.check-button:not(:disabled){animation:hcPulse 2.2s ease-in-out infinite}
+.check-button:not(:disabled){animation:none}
 .check-button:disabled{background:#dfe5ed;color:#8a94a3;box-shadow:none;cursor:not-allowed}
 .btn:disabled{background:#e9edf2!important;color:#98a2b3!important;border-color:#e1e6ed!important;opacity:1}
 .btn.primary.busy,.gate-button.busy{position:relative;color:transparent;pointer-events:none}
@@ -69,12 +69,162 @@ body{background:linear-gradient(180deg,#f7f9fc 0,#f1f4f8 100%)}
 html{font-size:16px}body{font-size:15px;line-height:1.45;color:#101828}main{padding-left:16px;padding-right:16px}.page-title{font-size:25px}.page-sub{font-size:13px;color:#475467}.section-head h2{font-size:17px}.muted{font-size:13px;color:#667085}.mini{font-size:12px;color:#667085}.notice{font-size:13px;color:#344054}.btn{font-size:13px;min-height:44px;padding:10px 14px}.badge{font-size:11px;min-height:27px;padding:5px 9px}.field label{font-size:12px;color:#344054}.field input,.field select{height:46px;font-size:14px;color:#101828}.employee-name{font-size:24px}.hello,.owner-kicker{font-size:13px}.hero-date{font-size:12px}.shift-banner .label{font-size:11px}.shift-banner .main{font-size:19px}.shift-banner .sub{font-size:12px}.clock{font-size:43px}.date{font-size:13px}.status-card b{font-size:12px}.status-card span{font-size:11px}.quick-title{font-size:14px}.quick-sub{font-size:11px}.schedule-toolbar .date-title b{font-size:17px}.schedule-toolbar .date-title span{font-size:12px}.day-cell .dow{font-size:10px}.day-cell .num{font-size:16px}.day-count{font-size:10px}.shift-card-title{font-size:17px}.shift-card-sub,.schedule-capacity{font-size:12px}.person-name{font-size:14px}.person-meta{font-size:11px}.person-status,.att-state{font-size:11px}.attendance-legend{font-size:11px}.schedule-page-head{align-items:flex-start}.employee-only-schedule{display:none}.schedule-request-actions{display:flex;gap:8px;overflow-x:auto;padding:0 0 10px;margin-top:-2px;scrollbar-width:none}.schedule-request-actions::-webkit-scrollbar{display:none}.request-chip{flex:0 0 auto;min-height:42px;padding:9px 12px;border-radius:12px;background:#fff;border:1px solid #d7e1ee;color:#344054;font-size:12px;font-weight:850;box-shadow:0 2px 8px rgba(16,24,40,.04)}.request-chip span{margin-right:5px;color:#126bd9}.registration-options-list{display:grid;gap:12px;max-height:64vh;overflow:auto}.registration-day{border:1px solid #e3e8ef;border-radius:16px;overflow:hidden}.registration-day-head{padding:11px 13px;background:#f7f9fc;border-bottom:1px solid #e3e8ef;display:flex;justify-content:space-between;align-items:center}.registration-day-head b{font-size:14px}.registration-day-head span{font-size:11px;color:#667085}.registration-shift{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 13px;border-top:1px solid #eef1f5}.registration-shift:first-child{border-top:0}.registration-shift-main{min-width:0}.registration-shift-time{font-size:15px;font-weight:900}.registration-shift-meta{font-size:12px;color:#667085;margin-top:3px}.registration-shift .btn{min-width:94px}.registration-empty{padding:16px;color:#667085;font-size:13px;text-align:center}.schedule-request-modal-grid{display:grid;gap:10px}.request-helper{padding:11px 12px;border-radius:12px;background:#f7f9fc;color:#475467;font-size:12px}.attendance-history-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}.attendance-history-list{display:grid;gap:8px;min-width:640px}.attendance-history-item{display:grid;grid-template-columns:1.05fr 1.35fr .75fr 1fr;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:12px 14px;box-shadow:var(--shadow)}.attendance-history-item b{font-size:14px}.attendance-history-item .history-label{font-size:11px;color:#667085;margin-top:3px}.attendance-history-item .history-value{font-size:13px;font-weight:850}.attendance-history-item .history-sub{font-size:11px;color:#667085;margin-top:3px}.attendance-history-item .history-metrics{text-align:right}.attendance-history-item .history-metrics .mini{font-size:11px;line-height:1.45}.owner-title{font-size:25px}.ov span{font-size:9px}
 @media(max-width:520px){.page-head{height:auto;min-height:78px}.page-title{font-size:24px}.card{padding:16px}.schedule-page-head{gap:8px}.schedule-page-head .page-title{font-size:23px}.schedule-page-head .btn{padding:9px 11px;min-height:42px}.schedule-request-actions{margin-top:2px}.employee-hero{padding-left:18px;padding-right:18px}.attendance-card{padding:17px 14px}.quick-card{height:104px;padding:13px}.quick-title{font-size:14px}.shift-card{padding:15px}.registration-options-list{max-height:68vh}.registration-shift{align-items:flex-start}.registration-shift .btn{min-width:88px}.attendance-history-list{min-width:620px}}
 @media(min-width:700px){.schedule-request-actions{max-width:900px}.attendance-history-list{min-width:0}.attendance-history-item{grid-template-columns:1.1fr 1.3fr .8fr 1fr}}
-</style></head><body>
+
+/* ==================== V22 MOBILE-FIRST VISUAL SYSTEM ==================== */
+:root{
+  --bg:#F4F6F8;
+  --surface:#FFFFFF;
+  --surface-2:#F8FAFC;
+  --ink:#17202B;
+  --ink-2:#344054;
+  --muted:#667085;
+  --muted-2:#98A2B3;
+  --line:#E4E7EC;
+  --primary:#146EF5;
+  --primary-dark:#0B57C7;
+  --primary-soft:#EAF2FF;
+  --success:#15803D;
+  --success-soft:#EAF7EF;
+  --warning:#B54708;
+  --warning-soft:#FFF4E8;
+  --danger:#B42318;
+  --danger-soft:#FDECEC;
+  --radius-sm:10px;
+  --radius-md:14px;
+  --radius-lg:18px;
+  --shadow-1:0 1px 2px rgba(16,24,40,.04),0 5px 16px rgba(16,24,40,.035);
+}
+html{background:var(--bg);font-size:16px}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;letter-spacing:-.01em}
+button,input,select{font-size:16px}
+button{-webkit-appearance:none;appearance:none}
+.app{max-width:760px;padding-bottom:92px}
+main{padding:0 16px 24px}
+.topbar{height:64px;padding:8px 16px;background:rgba(255,255,255,.94);border-bottom:1px solid var(--line);box-shadow:0 1px 0 rgba(16,24,40,.02);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.brand-mark{width:38px;height:38px;border-radius:11px;background:var(--primary);box-shadow:none;font-size:15px}
+.brand{font-size:15px;letter-spacing:-.25px}.sub{font-size:11px;color:var(--muted);font-weight:500}
+.page-head{height:auto;padding:22px 0 14px}.page-title{font-size:27px;line-height:1.12;letter-spacing:-.8px;font-weight:800}.page-sub{font-size:14px;line-height:1.45;color:var(--muted);margin-top:7px}
+.section-head{height:auto;margin:22px 0 10px}.section-head h2{font-size:17px;line-height:1.2;font-weight:800;letter-spacing:-.25px}
+.card,.item,.shift-item,.shift-card,.person-card,.device-card,.quick-card,.attendance-history-item{border:1px solid var(--line);box-shadow:var(--shadow-1);border-radius:var(--radius-md)}
+.card{padding:16px;margin-bottom:10px}
+.muted{font-size:13px;color:var(--muted)}.mini{font-size:12px;color:var(--muted)}
+.notice{min-height:44px;padding:11px 13px;border-radius:12px;font-size:13px;line-height:1.45;background:var(--surface-2);color:var(--ink-2)}
+.notice.ok{background:var(--success-soft);color:#126534}.notice.warn{background:var(--warning-soft);color:#9A3412}.notice.info{background:var(--primary-soft);color:#174EA6}
+.badge{min-height:28px;padding:5px 9px;font-size:11px;font-weight:800}.badge.ok{background:var(--success-soft);color:var(--success)}.badge.wait{background:#FFF5D6;color:#9A6700}.badge.bad{background:var(--danger-soft);color:var(--danger)}.badge.info{background:var(--primary-soft);color:#174EA6}
+.btn{min-height:44px;padding:0 14px;border-radius:11px;font-size:14px;font-weight:750;letter-spacing:-.1px}.btn.primary{background:var(--primary);box-shadow:0 4px 10px rgba(20,110,245,.16)}.btn.light{background:#F2F4F7;color:#344054}.btn.green{background:var(--success-soft);color:var(--success)}.btn.danger{background:var(--danger-soft);color:var(--danger)}
+.field{gap:6px}.field label{font-size:13px;color:#344054;font-weight:700}.field input,.field select{height:46px;border:1px solid #D0D5DD;border-radius:11px;padding:0 13px;font-size:16px;color:var(--ink);background:#fff}.field input:focus,.field select:focus{border-color:#84ADFF;box-shadow:0 0 0 3px rgba(20,110,245,.12)}
+/* Home */
+.employee-hero,.owner-hero{margin:0 -16px;background:var(--surface);color:var(--ink);border-radius:0 0 22px 22px;border-bottom:1px solid var(--line)}
+.employee-hero{height:auto;padding:20px 16px 18px}.hero-top{align-items:flex-start}.hello{font-size:14px;color:var(--muted);opacity:1}.employee-name{font-size:28px;line-height:1.08;font-weight:850;letter-spacing:-.9px;color:var(--ink);margin-top:4px}.hero-date{font-size:12px;color:var(--muted);opacity:1;max-width:150px;line-height:1.35}
+.shift-banner{margin-top:18px;height:auto;min-height:92px;padding:14px 15px;border-radius:14px;background:var(--primary-soft);border:1px solid #D5E5FF;color:var(--ink)}.shift-banner .label{font-size:11px;font-weight:800;letter-spacing:.05em;color:#4B6B9D;opacity:1}.shift-banner .main{font-size:19px;font-weight:850;margin-top:5px;color:#12315F}.shift-banner .sub{font-size:13px;color:#4B6280;margin-top:5px;line-height:1.35;white-space:normal;max-width:none}
+.attendance-wrap{margin-top:12px}.attendance-card{min-height:0;padding:18px 15px;border-radius:18px;border:1px solid var(--line);box-shadow:var(--shadow-1);background:var(--surface)}.clock{font-size:44px;line-height:48px;height:48px;font-weight:850;letter-spacing:-1.8px;color:var(--ink)}.date{height:auto;font-size:13px;color:var(--muted);margin-top:5px}.check-ring{width:154px;height:154px;margin:17px auto 14px;border:7px solid var(--primary-soft);background:#F8FBFF}.check-button{width:124px;height:124px;background:var(--primary);box-shadow:0 9px 22px rgba(20,110,245,.20);font-size:15px}.status-grid{gap:8px;margin-top:12px}.status-card{height:auto;min-height:64px;padding:11px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}.status-card b{font-size:13px}.status-card span{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}
+.quick-grid{gap:10px}.quick-card{height:104px;padding:13px;background:var(--surface);text-align:left;box-shadow:var(--shadow-1)}.quick-icon{width:36px;height:36px;border-radius:10px;background:var(--primary-soft);color:var(--primary);font-size:18px}.quick-title{font-size:14px;font-weight:800;margin-top:8px}.quick-sub{font-size:12px;color:var(--muted);margin-top:3px}
+/* Attendance history: deliberate horizontal data row */
+.attendance-history-scroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -2px;padding:0 2px 5px}.attendance-history-scroll::-webkit-scrollbar{display:none}.attendance-history-list{display:grid;gap:8px;min-width:620px}.attendance-history-item{grid-template-columns:1.05fr 1.25fr .8fr 1fr;gap:14px;min-height:76px;padding:13px 14px;background:#fff}.attendance-history-item b{font-size:14px}.attendance-history-item .history-label,.attendance-history-item .history-sub{font-size:12px;color:var(--muted);margin-top:4px}.attendance-history-item .history-value{font-size:13px;font-weight:800}.attendance-history-item .history-metrics{text-align:left}.attendance-history-item .history-metrics .mini{font-size:12px;line-height:1.5}
+/* Schedule */
+.schedule-toolbar{margin:2px 0 12px}.schedule-toolbar .date-title b{font-size:19px}.schedule-toolbar .date-title span{font-size:12px;margin-top:4px}.date-nav{gap:6px}.date-nav button{height:40px;width:40px;border-radius:10px;font-size:20px;background:#fff;border-color:var(--line)}.date-nav .today-btn{width:auto;padding:0 12px;font-size:12px;font-weight:750}.schedule-days{grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:0 0 14px}.schedule-days .arrow{display:none}.schedule-days .day-cell{height:72px;border-radius:12px;padding:9px 3px;background:#fff}.schedule-days .day-cell.selected{background:#EAF2FF;border-color:#79A9F7;box-shadow:inset 0 0 0 1px #9CC1FA}.day-cell .dow{font-size:11px;color:var(--muted);font-weight:750}.day-cell .num{font-size:19px;margin-top:5px}.day-cell .mark{font-size:10px;color:var(--primary);margin-top:4px}.shift-day-head{height:32px;margin-bottom:5px}.shift-day-title{font-size:14px}.shift-item{min-height:68px;padding:12px 13px}.shift-time{font-size:16px}.shift-meta{font-size:12px;margin-top:4px}.schedule-request-actions{gap:7px!important;margin:0 0 14px!important;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}.schedule-request-actions::-webkit-scrollbar{display:none}.request-chip{min-height:40px!important;padding:0 12px!important;border:1px solid #D0D5DD!important;background:#fff!important;border-radius:999px!important;color:#344054!important;font-size:13px!important;font-weight:700!important;white-space:nowrap}
+/* Admin */
+.admin-tabs{gap:7px;margin:0 0 12px;padding:2px 0 7px}.admin-tabs button{height:40px;border-radius:10px;padding:0 14px;font-size:13px;background:#fff;color:#475467;border-color:var(--line)}.admin-tabs button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.weekly-day-card,.settings-group{border-radius:14px;padding:13px;background:#FAFBFC}.weekly-day-title{font-size:14px}.weekly-day-sub{font-size:12px}.weekly-shift-row{grid-template-columns:minmax(0,1fr) 86px 40px;gap:8px}.weekly-shift-row .field label{font-size:11px}.weekly-shift-row .remove-weekly{width:40px;height:42px;border-radius:10px}
+/* Salary / profile */
+.salary-hero{height:auto;min-height:128px;border-radius:16px;padding:18px;background:var(--ink)}.salary-label{font-size:12px}.salary-value{font-size:31px;height:auto;margin-top:5px}.metric-grid{gap:9px}.metric{height:auto;min-height:86px;border-radius:13px;padding:13px}.metric .label{font-size:11px}.metric .value{font-size:19px}
+/* Bottom navigation */
+.bottom{height:78px;width:100%;padding:6px 8px calc(7px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--line);box-shadow:0 -5px 20px rgba(16,24,40,.05);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}.nav{min-height:54px;border-radius:12px;color:#667085;font-size:11px;font-weight:700;gap:4px}.nav .nav-ico{font-size:22px;line-height:22px}.nav.active{background:#EEF4FF;color:var(--primary);font-weight:800}
+/* Modals */
+.modal{background:rgba(16,24,40,.48);padding:12px}.modalbox{border-radius:20px;padding:18px;box-shadow:0 20px 60px rgba(16,24,40,.18)}.modalbox h2{font-size:20px}.modal-close{width:38px;height:38px;border-radius:11px;font-size:22px;background:#F2F4F7;color:#344054}
+/* touch + readability */
+.btn,.request-chip,.nav,.quick-card,.shift-item,.day-cell,.date-nav button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}.btn:active,.request-chip:active,.quick-card:active,.shift-item:active{transform:scale(.985)}
+@media(max-width:390px){main{padding-left:13px;padding-right:13px}.employee-hero,.owner-hero{margin-left:-13px;margin-right:-13px;padding-left:13px;padding-right:13px}.employee-name{font-size:25px}.page-title{font-size:25px}.clock{font-size:40px}.check-ring{width:144px;height:144px}.check-button{width:116px;height:116px}.schedule-days{gap:3px}.schedule-days .day-cell{height:68px}.day-cell .dow{font-size:10px}.day-cell .num{font-size:18px}.bottom{height:76px}}
+@media(min-width:700px){.app{max-width:760px}.employee-hero,.owner-hero{margin-left:-24px;margin-right:-24px;padding-left:24px;padding-right:24px}.bottom{width:min(760px,100%);border-radius:18px 18px 0 0}.attendance-history-list{min-width:0}}
+
+</style>
+<style id="hongcha-v2-design-system">
+/* HONGCHA HRM — DESIGN SYSTEM V2 IMPLEMENTATION
+   Visual-only layer. Business logic intentionally untouched. */
+:root{
+  --hc-bg:#f7f8fa;
+  --hc-surface:#ffffff;
+  --hc-text:#172033;
+  --hc-text-2:#667085;
+  --hc-text-3:#98a2b3;
+  --hc-border:#e6e8ec;
+  --hc-primary:#146ef5;
+  --hc-primary-soft:#edf4ff;
+  --hc-success:#16834a;
+  --hc-success-soft:#eaf8f0;
+  --hc-warning:#a96800;
+  --hc-warning-soft:#fff6df;
+  --hc-danger:#c93b3b;
+  --hc-danger-soft:#fff0f0;
+  --hc-radius:16px;
+  --hc-control-radius:12px;
+  --hc-page-x:20px;
+}
+html{background:var(--hc-bg)}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",system-ui,sans-serif !important;
+  background:var(--hc-bg) !important;
+  color:var(--hc-text) !important;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+button,input,select,textarea{font:inherit}
+button{min-height:44px}
+input,select,textarea{min-height:48px;border-radius:var(--hc-control-radius)!important}
+h1,h2,h3,h4,.title,.page-title{letter-spacing:-.02em}
+h1{font-size:28px!important;line-height:34px!important;font-weight:700!important}
+h2{font-size:24px!important;line-height:30px!important;font-weight:700!important}
+h3{font-size:17px!important;line-height:22px!important;font-weight:650!important}
+.hc-section-title,.section-title{
+  font-size:16px!important;line-height:22px!important;font-weight:650!important;
+  color:var(--hc-text)!important;
+}
+.card,.panel,.stat-card,.schedule-card,.attendance-card,.salary-card{
+  background:var(--hc-surface)!important;
+  border:1px solid var(--hc-border)!important;
+  box-shadow:none!important;
+  border-radius:var(--hc-radius)!important;
+}
+.primary,.btn-primary,.primary-btn{
+  background:var(--hc-primary)!important;
+  border-color:var(--hc-primary)!important;
+  border-radius:var(--hc-control-radius)!important;
+  min-height:52px!important;
+  font-size:16px!important;
+  font-weight:600!important;
+}
+.secondary,.btn-secondary,.secondary-btn{
+  border-radius:var(--hc-control-radius)!important;
+  min-height:48px!important;
+}
+.badge,.chip,.status-chip{
+  border-radius:999px!important;
+  font-size:13px!important;
+  font-weight:600!important;
+}
+hr,.divider{border-color:var(--hc-border)!important}
+table{font-variant-numeric:tabular-nums}
+.amount,.money,.time,.hours,.metric-value,.stat-value{
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
+}
+@media (max-width:600px){
+  main,.app-main,.page,.content,.view-content{padding-left:var(--hc-page-x)!important;padding-right:var(--hc-page-x)!important}
+  .card,.panel,.stat-card,.schedule-card,.attendance-card,.salary-card{margin-bottom:16px}
+  .grid,.cards-grid{gap:12px!important}
+  .modal,.dialog{border-radius:24px 24px 0 0!important}
+}
+@media (min-width:601px){
+  main,.app-main,.page,.content,.view-content{max-width:760px;margin-left:auto;margin-right:auto}
+}
+</style>
+
+</head><body>
 <div id="bootScreen"><div class="auth-card" style="text-align:center"><div class="auth-logo" style="margin:auto">H</div><div style="font-size:18px;font-weight:950;margin-top:12px">HongCha HRM</div><div class="muted" style="font-size:12px;margin-top:5px">Đang mở ứng dụng…</div></div></div>
 <div id="loginScreen" class="hidden"><div class="auth-card"><div class="auth-brand"><div class="auth-logo">H</div><div><div style="font-size:16px;font-weight:950">HongCha HRM</div><div class="muted" style="font-size:10px;margin-top:2px">Quản lý nhân sự & chấm công</div></div></div><h1>Chào mừng trở lại</h1><div class="desc">Đăng nhập để chấm công, xem lịch làm việc và theo dõi giờ công.</div><div class="login-toggle"><button id="loginModePassword" class="active" onclick="setLoginMode('password')">Mật khẩu</button><button id="loginModeOtp" onclick="setLoginMode('otp')">Email</button></div><div id="passwordLoginFields" class="stack"><div class="field"><label>Email</label><input id="loginEmail" type="email" autocomplete="username" placeholder="email của bạn"></div><div class="field"><label>Mật khẩu</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Mật khẩu"></div><button class="btn primary" style="width:100%" onclick="signIn()">Đăng nhập</button><button class="btn light" style="width:100%" onclick="sendResetPassword()">Quên mật khẩu</button></div><div id="otpLoginFields" class="stack" style="display:none"><div class="field"><label>Email</label><input id="loginEmailOtp" type="email" autocomplete="email" placeholder="email của bạn"></div><button class="btn primary" style="width:100%" onclick="sendMagicLink()">Gửi link đăng nhập</button><div class="notice info">Mở email và bấm link để đăng nhập nhanh. Không cần nhập mật khẩu.</div></div><div id="loginMsg" class="auth-msg"></div><div class="auth-foot">Tài khoản nhân viên chỉ sử dụng được trên thiết bị đã được cửa hàng phê duyệt.</div></div></div>
 <div id="app" class="app" style="display:none"><header class="topbar"><div class="topbar-inner"><div class="brand-row"><div class="brand-mark">H</div><div style="min-width:0"><div class="brand">HongCha HRM</div><div class="sub" id="roleLabel">—</div></div></div></div></header>
 <main>
-<section id="dashboard" class="view active"><div id="employeeHome"><div class="employee-hero"><div class="hero-top"><div><div class="hello" id="empGreeting">Chào buổi sáng</div><div class="employee-name" id="empName">Nhân viên</div></div><div class="hero-date" id="empToday">—</div></div><div class="shift-banner"><div class="label">TRẠNG THÁI CA</div><div class="main" id="empNextShift">Chưa có ca</div><div class="sub" id="empNextShiftSub">Vào Lịch để xem ca và đăng ký khi có ca trống.</div></div></div><div class="attendance-wrap"><div class="attendance-card"><div class="clock" id="homeClock">--:--</div><div class="date" id="homeDate">—</div><div class="check-ring"><button id="checkBtn" class="check-button" disabled onclick="punchAttendance()">CHECK-IN</button></div><div id="attendanceMsg" class="notice info">Đang kiểm tra trạng thái…</div><div class="status-grid"><div class="status-card"><b><span class="dot" id="homeGpsDot"></span>Vị trí</b><span id="homeGpsText">GPS sẽ được kiểm tra khi chấm công.</span></div><div class="status-card"><b><span class="dot" id="homeDeviceDot"></span>Thiết bị</b><span id="homeDeviceText">Đang kiểm tra</span></div></div></div></div><div class="section-head"><h2>Truy cập nhanh</h2></div><div class="quick-grid"><button class="quick-card" onclick="navigate('schedule')"><div class="quick-icon">▣</div><div class="quick-title">Đăng ký ca</div><div class="quick-sub">Chọn ca còn trống</div></button><button class="quick-card" onclick="navigate('schedule')"><div class="quick-icon">◫</div><div class="quick-title">Lịch tuần</div><div class="quick-sub">Xem lịch đã được xếp</div></button><button class="quick-card" onclick="navigate('salary')"><div class="quick-icon">₫</div><div class="quick-title">Giờ công & lương</div><div class="quick-sub">Theo dõi thu nhập</div></button><button class="quick-card" onclick="openProfileFromHeader()"><div class="quick-icon">●</div><div class="quick-title">Tài khoản</div><div class="quick-sub">Hồ sơ & mật khẩu</div></button></div><div class="section-head"><h2>Chấm công gần đây</h2></div><div id="attendanceHistory"><div class="empty">Chưa có dữ liệu.</div></div></div>
+<section id="dashboard" class="view active"><div id="employeeHome"><div class="employee-hero"><div class="hero-top"><div><div class="hello" id="empGreeting">Chào buổi sáng</div><div class="employee-name" id="empName">Nhân viên</div></div><div class="hero-date" id="empToday">—</div></div><div class="shift-banner"><div class="label">TRẠNG THÁI CA</div><div class="main" id="empNextShift">Chưa có ca</div><div class="sub" id="empNextShiftSub">Vào Lịch để xem ca và đăng ký khi có ca trống.</div></div></div><div class="attendance-wrap"><div class="attendance-card"><div class="clock" id="homeClock">--:--</div><div class="date" id="homeDate">—</div><div class="check-ring"><button id="checkBtn" class="check-button" disabled onclick="punchAttendance()">CHECK-IN</button></div><div id="attendanceMsg" class="notice info">Đang kiểm tra trạng thái…</div><div class="status-grid"><div class="status-card"><b><span class="dot" id="homeGpsDot"></span>Vị trí</b><span id="homeGpsText">GPS sẽ được kiểm tra khi chấm công.</span></div><div class="status-card"><b><span class="dot" id="homeDeviceDot"></span>Thiết bị</b><span id="homeDeviceText">Đang kiểm tra</span></div></div></div></div><div class="section-head"><h2>Thao tác nhanh</h2></div><div class="quick-grid"><button class="quick-card" onclick="navigate('schedule')"><div class="quick-icon">▣</div><div class="quick-title">Đăng ký ca</div><div class="quick-sub">Chọn ca còn trống</div></button><button class="quick-card" onclick="navigate('schedule')"><div class="quick-icon">◫</div><div class="quick-title">Lịch tuần</div><div class="quick-sub">Xem lịch đã được xếp</div></button><button class="quick-card" onclick="navigate('salary')"><div class="quick-icon">₫</div><div class="quick-title">Giờ công & lương</div><div class="quick-sub">Theo dõi thu nhập</div></button><button class="quick-card" onclick="openProfileFromHeader()"><div class="quick-icon">●</div><div class="quick-title">Tài khoản</div><div class="quick-sub">Hồ sơ & mật khẩu</div></button></div><div class="section-head"><h2>Chấm công gần đây</h2></div><div id="attendanceHistory"><div class="empty">Chưa có dữ liệu.</div></div></div>
 <div id="ownerHome" style="display:none"><div class="owner-hero"><div class="owner-kicker" id="ownerGreeting">Chào buổi sáng</div><div class="owner-title">Xin chào, <span id="ownerName">Chủ quán</span></div><div class="owner-store">● <span id="ownerStoreName">Trà Sữa HongCha</span></div><div class="owner-overview"><div class="ov"><b id="statShift">0</b><span>CA HÔM NAY</span></div><div class="ov"><b id="statPending">0</b><span>CHỜ DUYỆT</span></div><div class="ov"><b id="statEmployees">0</b><span>NHÂN VIÊN</span></div><div class="ov"><b id="statLate">0</b><span>ĐI MUỘN</span></div></div></div><div class="section-head"><h2>Việc cần xử lý</h2><button class="text-link" onclick="navigate('admin')">Xem tất cả</button></div><div id="ownerPending" class="stack"></div><div class="section-head"><h2>Quản lý nhanh</h2></div><div class="owner-actions"><button class="owner-action" onclick="navigate('admin');adminTab('employees',document.querySelector('#admin .admin-tabs button'))"><div class="ico">👥</div><b>Nhân viên</b><span>Hồ sơ, trạng thái & đơn giá giờ</span></button><button class="owner-action" onclick="navigate('admin');adminTab('schedules',document.querySelectorAll('#admin .admin-tabs button')[2])"><div class="ico">🗓</div><b>Thiết lập lịch tuần</b><span>Cài mẫu tuần và mở đăng ký</span></button><button class="owner-action" onclick="navigate('admin');adminTab('registrations',document.querySelectorAll('#admin .admin-tabs button')[3])"><div class="ico">✓</div><b>Duyệt đăng ký</b><span>Phê duyệt ca của nhân viên</span></button><button class="owner-action" onclick="navigate('admin');adminTab('devices',document.querySelectorAll('#admin .admin-tabs button')[6])"><div class="ico">📱</div><b>Thiết bị</b><span>Duyệt thiết bị đăng nhập</span></button></div></div></section>
 <section id="schedule" class="view"><div class="page-head"><div class="row schedule-page-head"><div><h1 class="page-title">Lịch làm việc</h1><div class="page-sub" id="schedulePageSub">Chọn ngày để xem đúng các ca của ngày đó.</div></div><button id="scheduleRegisterBtn" class="btn primary employee-only-schedule" type="button" onclick="openRegistrationOptions()">＋ Đăng ký ca</button></div><div id="employeeScheduleRequests" class="schedule-request-actions employee-only-schedule"><button type="button" class="request-chip" onclick="openScheduleRequestModal('late')"><span>⏱</span> Xin đi trễ</button><button type="button" class="request-chip" onclick="openScheduleRequestModal('emergency_leave')"><span>⚠</span> Xin nghỉ đột xuất</button><button type="button" class="request-chip" onclick="openScheduleRequestModal('swap')"><span>⇄</span> Xin đổi ca</button></div></div><div class="schedule-toolbar"><div class="date-title"><b id="mainScheduleSelectedDateTitle">—</b><span id="mainScheduleSelectedDateSub">—</span></div><div class="date-nav"><button class="date-arrow" type="button" aria-label="Tuần trước" onclick="prevMainScheduleDays()">‹</button><button class="today-btn" type="button" onclick="goMainScheduleToday()">Hôm nay</button><button class="date-arrow" type="button" aria-label="Tuần sau" onclick="nextMainScheduleDays()">›</button></div></div><div class="schedule-days" id="mainScheduleDayStrip"></div><div id="mainScheduleList"><div class="empty">Đang tải lịch…</div></div></section>
 <section id="salary" class="view"><div class="page-head"><h1 class="page-title">Giờ công & lương</h1><div class="page-sub">Tổng hợp theo giờ công đã được ghi nhận.</div></div><div class="salary-hero"><div class="salary-label">LƯƠNG TẠM TÍNH THÁNG NÀY</div><div class="salary-value" id="salaryHero">0đ</div><div style="font-size:10px;opacity:.75;margin-top:4px">Chưa bao gồm các khoản điều chỉnh chưa chốt.</div></div><div class="metric-grid" style="margin-top:10px"><div class="metric"><b id="salaryHoursBig">0h</b><span>Giờ công</span></div><div class="metric"><b id="salaryRateBig">—</b><span>Đơn giá/giờ</span></div></div><div class="card" style="margin-top:12px"><div class="row"><span>Đơn giá giờ</span><b id="hourly">—</b></div><hr><div class="row"><span>Giờ công kỳ này</span><b id="salaryHours">0 giờ</b></div><hr><div class="row"><span>Thưởng / phạt / ứng</span><b>Đang cập nhật</b></div><hr><div class="row"><b>Lương tạm tính</b><b id="salaryNet">—</b></div></div></section>
