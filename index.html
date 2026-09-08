@@ -1,688 +1,805 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#ffffff">
-<meta name="color-scheme" content="light">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="AWAN HRM">
-<title>AWAN HRM · Mobile App</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AWAN HRM - Chấm Công & Quản Lý</title>
+  <style>
+    /* ==========================================
+       1. CẤU HÌNH BIẾN & CHỦ ĐỀ (THEME)
+       ========================================== */
+    :root {
+      --primary: #2563eb;          /* Xanh dương chủ đạo */
+      --primary-dark: #1d4ed8;
+      --primary-light: #eff6ff;
+      --primary-border: #bfdbfe;
+      --bg-page: #f8fafc;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-sub: #64748b;
+      --border: #e2e8f0;
+      --success-bg: #f0fdf4;
+      --success-text: #166534;
+      --warning-bg: #fef3c7;
+      --warning-text: #92400e;
+      --danger: #ef4444;
+      --radius: 12px;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
 
-<style>
-/* ==================== NATIVE MOBILE UI SYSTEM ==================== */
-:root {
-  --bg: #F4F6F9;
-  --surface: #FFFFFF;
-  --surface-hover: #F8FAFC;
-  --ink: #0F172A;
-  --muted: #64748B;
-  --line: #E2E8F0;
-  --primary: #2563EB;
-  --primary-dark: #1D4ED8;
-  --primary-soft: #EFF6FF;
-  --success: #10B981;
-  --success-soft: #ECFDF5;
-  --warning: #F59E0B;
-  --warning-soft: #FFFBEB;
-  --danger: #EF4444;
-  --danger-soft: #FEF2F2;
-  --radius-sm: 12px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
-  --shadow-float: 0 12px 32px rgba(15, 23, 42, 0.08);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { 
-  margin: 0; min-height: 100%; background: var(--bg); color: var(--ink);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
-  -webkit-font-smoothing: antialiased; overscroll-behavior-y: none; font-size: 15px;
-}
-button, input, select { font: inherit; outline: none; }
-button { border: none; cursor: pointer; background: none; padding: 0; }
-button:disabled { opacity: 0.5; cursor: not-allowed; }
-button:active:not(:disabled) { transform: scale(0.97); transition: transform 0.1s; }
+    body {
+      background-color: #cbd5e1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
 
-/* AUTH SCREENS */
-#bootScreen, #loginScreen {
-  position: fixed; inset: 0; z-index: 100; background: var(--bg);
-  display: flex; align-items: center; justify-content: center; padding: 24px;
-}
-#bootScreen.hidden, #loginScreen.hidden { display: none; }
-.auth-card {
-  width: 100%; max-width: 400px; background: var(--surface); border-radius: var(--radius-lg);
-  padding: 32px 24px; box-shadow: var(--shadow-float); text-align: center;
-}
-.auth-logo {
-  width: 64px; height: 64px; border-radius: 20px; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: #fff; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; margin: 0 auto 16px;
-}
-.auth-card h1 { font-size: 24px; margin: 0 0 8px; font-weight: 800; letter-spacing: -0.5px; }
-.auth-card .desc { color: var(--muted); font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
+    /* Khung ứng dụng Mobile (Max-width 480px) */
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      background: var(--bg-page);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      padding-bottom: 70px; /* Nhường chỗ cho Bottom Nav */
+    }
 
-.login-toggle { display: flex; background: var(--bg); border-radius: 14px; padding: 4px; margin-bottom: 20px; }
-.login-toggle button {
-  flex: 1; height: 40px; border-radius: 10px; font-size: 13px; font-weight: 600; color: var(--muted);
-}
-.login-toggle button.active { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm); }
+    /* ==========================================
+       2. HEADER HỆ THỐNG
+       ========================================== */
+    .app-header {
+      background: var(--bg-card);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-/* APP LAYOUT */
-.app { display: none; max-width: 600px; margin: 0 auto; min-height: 100vh; padding-bottom: calc(80px + var(--safe-bottom)); }
-.app.ready { display: block; }
+    .avatar {
+      width: 38px;
+      height: 38px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+    }
 
-.topbar {
-  position: sticky; top: 0; z-index: 50; height: 60px; padding: 0 16px;
-  background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--line); display: flex; align-items: center;
-}
-.brand-row { display: flex; align-items: center; gap: 12px; }
-.brand-mark {
-  width: 36px; height: 36px; border-radius: 10px; background: var(--primary);
-  color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 16px;
-}
-.brand { font-size: 15px; font-weight: 700; }
-.sub { font-size: 12px; color: var(--muted); }
+    .header-info h1 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
 
-main { padding: 16px; }
-.view { display: none; animation: fadeUp 0.3s ease-out; }
-.view.active { display: block; }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .header-info p {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
 
-/* TYPOGRAPHY & HEADERS */
-.page-head { padding: 8px 0 20px; }
-.page-title { font-size: 28px; font-weight: 800; margin: 0; letter-spacing: -0.5px; }
-.page-sub { font-size: 14px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
-.section-head { display: flex; justify-content: space-between; align-items: center; margin: 24px 0 12px; }
-.section-head h2 { font-size: 18px; font-weight: 700; margin: 0; }
-.text-link { color: var(--primary); font-size: 13px; font-weight: 600; }
+    /* ==========================================
+       3. BỐ CỤC CHÍNH & TABS CONTENT
+       ========================================== */
+    .app-body {
+      padding: 16px;
+      flex: 1;
+    }
 
-/* CARDS & CONTAINERS */
-.card {
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md);
-  padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow-sm);
-}
-.row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.stack { display: grid; gap: 12px; }
-hr { border: none; border-top: 1px solid var(--line); margin: 16px 0; }
+    .tab-view {
+      display: none;
+    }
 
-/* FORMS & BUTTONS */
-.field { display: grid; gap: 6px; text-align: left; }
-.field label { font-size: 13px; font-weight: 600; color: var(--ink); }
-.field input, .field select {
-  width: 100%; height: 48px; border: 1px solid var(--line); border-radius: var(--radius-sm);
-  padding: 0 16px; font-size: 15px; background: var(--surface); transition: border-color 0.2s;
-}
-.field input:focus, .field select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
-.formgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.full { grid-column: 1 / -1; }
+    .tab-view.active {
+      display: block;
+    }
 
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  height: 48px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; padding: 0 20px; transition: all 0.2s;
-}
-.btn.primary { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
-.btn.light { background: #F1F5F9; color: var(--ink); }
-.btn.green { background: var(--success-soft); color: var(--success); }
-.btn.danger { background: var(--danger-soft); color: var(--danger); }
+    /* Card chung */
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
 
-/* NOTICES & BADGES */
-.notice { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; line-height: 1.5; background: var(--surface-hover); }
-.notice.info { background: var(--primary-soft); color: var(--primary-dark); }
-.notice.ok { background: var(--success-soft); color: #065F46; }
-.notice.warn { background: var(--warning-soft); color: #92400E; }
-.badge { padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; background: var(--surface-hover); color: var(--muted); }
-.badge.ok { background: var(--success-soft); color: var(--success); }
-.badge.bad { background: var(--danger-soft); color: var(--danger); }
-.badge.info { background: var(--primary-soft); color: var(--primary); }
+    /* Text Truncate (Cắt chữ tự động) */
+    .truncate {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
 
-/* DASHBOARD COMPONENTS */
-.employee-hero, .owner-hero { margin: -16px -16px 16px; padding: 24px 16px; background: var(--surface); border-bottom: 1px solid var(--line); }
-.hero-top { display: flex; justify-content: space-between; align-items: flex-start; }
-.hello { font-size: 14px; color: var(--muted); }
-.employee-name { font-size: 26px; font-weight: 800; margin-top: 4px; letter-spacing: -0.5px; }
-.hero-date { font-size: 13px; color: var(--muted); text-align: right; }
+    /* ==========================================
+       4. GIAO DIỆN CHẤM CÔNG (TAB TRANG CHỦ)
+       ========================================== */
+    .user-greeting {
+      font-size: 12px;
+      color: var(--text-sub);
+    }
 
-.shift-banner {
-  margin-top: 20px; padding: 16px; border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; box-shadow: var(--shadow-md);
-}
-.shift-banner .label { font-size: 11px; font-weight: 700; opacity: 0.8; letter-spacing: 0.5px; }
-.shift-banner .main { font-size: 20px; font-weight: 700; margin-top: 4px; }
-.shift-banner .sub { font-size: 13px; opacity: 0.9; margin-top: 6px; line-height: 1.4; }
+    .user-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
 
-/* CHECK-IN RING */
-.attendance-card { text-align: center; padding: 24px 16px; }
-.clock { font-size: 48px; font-weight: 800; letter-spacing: -1.5px; font-variant-numeric: tabular-nums; }
-.date { font-size: 14px; color: var(--muted); margin-top: 4px; }
-.check-ring {
-  width: 160px; height: 160px; margin: 24px auto; border-radius: 50%;
-  border: 8px solid var(--primary-soft); display: grid; place-items: center; background: #fff;
-}
-.check-button {
-  width: 124px; height: 124px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: #fff; font-size: 16px; font-weight: 800; box-shadow: 0 12px 28px rgba(37, 99, 235, 0.3);
-}
-.status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; text-align: left; }
-.status-card { padding: 12px; background: var(--bg); border-radius: var(--radius-sm); }
-.status-card b { display: flex; align-items: center; font-size: 13px; gap: 6px; }
-.status-card span { display: block; font-size: 12px; color: var(--muted); margin-top: 4px; }
-.dot { width: 8px; height: 8px; border-radius: 50%; background: #CBD5E1; }
-.dot.ok { background: var(--success); }
-.dot.bad { background: var(--danger); }
+    /* Khung trạng thái ca */
+    .shift-status-card {
+      background: var(--primary);
+      color: #fff;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+    }
 
-/* QUICK ACTIONS */
-.quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.quick-card {
-  padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md);
-  text-align: left; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 8px;
-}
-.quick-icon {
-  width: 40px; height: 40px; border-radius: 12px; background: var(--primary-soft);
-  color: var(--primary); display: grid; place-items: center; font-size: 20px;
-}
-.quick-title { font-size: 14px; font-weight: 700; }
-.quick-sub { font-size: 12px; color: var(--muted); }
+    .shift-status-card .label {
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      opacity: 0.9;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
 
-/* OWNER DASHBOARD */
-.owner-title { font-size: 26px; font-weight: 800; margin-top: 4px; }
-.owner-store {
-  display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
-  background: var(--bg); border-radius: 100px; font-size: 12px; font-weight: 600; margin-top: 12px;
-}
-.owner-overview { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
-.ov { padding: 16px; background: var(--bg); border-radius: var(--radius-sm); border: 1px solid var(--line); }
-.ov b { display: block; font-size: 24px; font-weight: 800; }
-.ov span { display: block; font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 4px; }
-.owner-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.owner-action {
-  padding: 16px; background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--radius-md); text-align: left; box-shadow: var(--shadow-sm);
-}
-.owner-action .ico { font-size: 24px; margin-bottom: 8px; }
-.owner-action b { display: block; font-size: 14px; font-weight: 700; }
-.owner-action span { display: block; font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .shift-status-card .time {
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
 
-/* SCHEDULE STRIP */
-.schedule-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.date-nav { display: flex; gap: 8px; }
-.date-nav button {
-  width: 40px; height: 40px; border-radius: var(--radius-sm); background: var(--surface);
-  border: 1px solid var(--line); font-size: 18px; font-weight: 600;
-}
-.date-nav .today-btn { width: auto; padding: 0 16px; font-size: 13px; }
-.schedule-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 16px; }
-.day-cell {
-  height: 72px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;
-}
-.day-cell.selected { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
-.day-cell .dow { font-size: 11px; font-weight: 600; color: var(--muted); }
-.day-cell.selected .dow, .day-cell.selected .mark { color: rgba(255,255,255,0.9); }
-.day-cell .num { font-size: 18px; font-weight: 800; margin-top: 4px; }
+    /* Đồng hồ & Nút Check-in/Check-out */
+    .clock-container {
+      text-align: center;
+      padding: 12px 0;
+    }
 
-/* SHIFT CARDS */
-.shift-card, .shift-item, .attendance-history-item {
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md);
-  padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow-sm);
-}
-.shift-card-title { font-size: 16px; font-weight: 700; }
-.shift-card-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
-.person-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); margin-top: 12px; }
-.person-avatar {
-  width: 40px; height: 40px; border-radius: 50%; background: var(--bg);
-  display: grid; place-items: center; font-weight: 700; color: var(--muted); flex-shrink: 0;
-}
+    .live-time {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
 
-/* SALARY HERO */
-.salary-hero {
-  background: linear-gradient(135deg, var(--ink), #1E293B); color: #fff;
-  border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-float);
-}
-.salary-label { font-size: 12px; opacity: 0.8; font-weight: 600; }
-.salary-value { font-size: 36px; font-weight: 800; margin-top: 8px; letter-spacing: -1px; }
+    .live-date {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-bottom: 20px;
+    }
 
-/* ADMIN TABS */
-.admin-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 16px; margin: 0 -16px; padding: 0 16px 16px; scrollbar-width: none; }
-.admin-tabs::-webkit-scrollbar { display: none; }
-.admin-tabs button {
-  white-space: nowrap; height: 40px; padding: 0 16px; border-radius: 100px;
-  background: var(--surface); border: 1px solid var(--line); font-size: 13px; font-weight: 600; color: var(--muted);
-}
-.admin-tabs button.active { background: var(--ink); color: #fff; border-color: var(--ink); }
-.admin-pane { display: none; }
-.admin-pane.active { display: block; }
+    .btn-checkout-circle {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+      transition: transform 0.15s ease, background 0.2s ease;
+    }
 
-/* MODALS */
-.modal {
-  position: fixed; inset: 0; z-index: 100; display: none; background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(4px); align-items: flex-end; justify-content: center;
-}
-.modal.open { display: flex; animation: fadeIn 0.2s; }
-.modalbox {
-  width: 100%; max-width: 600px; background: var(--surface); border-radius: 24px 24px 0 0;
-  padding: 24px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.modal-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-.modal-head h2 { font-size: 20px; font-weight: 800; margin: 0; }
-.modal-close {
-  width: 36px; height: 36px; border-radius: 50%; background: var(--bg);
-  display: grid; place-items: center; font-size: 20px; font-weight: 600; color: var(--muted);
-}
+    .btn-checkout-circle:active {
+      transform: scale(0.94);
+      background: var(--primary-dark);
+    }
 
-/* BOTTOM NAVIGATION */
-.bottom {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 80; height: calc(64px + var(--safe-bottom));
-  background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(4, 1fr);
-  padding-bottom: var(--safe-bottom); max-width: 600px; margin: 0 auto;
-}
-.nav {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-  color: var(--muted); font-size: 11px; font-weight: 600;
-}
-.nav .nav-ico { font-size: 24px; margin-bottom: 2px; }
-.nav.active { color: var(--primary); }
-.nav.hidden { display: none; }
+    /* Status badge */
+    .status-banner {
+      background: var(--success-bg);
+      color: var(--success-text);
+      font-size: 12px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      text-align: center;
+      margin-top: 16px;
+      font-weight: 500;
+    }
 
-/* UTILS */
-.empty { padding: 32px 16px; text-align: center; color: var(--muted); background: var(--bg); border-radius: var(--radius-md); font-size: 14px; border: 1px dashed #CBD5E1; }
-.muted { color: var(--muted); }
-.schedule-request-actions { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none; }
-.request-chip { flex: 0 0 auto; height: 40px; padding: 0 16px; border-radius: 100px; background: var(--surface); border: 1px solid var(--line); font-size: 13px; font-weight: 600; }
-</style>
+    /* Thao tác nhanh Grid */
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 20px 0 12px 0;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .quick-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    .quick-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .quick-info h4 {
+      font-size: 13px;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .quick-info p {
+      font-size: 10.5px;
+      color: var(--text-sub);
+    }
+
+    /* ==========================================
+       5. GIAO DIỆN LỊCH LÀM VIỆC (TAB LỊCH)
+       ========================================== */
+    .action-pills {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+    .pill-btn {
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .pill-btn.primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Thanh chọn ngày */
+    .calendar-strip {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin: 12px 0;
+    }
+
+    .day-item {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 0;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .day-item.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .day-item .day-name { font-size: 10px; opacity: 0.8; }
+    .day-item .day-num { font-size: 15px; font-weight: 700; margin: 2px 0; }
+    .day-item .day-sub { font-size: 9px; opacity: 0.8; }
+
+    /* Empty state */
+    .empty-box {
+      background: #f8fafc;
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      color: var(--text-sub);
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+
+    /* ==========================================
+       6. GIAO DIỆN QUẢN TRỊ (TAB QUẢN TRỊ)
+       ========================================== */
+    .admin-subnav {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      margin-bottom: 16px;
+      padding-bottom: 4px;
+    }
+
+    .subnav-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: #f1f5f9;
+      color: var(--text-sub);
+      font-size: 12px;
+      border: none;
+      white-space: nowrap;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .subnav-btn.active {
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Thẻ thống kê Dashboard (Căn giữa) */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      text-align: center; /* Căn giữa chỉ số */
+      box-shadow: var(--shadow);
+    }
+
+    .stat-card .num {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .stat-card .label {
+      font-size: 10px;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* Bảng nhân viên (Tối ưu Truncate email) */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 8px;
+      color: var(--text-sub);
+      font-size: 11px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+    }
+
+    .user-email-text {
+      max-width: 130px;
+      color: var(--text-sub);
+      font-size: 11px;
+    }
+
+    /* Card thiết lập ca (Sửa lỗi chữ x) */
+    .shift-edit-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .shift-edit-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .shift-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .btn-delete-shift {
+      background: #fee2e2;
+      color: var(--danger);
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-bottom: 4px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+    }
+
+    /* ==========================================
+       7. BOTTOM NAVIGATION BAR
+       ========================================== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 480px;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0;
+      z-index: 1000;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-sub);
+      font-size: 10px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 25%;
+    }
+
+    .nav-item .icon {
+      font-size: 18px;
+      margin-bottom: 2px;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+      font-weight: 700;
+    }
+  </style>
 </head>
-
 <body>
-<div id="bootScreen"><div class="auth-card"><div class="auth-logo">A</div><h1 style="font-size:22px;">AWAN HRM</h1><div class="muted" style="font-size:14px;margin-top:8px">Đang mở ứng dụng…</div></div></div>
 
-<div id="loginScreen" class="hidden">
-  <div class="auth-card">
-    <div class="auth-logo">A</div>
-    <h1>Chào mừng trở lại</h1>
-    <div class="desc">Đăng nhập để chấm công, xem lịch làm việc tại Tiệm Trà AWAN.</div>
-    <div class="login-toggle">
-      <button id="loginModePassword" class="active" onclick="setLoginMode('password')">Mật khẩu</button>
-      <button id="loginModeOtp" onclick="setLoginMode('otp')">Email</button>
-    </div>
+  <div class="app-container">
     
-    <div id="passwordLoginFields" class="stack">
-      <div class="field">
-        <label>Email</label>
-        <input id="loginEmail" type="email" autocomplete="username" placeholder="Nhập email của bạn">
+    <!-- HEADER HỆ THỐNG -->
+    <header class="app-header">
+      <div class="avatar">A</div>
+      <div class="header-info">
+        <h1>AWAN HRM</h1>
+        <p id="header-role">Nhân viên / Tiệm Trà AWAN</p>
       </div>
-      <div class="field">
-        <label>Mật khẩu</label>
-        <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu">
-      </div>
-      <button class="btn primary" style="width:100%" onclick="signIn()">Đăng nhập</button>
-      <button class="btn light" style="width:100%" onclick="sendResetPassword()">Quên mật khẩu</button>
-    </div>
-    
-    <div id="otpLoginFields" class="stack" style="display:none">
-      <div class="field">
-        <label>Email</label>
-        <input id="loginEmailOtp" type="email" autocomplete="email" placeholder="Nhập email của bạn">
-      </div>
-      <button class="btn primary" style="width:100%" onclick="sendMagicLink()">Gửi link đăng nhập</button>
-      <div class="notice info">Mở email và bấm link để đăng nhập nhanh. Không cần nhập mật khẩu.</div>
-    </div>
-    <div id="loginMsg" class="auth-msg" style="margin-top: 12px; font-size: 13px;"></div>
-  </div>
-</div>
+    </header>
 
-<div id="app" class="app">
-  <header class="topbar">
-    <div class="brand-row">
-      <div class="brand-mark">A</div>
-      <div>
-        <div class="brand">AWAN HRM</div>
-        <div class="sub" id="roleLabel">—</div>
-      </div>
-    </div>
-  </header>
+    <!-- NỘI DUNG ỨNG DỤNG -->
+    <main class="app-body">
 
-  <main>
-    <section id="dashboard" class="view active">
-      <div id="employeeHome">
-        <div class="employee-hero">
-          <div class="hero-top">
-            <div>
-              <div class="hello" id="empGreeting">Chào buổi sáng</div>
-              <div class="employee-name" id="empName">Nhân viên</div>
-            </div>
-            <div class="hero-date" id="empToday">—</div>
-          </div>
-          <div class="shift-banner">
-            <div class="label">TRẠNG THÁI CA</div>
-            <div class="main" id="empNextShift">Chưa có ca</div>
-            <div class="sub" id="empNextShiftSub">Vào Lịch để xem ca và đăng ký khi có ca trống.</div>
-          </div>
+      <!-- ================= TAB 1: TRANG CHỦ / CHẤM CÔNG ================= -->
+      <section id="tab-home" class="tab-view active">
+        <div class="user-greeting">Chào buổi tối</div>
+        <div class="user-name">Nhân Viên Test</div>
+
+        <!-- Khung trạng thái ca (Đã sửa lỗi TRẠNG THÁI CA) -->
+        <div class="shift-status-card">
+          <div class="label">Trạng thái ca</div>
+          <div class="time">15:00 – 22:00</div>
         </div>
-        
-        <div class="attendance-wrap">
-          <div class="attendance-card card">
-            <div class="clock" id="homeClock">--:--</div>
-            <div class="date" id="homeDate">—</div>
-            <div class="check-ring">
-              <button id="checkBtn" class="check-button" disabled onclick="punchAttendance()">CHECK-IN</button>
-            </div>
-            <div id="attendanceMsg" class="notice info" style="margin-bottom:12px;">Đang kiểm tra trạng thái…</div>
-            <div class="status-grid">
-              <div class="status-card">
-                <b><span class="dot" id="homeGpsDot"></span>Vị trí</b>
-                <span id="homeGpsText">GPS sẽ được kiểm tra khi chấm công.</span>
-              </div>
-              <div class="status-card">
-                <b><span class="dot" id="homeDeviceDot"></span>Thiết bị</b>
-                <span id="homeDeviceText">Đang kiểm tra</span>
-              </div>
-            </div>
+
+        <!-- Khung Chấm công & Đồng hồ -->
+        <div class="card clock-container">
+          <div class="live-time" id="clock-display">19:53:14</div>
+          <div class="live-date">Thứ Ba, 08/09/2026</div>
+
+          <button class="btn-checkout-circle" id="check-btn" onclick="toggleCheckIn()">
+            CHECK-OUT
+          </button>
+
+          <div class="status-banner">
+            Đã check-in lúc 15:34 · Trễ 34 phút
           </div>
         </div>
 
-        <div class="section-head"><h2>Thao tác nhanh</h2></div>
+        <!-- Thao tác nhanh -->
+        <div class="section-title">Thao tác nhanh</div>
         <div class="quick-grid">
-          <button class="quick-card" onclick="navigate('schedule')">
-            <div class="quick-icon">▣</div>
-            <div class="quick-title">Đăng ký ca</div>
-            <div class="quick-sub">Chọn ca còn trống</div>
-          </button>
-          <button class="quick-card" onclick="navigate('schedule')">
-            <div class="quick-icon">◫</div>
-            <div class="quick-title">Lịch tuần</div>
-            <div class="quick-sub">Xem lịch đã được xếp</div>
-          </button>
-          <button class="quick-card" onclick="navigate('salary')">
-            <div class="quick-icon">₫</div>
-            <div class="quick-title">Giờ công & lương</div>
-            <div class="quick-sub">Theo dõi thu nhập</div>
-          </button>
-          <button class="quick-card" onclick="openProfileFromHeader()">
-            <div class="quick-icon">●</div>
-            <div class="quick-title">Tài khoản</div>
-            <div class="quick-sub">Hồ sơ & mật khẩu</div>
-          </button>
-        </div>
-
-        <div class="section-head"><h2>Chấm công gần đây</h2></div>
-        <div id="attendanceHistory">
-          <div class="empty">Chưa có dữ liệu.</div>
-        </div>
-      </div>
-
-      <div id="ownerHome" style="display:none">
-        <div class="owner-hero">
-          <div class="hello" id="ownerGreeting">Chào buổi sáng</div>
-          <div class="owner-title">Xin chào, <span id="ownerName">Chủ quán</span></div>
-          <div class="owner-store">📍 <span id="ownerStoreName">Tiệm Trà AWAN</span></div>
-          <div class="owner-overview">
-            <div class="ov"><b id="statShift">0</b><span>CA HÔM NAY</span></div>
-            <div class="ov"><b id="statPending">0</b><span>CHỜ DUYỆT</span></div>
-            <div class="ov"><b id="statEmployees">0</b><span>NHÂN VIÊN</span></div>
-            <div class="ov"><b id="statLate">0</b><span>ĐI MUỘN</span></div>
+          <div class="quick-item" onclick="switchMainTab('tab-schedule')">
+            <div class="quick-icon">📅</div>
+            <div class="quick-info">
+              <h4>Đăng ký ca</h4>
+              <p>Chọn ca còn trống</p>
+            </div>
+          </div>
+          <div class="quick-item" onclick="switchMainTab('tab-schedule')">
+            <div class="quick-icon">📋</div>
+            <div class="quick-info">
+              <h4>Lịch tuần</h4>
+              <p>Xem lịch đã duyệt</p>
+            </div>
+          </div>
+          <div class="quick-item">
+            <div class="quick-icon">💰</div>
+            <div class="quick-info">
+              <h4>Giờ công & Lương</h4>
+              <p>Theo dõi thu nhập</p>
+            </div>
+          </div>
+          <div class="quick-item">
+            <div class="quick-icon">👤</div>
+            <div class="quick-info">
+              <h4>Tài khoản</h4>
+              <p>Hồ sơ & Đổi mật khẩu</p>
+            </div>
           </div>
         </div>
+      </section>
 
-        <div class="section-head">
-          <h2>Việc cần xử lý</h2>
-          <button class="text-link" onclick="navigate('admin')">Xem tất cả</button>
-        </div>
-        <div id="ownerPending" class="stack"></div>
-
-        <div class="section-head"><h2>Quản lý nhanh</h2></div>
-        <div class="owner-actions">
-          <button class="owner-action" onclick="navigate('admin');adminTab('employees',document.querySelector('#admin .admin-tabs button'))">
-            <div class="ico">👥</div><b>Nhân viên</b><span>Hồ sơ, trạng thái & lương</span>
-          </button>
-          <button class="owner-action" onclick="navigate('admin');adminTab('schedules',document.querySelectorAll('#admin .admin-tabs button')[2])">
-            <div class="ico">🗓</div><b>Lịch tuần</b><span>Cài mẫu tuần & mở đăng ký</span>
-          </button>
-          <button class="owner-action" onclick="navigate('admin');adminTab('registrations',document.querySelectorAll('#admin .admin-tabs button')[3])">
-            <div class="ico">✓</div><b>Duyệt ca</b><span>Phê duyệt ca nhân viên</span>
-          </button>
-          <button class="owner-action" onclick="navigate('admin');adminTab('devices',document.querySelectorAll('#admin .admin-tabs button')[6])">
-            <div class="ico">📱</div><b>Thiết bị</b><span>Duyệt thiết bị đăng nhập</span>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- SCHEDULE SECTION -->
-    <section id="schedule" class="view">
-      <div class="page-head">
-        <div class="row">
+      <!-- ================= TAB 2: LỊCH LÀM VIỆC ================= -->
+      <section id="tab-schedule" class="tab-view">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <div>
-            <h1 class="page-title">Lịch làm việc</h1>
-            <div class="page-sub" id="schedulePageSub">Chọn ngày để xem các ca làm việc.</div>
+            <h2 style="font-size: 18px; font-weight: 700;">Lịch làm việc</h2>
+            <p style="font-size: 11px; color: var(--text-sub);">Lịch của bạn và các ca còn chỗ để đăng ký</p>
           </div>
-          <button id="scheduleRegisterBtn" class="btn primary employee-only-schedule" type="button" onclick="openRegistrationOptions()">＋ Đăng ký ca</button>
+          <button class="pill-btn primary">+ Đăng ký ca</button>
         </div>
-      </div>
-      
-      <div id="employeeScheduleRequests" class="schedule-request-actions employee-only-schedule">
-        <button type="button" class="request-chip" onclick="openScheduleRequestModal('late')">⏱ Xin đi trễ</button>
-        <button type="button" class="request-chip" onclick="openScheduleRequestModal('emergency_leave')">⚠ Xin nghỉ đột xuất</button>
-        <button type="button" class="request-chip" onclick="openScheduleRequestModal('swap')">⇄ Xin đổi ca</button>
-      </div>
 
-      <div class="schedule-toolbar">
-        <div>
-          <b id="mainScheduleSelectedDateTitle" style="font-size:18px;">—</b>
-          <div id="mainScheduleSelectedDateSub" class="muted" style="font-size:13px; margin-top:2px;">—</div>
+        <div class="action-pills">
+          <button class="pill-btn">⏱ Xin đi trễ</button>
+          <button class="pill-btn">⚠️ Xin nghỉ đột xuất</button>
+          <button class="pill-btn">🔄 Xin đổi ca</button>
         </div>
-        <div class="date-nav">
-          <button type="button" onclick="prevMainScheduleDays()">‹</button>
-          <button class="today-btn" type="button" onclick="goMainScheduleToday()">Hôm nay</button>
-          <button type="button" onclick="nextMainScheduleDays()">›</button>
-        </div>
-      </div>
 
-      <div class="schedule-days" id="mainScheduleDayStrip"></div>
-      <div id="mainScheduleList"><div class="empty">Đang tải lịch…</div></div>
-    </section>
-
-    <!-- SALARY SECTION -->
-    <section id="salary" class="view">
-      <div class="page-head">
-        <h1 class="page-title">Giờ công & lương</h1>
-        <div class="page-sub">Tổng hợp theo giờ công đã được ghi nhận.</div>
-      </div>
-      <div class="salary-hero">
-        <div class="salary-label">LƯƠNG TẠM TÍNH THÁNG NÀY</div>
-        <div class="salary-value" id="salaryHero">0đ</div>
-        <div style="font-size:12px;opacity:0.8;margin-top:8px">Chưa bao gồm các khoản điều chỉnh chưa chốt.</div>
-      </div>
-      <div class="formgrid" style="margin-top:16px">
-        <div class="card" style="margin-bottom:0; text-align:center;">
-          <b id="salaryHoursBig" style="font-size:24px; display:block;">0h</b>
-          <span class="muted" style="font-size:12px;">Giờ công</span>
+        <!-- Thanh chọn ngày -->
+        <div class="calendar-strip">
+          <div class="day-item"><div class="day-name">T2</div><div class="day-num">07</div><div class="day-sub">2 ca</div></div>
+          <div class="day-item"><div class="day-name">T3</div><div class="day-num">08</div><div class="day-sub">2 ca</div></div>
+          <div class="day-item"><div class="day-name">T4</div><div class="day-num">09</div><div class="day-sub">-</div></div>
+          <div class="day-item"><div class="day-name">T5</div><div class="day-num">10</div><div class="day-sub">-</div></div>
+          <div class="day-item"><div class="day-name">T6</div><div class="day-num">11</div><div class="day-sub">-</div></div>
+          <div class="day-item active"><div class="day-name">T7</div><div class="day-num">12</div><div class="day-sub">0 ca</div></div>
+          <div class="day-item"><div class="day-name">CN</div><div class="day-num">13</div><div class="day-sub">-</div></div>
         </div>
-        <div class="card" style="margin-bottom:0; text-align:center;">
-          <b id="salaryRateBig" style="font-size:24px; display:block;">—</b>
-          <span class="muted" style="font-size:12px;">Đơn giá/giờ</span>
-        </div>
-      </div>
-      <div class="card" style="margin-top:16px">
-        <div class="row"><span>Đơn giá giờ</span><b id="hourly">—</b></div><hr>
-        <div class="row"><span>Giờ công kỳ này</span><b id="salaryHours">0 giờ</b></div><hr>
-        <div class="row"><span>Thưởng / phạt / ứng</span><b>Đang cập nhật</b></div><hr>
-        <div class="row" style="font-size:16px;"><b>Lương tạm tính</b><b id="salaryNet" style="color:var(--primary);">—</b></div>
-      </div>
-    </section>
 
-    <!-- ADMIN SECTION -->
-    <section id="admin" class="view">
-      <div class="page-head">
-        <h1 class="page-title">Quản trị</h1>
-        <div class="page-sub">Điều hành nhân sự, lịch ca, thiết bị và cửa hàng.</div>
-      </div>
-      <div class="admin-tabs">
-        <button class="active" onclick="adminTab('employees',this)">Nhân viên</button>
-        <button onclick="adminTab('templates',this)">Mẫu ca</button>
-        <button onclick="adminTab('schedules',this)">Lịch tuần</button>
-        <button onclick="adminTab('registrations',this)">Duyệt ca</button>
-        <button onclick="adminTab('attendance',this)">Chấm công</button>
-        <button onclick="adminTab('leaves',this)">Nghỉ phép</button>
-        <button onclick="adminTab('devices',this)">Thiết bị</button>
-        <button onclick="adminTab('store',this)">Cửa hàng</button>
-        <button id="adminPayrollTab" onclick="adminTab('payroll',this)">Lương</button>
-        <button onclick="adminTab('audit',this)">Nhật ký</button>
-      </div>
-      
-      <div id="adminEmployees" class="admin-pane active">
-        <div class="card">
-          <div class="row" style="margin-bottom:16px;">
-            <div><b>Nhân viên</b><div class="muted" style="font-size:12px;">Hồ sơ, trạng thái & đơn giá.</div></div>
-            <button class="btn primary" style="height:36px; font-size:13px;" onclick="openCreateEmployee()">+ Thêm</button>
+        <!-- Sửa lỗi dính chữ ở Empty state -->
+        <div class="empty-box">
+          <b>Ngày này chưa có ca.</b> Không có ca nào được tạo trong ngày này. Bạn có thể chọn ngày khác để kiểm tra.
+        </div>
+      </section>
+
+      <!-- ================= TAB 3: QUẢN TRỊ (ADMIN) ================= -->
+      <section id="tab-admin" class="tab-view">
+        <div style="margin-bottom: 12px;">
+          <h2 style="font-size: 18px; font-weight: 700;">Quản trị</h2>
+          <p style="font-size: 11px; color: var(--text-sub);">Điều hành nhân sự, lịch ca, thiết bị và cửa hàng</p>
+        </div>
+
+        <!-- Sub-tabs Quản trị -->
+        <div class="admin-subnav">
+          <button class="subnav-btn active" onclick="switchAdminTab('sub-overview', this)">Tổng quan</button>
+          <button class="subnav-btn" onclick="switchAdminTab('sub-employees', this)">Nhân viên</button>
+          <button class="subnav-btn" onclick="switchAdminTab('sub-shifts', this)">Lịch tuần</button>
+          <button class="subnav-btn" onclick="switchAdminTab('sub-attendance', this)">Chấm công</button>
+        </div>
+
+        <!-- 1. Sub-tab Tổng quan -->
+        <div id="sub-overview" class="admin-sub-view">
+          <!-- Stat cards đã căn giữa -->
+          <div class="stats-grid">
+            <div class="stat-card"><div class="num">2</div><div class="label">Ca hôm nay</div></div>
+            <div class="stat-card"><div class="num">0</div><div class="label">Chờ duyệt</div></div>
+            <div class="stat-card"><div class="num">2</div><div class="label">Nhân viên</div></div>
+            <div class="stat-card"><div class="num">1</div><div class="label">Đi muộn</div></div>
           </div>
-          <div id="employeeTable"><div class="empty">Đang tải…</div></div>
+
+          <div class="section-title" style="margin-top: 0;">Việc cần xử lý</div>
+          <div class="empty-box" style="background: var(--bg-card); border-style: solid; text-align: left; padding: 12px;">
+            🎉 Không có việc nào đang chờ xử lý.
+          </div>
         </div>
-      </div>
-      
-      <!-- Keep other admin panes structure identical, just inheriting new CSS -->
-      <div id="adminTemplates" class="admin-pane"><div class="card"><div class="row"><div><b>Mẫu ca</b><div class="muted" style="font-size:12px;">Khung giờ chuẩn tạo lịch.</div></div><button class="btn primary" style="height:36px;" onclick="openCreateTemplate()">+ Thêm</button></div><div id="templateList" style="margin-top:16px;"></div><div id="tplMsg"></div></div></div>
-      <div id="adminSchedules" class="admin-pane"><div class="card"><b>Thiết lập lịch tuần cố định</b><div class="muted" style="font-size:12px; margin-bottom:16px;">Mỗi ngày có ca nào và cần bao nhiêu người.</div><div id="weeklyPlanGrid" class="stack"></div><div class="row" style="margin-top:16px;"><button class="btn light" onclick="loadWeeklyPlan()">Tải lại</button><button class="btn primary" onclick="saveWeeklyPlan()">Lưu mẫu</button></div></div><div class="card"><b>Tạo tuần đăng ký</b><div class="field" style="margin:12px 0;"><label>Tuần bắt đầu (Thứ Hai)</label><input id="weeklyGenerateStart" type="date"></div><button class="btn primary" style="width:100%" onclick="generateWeeklySchedule()">Tạo & mở đăng ký tuần</button></div></div>
-      <div id="adminRegistrations" class="admin-pane"><div class="card"><div class="row"><b>Duyệt đăng ký ca</b><button class="btn light" style="height:36px;" onclick="loadRegistrations()">Làm mới</button></div><div id="registrationList" style="margin-top:16px;"></div></div></div>
-      <div id="adminAttendance" class="admin-pane"><div class="card"><div class="row"><b>Bảng chấm công</b><button class="btn light" style="height:36px;" onclick="loadAdminAttendance()">Làm mới</button></div><div id="adminAttendanceList" style="margin-top:16px;"></div></div></div>
-      <div id="adminLeaves" class="admin-pane"><div class="card"><div class="row"><b>Duyệt nghỉ phép</b><button class="btn light" style="height:36px;" onclick="loadLeaves()">Làm mới</button></div><div id="leaveList" style="margin-top:16px;"></div></div></div>
-      <div id="adminDevices" class="admin-pane"><div class="card"><div class="row"><b>Thiết bị chờ duyệt</b><button class="btn light" style="height:36px;" onclick="loadDevices()">Làm mới</button></div><div id="deviceList" style="margin-top:16px;"></div></div></div>
-      <div id="adminPayroll" class="admin-pane"><div class="card"><div class="row"><b>Kỳ lương</b><button class="btn light" style="height:36px;" onclick="loadPayroll()">Làm mới</button></div><div class="stack" style="margin-top:16px;"><div class="field"><label>Tên kỳ lương</label><input id="payrollPeriodName"></div><div class="formgrid"><div class="field"><label>Từ ngày</label><input id="payrollStart" type="date"></div><div class="field"><label>Đến ngày</label><input id="payrollEnd" type="date"></div></div><button class="btn primary" onclick="createPayrollPeriod()">Tạo kỳ lương</button></div></div></div>
-      <div id="adminAudit" class="admin-pane"><div class="card"><div class="row"><b>Nhật ký thao tác</b><button class="btn light" style="height:36px;" onclick="loadAudit()">Làm mới</button></div><div id="auditList" style="margin-top:16px;"></div></div></div>
-      <div id="adminStore" class="admin-pane"><div class="card"><b>Cửa hàng & chấm công</b><div class="stack" style="margin-top:16px;"><div class="field"><label>Tên quán</label><input id="storeName"></div><div class="field"><label>Địa chỉ</label><input id="storeAddress"></div><div class="formgrid"><div class="field"><label>Vĩ độ</label><input id="storeLat" type="number" step="any"></div><div class="field"><label>Kinh độ</label><input id="storeLng" type="number" step="any"></div><div class="field"><label>Bán kính GPS (m)</label><input id="storeRadius" type="number"></div><div class="field"><label>Cho phép trễ (phút)</label><input id="storeGrace" type="number"></div></div><button class="btn primary" onclick="saveStore()">Lưu cài đặt</button></div></div></div>
-    </section>
 
-    <!-- PROFILE SECTION -->
-    <section id="profile" class="view">
-      <div class="page-head">
-        <h1 class="page-title">Tài khoản</h1>
-        <div class="page-sub">Thông tin cá nhân và bảo mật.</div>
-      </div>
-      <div class="card stack">
-        <div class="field"><label>Họ và tên</label><input id="fullName"></div>
-        <div class="field"><label>Email</label><input id="email" readonly style="background:#F8FAFC; color:var(--muted);"></div>
-        <div class="field"><label>Số điện thoại</label><input id="phone"></div>
-        <div class="field"><label>Địa chỉ</label><input id="address"></div>
-        <button class="btn primary" onclick="saveProfile()">Lưu thay đổi</button>
-        <button class="btn light" onclick="openPasswordModal()">Đổi mật khẩu</button>
-        <div id="profileMsg"></div>
-        <hr>
-        <button class="btn danger" onclick="signOut()">Đăng xuất tài khoản</button>
-      </div>
-    </section>
-  </main>
+        <!-- 2. Sub-tab Nhân viên -->
+        <div id="sub-employees" class="admin-sub-view" style="display: none;">
+          <div class="card" style="padding: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span style="font-size: 13px; font-weight: 700;">Danh sách nhân viên</span>
+              <button class="pill-btn primary" style="font-size: 11px;">+ Thêm</button>
+            </div>
 
-  <nav class="bottom" id="bottomNav">
-    <button class="nav active" data-nav="dashboard" onclick="navigate('dashboard')">
-      <span class="nav-ico">⌂</span><span>Trang chủ</span>
-    </button>
-    <button class="nav" data-nav="schedule" onclick="navigate('schedule')">
-      <span class="nav-ico">▣</span><span>Lịch</span>
-    </button>
-    <button class="nav" id="salaryNav" data-nav="salary" onclick="navigate('salary')">
-      <span class="nav-ico">₫</span><span>Lương</span>
-    </button>
-    <button class="nav hidden" id="adminNav" data-nav="admin" onclick="navigate('admin')">
-      <span class="nav-ico">⚙</span><span>Quản trị</span>
-    </button>
-    <button class="nav" data-nav="profile" onclick="navigate('profile')">
-      <span class="nav-ico">●</span><span>Tài khoản</span>
-    </button>
-  </nav>
-</div>
-
-<!-- DEVICE GATE -->
-<div id="deviceGate" class="view" style="display:none; position:fixed; inset:0; z-index:120; background:var(--bg); align-items:center; justify-content:center; padding:24px;">
-  <div class="card" style="width:100%; max-width:400px; text-align:center; padding:32px 24px;">
-    <div style="font-size:48px; margin-bottom:16px;">📱</div>
-    <h1 style="font-size:24px; margin:0 0 8px;">Liên kết thiết bị</h1>
-    <p class="muted" id="gateDesc" style="font-size:14px; margin-bottom:24px;">Thiết bị này chưa được phê duyệt.</p>
-    <div id="gateDeviceName" style="padding:12px; background:var(--bg); border-radius:var(--radius-sm); font-weight:700; margin-bottom:8px;">Thiết bị</div>
-    <div id="gateDeviceId" style="font-size:11px; color:var(--muted); word-break:break-all; margin-bottom:24px;">—</div>
-    <button id="gateAction" class="btn primary" style="width:100%; margin-bottom:12px;" onclick="registerDeviceAndRefresh()">Đăng ký thiết bị</button>
-    <button class="btn light" style="width:100%;" onclick="signOut()">Đăng xuất</button>
-  </div>
-</div>
-
-<!-- MODALS -->
-<div id="employeeModal" class="modal">
-  <div class="modalbox">
-    <div class="modal-head">
-      <div><h2>Sửa nhân viên</h2><div class="muted" style="font-size:13px;margin-top:4px">Quản lý hồ sơ và quyền.</div></div>
-      <button class="modal-close" onclick="closeEmployeeModal()">×</button>
-    </div>
-    <div class="stack">
-      <input id="editEmployeeId" type="hidden">
-      <div class="field"><label>Họ và tên</label><input id="editEmployeeName"></div>
-      <div class="field"><label>Số điện thoại</label><input id="editEmployeePhone"></div>
-      <div class="formgrid">
-        <div class="field">
-          <label>Vai trò</label>
-          <select id="editEmployeeRole"><option value="employee">Nhân viên</option><option value="manager">Quản lý</option><option value="owner">Chủ quán</option></select>
+            <!-- Bảng Nhân viên với Truncate email -->
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Nhân viên</th>
+                  <th>Vai trò</th>
+                  <th>Lương/giờ</th>
+                  <th>Tác vụ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <b class="truncate" style="max-width: 100px;">Anh Khanh</b>
+                    <span class="truncate user-email-text">phamkhanh911002@gmail.com</span>
+                  </td>
+                  <td>Chủ quán</td>
+                  <td>0đ</td>
+                  <td><button class="pill-btn" style="padding: 2px 8px;">Sửa</button></td>
+                </tr>
+                <tr>
+                  <td>
+                    <b class="truncate" style="max-width: 100px;">Nhân Viên Test</b>
+                    <span class="truncate user-email-text">sundaybasicongichkhiem@gmail.com</span>
+                  </td>
+                  <td>Nhân viên</td>
+                  <td>21.000đ</td>
+                  <td><button class="pill-btn" style="padding: 2px 8px;">Sửa</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div class="field">
-          <label>Trạng thái</label>
-          <select id="editEmployeeStatus"><option value="active">Đang làm</option><option value="inactive">Tạm nghỉ</option><option value="invited">Chưa kích hoạt</option><option value="terminated">Đã nghỉ</option></select>
+
+        <!-- 3. Sub-tab Lịch tuần (Khắc phục lỗi nút x) -->
+        <div id="sub-shifts" class="admin-sub-view" style="display: none;">
+          <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px;">Thiết lập lịch tuần cố định</div>
+
+          <!-- Ca 1 -->
+          <div class="shift-edit-card">
+            <div class="shift-edit-header">
+              <span class="shift-title">Ca 1</span>
+              <button class="btn-delete-shift" title="Xóa ca">✕</button>
+            </div>
+            <div class="form-group">
+              <label>Mẫu ca</label>
+              <select class="form-control">
+                <option>Ca Sáng : 08:00 – 12:00</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label>Số người cần</label>
+              <input type="number" class="form-control" value="1">
+            </div>
+          </div>
+
+          <!-- Ca 2 -->
+          <div class="shift-edit-card">
+            <div class="shift-edit-header">
+              <span class="shift-title">Ca 2</span>
+              <button class="btn-delete-shift" title="Xóa ca">✕</button>
+            </div>
+            <div class="form-group">
+              <label>Mẫu ca</label>
+              <select class="form-control">
+                <option>Ca Chiều : 12:00 – 18:00</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label>Số người cần</label>
+              <input type="number" class="form-control" value="1">
+            </div>
+          </div>
+
+          <button class="pill-btn primary" style="width: 100%; padding: 10px; margin-top: 4px;">+ Thêm ca mới</button>
         </div>
-      </div>
-      <div class="field"><label>Lương/giờ (đ)</label><input id="editEmployeeRate" type="number" step="1000"></div>
-      <button class="btn primary" onclick="saveEmployee()">Lưu thay đổi</button>
-      <hr>
-      <div class="stack">
-        <label style="font-weight:700; font-size:14px;">Đổi mật khẩu nhân viên</label>
-        <div class="field"><input id="editEmployeePassword" type="password" placeholder="Mật khẩu mới"></div>
-        <div class="field"><input id="editEmployeePassword2" type="password" placeholder="Nhập lại mật khẩu"></div>
-        <button class="btn light" onclick="changeEmployeePassword()">Cập nhật mật khẩu</button>
-      </div>
-    </div>
-  </div>
-</div>
 
-<div id="createEmployeeModal" class="modal">
-  <div class="modalbox">
-    <div class="modal-head">
-      <div><h2>Thêm nhân viên</h2><div class="muted" style="font-size:13px;margin-top:4px">Tạo tài khoản và gửi lời mời.</div></div>
-      <button class="modal-close" onclick="closeCreateEmployee()">×</button>
-    </div>
-    <div class="stack">
-      <div class="field"><label>Họ và tên *</label><input id="newEmployeeName" placeholder="Nguyễn Văn A"></div>
-      <div class="field"><label>Email đăng nhập *</label><input id="newEmployeeEmail" type="email" placeholder="nhanvien@email.com"></div>
-      <div class="field"><label>Số điện thoại</label><input id="newEmployeePhone" inputmode="tel"></div>
-      <div class="field"><label>Lương/giờ (đ)</label><input id="newEmployeeRate" type="number" step="1000" value="30000"></div>
-      <button class="btn primary" onclick="createEmployee()">Tạo & gửi email mời</button>
-    </div>
-  </div>
-</div>
+        <!-- 4. Sub-tab Chấm công -->
+        <div id="sub-attendance" class="admin-sub-view" style="display: none;">
+          <div class="card">
+            <div style="font-size: 13px; font-weight: 700; margin-bottom: 10px;">Bảng chấm công gần đây</div>
+            <div style="font-size: 12px; margin-bottom: 8px;">
+              <b>15:00 – 22:00</b> <span style="color: var(--text-sub);">(Nhân Viên Test)</span>
+              <div style="color: var(--danger); font-size: 11px; margin-top: 2px;">IN 15:34 · Trễ 34p</div>
+            </div>
+            <button class="pill-btn" style="width: 100%;">✏️ Điều chỉnh chấm công</button>
+          </div>
+        </div>
+      </section>
 
-<div id="templateModal" class="modal">
-  <div class="modalbox">
-    <div class="modal-head">
-      <div><h2 id="templateModalTitle">Thêm mẫu ca</h2></div>
-      <button class="modal-close" onclick="closeTemplateModal()">×</button>
-    </div>
-    <div class="stack">
-      <input id="editTemplateId" type="hidden">
-      <div class="field"><label>Tên ca</label><input id="tplName" placeholder="Ca sáng"></div>
-      <div class="formgrid">
-        <div class="field"><label>Bắt đầu</label><input id="tplStart" type="time" value="08:00"></div>
-        <div class="field"><label>Kết thúc</label><input id="tplEnd" type="time" value="14:00"></div>
-        <div class="field"><label>Nghỉ giữa ca (phút)</label><input id="tplBreak" type="number" value="0"></div>
-        <div class="field"><label>Số vị trí</label><input id="tplCapacity" type="number" value="1"></div>
-      </div>
-      <div class="field"><label>Trạng thái</label><select id="tplActive"><option value="true">Đang dùng</option><option value="false">Tạm tắt</option></select></div>
-      <div class="formgrid" style="margin-top:12px;">
-        <button class="btn light" onclick="closeTemplateModal()">Hủy</button>
-        <button class="btn primary" onclick="<!-- Thay bằng hàm save JS của bạn -->">Lưu mẫu</button>
-      </div>
-    </div>
+      <!-- ================= TAB 4: TÀI KHOẢN ================= -->
+      <section id="tab-account" class="tab-view">
+        <div class="card" style="text-align: center; padding: 24px 16px;">
+          <div class="avatar" style="width: 60px; height: 60px; font-size: 24px; margin: 0 auto 12px auto;">A</div>
+          <h3 style="font-size: 16px;">Phạm Hồng Khanh</h3>
+          <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 16px;">Chủ quán / Admin</p>
+          <button class="pill-btn" style="color: var(--danger); border-color: #fca5a5;">Đăng xuất</button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- BOTTOM NAVIGATION BAR -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" onclick="switchMainTab('tab-home', this)">
+        <span class="icon">🏠</span>
+        <span>Trang chủ</span>
+      </button>
+      <button class="nav-item" onclick="switchMainTab('tab-schedule', this)">
+        <span class="icon">📅</span>
+        <span>Lịch</span>
+      </button>
+      <button class="nav-item" onclick="switchMainTab('tab-admin', this)">
+        <span class="icon">⚙️</span>
+        <span>Quản trị</span>
+      </button>
+      <button class="nav-item" onclick="switchMainTab('tab-account', this)">
+        <span class="icon">👤</span>
+        <span>Tài khoản</span>
+      </button>
+    </nav>
+
   </div>
-</div>
 <script>
 let sb=null,session=null,profile=null,currentView='dashboard',loginMode='password',appBusy=false,currentWorkState=null;
 const UI_STATE_KEY='hongcha_hrm_ui_state_v21_3';
