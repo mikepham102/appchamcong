@@ -1,4 +1,4 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0d73e8"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="HongCha HRM"><title>HongCha HRM V19 Foundation</title><style>
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0d73e8"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="HongCha HRM"><title>HongCha HRM V21.2</title><style>
 :root{--bg:#f5f7fb;--surface:#fff;--ink:#172033;--muted:#7a8596;--line:#e7ecf3;--primary:#1677ff;--primary2:#075fd0;--green:#16a34a;--amber:#d97706;--red:#dc2626;--shadow:0 6px 22px rgba(15,23,42,.055);--radius:18px}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}body{overscroll-behavior-y:none}button,input,select{font:inherit}button{border:0;cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}
 #bootScreen,#loginScreen{position:fixed;inset:0;z-index:100;background:linear-gradient(180deg,#f8fbff 0%,#f3f6fb 100%);display:flex;align-items:center;justify-content:center;padding:20px}#bootScreen.hidden,#loginScreen.hidden{display:none}
@@ -44,6 +44,24 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 
 .assign-person-option{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff;cursor:pointer}.assign-person-option.assigned{background:#f7fbff}.assign-person-option input{width:20px;height:20px;accent-color:#1476c9;flex:none}.assign-person-option .person-main{display:flex;flex-direction:column}.assign-person-option .person-status{margin-left:auto}.modal{position:fixed;inset:0;background:rgba(15,23,42,.42);display:none;align-items:flex-end;justify-content:center;z-index:100}.modal.open{display:flex}.modal-card{width:min(560px,100%);max-height:88vh;background:#fff;border-radius:24px 24px 0 0;padding:18px;box-shadow:0 -10px 35px rgba(15,23,42,.18);animation:modalUp .18s ease}.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.modal-close{width:36px;height:36px;border-radius:10px;border:0;background:#f1f3f5;font-size:24px;line-height:1}.modal-actions{display:flex;gap:8px;margin-top:14px}.modal-actions .btn{flex:1}.day-cell{transition:background .16s ease,border-color .16s ease,box-shadow .16s ease;will-change:auto}.schedule-days{overflow:visible;min-height:66px}.schedule-days .day-cell:active,.schedule-days .arrow:active{transform:scale(.97)}
 @keyframes modalUp{from{transform:translateY(18px);opacity:.7}to{transform:translateY(0);opacity:1}}
+
+.supplement-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.supplement-note{font-size:10px;color:var(--muted);line-height:1.45}.attendance-person-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.attendance-person-actions .btn{min-height:34px;font-size:10px}@media(max-width:520px){.supplement-grid{grid-template-columns:1fr}}
+
+/* V21 UI FOUNDATION — clean operational hierarchy */
+:root{--bg:#f2f5f9;--surface:#ffffff;--ink:#152033;--muted:#7b8798;--line:#e4e9f0;--primary:#146ff5;--primary2:#0a5dcc;--shadow:0 10px 30px rgba(18,31,53,.06);--radius:20px}
+body{background:linear-gradient(180deg,#f7f9fc 0,#f1f4f8 100%)}
+.app{max-width:980px}.topbar{height:64px;padding:8px 18px;box-shadow:0 1px 0 rgba(15,23,42,.03)}
+.brand-mark{width:38px;height:38px;border-radius:13px}.brand{font-size:15px}.sub{font-size:10px}
+.page-head{height:auto;min-height:86px;padding:22px 2px 14px}.page-title{font-size:26px;font-weight:950}.page-sub{font-size:12px}
+.card,.shift-card,.attendance-shift-card{border-radius:20px;box-shadow:0 8px 26px rgba(15,23,42,.055)}
+.btn{min-height:42px;border-radius:12px;font-size:11px}.btn.primary{box-shadow:0 5px 14px rgba(20,111,245,.18)}
+.schedule-toolbar{background:transparent}.schedule-days{gap:6px}.day-cell{border-radius:14px;min-width:0}.day-cell.selected{background:#146ff5!important;border-color:#146ff5!important;color:#fff!important;box-shadow:0 7px 16px rgba(20,111,245,.18)}.day-cell.selected .dow,.day-cell.selected .mark,.day-cell.selected .day-count{color:#fff!important}
+.shift-card{padding:16px}.shift-card-title{font-size:15px}.shift-card-sub,.schedule-capacity{font-size:10px}.schedule-add-btn{background:#edf5ff;color:#125fc9;border:1px solid #cfe1ff;font-weight:900}.schedule-add-btn:not(:disabled):active{transform:scale(.98)}
+.person-row,.attendance-person{padding:11px 0}.person-avatar{width:38px;height:38px}.person-status,.att-state{font-size:9px;font-weight:900}
+.admin-tabs{padding-bottom:9px}.admin-tabs button{height:36px;border-radius:12px}.admin-tabs button.active{box-shadow:0 5px 14px rgba(15,23,42,.12)}
+.attendance-person-actions .attendance-action{min-height:40px;border-radius:12px}.attendance-person-actions .attendance-action:hover{transform:translateY(-1px)}
+.payroll-shell{display:grid;gap:10px}.payroll-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.payroll-kpi{padding:13px;border:1px solid var(--line);background:#fbfcfe;border-radius:15px}.payroll-kpi b{display:block;font-size:18px;font-weight:950}.payroll-kpi span{font-size:9px;color:var(--muted);margin-top:4px;display:block}.payroll-run{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:15px;background:#fff}.payroll-run .name{font-weight:900;font-size:12px}.payroll-run .meta{font-size:9px;color:var(--muted);margin-top:3px}.payroll-run .amount{text-align:right;font-weight:950;font-size:14px}.payroll-run .amount small{display:block;font-size:9px;color:var(--muted);font-weight:700;margin-top:3px}.audit-row{padding:12px 0;border-bottom:1px solid var(--line)}.audit-row:last-child{border-bottom:0}.audit-action{font-weight:900;font-size:11px}.audit-meta{font-size:9px;color:var(--muted);margin-top:3px;line-height:1.4}
+@media(max-width:520px){.payroll-kpis{grid-template-columns:1fr 1fr}.payroll-run{grid-template-columns:1fr}.payroll-run .amount{text-align:left}}
 </style></head><body>
 <div id="bootScreen"><div class="auth-card" style="text-align:center"><div class="auth-logo" style="margin:auto">H</div><div style="font-size:18px;font-weight:950;margin-top:12px">HongCha HRM</div><div class="muted" style="font-size:12px;margin-top:5px">Đang mở ứng dụng…</div></div></div>
 <div id="loginScreen" class="hidden"><div class="auth-card"><div class="auth-brand"><div class="auth-logo">H</div><div><div style="font-size:16px;font-weight:950">HongCha HRM</div><div class="muted" style="font-size:10px;margin-top:2px">Quản lý nhân sự & chấm công</div></div></div><h1>Chào mừng trở lại</h1><div class="desc">Đăng nhập để chấm công, xem lịch làm việc và theo dõi giờ công.</div><div class="login-toggle"><button id="loginModePassword" class="active" onclick="setLoginMode('password')">Mật khẩu</button><button id="loginModeOtp" onclick="setLoginMode('otp')">Email</button></div><div id="passwordLoginFields" class="stack"><div class="field"><label>Email</label><input id="loginEmail" type="email" autocomplete="username" placeholder="email của bạn"></div><div class="field"><label>Mật khẩu</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Mật khẩu"></div><button class="btn primary" style="width:100%" onclick="signIn()">Đăng nhập</button><button class="btn light" style="width:100%" onclick="sendResetPassword()">Quên mật khẩu</button></div><div id="otpLoginFields" class="stack" style="display:none"><div class="field"><label>Email</label><input id="loginEmailOtp" type="email" autocomplete="email" placeholder="email của bạn"></div><button class="btn primary" style="width:100%" onclick="sendMagicLink()">Gửi link đăng nhập</button><div class="notice info">Mở email và bấm link để đăng nhập nhanh. Không cần nhập mật khẩu.</div></div><div id="loginMsg" class="auth-msg"></div><div class="auth-foot">Tài khoản nhân viên chỉ sử dụng được trên thiết bị đã được cửa hàng phê duyệt.</div></div></div>
@@ -53,11 +71,13 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 <div id="ownerHome" style="display:none"><div class="owner-hero"><div class="owner-kicker" id="ownerGreeting">Chào buổi sáng</div><div class="owner-title">Xin chào, <span id="ownerName">Chủ quán</span></div><div class="owner-store">● <span id="ownerStoreName">Trà Sữa HongCha</span></div><div class="owner-overview"><div class="ov"><b id="statShift">0</b><span>CA HÔM NAY</span></div><div class="ov"><b id="statPending">0</b><span>CHỜ DUYỆT</span></div><div class="ov"><b id="statEmployees">0</b><span>NHÂN VIÊN</span></div><div class="ov"><b id="statLate">0</b><span>ĐI MUỘN</span></div></div></div><div class="section-head"><h2>Việc cần xử lý</h2><button class="text-link" onclick="navigate('admin')">Xem tất cả</button></div><div id="ownerPending" class="stack"></div><div class="section-head"><h2>Quản lý nhanh</h2></div><div class="owner-actions"><button class="owner-action" onclick="navigate('admin');adminTab('employees',document.querySelector('#admin .admin-tabs button'))"><div class="ico">👥</div><b>Nhân viên</b><span>Hồ sơ, trạng thái & đơn giá giờ</span></button><button class="owner-action" onclick="navigate('admin');adminTab('schedules',document.querySelectorAll('#admin .admin-tabs button')[2])"><div class="ico">🗓</div><b>Lịch làm việc</b><span>Tạo và xem lịch ca</span></button><button class="owner-action" onclick="navigate('admin');adminTab('registrations',document.querySelectorAll('#admin .admin-tabs button')[3])"><div class="ico">✓</div><b>Duyệt đăng ký</b><span>Phê duyệt ca của nhân viên</span></button><button class="owner-action" onclick="navigate('admin');adminTab('devices',document.querySelectorAll('#admin .admin-tabs button')[6])"><div class="ico">📱</div><b>Thiết bị</b><span>Duyệt thiết bị đăng nhập</span></button></div></div></section>
 <section id="schedule" class="view"><div class="page-head"><div class="row"><div><h1 class="page-title">Lịch làm việc</h1><div class="page-sub" id="schedulePageSub">Chọn ngày để xem đúng các ca của ngày đó.</div></div><button id="leaveFromScheduleBtn" class="btn light" onclick="openLeaveModal()">Xin nghỉ</button></div></div><div class="schedule-toolbar"><div class="date-title"><b id="mainScheduleSelectedDateTitle">—</b><span id="mainScheduleSelectedDateSub">—</span></div><div class="date-nav"><button class="date-arrow" type="button" aria-label="Tuần trước" onclick="prevMainScheduleDays()">‹</button><button class="today-btn" type="button" onclick="goMainScheduleToday()">Hôm nay</button><button class="date-arrow" type="button" aria-label="Tuần sau" onclick="nextMainScheduleDays()">›</button></div></div><div class="schedule-days" id="mainScheduleDayStrip"></div><div id="mainScheduleList"><div class="empty">Đang tải lịch…</div></div></section>
 <section id="salary" class="view"><div class="page-head"><h1 class="page-title">Giờ công & lương</h1><div class="page-sub">Tổng hợp theo giờ công đã được ghi nhận.</div></div><div class="salary-hero"><div class="salary-label">LƯƠNG TẠM TÍNH THÁNG NÀY</div><div class="salary-value" id="salaryHero">0đ</div><div style="font-size:10px;opacity:.75;margin-top:4px">Chưa bao gồm các khoản điều chỉnh chưa chốt.</div></div><div class="metric-grid" style="margin-top:10px"><div class="metric"><b id="salaryHoursBig">0h</b><span>Giờ công</span></div><div class="metric"><b id="salaryRateBig">—</b><span>Đơn giá/giờ</span></div></div><div class="card" style="margin-top:12px"><div class="row"><span>Đơn giá giờ</span><b id="hourly">—</b></div><hr><div class="row"><span>Giờ công kỳ này</span><b id="salaryHours">0 giờ</b></div><hr><div class="row"><span>Thưởng / phạt / ứng</span><b>Đang cập nhật</b></div><hr><div class="row"><b>Lương tạm tính</b><b id="salaryNet">—</b></div></div></section>
-<section id="admin" class="view"><div class="page-head"><h1 class="page-title">Quản trị</h1><div class="page-sub">Điều hành nhân sự, lịch ca, thiết bị và cửa hàng.</div></div><div class="admin-tabs"><button class="active" onclick="adminTab('employees',this)">Nhân viên</button><button onclick="adminTab('templates',this)">Mẫu ca</button><button onclick="adminTab('schedules',this)">Lịch ca</button><button onclick="adminTab('registrations',this)">Duyệt ca</button><button onclick="adminTab('attendance',this)">Chấm công</button><button onclick="adminTab('leaves',this)">Nghỉ phép</button><button onclick="adminTab('devices',this)">Thiết bị</button><button onclick="adminTab('store',this)">Cửa hàng</button></div>
+<section id="admin" class="view"><div class="page-head"><h1 class="page-title">Quản trị</h1><div class="page-sub">Điều hành nhân sự, lịch ca, thiết bị và cửa hàng.</div></div><div class="admin-tabs"><button class="active" onclick="adminTab('employees',this)">Nhân viên</button><button onclick="adminTab('templates',this)">Mẫu ca</button><button onclick="adminTab('schedules',this)">Lịch ca</button><button onclick="adminTab('registrations',this)">Duyệt ca</button><button onclick="adminTab('attendance',this)">Chấm công</button><button onclick="adminTab('leaves',this)">Nghỉ phép</button><button onclick="adminTab('devices',this)">Thiết bị</button><button onclick="adminTab('store',this)">Cửa hàng</button><button id="adminPayrollTab" onclick="adminTab('payroll',this)">Lương</button><button onclick="adminTab('audit',this)">Nhật ký</button></div>
 <div id="adminEmployees" class="admin-pane active"><div class="card"><div class="row"><div><b>Nhân viên</b><div class="muted">Hồ sơ, trạng thái và đơn giá giờ.</div></div><button class="btn primary" onclick="openCreateEmployee()">+ Thêm</button></div><hr><div id="employeeTable" class="scroll"><div class="empty">Đang tải…</div></div></div></div>
 <div id="adminTemplates" class="admin-pane"><div class="card"><b>Tạo mẫu ca</b><div class="stack" style="margin-top:12px"><div class="formgrid"><div class="field"><label>Tên ca</label><input id="tplName" placeholder="Ca sáng"></div><div class="field"><label>Số vị trí</label><input id="tplCapacity" type="number" value="1" min="1" max="10"></div><div class="field"><label>Bắt đầu</label><input id="tplStart" type="time" value="08:00"></div><div class="field"><label>Kết thúc</label><input id="tplEnd" type="time" value="14:00"></div><div class="field"><label>Nghỉ giữa ca (phút)</label><input id="tplBreak" type="number" value="0" min="0"></div></div><button class="btn primary" onclick="createTemplate()">Tạo mẫu ca</button><div id="tplMsg"></div></div></div><div class="card"><b>Danh sách mẫu ca</b><div id="templateList" style="margin-top:10px"></div></div></div>
-<div id="adminSchedules" class="admin-pane"><div class="card"><b>Tạo lịch ca</b><div class="stack" style="margin-top:12px"><div class="formgrid"><div class="field"><label>Ngày</label><input id="schDate" type="date" onchange="adminSelectedDate=this.value||localToday();adminDayWindowStart=mondayOfWeek(adminSelectedDate);renderScheduleForKind('admin')"></div><div class="field"><label>Mẫu ca</label><select id="schTemplate"><option value="">Chọn mẫu ca</option></select></div><div class="field"><label>Số vị trí</label><input id="schSlots" type="number" value="1" min="1" max="10"></div><div class="field full"><label>Ghi chú</label><input id="schNote" placeholder="Ví dụ: cần 2 người"></div></div><button class="btn primary" onclick="createSchedule()">Tạo ca mở đăng ký</button><div id="schMsg"></div></div></div><div class="schedule-toolbar"><div class="date-title"><b id="adminSelectedDateTitle">—</b><span id="adminSelectedDateSub">Lịch ca trong ngày đã chọn</span></div><div class="date-nav"><button class="today-btn" onclick="goAdminToday()">Hôm nay</button></div></div><div class="schedule-days" id="adminDayStrip"></div><div class="schedule-summary" id="adminScheduleSummary"></div><div class="card"><div class="row"><div><b>Lịch trong ngày</b><div class="muted">Mỗi ca hiển thị người đang được xếp và vị trí còn trống.</div></div><button class="btn light" onclick="loadAdminSchedules()">Làm mới</button></div><div id="adminScheduleList" style="margin-top:10px"></div></div></div><div id="adminRegistrations" class="admin-pane"><div class="card"><div class="row"><div><b>Duyệt đăng ký ca</b><div class="muted">Nhân viên gửi yêu cầu sẽ xuất hiện tại đây.</div></div><button class="btn light" onclick="loadRegistrations()">Làm mới</button></div><div id="registrationList" style="margin-top:10px"></div></div></div>
-<div id="adminAttendance" class="admin-pane"><div class="schedule-toolbar"><div class="date-title"><b id="adminAttendanceDateTitle">—</b><span>Ai đang trong ca, đã chấm công, đã ra ca và ca chưa chấm công.</span></div><div class="date-nav"><button class="today-btn" onclick="goAdminAttendanceToday()">Hôm nay</button></div></div><div class="schedule-days" id="adminAttendanceDayStrip"></div><div class="schedule-summary" id="adminAttendanceSummary"></div><div class="card"><div class="row"><div><b>Bảng chấm công</b><div class="muted">Theo dõi theo từng ca của ngày đã chọn.</div></div><button class="btn light" onclick="loadAdminAttendance()">Làm mới</button></div><div id="adminAttendanceList" style="margin-top:10px"></div><div class="attendance-legend"><span><i class="legend-dot green"></i>Đúng giờ / đang làm</span><span><i class="legend-dot orange"></i>Không đúng giờ</span><span><i class="legend-dot red"></i>Quên chấm công</span><span><i class="legend-dot gray"></i>Chưa tới ca</span></div></div></div><div id="adminLeaves" class="admin-pane"><div class="card"><div class="row"><div><b>Duyệt nghỉ phép</b><div class="muted">Yêu cầu nghỉ của nhân viên trong cửa hàng.</div></div><button class="btn light" onclick="loadLeaves()">Làm mới</button></div><div id="leaveList" style="margin-top:10px"></div></div></div><div id="adminDevices" class="admin-pane"><div class="card pending-banner"><b>Khóa thiết bị</b><div style="font-size:11px;margin-top:4px">Nhân viên chỉ được sử dụng tài khoản trên thiết bị đã được Owner phê duyệt.</div></div><div class="card"><div class="row"><div><b>Thiết bị chờ duyệt</b><div class="muted">Duyệt để nhân viên có thể vào ứng dụng.</div></div><button class="btn light" onclick="loadDevices()">Làm mới</button></div><div id="deviceList" style="margin-top:10px"></div></div></div>
+<div id="adminSchedules" class="admin-pane"><div class="card"><b>Tạo lịch ca</b><div class="stack" style="margin-top:12px"><div class="formgrid"><div class="field"><label>Ngày</label><input id="schDate" type="date" onchange="adminSelectedDate=this.value||localToday();adminDayWindowStart=mondayOfWeek(adminSelectedDate);renderScheduleForKind('admin')"></div><div class="field"><label>Mẫu ca</label><select id="schTemplate"><option value="">Chọn mẫu ca</option></select></div><div class="field"><label>Số vị trí</label><input id="schSlots" type="number" value="1" min="1" max="10"></div><div class="field full"><label>Ghi chú</label><input id="schNote" placeholder="Ví dụ: cần 2 người"></div></div><button class="btn primary" onclick="createSchedule()">Tạo ca mở đăng ký</button><div id="schMsg"></div></div></div><div class="schedule-toolbar"><div class="date-title"><b id="adminSelectedDateTitle">—</b><span id="adminSelectedDateSub">Lịch ca trong ngày đã chọn</span></div><div class="date-nav"><button type="button" class="today-btn" onclick="goAdminToday()">Hôm nay</button></div></div><div class="schedule-days" id="adminDayStrip"></div><div class="schedule-summary" id="adminScheduleSummary"></div><div class="card"><div class="row"><div><b>Lịch trong ngày</b><div class="muted">Mỗi ca hiển thị người đang được xếp và vị trí còn trống.</div></div><button class="btn light" onclick="loadAdminSchedules()">Làm mới</button></div><div id="adminScheduleList" style="margin-top:10px"></div></div></div><div id="adminRegistrations" class="admin-pane"><div class="card"><div class="row"><div><b>Duyệt đăng ký ca</b><div class="muted">Nhân viên gửi yêu cầu sẽ xuất hiện tại đây.</div></div><button class="btn light" onclick="loadRegistrations()">Làm mới</button></div><div id="registrationList" style="margin-top:10px"></div></div></div>
+<div id="adminAttendance" class="admin-pane"><div class="schedule-toolbar"><div class="date-title"><b id="adminAttendanceDateTitle">—</b><span>Ai đang trong ca, đã chấm công, đã ra ca và ca chưa chấm công.</span></div><div class="date-nav"><button type="button" class="today-btn" onclick="goAdminAttendanceToday()">Hôm nay</button></div></div><div class="schedule-days" id="adminAttendanceDayStrip"></div><div class="schedule-summary" id="adminAttendanceSummary"></div><div class="card"><div class="row"><div><b>Bảng chấm công</b><div class="muted">Theo dõi theo từng ca của ngày đã chọn.</div></div><button type="button" class="btn light" onclick="loadAdminAttendance()">Làm mới</button></div><div id="adminAttendanceList" style="margin-top:10px"></div><div class="attendance-legend"><span><i class="legend-dot green"></i>Đúng giờ / đang làm</span><span><i class="legend-dot orange"></i>Không đúng giờ</span><span><i class="legend-dot red"></i>Quên chấm công</span><span><i class="legend-dot gray"></i>Chưa tới ca</span></div></div></div><div id="adminLeaves" class="admin-pane"><div class="card"><div class="row"><div><b>Duyệt nghỉ phép</b><div class="muted">Yêu cầu nghỉ của nhân viên trong cửa hàng.</div></div><button class="btn light" onclick="loadLeaves()">Làm mới</button></div><div id="leaveList" style="margin-top:10px"></div></div></div><div id="adminDevices" class="admin-pane"><div class="card pending-banner"><b>Khóa thiết bị</b><div style="font-size:11px;margin-top:4px">Nhân viên chỉ được sử dụng tài khoản trên thiết bị đã được Owner phê duyệt.</div></div><div class="card"><div class="row"><div><b>Thiết bị chờ duyệt</b><div class="muted">Duyệt để nhân viên có thể vào ứng dụng.</div></div><button class="btn light" onclick="loadDevices()">Làm mới</button></div><div id="deviceList" style="margin-top:10px"></div></div></div>
+<div id="adminPayroll" class="admin-pane"><div class="payroll-shell"><div class="card"><div class="row"><div><b>Kỳ lương</b><div class="muted">Tính từ giờ công đã chốt và các khoản điều chỉnh được duyệt.</div></div><button type="button" class="btn light" onclick="loadPayroll()">Làm mới</button></div><div class="formgrid" style="margin-top:13px"><div class="field full"><label>Tên kỳ lương</label><input id="payrollPeriodName" placeholder="Lương tháng 09/2026"></div><div class="field"><label>Từ ngày</label><input id="payrollStart" type="date"></div><div class="field"><label>Đến ngày</label><input id="payrollEnd" type="date"></div><div class="field full"><label>Ghi chú</label><input id="payrollNote" placeholder="Ví dụ: kỳ lương tháng 9"></div></div><button type="button" class="btn primary" style="margin-top:10px" onclick="createPayrollPeriod()">＋ Tạo kỳ lương</button><div id="payrollMsg" style="margin-top:9px"></div></div><div id="payrollPeriods" class="stack"></div><div id="payrollSelected" class="card" style="display:none"><div id="payrollSelectedHead"></div><div id="payrollKpis" class="payroll-kpis" style="margin-top:12px"></div><div id="payrollRuns" class="stack" style="margin-top:12px"></div><hr><b>Khoản điều chỉnh</b><div class="formgrid" style="margin-top:10px"><div class="field"><label>Nhân viên</label><select id="payrollAdjEmployee"></select></div><div class="field"><label>Loại</label><select id="payrollAdjType"><option value="bonus">Thưởng</option><option value="penalty">Phạt</option><option value="advance">Tạm ứng</option></select></div><div class="field"><label>Số tiền</label><input id="payrollAdjAmount" type="number" min="1" step="1000"></div><div class="field full"><label>Lý do</label><input id="payrollAdjReason" placeholder="Lý do điều chỉnh"></div></div><button type="button" class="btn light" style="margin-top:9px" onclick="addPayrollAdjustment()">Thêm khoản điều chỉnh</button><div id="payrollAdjustments" style="margin-top:10px"></div></div></div></div>
+<div id="adminAudit" class="admin-pane"><div class="card"><div class="row"><div><b>Nhật ký thao tác</b><div class="muted">Ai đã làm gì, với dữ liệu nào và vào thời điểm nào.</div></div><button type="button" class="btn light" onclick="loadAudit()">Làm mới</button></div><div id="auditList" style="margin-top:10px"></div></div></div>
 <div id="adminStore" class="admin-pane"><div class="card"><b>Cửa hàng & chấm công</b><div class="muted" style="margin-top:4px">Cấu hình vị trí quán và quy tắc chấm công.</div><div class="stack" style="margin-top:13px"><div class="formgrid"><div class="field full"><label>Tên quán</label><input id="storeName"></div><div class="field full"><label>Địa chỉ</label><input id="storeAddress"></div><div class="field"><label>Vĩ độ</label><input id="storeLat" type="number" step="any"></div><div class="field"><label>Kinh độ</label><input id="storeLng" type="number" step="any"></div><div class="field"><label>Bán kính GPS (m)</label><input id="storeRadius" type="number" min="20" max="1000"></div><div class="field"><label>Cho phép trễ (phút)</label><input id="storeGrace" type="number" min="0" max="60"></div><div class="field"><label>Check-in sớm (phút)</label><input id="storeEarly" type="number" min="0" max="360"></div><div class="field"><label>Đơn giá giờ mặc định</label><input id="storeRate" type="number" min="0"></div></div><button class="btn primary" onclick="saveStore()">Lưu cài đặt</button><div id="storeMsg"></div></div></div></div></section>
 <section id="profile" class="view"><div class="page-head"><h1 class="page-title">Tài khoản</h1><div class="page-sub">Thông tin cá nhân và bảo mật.</div></div><div class="card stack"><div class="field"><label>Họ và tên</label><input id="fullName"></div><div class="field"><label>Email</label><input id="email" readonly></div><div class="field"><label>Số điện thoại</label><input id="phone"></div><div class="field"><label>Địa chỉ</label><input id="address"></div><button class="btn primary" onclick="saveProfile()">Lưu thay đổi</button><button class="btn light" onclick="openPasswordModal()">Đổi mật khẩu</button><div id="profileMsg"></div><button class="btn danger" onclick="signOut()">Đăng xuất</button></div></section>
 </main>
@@ -65,7 +85,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 <div id="deviceGate" class="view"><div class="device-gate-card"><div class="gate-icon" id="gateIcon">📱</div><h1 id="gateTitle">Liên kết thiết bị</h1><p id="gateDesc">Thiết bị này chưa được phê duyệt.</p><div class="device-name" id="gateDeviceName">Thiết bị</div><div class="device-id" id="gateDeviceId">—</div><button id="gateAction" class="gate-button" onclick="registerDeviceAndRefresh()">Đăng ký thiết bị</button><button class="gate-secondary" onclick="signOut()">Đăng xuất</button><div class="gate-note">Chỉ thiết bị được Owner phê duyệt mới được sử dụng tài khoản nhân viên.</div></div></div>
 <div id="employeeModal" class="modal"><div class="modalbox"><div class="modal-head"><div><h2>Sửa nhân viên</h2><div class="muted" style="font-size:11px;margin-top:3px">Quản lý hồ sơ và quyền tài khoản.</div></div><button class="modal-close" onclick="closeEmployeeModal()">×</button></div><div class="stack" style="margin-top:16px"><input id="editEmployeeId" type="hidden"><div class="field"><label>Họ và tên</label><input id="editEmployeeName"></div><div class="field"><label>Số điện thoại</label><input id="editEmployeePhone"></div><div class="formgrid"><div class="field"><label>Vai trò</label><select id="editEmployeeRole"><option value="employee">Nhân viên</option><option value="manager">Quản lý</option><option value="owner">Chủ quán</option></select></div><div class="field"><label>Trạng thái</label><select id="editEmployeeStatus"><option value="active">Đang làm</option><option value="inactive">Tạm nghỉ</option><option value="invited">Chưa kích hoạt</option><option value="terminated">Đã nghỉ</option></select></div></div><div class="field"><label>Lương/giờ (đ)</label><input id="editEmployeeRate" type="number" min="0" step="1000"></div><button class="btn primary" onclick="saveEmployee()">Lưu thay đổi</button><div class="password-box"><b style="font-size:12px">Đổi mật khẩu tài khoản</b><div class="muted" style="font-size:10px;margin:4px 0 10px">Mật khẩu mới không được hiển thị lại.</div><div class="stack"><div class="field"><label>Mật khẩu mới</label><input id="editEmployeePassword" type="password" autocomplete="new-password"></div><div class="field"><label>Nhập lại mật khẩu</label><input id="editEmployeePassword2" type="password" autocomplete="new-password"></div><button class="btn light" onclick="changeEmployeePassword()">Đổi mật khẩu</button><div id="employeePasswordMsg"></div></div></div><div id="employeeMsg"></div></div></div></div>
 <div id="createEmployeeModal" class="modal"><div class="modalbox"><div class="modal-head"><div><h2>Thêm nhân viên</h2><div class="muted" style="font-size:11px;margin-top:3px">Tạo tài khoản và gửi lời mời.</div></div><button class="modal-close" onclick="closeCreateEmployee()">×</button></div><div class="stack" style="margin-top:16px"><div class="field"><label>Họ và tên *</label><input id="newEmployeeName" placeholder="Nguyễn Văn A"></div><div class="field"><label>Email đăng nhập *</label><input id="newEmployeeEmail" type="email" placeholder="nhanvien@email.com"></div><div class="field"><label>Số điện thoại</label><input id="newEmployeePhone" inputmode="tel"></div><div class="field"><label>Lương/giờ (đ)</label><input id="newEmployeeRate" type="number" min="0" step="1000" value="30000"></div><button class="btn primary" onclick="createEmployee()">Tạo tài khoản & gửi email mời</button><div id="createEmployeeMsg"></div></div></div></div>
-<div id="assignShiftModal" class="modal"><div class="modal-card"><div class="modal-head"><div><b id="assignShiftTitle">Thêm nhân viên vào ca</b><div class="muted" id="assignShiftSub">—</div></div><button class="modal-close" onclick="closeAssignShiftModal()">×</button></div><div id="assignShiftCapacity" class="notice info" style="margin:10px 0">—</div><div id="assignShiftPeople" class="stack" style="max-height:52vh;overflow:auto"></div><div id="assignShiftMsg" style="margin-top:10px"></div><div class="modal-actions"><button class="btn light" onclick="closeAssignShiftModal()">Hủy</button><button id="assignShiftSave" class="btn primary" onclick="saveAssignShift()">Lưu</button></div></div></div><div id="leaveModal" class="modal"><div class="modalbox"><div class="modal-head"><div><h2>Xin nghỉ</h2><div class="muted" style="font-size:11px;margin-top:3px">Gửi yêu cầu để Owner/Manager duyệt.</div></div><button class="modal-close" onclick="closeLeaveModal()">×</button></div><div class="stack" style="margin-top:16px"><div class="formgrid"><div class="field"><label>Từ ngày</label><input id="leaveStart" type="date"></div><div class="field"><label>Đến ngày</label><input id="leaveEnd" type="date"></div></div><div class="field"><label>Lý do *</label><input id="leaveReason" placeholder="Ví dụ: việc gia đình"></div><button class="btn primary" onclick="submitLeave()">Gửi yêu cầu nghỉ</button><div id="leaveMsg"></div></div></div></div><div id="passwordModal" class="modal"><div class="modalbox"><div class="modal-head"><div><h2>Đổi mật khẩu</h2><div class="muted" style="font-size:11px;margin-top:3px">Mật khẩu tối thiểu 8 ký tự.</div></div><button class="modal-close" onclick="closePasswordModal()">×</button></div><div class="stack" style="margin-top:16px"><div class="field"><label>Mật khẩu mới</label><input id="newPassword" type="password" autocomplete="new-password"></div><div class="field"><label>Nhập lại mật khẩu</label><input id="newPassword2" type="password" autocomplete="new-password"></div><button class="btn primary" onclick="setNewPassword()">Cập nhật mật khẩu</button><div id="passwordMsg"></div></div></div></div>
+<div id="assignShiftModal" class="modal"><div class="modal-card"><div class="modal-head"><div><b id="assignShiftTitle">Thêm nhân viên vào ca</b><div class="muted" id="assignShiftSub">—</div></div><button class="modal-close" onclick="closeAssignShiftModal()">×</button></div><div id="assignShiftCapacity" class="notice info" style="margin:10px 0">—</div><div id="assignShiftPeople" class="stack" style="max-height:52vh;overflow:auto"></div><div id="assignShiftMsg" style="margin-top:10px"></div><div class="modal-actions"><button class="btn light" onclick="closeAssignShiftModal()">Hủy</button><button id="assignShiftSave" class="btn primary" onclick="saveAssignShift()">Lưu</button></div></div></div><div id="supplementAttendanceModal" class="modal"><div class="modalbox"><div class="modal-head"><div><h2 id="supplementAttendanceTitle">Bổ sung chấm công</h2><div class="muted" id="supplementAttendanceSub">—</div></div><button type="button" class="modal-close" onclick="closeSupplementAttendance()">×</button></div><div class="stack" style="margin-top:16px"><div class="notice info">Owner nhập <b>giờ bắt đầu</b> và <b>giờ kết thúc thực tế</b>. Hệ thống sẽ tính lại giờ công và lưu vào bảng chấm công của nhân viên.</div><div class="supplement-grid"><div class="field"><label>Giờ bắt đầu thực tế *</label><input id="supplementCheckIn" type="datetime-local"></div><div class="field"><label>Giờ kết thúc thực tế *</label><input id="supplementCheckOut" type="datetime-local"></div></div><div class="supplement-note">Thời gian phải nằm trong ca và không được ở tương lai. Nếu đang chỉnh một bản ghi đã có, dữ liệu cũ sẽ được cập nhật và ghi nhật ký thao tác.</div><div class="field"><label>Ghi chú</label><input id="supplementNote" placeholder="Ví dụ: Điện thoại lỗi, Owner bổ sung công"></div><div id="supplementAttendanceMsg"></div><div class="modal-actions"><button type="button" class="btn light" onclick="closeSupplementAttendance()">Hủy</button><button id="supplementAttendanceSave" type="button" class="btn primary" onclick="saveSupplementAttendance()">Lưu chấm công</button></div></div></div></div><div id="leaveModal" class="modal"><div class="modalbox"><div class="modal-head"><div><h2>Xin nghỉ</h2><div class="muted" style="font-size:11px;margin-top:3px">Gửi yêu cầu để Owner/Manager duyệt.</div></div><button class="modal-close" onclick="closeLeaveModal()">×</button></div><div class="stack" style="margin-top:16px"><div class="formgrid"><div class="field"><label>Từ ngày</label><input id="leaveStart" type="date"></div><div class="field"><label>Đến ngày</label><input id="leaveEnd" type="date"></div></div><div class="field"><label>Lý do *</label><input id="leaveReason" placeholder="Ví dụ: việc gia đình"></div><button class="btn primary" onclick="submitLeave()">Gửi yêu cầu nghỉ</button><div id="leaveMsg"></div></div></div></div><div id="passwordModal" class="modal"><div class="modalbox"><div class="modal-head"><div><h2>Đổi mật khẩu</h2><div class="muted" style="font-size:11px;margin-top:3px">Mật khẩu tối thiểu 8 ký tự.</div></div><button class="modal-close" onclick="closePasswordModal()">×</button></div><div class="stack" style="margin-top:16px"><div class="field"><label>Mật khẩu mới</label><input id="newPassword" type="password" autocomplete="new-password"></div><div class="field"><label>Nhập lại mật khẩu</label><input id="newPassword2" type="password" autocomplete="new-password"></div><button class="btn primary" onclick="setNewPassword()">Cập nhật mật khẩu</button><div id="passwordMsg"></div></div></div></div>
 <div id="toast" class="toast"></div>
 <script>
 let sb=null,session=null,profile=null,currentView='dashboard',loginMode='password',appBusy=false,currentWorkState=null;
@@ -73,7 +93,7 @@ const DEFAULT_SUPABASE_URL='https://qwrcjxicudxlspxqfjkj.supabase.co';
 const DEFAULT_SUPABASE_KEY='sb_publishable_YH3fxd3AUJu2p_ADijIpLQ_iuFvEKGk';
 const ROLE_LABEL={owner:'Chủ quán',manager:'Quản lý',employee:'Nhân viên'};
 let employeeSelectedDate=localToday(), employeeDayWindowStart=null, adminSelectedDate=localToday(), adminDayWindowStart=null, adminAttendanceDate=localToday(), adminAttendanceWindowStart=null, mainScheduleDate=localToday(), mainScheduleWindowStart=null;
-let adminScheduleLoadToken=0, employeeScheduleLoadToken=0, adminAttendanceLoadToken=0;
+let adminScheduleLoadToken=0, employeeScheduleLoadToken=0, mainScheduleLoadToken=0, adminAttendanceLoadToken=0, employeeAttendanceStateToken=0, salaryLoadToken=0;
 function el(id){return document.getElementById(id)}
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function toast(msg){const t=el('toast');if(!t)return;t.textContent=msg;t.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove('show'),2200)}
@@ -92,48 +112,64 @@ function renderScheduleForKind(kind){
  if(kind==='employee'){
   if(!employeeDayWindowStart)employeeDayWindowStart=mondayOfWeek(employeeSelectedDate);
   renderDayStrip('mainScheduleDayStrip',employeeSelectedDate,employeeDayWindowStart,'selectEmployeeDate','prevEmployeeDays','nextEmployeeDays');
-  syncMainScheduleRoleUI();loadSchedules();
+  syncMainScheduleRoleUI();
+  loadSchedules();
  }else if(kind==='main'){
   if(!mainScheduleWindowStart)mainScheduleWindowStart=mondayOfWeek(mainScheduleDate);
   renderDayStrip('mainScheduleDayStrip',mainScheduleDate,mainScheduleWindowStart,'selectMainScheduleDate','prevMainScheduleDays','nextMainScheduleDays');
-  syncMainScheduleRoleUI();loadMainSchedule();
+  syncMainScheduleRoleUI();
+  loadMainSchedule();
  }else if(kind==='admin'){
   if(!adminDayWindowStart)adminDayWindowStart=mondayOfWeek(adminSelectedDate);
-  renderDayStrip('adminDayStrip',adminSelectedDate,adminDayWindowStart,'selectAdminDate','prevAdminDays','nextAdminDays');loadAdminSchedules();
+  renderDayStrip('adminDayStrip',adminSelectedDate,adminDayWindowStart,'selectAdminDate','prevAdminDays','nextAdminDays');
+  loadAdminSchedules();
  }else{
   if(!adminAttendanceWindowStart)adminAttendanceWindowStart=mondayOfWeek(adminAttendanceDate);
-  renderDayStrip('adminAttendanceDayStrip',adminAttendanceDate,adminAttendanceWindowStart,'selectAdminAttendanceDate','prevAdminAttendanceDays','nextAdminAttendanceDays');loadAdminAttendance();
+  renderDayStrip('adminAttendanceDayStrip',adminAttendanceDate,adminAttendanceWindowStart,'selectAdminAttendanceDate','prevAdminAttendanceDays','nextAdminAttendanceDays');
+  loadAdminAttendance();
  }
 }
 function goMainScheduleToday(){mainScheduleDate=localToday();mainScheduleWindowStart=mondayOfWeek(mainScheduleDate);renderScheduleForKind('main')}
 function selectMainScheduleDate(d){mainScheduleDate=d;if(!mainScheduleWindowStart||!sevenDayWindow(d,mainScheduleWindowStart).includes(d))mainScheduleWindowStart=mondayOfWeek(d);updateDayStripSelection('mainScheduleDayStrip',d);loadMainSchedule()}
 function prevMainScheduleDays(){shiftMainScheduleWindow(-7)}
 function nextMainScheduleDays(){shiftMainScheduleWindow(7)}
-function shiftMainScheduleWindow(delta){const base=new Date((mainScheduleWindowStart||mondayOfWeek(mainScheduleDate))+'T12:00:00');base.setDate(base.getDate()+delta);mainScheduleWindowStart=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Ho_Chi_Minh'}).format(base);mainScheduleDate=mainScheduleWindowStart;renderScheduleForKind('main')}
-
-function syncMainScheduleRoleUI(){const manager=['owner','manager'].includes(profile?.role);const leave=el('leaveFromScheduleBtn'),sub=el('schedulePageSub');if(leave)leave.style.display=manager?'none':'inline-flex';if(sub)sub.textContent=manager?'Lịch toàn cửa hàng · thêm người và xử lý ca trực tiếp tại đây.':'Lịch của bạn và các ca còn chỗ để đăng ký.';}
-
+function shiftMainScheduleWindow(delta){
+ const base=new Date((mainScheduleWindowStart||mondayOfWeek(mainScheduleDate))+'T12:00:00');
+ base.setDate(base.getDate()+delta);
+ mainScheduleWindowStart=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Ho_Chi_Minh'}).format(base);
+ mainScheduleDate=mainScheduleWindowStart;
+ renderScheduleForKind('main');
+}
+function syncMainScheduleRoleUI(){
+ const manager=['owner','manager'].includes(profile?.role);
+ const leave=el('leaveFromScheduleBtn'),sub=el('schedulePageSub');
+ if(leave)leave.style.display=manager?'none':'inline-flex';
+ if(sub)sub.textContent=manager?'Lịch toàn cửa hàng · thêm người và xử lý ca trực tiếp tại đây.':'Lịch của bạn và các ca còn chỗ để đăng ký.';
+}
 function selectEmployeeDate(d){
  employeeSelectedDate=d;
  if(!employeeDayWindowStart || !sevenDayWindow(employeeSelectedDate,employeeDayWindowStart).includes(d)) employeeDayWindowStart=mondayOfWeek(d);
  updateDayStripSelection('mainScheduleDayStrip',d);
  loadSchedules();
 }
-function prevEmployeeDays(){shiftWindowSelected('employee',-7)} function nextEmployeeDays(){shiftWindowSelected('employee',7)}
+function prevEmployeeDays(){shiftWindowSelected('employee',-7)}
+function nextEmployeeDays(){shiftWindowSelected('employee',7)}
 function selectAdminDate(d){
  adminSelectedDate=d;
  if(!adminDayWindowStart || !sevenDayWindow(adminSelectedDate,adminDayWindowStart).includes(d)) adminDayWindowStart=mondayOfWeek(d);
  updateDayStripSelection('adminDayStrip',d);
  loadAdminSchedules();
 }
-function prevAdminDays(){shiftWindowSelected('admin',-7)} function nextAdminDays(){shiftWindowSelected('admin',7)}
+function prevAdminDays(){shiftWindowSelected('admin',-7)}
+function nextAdminDays(){shiftWindowSelected('admin',7)}
 function selectAdminAttendanceDate(d){
  adminAttendanceDate=d;
  if(!adminAttendanceWindowStart || !sevenDayWindow(adminAttendanceDate,adminAttendanceWindowStart).includes(d)) adminAttendanceWindowStart=mondayOfWeek(d);
  updateDayStripSelection('adminAttendanceDayStrip',d);
  loadAdminAttendance();
 }
-function prevAdminAttendanceDays(){shiftWindowSelected('attendance',-7)} function nextAdminAttendanceDays(){shiftWindowSelected('attendance',7)}
+function prevAdminAttendanceDays(){shiftWindowSelected('attendance',-7)}
+function nextAdminAttendanceDays(){shiftWindowSelected('attendance',7)}
 function prettyDate(s){return new Date(s+'T12:00:00').toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'2-digit'})}
 function time5(t){return (t||'').slice(0,5)}
 function statusLabel(s){return ({open:'Đang mở',assigned:'Đã xếp',cancelled:'Đã hủy',completed:'Hoàn tất'}[s]||'—')}
@@ -194,57 +230,122 @@ function closePasswordModal(){el('passwordModal').classList.remove('open')}
 async function setNewPassword(){if(!sb||!session){toast('Phiên đăng nhập chưa sẵn sàng.');return}const p1=el('newPassword').value,p2=el('newPassword2').value;if(p1.length<8){el('passwordMsg').innerHTML='<div class="notice warn">Mật khẩu phải có ít nhất 8 ký tự.</div>';return}if(p1!==p2){el('passwordMsg').innerHTML='<div class="notice warn">Hai mật khẩu không giống nhau.</div>';return}const {error}=await sb.auth.updateUser({password:p1});el('passwordMsg').innerHTML=error?'<div class="notice warn">Không thể cập nhật mật khẩu.</div>':'<div class="notice ok">Đã đổi mật khẩu thành công.</div>';if(!error)setTimeout(closePasswordModal,700)}
 async function saveProfile(){if(!sb||!session)return;const payload={full_name:el('fullName').value.trim(),phone:el('phone').value.trim(),address:el('address').value.trim()};if(!payload.full_name){el('profileMsg').innerHTML='<div class="notice warn">Họ và tên không được để trống.</div>';return}const {error}=await sb.from('profiles').update(payload).eq('id',session.user.id);el('profileMsg').innerHTML=error?'<div class="notice warn">Không thể lưu hồ sơ.</div>':'<div class="notice ok">Đã lưu hồ sơ.</div>';if(!error){profile={...profile,...payload};syncHeader()}}
 function syncHeader(){if(!profile)return;el('roleLabel').textContent=ROLE_LABEL[profile.role]||'Tài khoản'}
-function updateNavForRole(){const owner=['owner','manager'].includes(profile?.role);el('salaryNav').classList.toggle('hidden',owner);el('adminNav').classList.toggle('hidden',!owner);document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'))}
-function navigate(id){const s=session,p=profile;if(!s||!p){showLogin('Vui lòng đăng nhập để tiếp tục.');return}if(p.role==='employee'&&id==='admin')return;if(['owner','manager'].includes(p.role)&&id==='salary'){toast('Mục này dành cho nhân viên.');return}document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));const v=el(id);if(!v)return;v.classList.add('active');currentView=id;document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.nav===id));window.scrollTo(0,0);if(id==='dashboard'){if(p.role==='employee'){refreshAttendanceState();loadSchedules();loadAttendanceHistory()}else loadOwnerOverview()}if(id==='schedule')renderScheduleForKind(p.role==='employee'?'employee':'main');if(id==='salary')loadSalarySummary();if(id==='admin'){adminTab('employees',document.querySelector('#admin .admin-tabs button'));loadEmployees()}if(id==='profile'){el('profileMsg').innerHTML=''}}
-async function loadOwnerOverview(){if(!profile||!['owner','manager'].includes(profile.role)||!sb)return;const today=localToday();const [{data:emps},{data:regs},{data:devs},{data:atts},{data:todayShifts}]=await Promise.all([sb.from('profiles').select('id').eq('store_id',profile.store_id).eq('employment_status','active'),sb.from('shift_registrations').select('id,work_schedules:schedule_id(store_id)').eq('status','pending'),sb.from('devices').select('id,profiles:employee_id(store_id)').eq('status','pending'),sb.from('attendance').select('id,late_minutes,profiles:employee_id(store_id)').gte('check_in',today+'T00:00:00').lt('check_in',dateAdd(today,1)+'T00:00:00'),sb.from('work_schedules').select('id,status').eq('store_id',profile.store_id).eq('work_date',today)]);const storeRegs=(regs||[]).filter(x=>x.work_schedules?.store_id===profile.store_id),storeDevs=(devs||[]).filter(x=>x.profiles?.store_id===profile.store_id),storeAtts=(atts||[]).filter(x=>x.profiles?.store_id===profile.store_id);el('statEmployees').textContent=(emps||[]).length;el('statPending').textContent=storeRegs.length+storeDevs.length;el('statShift').textContent=(todayShifts||[]).filter(x=>x.status!=='cancelled').length;el('statLate').textContent=storeAtts.filter(x=>Number(x.late_minutes||0)>0).length;const pending=[];if(storeRegs.length)pending.push(`<div class="notice info">Có <b>${storeRegs.length}</b> đăng ký ca đang chờ duyệt.</div>`);if(storeDevs.length)pending.push(`<div class="notice warn">Có <b>${storeDevs.length}</b> thiết bị đang chờ xác nhận.</div>`);const openMissing=storeAtts.filter(x=>x.check_in&&!x.check_out).length;if(openMissing)pending.push(`<div class="notice warn">Có <b>${openMissing}</b> ca đang thiếu checkout.</div>`);el('ownerPending').innerHTML=pending.join('')||'<div class="notice ok">Không có việc chờ xử lý.</div>'}
+function updateNavForRole(){
+ const isStaff=['owner','manager'].includes(profile?.role),isOwner=profile?.role==='owner';
+ el('salaryNav').classList.toggle('hidden',isStaff);
+ el('adminNav').classList.toggle('hidden',!isStaff);
+ const tabs=document.querySelectorAll('#admin .admin-tabs button');
+ if(tabs[6])tabs[6].classList.toggle('hidden',!isOwner); // Thiết bị
+ if(tabs[7])tabs[7].classList.toggle('hidden',!isOwner); // Cửa hàng
+ if(tabs[8])tabs[8].classList.toggle('hidden',!isOwner); // Lương
+ const create= document.querySelector('#adminEmployees .btn.primary');
+ if(create)create.classList.toggle('hidden',!isStaff);
+ document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
+}
+function navigate(id){const s=session,p=profile;if(!s||!p){showLogin('Vui lòng đăng nhập để tiếp tục.');return}if(p.role==='employee'&&id==='admin')return;if(['owner','manager'].includes(p.role)&&id==='salary'){toast('Mục này dành cho nhân viên.');return}document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));const v=el(id);if(!v)return;v.classList.add('active');currentView=id;document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.nav===id));window.scrollTo(0,0);if(id==='dashboard'){if(p.role==='employee'){refreshAttendanceState();loadSchedules();loadAttendanceHistory()}else loadOwnerOverview()}if(id==='schedule')renderScheduleForKind(p.role==='employee'?'employee':'main');if(id==='salary')loadSalarySummary();if(id==='admin'){adminTab('employees',document.querySelector('#admin .admin-tabs button'))}if(id==='profile'){el('profileMsg').innerHTML=''}}
+async function loadOwnerOverview(){
+ if(!profile||!['owner','manager'].includes(profile.role)||!sb)return;
+ try{
+  const today=localToday();
+  const [{data:emps},{data:regs},{data:devs},{data:atts},{data:todayShifts}]=await Promise.all([
+   sb.from('profiles').select('id').eq('store_id',profile.store_id).eq('employment_status','active'),
+   sb.from('shift_registrations').select('id,work_schedules:schedule_id(store_id)').eq('status','pending'),
+   sb.from('devices').select('id,profiles:employee_id(store_id)').eq('status','pending'),
+   sb.from('attendance').select('id,late_minutes,profiles:employee_id(store_id)').gte('check_in',today+'T00:00:00').lt('check_in',dateAdd(today,1)+'T00:00:00'),
+   sb.from('work_schedules').select('id,status').eq('store_id',profile.store_id).eq('work_date',today)
+  ]);
+  const storeRegs=(regs||[]).filter(x=>x.work_schedules?.store_id===profile.store_id);
+  const storeDevs=(devs||[]).filter(x=>x.profiles?.store_id===profile.store_id);
+  const storeAtts=(atts||[]).filter(x=>x.profiles?.store_id===profile.store_id);
+  el('statEmployees').textContent=(emps||[]).length;
+  el('statPending').textContent=storeRegs.length+storeDevs.length;
+  el('statShift').textContent=(todayShifts||[]).filter(x=>x.status!=='cancelled').length;
+  el('statLate').textContent=storeAtts.filter(x=>Number(x.late_minutes||0)>0).length;
+  const pending=[];
+  if(storeRegs.length)pending.push(`<div class="notice info">Có <b>${storeRegs.length}</b> đăng ký ca đang chờ duyệt.</div>`);
+  if(storeDevs.length&&profile.role==='owner')pending.push(`<div class="notice warn">Có <b>${storeDevs.length}</b> thiết bị đang chờ xác nhận.</div>`);
+  const openMissing=storeAtts.filter(x=>x.check_in&&!x.check_out).length;
+  if(openMissing)pending.push(`<div class="notice warn">Có <b>${openMissing}</b> ca đang thiếu checkout.</div>`);
+  el('ownerPending').innerHTML=pending.join('')||'<div class="notice ok">Không có việc chờ xử lý.</div>';
+ }catch(e){
+  console.error('loadOwnerOverview',e);
+  el('ownerPending').innerHTML='<div class="notice warn">Không tải được tổng quan. Vui lòng thử lại.</div>';
+ }
+}
 function renderRoleUI(){const emp=profile?.role==='employee';el('employeeHome').style.display=emp?'block':'none';el('ownerHome').style.display=emp?'none':'block';updateNavForRole();navigate('dashboard')}
 function updateEmployeeHome(next){if(!next){el('empNextShift').textContent='Chưa có ca';el('empNextShiftSub').textContent='Bạn có thể đăng ký ca mới.';return}const today=localToday();const label=next.work_date===today?'Hôm nay':prettyDate(next.work_date);el('empNextShift').textContent=time5(next.start_time)+' – '+time5(next.end_time);el('empNextShiftSub').textContent=next.employee_id===session?.user?.id?'Ca đã được xếp cho bạn · '+label:'Ca đang mở đăng ký · '+label}
 async function registerForShift(scheduleId){const {data:existing}=await sb.from('shift_registrations').select('id,status,rejection_reason').eq('schedule_id',scheduleId).eq('employee_id',session.user.id).order('created_at',{ascending:false}).limit(1).maybeSingle();if(existing&&(existing.status==='pending'||existing.status==='approved')){toast(existing.status==='pending'?'Bạn đã đăng ký ca này, đang chờ duyệt.':'Bạn đã được xếp ca này.');return}const {error}=await sb.rpc('register_for_shift',{p_schedule_id:scheduleId,p_note:''});if(error){toast(error.message==='CA_DA_HUY'?'Ca đã bị hủy.':error.message==='CA_DA_DUOC_XEP'?'Ca đã đủ người.':error.message==='TRUNG_CA'?'Ca trùng với lịch đã có của bạn.':'Không thể đăng ký ca.');return}toast('Đã gửi đăng ký ca.');await loadSchedules()}
 async function loadSchedules(){
- const s=session,p=profile;if(!sb||!s||!p)return;
- if(['owner','manager'].includes(p.role)){await loadMainManagerSchedule();return}
+ const s=session,p=profile;
+ if(!sb||!s||!p||p.role!=='employee')return;
  const token=++employeeScheduleLoadToken;
  const userId=s.user.id,storeId=p.store_id,selected=employeeSelectedDate;
- const {data,error}=await sb.from('work_schedules').select('id,work_date,start_time,end_time,status,note,employee_id,shift_group_id').eq('store_id',storeId).eq('work_date',selected).or('employee_id.eq.'+userId+',employee_id.is.null').order('start_time');
- if(session!==s||profile!==p||token!==employeeScheduleLoadToken||selected!==employeeSelectedDate)return;
- if(error){if(el('shiftList'))el('shiftList').innerHTML='<div class="notice warn">Không tải được lịch. Vui lòng thử lại.</div>';return}
- const {data:regs}=await sb.from('shift_registrations').select('id,schedule_id,status,rejection_reason,created_at').eq('employee_id',userId).order('created_at',{ascending:false});
- if(session!==s||profile!==p||token!==employeeScheduleLoadToken||selected!==employeeSelectedDate)return;
- const rm=new Map();(regs||[]).forEach(r=>{if(!rm.has(r.schedule_id))rm.set(r.schedule_id,r)});
- const title=selected===localToday()?'Hôm nay':prettyDate(selected);el('employeeSelectedDateTitle').textContent=title;el('employeeSelectedDateSub').textContent=title+' · '+(data||[]).length+' ca';updateDayStripSelection('employeeDayStrip',selected);
- const days=sevenDayWindow(selected,employeeDayWindowStart);const {data:weekRows}=await sb.from('work_schedules').select('work_date,shift_group_id,id').eq('store_id',storeId).gte('work_date',days[0]).lte('work_date',days[6]).neq('status','cancelled');
- if(session!==s||profile!==p||token!==employeeScheduleLoadToken||selected!==employeeSelectedDate)return;
- const counts=new Map(days.map(d=>[d,new Set()]));(weekRows||[]).forEach(x=>{if(counts.has(x.work_date))counts.get(x.work_date).add(x.shift_group_id||x.id)});days.forEach(d=>{const c=el('count_mainScheduleDayStrip_'+d);if(c)c.textContent=counts.get(d)?.size?`${counts.get(d).size} ca`:''});
- const groups=new Map();(data||[]).forEach(x=>{const key=x.shift_group_id||x.id;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(x)});
- el('shiftList').innerHTML=groups.size?[...groups.values()].map(items=>{const first=items[0],open=items.find(x=>x.status==='open'&&!x.employee_id),own=items.find(x=>x.employee_id===userId);let action='';if(own)action='<span class="badge ok">Ca của bạn</span>';else if(open){const reg=rm.get(open.id);if(reg?.status==='pending')action='<span class="badge wait">Đang chờ duyệt</span>';else if(reg?.status==='rejected')action=`<div><span class="badge bad">Đã từ chối</span><button class="btn primary" style="margin-top:6px" onclick="registerForShift('${open.id}')">Đăng ký lại</button></div>`;else action=`<button class="btn primary" onclick="registerForShift('${open.id}')">Đăng ký ca</button>`}return `<div class="shift-card"><div class="shift-card-head"><div><div class="shift-card-title">${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</div><div class="shift-card-sub">${items.length} vị trí · ${items.filter(x=>x.employee_id).length} đã xếp${first.note?' · '+escapeHtml(first.note):''}</div></div><div>${action}</div></div>${own?'<div class="selected-day-note" style="margin:11px 0 0">Bạn đang được xếp trong ca này.</div>':''}</div>`}).join(''):'<div class="empty-day"><b>Ngày này chưa có ca.</b><span>Ngày này không có ca. Bạn vẫn có thể chọn ngày khác để xem lịch.</span></div>';
-}
+ const target=el('mainScheduleList');
+ if(!target)return;
+ target.innerHTML='<div class="loading-slot"><div class="notice info">Đang tải lịch…</div></div>';
 
-async function loadMainManagerSchedule(){
- const s=session,p=profile;if(!sb||!s||!p||!['owner','manager'].includes(p.role))return;
- const token=++employeeScheduleLoadToken,selected=employeeSelectedDate,storeId=p.store_id;
- const {data,error}=await sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at,status,note,employee_id,shift_group_id,profiles:employee_id(full_name,phone)').eq('store_id',storeId).eq('work_date',selected).order('start_time');
+ const [{data:assignedRows,error:assignedError},{data:openRows,error:openError}]=await Promise.all([
+   sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at,status,note,employee_id,shift_group_id').eq('store_id',storeId).eq('work_date',selected).eq('employee_id',userId).neq('status','cancelled').order('start_time'),
+   sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at,status,note,employee_id,shift_group_id').eq('store_id',storeId).eq('work_date',selected).eq('status','open').is('employee_id',null).order('start_time')
+ ]);
  if(session!==s||profile!==p||token!==employeeScheduleLoadToken||selected!==employeeSelectedDate)return;
- syncMainScheduleRoleUI();
- if(error){el('shiftList').innerHTML='<div class="notice warn">Không tải được lịch. Vui lòng thử lại.</div>';return}
- const title=selected===localToday()?'Hôm nay':prettyDate(selected);el('employeeSelectedDateTitle').textContent=title;el('employeeSelectedDateSub').textContent=title+' · '+(data||[]).filter(x=>x.status!=='cancelled').length+' ca';updateDayStripSelection('employeeDayStrip',selected);
- const days=sevenDayWindow(selected,employeeDayWindowStart);const {data:weekRows}=await sb.from('work_schedules').select('work_date,shift_group_id,id').eq('store_id',storeId).gte('work_date',days[0]).lte('work_date',days[6]).neq('status','cancelled');
+ if(assignedError||openError){console.error('loadSchedules',assignedError||openError);target.innerHTML='<div class="notice warn">Không tải được lịch. Vui lòng thử lại.</div>';return}
+ const data=[...(assignedRows||[]),...(openRows||[])].sort((a,b)=>String(a.start_time||'').localeCompare(String(b.start_time||'')));
+
+ const {data:regs,error:regError}=await sb.from('shift_registrations')
+   .select('id,schedule_id,status,rejection_reason,created_at')
+   .eq('employee_id',userId).order('created_at',{ascending:false});
  if(session!==s||profile!==p||token!==employeeScheduleLoadToken||selected!==employeeSelectedDate)return;
- const counts=new Map(days.map(d=>[d,new Set()]));(weekRows||[]).forEach(x=>{if(counts.has(x.work_date))counts.get(x.work_date).add(x.shift_group_id||x.id)});days.forEach(d=>{const c=el('count_mainScheduleDayStrip_'+d);if(c)c.textContent=counts.get(d)?.size?`${counts.get(d).size} ca`:''});
- const groups=new Map();(data||[]).filter(x=>x.status!=='cancelled').forEach(x=>{const key=x.shift_group_id||x.id;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(x)});
- if(!groups.size){el('shiftList').innerHTML='<div class="empty-day"><b>Ngày này chưa có ca.</b><span>Không có ca được tạo trong ngày này. Bạn có thể chọn ngày khác để kiểm tra.</span></div>';return}
- el('shiftList').innerHTML=[...groups.values()].map(items=>{
-   const first=items[0],assigned=items.filter(x=>x.employee_id),openSlots=items.filter(x=>x.status==='open'&&!x.employee_id),hasCapacity=openSlots.length>0;
-   const add=hasCapacity?`<button type="button" class="btn light schedule-add-btn" onclick="openAssignShiftModal('${openSlots[0].id}')">＋ Thêm nhân viên</button>`:`<button type="button" class="btn light schedule-add-btn" disabled title="Ca đã đủ vị trí">Đã đủ vị trí</button>`;
-   return `<div class="shift-card"><div class="shift-card-head"><div><div class="shift-card-title">Ca ${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</div><div class="shift-card-sub">${items.length} vị trí · ${assigned.length} nhân viên</div><div class="schedule-capacity">${hasCapacity?'Còn '+openSlots.length+' vị trí trống':'Đã đủ '+assigned.length+'/'+items.length+' vị trí'}</div></div><div class="shift-card-actions">${add}</div></div><div class="people-list">${assigned.length?assigned.map(x=>`<div class="person-row"><div class="person-avatar">${escapeHtml((x.profiles?.full_name||'N').slice(0,1).toUpperCase())}</div><div class="person-main"><div class="person-name">${escapeHtml(x.profiles?.full_name||'Nhân viên')}</div><div class="person-meta">${escapeHtml(x.profiles?.phone||'')} · Đã xếp ca</div></div><span class="person-status ok">Trong ca</span></div>`).join(''):'<div class="empty" style="padding:12px 0">Chưa có nhân viên trong ca.</div>'}</div></div>`;
+ if(regError)console.error('loadSchedules registrations',regError);
+
+ const rm=new Map();(regs||[]).forEach(r=>{if(!rm.has(r.schedule_id))rm.set(r.schedule_id,r)});
+ const activeRows=(data||[]).filter(x=>x.status!=='cancelled');
+ const title=selected===localToday()?'Hôm nay':prettyDate(selected);
+ el('mainScheduleSelectedDateTitle').textContent=title;
+ el('mainScheduleSelectedDateSub').textContent=`Lịch của bạn · ${activeRows.length} ca`;
+ updateDayStripSelection('mainScheduleDayStrip',selected);
+
+ const days=sevenDayWindow(selected,employeeDayWindowStart);
+ const {data:weekRows,error:weekError}=await sb.from('work_schedules')
+   .select('work_date,shift_group_id,id,status').eq('store_id',storeId)
+   .gte('work_date',days[0]).lte('work_date',days[6]);
+ if(session!==s||profile!==p||token!==employeeScheduleLoadToken||selected!==employeeSelectedDate)return;
+ if(weekError){console.error('loadSchedules week',weekError);target.innerHTML='<div class="notice warn">Không tải được lịch tuần. Vui lòng thử lại.</div>';return}
+
+ const counts=new Map(days.map(d=>[d,new Set()]));
+ (weekRows||[]).filter(x=>x.status!=='cancelled').forEach(x=>{
+   if(counts.has(x.work_date))counts.get(x.work_date).add(x.shift_group_id||x.id);
+ });
+ days.forEach(d=>{const c=el('count_mainScheduleDayStrip_'+d);if(c)c.textContent=counts.get(d)?.size?`${counts.get(d).size} ca`:''});
+
+ const groups=new Map();
+ activeRows.forEach(x=>{const key=x.shift_group_id||x.id;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(x)});
+ if(!groups.size){
+   target.innerHTML='<div class="empty-day"><b>Ngày này chưa có ca.</b><span>Không có ca được tạo trong ngày này. Bạn có thể chọn ngày khác để kiểm tra.</span></div>';
+   return;
+ }
+ target.innerHTML=[...groups.values()].map(items=>{
+   const first=items[0],own=items.some(x=>x.employee_id===userId),open=items.find(x=>x.status==='open'&&!x.employee_id);
+   let action='';
+   if(own)action='<span class="badge ok">Ca của bạn</span>';
+   else if(open){
+     const reg=rm.get(open.id);
+     if(reg?.status==='pending')action='<span class="badge wait">Đang chờ duyệt</span>';
+     else if(reg?.status==='rejected')action=`<div><span class="badge bad">Đã từ chối</span><button type="button" class="btn primary" style="margin-top:6px" onclick="registerForShift('${open.id}')">Đăng ký lại</button></div>`;
+     else action=`<button type="button" class="btn primary" onclick="registerForShift('${open.id}')">Đăng ký ca</button>`;
+   }
+   return `<div class="shift-card"><div class="shift-card-head"><div><div class="shift-card-title">${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</div><div class="shift-card-sub">${items.length} vị trí · ${items.filter(x=>x.employee_id).length} đã xếp${first.note?' · '+escapeHtml(first.note):''}</div></div><div>${action}</div></div>${own?'<div class="selected-day-note" style="margin:11px 0 0">Bạn đang được xếp trong ca này.</div>':''}</div>`;
  }).join('');
 }
+
+async function loadMainManagerSchedule(){ return loadMainSchedule(); }
 
 function hideDeviceGate(){el('deviceGate').classList.remove('active')}
 async function refreshDeviceGate(){if(!session||!profile)return;const access=await getEmployeeDeviceAccess();if(access.allowed){hideDeviceGate();await loadApp()}else showDeviceGate(access)}
 async function registerDeviceAndRefresh(){const b=el('gateAction');b.disabled=true;b.textContent='Đang gửi…';await registerDevice();const access=await getEmployeeDeviceAccess();b.disabled=false;if(access.allowed)await loadApp();else showDeviceGate(access)}
 function syncDeviceUI(){if(!profile||profile.role!=='employee')return;const key=getDeviceKey();sb.from('devices').select('status,device_name').eq('employee_id',session.user.id).eq('device_key',key).maybeSingle().then(({data})=>{const ok=data?.status==='approved',label=data?({approved:'Đã duyệt',pending:'Chờ xác nhận',rejected:'Bị từ chối',revoked:'Đã thu hồi'}[data.status]||data.status):'Chưa liên kết';if(el('homeDeviceText'))el('homeDeviceText').textContent=label;if(el('homeDeviceDot'))el('homeDeviceDot').className='dot '+(ok?'ok':data?'bad':'')})}
 async function signOut(){if(sb)await sb.auth.signOut();session=null;profile=null;hideDeviceGate();showLogin()}
-function adminTab(tab,btn){document.querySelectorAll('.admin-pane').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.admin-tabs button').forEach(x=>x.classList.remove('active'));const pane=el('admin'+tab.charAt(0).toUpperCase()+tab.slice(1));if(pane)pane.classList.add('active');if(btn)btn.classList.add('active');if(tab==='employees')loadEmployees();if(tab==='templates')loadTemplates();if(tab==='schedules'){loadTemplates().then(()=>renderScheduleForKind('admin'));}if(tab==='registrations')loadRegistrations();if(tab==='attendance')renderScheduleForKind('attendance');if(tab==='leaves')loadLeaves();if(tab==='devices')loadDevices();if(tab==='store')loadStore()}
+function adminTab(tab,btn){document.querySelectorAll('.admin-pane').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.admin-tabs button').forEach(x=>x.classList.remove('active'));const pane=el('admin'+tab.charAt(0).toUpperCase()+tab.slice(1));if(pane)pane.classList.add('active');if(btn)btn.classList.add('active');if(tab==='employees')loadEmployees();if(tab==='templates')loadTemplates();if(tab==='schedules'){loadTemplates().then(()=>renderScheduleForKind('admin'));}if(tab==='registrations')loadRegistrations();if(tab==='attendance')renderScheduleForKind('attendance');if(tab==='leaves')loadLeaves();if(tab==='devices')loadDevices();if(tab==='store')loadStore();if(tab==='payroll')loadPayroll();if(tab==='audit')loadAudit()}
 function openEmployeeModal(x){el('editEmployeeId').value=x.id;el('editEmployeeName').value=x.full_name||'';el('editEmployeePhone').value=x.phone||'';el('editEmployeeRole').value=x.role||'employee';el('editEmployeeStatus').value=x.employment_status||'active';el('editEmployeeRate').value=x.hourly_rate||0;const manager=profile?.role==='manager';el('editEmployeeRole').disabled=manager;el('editEmployeeStatus').disabled=manager;el('editEmployeeRate').disabled=manager;el('employeePasswordMsg').innerHTML='';el('employeeMsg').innerHTML='';el('employeeModal').classList.add('open')}
 function closeEmployeeModal(){el('employeeModal').classList.remove('open')}
 function openCreateEmployee(){if(!profile||!['owner','manager'].includes(profile.role)){toast('Bạn không có quyền tạo nhân viên.');return}el('newEmployeeName').value='';el('newEmployeeEmail').value='';el('newEmployeePhone').value='';el('newEmployeeRate').value=30000;el('createEmployeeMsg').innerHTML='';el('createEmployeeModal').classList.add('open')}
@@ -254,12 +355,14 @@ function initModalEvents(){document.querySelectorAll('.modal').forEach(m=>m.addE
 document.addEventListener('DOMContentLoaded',()=>{initModalEvents();init()});
 
 async function loadEmployees(){
- const el=document.getElementById('employeeTable');if(!sb||!profile)return;
- const {data,error}=await sb.from('profiles').select('id,full_name,email,phone,role,employment_status,hourly_rate,store_id').eq('store_id',profile.store_id).order('full_name');
- if(error){el.innerHTML='<div class="notice warn">Có lỗi xảy ra. Vui lòng thử lại.</div>';return}
- if(!data?.length){el.innerHTML='<div class="empty">Chưa có nhân viên nào trong cửa hàng.</div>';return}
- el.innerHTML='<table class="table"><thead><tr><th>Nhân viên</th><th>Vai trò</th><th>Trạng thái</th><th>Lương/giờ</th><th></th></tr></thead><tbody>'+
- data.map(x=>`<tr><td><b>${escapeHtml(x.full_name||'(Chưa đặt tên)')}</b><br><span class="muted">${escapeHtml(x.email||'')}</span><br><span class="muted">${escapeHtml(x.phone||'')}</span></td><td>${escapeHtml(ROLE_LABEL[x.role]||x.role)}</td><td>${escapeHtml(({active:'Đang làm',inactive:'Tạm nghỉ',invited:'Chưa kích hoạt',terminated:'Đã nghỉ'}[x.employment_status]||x.employment_status))}</td><td>${Number(x.hourly_rate||0).toLocaleString('vi-VN')}đ</td><td>${['owner','manager'].includes(profile.role)?`<button class="btn light" onclick='openEmployeeModal(${JSON.stringify(x)})'>Sửa</button>`:''}</td></tr>`).join('')+'</tbody></table>';
+ const target=document.getElementById('employeeTable');if(!sb||!profile)return;
+ const canSeePay=profile.role==='owner';
+ const fields=canSeePay?'id,full_name,email,phone,role,employment_status,hourly_rate,store_id':'id,full_name,email,phone,role,employment_status,store_id';
+ const {data,error}=await sb.from('profiles').select(fields).eq('store_id',profile.store_id).order('full_name');
+ if(error){target.innerHTML='<div class="notice warn">Có lỗi xảy ra. Vui lòng thử lại.</div>';return}
+ if(!data?.length){target.innerHTML='<div class="empty">Chưa có nhân viên nào trong cửa hàng.</div>';return}
+ target.innerHTML='<table class="table"><thead><tr><th>Nhân viên</th><th>Vai trò</th><th>Trạng thái</th>'+(canSeePay?'<th>Lương/giờ</th>':'')+'<th></th></tr></thead><tbody>'+
+ data.map(x=>`<tr><td><b>${escapeHtml(x.full_name||'(Chưa đặt tên)')}</b><br><span class="muted">${escapeHtml(x.email||'')}</span><br><span class="muted">${escapeHtml(x.phone||'')}</span></td><td>${escapeHtml(ROLE_LABEL[x.role]||x.role)}</td><td>${escapeHtml(({active:'Đang làm',inactive:'Tạm nghỉ',invited:'Chưa kích hoạt',terminated:'Đã nghỉ'}[x.employment_status]||x.employment_status))}</td>${canSeePay?`<td>${Number(x.hourly_rate||0).toLocaleString('vi-VN')}đ</td>`:''}<td>${['owner','manager'].includes(profile.role)?`<button type="button" class="btn light" onclick='openEmployeeModal(${JSON.stringify(x)})'>Sửa</button>`:''}</td></tr>`).join('')+'</tbody></table>';
 }
 async function changeEmployeePassword(){
  if(!sb||!session||!profile||profile.role!=='owner'){alert('Chỉ Owner được đổi mật khẩu tài khoản nhân viên.');return}
@@ -343,7 +446,7 @@ let assignShiftContext=null;
 function focusAssign(id){openAssignShiftModal(id)}
 async function openAssignShiftModal(scheduleId){
  const modal=el('assignShiftModal');if(!modal||!sb||!profile)return;
- const {data:slot,error}=await sb.from('work_schedules').select('id,work_date,start_time,end_time,status,note,employee_id,shift_group_id').eq('id',scheduleId).single();
+ const {data:slot,error}=await sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at,status,note,employee_id,shift_group_id').eq('id',scheduleId).single();
  if(error||!slot){toast('Không tìm thấy ca.');return}
  const groupId=slot.shift_group_id||slot.id;
  const [{data:slots},{data:emps,error:empErr}]=await Promise.all([
@@ -373,21 +476,20 @@ async function saveAssignShift(){
  if(selected.length>assignShiftContext.openSlots.length){el('assignShiftMsg').innerHTML=`<div class="notice warn">Chỉ còn ${assignShiftContext.openSlots.length} vị trí trống. Hãy bỏ bớt ${selected.length-assignShiftContext.openSlots.length} người.</div>`;return}
  const btn=el('assignShiftSave');setBusyButton(btn,true,'Đang lưu…');
  try{
-   const startedAt=assignShiftContext.startedAt||false;
-   for(let i=0;i<selected.length;i++){
-     const slotId=assignShiftContext.openSlots[i];
-     const {error}=await sb.rpc('assign_employee_to_schedule',{p_schedule_id:slotId,p_employee_id:selected[i],p_note:(startedAt?'Owner xác nhận bổ sung nhân sự do sự cố chấm công':'')});
-     if(error){const msg=String(error.message||'');throw new Error(msg==='TRUNG_CA'?'Nhân viên đã có ca trùng giờ.':msg==='CA_DA_BAT_DAU'?'Ca đã bắt đầu. Chỉ Owner mới có thể bổ sung nhân sự để xử lý chấm công.':msg)}
-     if(startedAt && profile?.role==='owner'){
-       const ask=confirm('Ca đang diễn ra. Bạn có muốn xác nhận check-in thay cho nhân viên này ngay bây giờ không?');
-       if(ask){
-         const {error:ce}=await sb.rpc('confirm_late_checkin',{p_schedule_id:slotId,p_note:'Owner xác nhận thay do sự cố chấm công'});
-         if(ce)throw new Error(ce.message==='CA_DA_KET_THUC'?'Ca đã kết thúc, không thể xác nhận check-in.':ce.message==='DA_CHECKIN'?'Ca đã có check-in.':'Không thể xác nhận check-in thay.');
-       }
-     }
-   }
-   toast(startedAt?'Đã bổ sung nhân viên vào ca và xử lý xác nhận theo lựa chọn.':`Đã thêm ${selected.length} nhân viên vào ca.`);closeAssignShiftModal();await loadAdminSchedules();await loadMainSchedule();await loadRegistrations();await loadOwnerOverview();
+   const {error}=await sb.rpc('assign_employees_to_schedule_group',{p_schedule_id:assignShiftContext.scheduleId,p_employee_ids:selected,p_note:(assignShiftContext.startedAt?'Owner bổ sung nhân sự vào ca đang diễn ra do sự cố chấm công':'')});
+   if(error){const msg=String(error.message||'');throw new Error(msg==='TRUNG_CA'?'Nhân viên đã có ca trùng giờ.':msg==='CA_DA_BAT_DAU'?'Ca đã bắt đầu. Chỉ Owner mới có thể bổ sung nhân sự vào ca đang diễn ra.':msg==='CA_DA_KET_THUC'?'Ca đã kết thúc. Không thể bổ sung nhân viên.':msg==='KHONG_DU_CHO'?'Không đủ vị trí trống cho số người đã chọn.':msg)}
+   toast(assignShiftContext.startedAt?'Đã bổ sung nhân viên vào ca đang diễn ra. Nhân viên sẽ thấy trạng thái chấm công theo đúng thời điểm hiện tại.':`Đã thêm ${selected.length} nhân viên vào ca.`);
+   closeAssignShiftModal();await loadAdminSchedules();await loadMainSchedule();await loadRegistrations();await loadOwnerOverview();
  }catch(e){el('assignShiftMsg').innerHTML=`<div class="notice warn">${escapeHtml(e.message||'Không thể thêm nhân viên.')}</div>`;setBusyButton(btn,false,'Lưu');}
+}
+
+async function unassignSchedule(id){
+ if(profile?.role!=='owner'){toast('Chỉ Owner được bỏ người khỏi ca.');return}
+ if(!confirm('Bỏ nhân viên này khỏi ca? Lịch sẽ trở lại vị trí trống.'))return;
+ const reason=prompt('Lý do (không bắt buộc):','')??'';
+ const {error}=await sb.rpc('unassign_employee_from_schedule',{p_schedule_id:id,p_reason:reason||null});
+ if(error){const map={'DA_CO_CHAM_CONG':'Nhân viên đã có dữ liệu chấm công nên không thể bỏ khỏi ca.','CA_DA_KET_THUC':'Ca đã kết thúc.','CA_KHONG_CO_NGUOI':'Ca này không còn người để bỏ.','FORBIDDEN':'Bạn không có quyền.'};toast(map[error.message]||'Không thể bỏ nhân viên khỏi ca.');return}
+ toast('Đã bỏ nhân viên khỏi ca.');await loadMainSchedule();await loadAdminSchedules();
 }
 function scheduleTimeStatus(item){
  const now=Date.now();
@@ -399,29 +501,61 @@ function scheduleTimeStatus(item){
  return {label:'Đã qua ca',cls:'done'};
 }
 async function loadMainSchedule(){
- const target=el('mainScheduleList');if(!target||!sb||!profile)return;
- const token=++adminScheduleLoadToken,selected=mainScheduleDate,storeId=profile.store_id;
- const [{data,error},{data:emps}]=await Promise.all([
-  sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at,status,note,employee_id,shift_group_id,profiles:employee_id(full_name,phone)').eq('store_id',storeId).eq('work_date',selected).order('start_time'),
-  sb.from('profiles').select('id,full_name').eq('store_id',storeId).eq('role','employee').eq('employment_status','active').order('full_name')
- ]);
- if(token!==adminScheduleLoadToken||selected!==mainScheduleDate)return;
+ const target=el('mainScheduleList');
+ if(!target||!sb||!profile||!['owner','manager'].includes(profile.role))return;
+ const token=++mainScheduleLoadToken,selected=mainScheduleDate,storeId=profile.store_id;
+ target.innerHTML='<div class="loading-slot"><div class="notice info">Đang tải lịch…</div></div>';
+
+ const {data,error}=await sb.from('work_schedules')
+   .select('id,work_date,start_time,end_time,start_at,end_at,status,note,employee_id,shift_group_id,profiles:employee_id(full_name,phone)')
+   .eq('store_id',storeId).eq('work_date',selected).order('start_time');
+ if(token!==mainScheduleLoadToken||selected!==mainScheduleDate)return;
  if(error){target.innerHTML='<div class="notice warn">Không tải được lịch. Vui lòng thử lại.</div>';return}
+
+ const activeRows=(data||[]).filter(x=>x.status!=='cancelled');
  const title=selected===localToday()?'Hôm nay':prettyDate(selected);
- el('mainScheduleSelectedDateTitle').textContent=title;el('mainScheduleSelectedDateSub').textContent=`Lịch trong ngày · ${(data||[]).length} ca`;
+ el('mainScheduleSelectedDateTitle').textContent=title;
+ el('mainScheduleSelectedDateSub').textContent=`Lịch toàn cửa hàng · ${activeRows.length} ca`;
  updateDayStripSelection('mainScheduleDayStrip',selected);
- const week=sevenDayWindow(selected,mainScheduleWindowStart),weekRows=(await sb.from('work_schedules').select('work_date,shift_group_id,id,status').eq('store_id',storeId).gte('work_date',week[0]).lte('work_date',week[6])).data||[];
- if(token!==adminScheduleLoadToken||selected!==mainScheduleDate)return;
- const counts=new Map(week.map(d=>[d,new Set()]));weekRows.filter(x=>x.status!=='cancelled').forEach(x=>{if(counts.has(x.work_date))counts.get(x.work_date).add(x.shift_group_id||x.id)});
- week.forEach(d=>{const c=el('count_mainScheduleDayStrip_'+d);if(c)c.textContent=counts.get(d)?.size?`${counts.get(d).size} ca`:''});
- const groups=new Map();(data||[]).forEach(x=>{const k=x.shift_group_id||x.id;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(x)});
- const options=(emps||[]).map(e=>`<option value="${e.id}">${escapeHtml(e.full_name||'Nhân viên')}</option>`).join('');
- target.innerHTML=groups.size?[...groups.values()].map(items=>{
-  const first=items[0],active=items.filter(x=>x.status!=='cancelled'),assignedPeople=active.filter(x=>x.employee_id),openSlots=active.filter(x=>x.status==='open'&&!x.employee_id),hasCapacity=openSlots.length>0;
-  const addBtn=`<button type="button" class="btn light schedule-add-btn" ${hasCapacity?`onclick="openAssignShiftModal('${openSlots[0].id}')"`: 'disabled'}>${hasCapacity?'＋ Thêm nhân viên':'Đã đủ vị trí'}</button>`;
-  const cancel=active.some(x=>x.status==='open'||x.status==='assigned')?`<button type="button" class="icon-action danger" title="Hủy ca" aria-label="Hủy ca" onclick="cancelSchedule('${first.id}')">×</button>`:'';
-  return `<div class="shift-card"><div class="shift-card-head"><div><div class="shift-card-title">Ca ${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</div><div class="shift-card-sub">${active.length} vị trí · ${assignedPeople.length} nhân viên${first.note?' · '+escapeHtml(first.note):''}</div></div><div class="shift-card-actions">${addBtn}${cancel}</div></div><div class="people-list">${assignedPeople.length?assignedPeople.map(x=>{const st=scheduleTimeStatus(x);return `<div class="person-row"><div class="person-avatar">${escapeHtml((x.profiles?.full_name||'N').slice(0,1).toUpperCase())}</div><div class="person-main"><div class="person-name">${escapeHtml(x.profiles?.full_name||'Nhân viên')}</div><div class="person-meta">Đã xếp ca</div></div><span class="person-status ${st.cls}">${st.label}</span></div>`}).join(''):'<div class="empty" style="padding:12px 0">Chưa có nhân viên trong ca.</div>'}</div></div>`;
- }).join(''):'<div class="empty-day"><b>Ngày này chưa có ca.</b><span>Ngày vẫn có thể chọn để tạo hoặc kiểm tra lịch.</span></div>';
+
+ const week=sevenDayWindow(selected,mainScheduleWindowStart);
+ const {data:weekRows,error:weekError}=await sb.from('work_schedules')
+   .select('work_date,shift_group_id,id,status').eq('store_id',storeId)
+   .gte('work_date',week[0]).lte('work_date',week[6]);
+ if(token!==mainScheduleLoadToken||selected!==mainScheduleDate)return;
+ if(!weekError){
+   const counts=new Map(week.map(d=>[d,new Set()]));
+   (weekRows||[]).filter(x=>x.status!=='cancelled').forEach(x=>{if(counts.has(x.work_date))counts.get(x.work_date).add(x.shift_group_id||x.id)});
+   week.forEach(d=>{const c=el('count_mainScheduleDayStrip_'+d);if(c)c.textContent=counts.get(d)?.size?`${counts.get(d).size} ca`:''});
+ }
+
+ const groups=new Map();
+ activeRows.forEach(x=>{const k=x.shift_group_id||x.id;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(x)});
+ if(!groups.size){
+   target.innerHTML='<div class="empty-day"><b>Ngày này chưa có ca.</b><span>Bạn vẫn có thể chọn ngày khác hoặc tạo ca mới trong Quản trị.</span></div>';
+   return;
+ }
+
+ target.innerHTML=[...groups.values()].map(items=>{
+   const first=items[0],assignedPeople=items.filter(x=>x.employee_id),openSlots=items.filter(x=>x.status==='open'&&!x.employee_id);
+   const hasCapacity=openSlots.length>0;
+   const startTs=new Date(first.start_at||(`${first.work_date}T${first.start_time}`)).getTime();
+   const endTs=new Date(first.end_at||(`${first.work_date}T${first.end_time}`)).getTime();
+   const started=Date.now()>=startTs,ended=Date.now()>endTs;
+   const canAdd=hasCapacity&&!ended&&(!started||profile.role==='owner');
+   let addLabel='＋ Thêm nhân viên',addTitle='Thêm nhân viên vào ca';
+   if(!hasCapacity){addLabel='Đã đủ vị trí';addTitle='Ca đã đủ vị trí'}
+   else if(ended){addLabel='Ca đã kết thúc';addTitle='Không thể thêm người vào ca đã kết thúc'}
+   else if(started&&profile.role!=='owner'){addLabel='Ca đang diễn ra';addTitle='Chỉ Owner được bổ sung người vào ca đang diễn ra'}
+   const addBtn=`<button type="button" class="btn light schedule-add-btn" ${canAdd?`onclick="openAssignShiftModal('${openSlots[0].id}')"`:'disabled'} title="${addTitle}">${addLabel}</button>`;
+   const cancel=(!started&&!ended)?`<button type="button" class="icon-action danger" title="Hủy ca" aria-label="Hủy ca" onclick="cancelSchedule('${first.id}')">×</button>`:'';
+   const people=assignedPeople.length?assignedPeople.map(x=>{
+     const st=scheduleTimeStatus(x);
+     const canRemove=profile.role==='owner'&&Date.now()<new Date(x.end_at||(`${x.work_date}T${x.end_time}`)).getTime();
+     return `<div class="person-row"><div class="person-avatar">${escapeHtml((x.profiles?.full_name||'N').slice(0,1).toUpperCase())}</div><div class="person-main"><div class="person-name">${escapeHtml(x.profiles?.full_name||'Nhân viên')}</div><div class="person-meta">${escapeHtml(x.profiles?.phone||'')} · Đã xếp ca</div></div><span class="person-status ${st.cls}">${st.label}</span>${canRemove?`<button type="button" class="icon-action" title="Bỏ người khỏi ca" onclick="unassignSchedule('${x.id}')">−</button>`:''}</div>`;
+   }).join(''):'<div class="empty" style="padding:12px 0">Chưa có nhân viên trong ca.</div>';
+   return `<div class="shift-card"><div class="shift-card-head"><div><div class="shift-card-title">Ca ${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</div><div class="shift-card-sub">${items.length} vị trí · ${assignedPeople.length} nhân viên</div><div class="schedule-capacity">${hasCapacity?'Còn '+openSlots.length+' vị trí trống':'Đã đủ '+assignedPeople.length+'/'+items.length+' vị trí'}</div></div><div class="shift-card-actions">${addBtn}${cancel}</div></div><div class="people-list">${people}</div></div>`;
+ }).join('');
 }
 
 async function loadAdminSchedules(){
@@ -560,142 +694,6 @@ function showDeviceGate(access){
     title.textContent='Liên kết thiết bị';desc.textContent='Thiết bị này chưa được đăng ký cho tài khoản. Gửi yêu cầu để Owner xác nhận.';icon.textContent='📱';action.textContent='Đăng ký thiết bị';action.onclick=registerDeviceAndRefresh;
   }
 }
-function hideDeviceGate(){el('deviceGate').classList.remove('active')}
-async function refreshDeviceGate(){if(!session||!profile)return;const access=await getEmployeeDeviceAccess();if(access.allowed){hideDeviceGate();await loadApp()}else showDeviceGate(access)}
-async function registerDeviceAndRefresh(){const b=el('gateAction');b.disabled=true;b.textContent='Đang gửi…';await registerDevice();const access=await getEmployeeDeviceAccess();b.disabled=false;if(access.allowed)await loadApp();else showDeviceGate(access)}
-function syncDeviceUI(){if(!profile||profile.role!=='employee')return;const key=getDeviceKey();sb.from('devices').select('status,device_name').eq('employee_id',session.user.id).eq('device_key',key).maybeSingle().then(({data})=>{const ok=data?.status==='approved',label=data?({approved:'Đã duyệt',pending:'Chờ xác nhận',rejected:'Bị từ chối',revoked:'Đã thu hồi'}[data.status]||data.status):'Chưa liên kết';if(el('homeDeviceText'))el('homeDeviceText').textContent=label;if(el('homeDeviceDot'))el('homeDeviceDot').className='dot '+(ok?'ok':data?'bad':'')})}
-async function signOut(){if(sb)await sb.auth.signOut();session=null;profile=null;hideDeviceGate();showLogin()}
-function adminTab(tab,btn){document.querySelectorAll('.admin-pane').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.admin-tabs button').forEach(x=>x.classList.remove('active'));const pane=el('admin'+tab.charAt(0).toUpperCase()+tab.slice(1));if(pane)pane.classList.add('active');if(btn)btn.classList.add('active');if(tab==='employees')loadEmployees();if(tab==='templates')loadTemplates();if(tab==='schedules')loadTemplates().then(loadAdminSchedules);if(tab==='registrations')loadRegistrations();if(tab==='attendance')loadAdminAttendance();if(tab==='leaves')loadLeaves();if(tab==='devices')loadDevices();if(tab==='store')loadStore()}
-function openEmployeeModal(x){el('editEmployeeId').value=x.id;el('editEmployeeName').value=x.full_name||'';el('editEmployeePhone').value=x.phone||'';el('editEmployeeRole').value=x.role||'employee';el('editEmployeeStatus').value=x.employment_status||'active';el('editEmployeeRate').value=x.hourly_rate||0;const manager=profile?.role==='manager';el('editEmployeeRole').disabled=manager;el('editEmployeeStatus').disabled=manager;el('editEmployeeRate').disabled=manager;el('employeePasswordMsg').innerHTML='';el('employeeMsg').innerHTML='';el('employeeModal').classList.add('open')}
-function closeEmployeeModal(){el('employeeModal').classList.remove('open')}
-function openCreateEmployee(){if(!profile||!['owner','manager'].includes(profile.role)){toast('Bạn không có quyền tạo nhân viên.');return}el('newEmployeeName').value='';el('newEmployeeEmail').value='';el('newEmployeePhone').value='';el('newEmployeeRate').value=30000;el('createEmployeeMsg').innerHTML='';el('createEmployeeModal').classList.add('open')}
-function closeCreateEmployee(){el('createEmployeeModal').classList.remove('open')}
-function openProfileFromHeader(){navigate('profile')}
-function initModalEvents(){document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal.open').forEach(m=>m.classList.remove('open'))})}
-document.addEventListener('DOMContentLoaded',()=>{initModalEvents();init()});
-
-async function loadEmployees(){
- const el=document.getElementById('employeeTable');if(!sb||!profile)return;
- const {data,error}=await sb.from('profiles').select('id,full_name,email,phone,role,employment_status,hourly_rate,store_id').eq('store_id',profile.store_id).order('full_name');
- if(error){el.innerHTML='<div class="notice warn">Có lỗi xảy ra. Vui lòng thử lại.</div>';return}
- if(!data?.length){el.innerHTML='<div class="empty">Chưa có nhân viên nào trong cửa hàng.</div>';return}
- el.innerHTML='<table class="table"><thead><tr><th>Nhân viên</th><th>Vai trò</th><th>Trạng thái</th><th>Lương/giờ</th><th></th></tr></thead><tbody>'+
- data.map(x=>`<tr><td><b>${escapeHtml(x.full_name||'(Chưa đặt tên)')}</b><br><span class="muted">${escapeHtml(x.email||'')}</span><br><span class="muted">${escapeHtml(x.phone||'')}</span></td><td>${escapeHtml(ROLE_LABEL[x.role]||x.role)}</td><td>${escapeHtml(({active:'Đang làm',inactive:'Tạm nghỉ',invited:'Chưa kích hoạt',terminated:'Đã nghỉ'}[x.employment_status]||x.employment_status))}</td><td>${Number(x.hourly_rate||0).toLocaleString('vi-VN')}đ</td><td>${['owner','manager'].includes(profile.role)?`<button class="btn light" onclick='openEmployeeModal(${JSON.stringify(x)})'>Sửa</button>`:''}</td></tr>`).join('')+'</tbody></table>';
-}
-async function changeEmployeePassword(){
- if(!sb||!session||!profile||profile.role!=='owner'){alert('Chỉ Owner được đổi mật khẩu tài khoản nhân viên.');return}
- const id=document.getElementById('editEmployeeId').value;
- const p1=document.getElementById('editEmployeePassword').value;
- const p2=document.getElementById('editEmployeePassword2').value;
- const msg=document.getElementById('employeePasswordMsg');
- if(p1.length<8){msg.innerHTML='<div class="notice warn">Mật khẩu phải có ít nhất 8 ký tự.</div>';return}
- if(p1!==p2){msg.innerHTML='<div class="notice warn">Hai mật khẩu không giống nhau.</div>';return}
- msg.innerHTML='<div class="notice">Đang cập nhật mật khẩu...</div>';
- try{
-  const {data,error}=await sb.functions.invoke('change-employee-password',{body:{employee_id:id,new_password:p1}});
-  if(error)throw new Error(error.message||'Không thể đổi mật khẩu');
-  if(data?.error)throw new Error(data.error);
-  msg.innerHTML='<div class="notice ok">Đã đổi mật khẩu thành công.</div>';
-  document.getElementById('editEmployeePassword').value='';document.getElementById('editEmployeePassword2').value='';
- }catch(e){msg.innerHTML='<div class="notice warn">'+escapeHtml(e.message||String(e))+'</div>'}
-}
-async function saveEmployee(){
- const id=document.getElementById('editEmployeeId').value;
- if(profile.role==='manager'){
-   const name=document.getElementById('editEmployeeName').value.trim();
-   if(!name){alert('Họ tên không được để trống.');return}
-   const {error}=await sb.rpc('manager_update_employee_contact',{p_employee_id:id,p_full_name:name,p_phone:document.getElementById('editEmployeePhone').value.trim()});
-   document.getElementById('employeeMsg').innerHTML=error?'<div class="notice warn">Quản lý chỉ được sửa thông tin liên hệ.</div>':'<div class="notice ok">Đã lưu thông tin nhân viên.</div>';
-   if(!error){closeEmployeeModal();await loadEmployees();}
-   return;
- }
- if(profile.role!=='owner'){alert('Bạn không có quyền sửa nhân viên.');return}
- const payload={full_name:document.getElementById('editEmployeeName').value.trim(),phone:document.getElementById('editEmployeePhone').value.trim(),role:document.getElementById('editEmployeeRole').value,employment_status:document.getElementById('editEmployeeStatus').value,hourly_rate:Number(document.getElementById('editEmployeeRate').value||0)};
- if(!payload.full_name){alert('Họ tên không được để trống.');return}
- const {error}=await sb.from('profiles').update(payload).eq('id',id);
- document.getElementById('employeeMsg').innerHTML=error?'<div class="notice warn">Có lỗi xảy ra. Vui lòng thử lại.</div>':'<div class="notice ok">Đã lưu.</div>';
- if(!error){closeEmployeeModal();await loadEmployees();}
-}
-
-async function loadTemplates(){
- const el=document.getElementById('templateList'),sel=document.getElementById('schTemplate');if(!sb||!profile)return;
- const {data,error}=await sb.from('shift_templates').select('id,name,start_time,end_time,break_minutes,capacity,is_active').eq('store_id',profile.store_id).order('start_time');
- if(error){el.innerHTML='<div class="notice warn">Có lỗi xảy ra. Vui lòng thử lại.</div>';return}
- sel.innerHTML='<option value="">-- Chọn mẫu --</option>';
- data.forEach(x=>{sel.insertAdjacentHTML('beforeend',`<option value="${x.id}">${escapeHtml(x.name)} · ${x.start_time.slice(0,5)}-${x.end_time.slice(0,5)}</option>`)});
- el.innerHTML=data.length?data.map(x=>`<div class="item"><div class="row"><div><b>${escapeHtml(x.name)}</b><div class="muted">${x.start_time.slice(0,5)} – ${x.end_time.slice(0,5)} · tối đa ${x.capacity} người</div></div><span class="badge ${x.is_active?'ok':'bad'}">${x.is_active?'Đang dùng':'Tắt'}</span></div></div>`).join(''):'<div class="empty">Chưa có mẫu ca.</div>';
-}
-async function createEmployee(){
-  if(!sb||!session||!profile||!['owner','manager'].includes(profile.role)){toast('Bạn không có quyền tạo nhân viên.');return}
-  const name=el('newEmployeeName').value.trim();
-  const email=el('newEmployeeEmail').value.trim().toLowerCase();
-  const phone=el('newEmployeePhone').value.trim();
-  const rate=Number(el('newEmployeeRate').value||0);
-  const msg=el('createEmployeeMsg');
-  if(!name||!email){msg.innerHTML='<div class="notice warn">Vui lòng nhập họ tên và email.</div>';return}
-  if(!/^\S+@\S+\.\S+$/.test(email)){msg.innerHTML='<div class="notice warn">Email chưa đúng định dạng.</div>';return}
-  msg.innerHTML='<div class="notice info">Đang tạo tài khoản và gửi email mời…</div>';
-  try{
-    const {data,error}=await sb.functions.invoke('create-employee',{body:{full_name:name,email,phone,hourly_rate:rate,redirect_to:location.href.split('#')[0]}});
-    if(error)throw new Error(error.message||'Không thể tạo tài khoản');
-    if(data?.error)throw new Error(data.error);
-    msg.innerHTML='<div class="notice ok">Đã tạo tài khoản và gửi email mời đến <b>'+escapeHtml(email)+'</b>.</div>';
-    await loadEmployees();
-  }catch(e){msg.innerHTML='<div class="notice warn">Không thể tạo tài khoản: '+escapeHtml(e.message||String(e))+'</div>'}
-}
-
-async function createTemplate(){
- if(!profile?.store_id){alert('Owner chưa có store_id. Hãy cấu hình cửa hàng trước.');return}
- const p={store_id:profile.store_id,name:document.getElementById('tplName').value.trim(),start_time:document.getElementById('tplStart').value,end_time:document.getElementById('tplEnd').value,break_minutes:Number(document.getElementById('tplBreak').value||0),capacity:Math.max(1,Math.min(10,Number(document.getElementById('tplCapacity').value||1)))};
- if(!p.name||!p.start_time||!p.end_time){alert('Điền đủ tên ca, giờ bắt đầu và kết thúc.');return}
- const {error}=await sb.from('shift_templates').insert(p);document.getElementById('tplMsg').innerHTML=error?'<div class="notice warn">Có lỗi xảy ra. Vui lòng thử lại.</div>':'<div class="notice ok">Đã tạo mẫu ca.</div>';if(!error)await loadTemplates();
-}
-async function createSchedule(){
- if(!profile?.store_id){alert('Chưa có cửa hàng.');return}
- const tid=document.getElementById('schTemplate').value,date=document.getElementById('schDate').value;
- const slots=Math.max(1,Math.min(10,Number(document.getElementById('schSlots').value||1)));
- if(!tid||!date){alert('Chọn ngày và mẫu ca.');return}
- const {data,error}=await sb.rpc('create_schedule_slots',{p_store_id:profile.store_id,p_shift_template_id:tid,p_work_date:date,p_note:document.getElementById('schNote').value.trim(),p_slots:slots});
- document.getElementById('schMsg').innerHTML=error?'<div class="notice warn">Có lỗi xảy ra. Vui lòng thử lại.</div>':'<div class="notice ok">Đã tạo '+data+' vị trí ca mở đăng ký.</div>';
- if(!error)await loadAdminSchedules();
-}
-
-async function loadRegistrations(){
- const el=document.getElementById('registrationList');
- const {data,error}=await sb.from('shift_registrations').select('id,status,note,requested_at,schedule_id,employee_id,profiles:employee_id(full_name,email),work_schedules: schedule_id(work_date,start_time,end_time,status)').eq('status','pending').order('requested_at');
- if(error){el.innerHTML='<div class="notice warn">Có lỗi xảy ra. Vui lòng thử lại.</div>';return}
- el.innerHTML=data?.length?data.map(x=>`<div class="item"><div class="row"><div><b>${escapeHtml(x.profiles?.full_name||'Nhân viên')}</b><div class="muted">${escapeHtml(x.work_schedules?.work_date||'')} · ${escapeHtml(x.work_schedules?.start_time||'').slice(0,5)} – ${escapeHtml(x.work_schedules?.end_time||'').slice(0,5)}</div></div><span class="badge wait">Chờ duyệt</span></div><div class="admin-actions" style="margin-top:9px"><button class="btn green" onclick="reviewRegistration('${x.id}','approve','${x.schedule_id}','${x.employee_id}')">Duyệt</button><button class="btn danger" onclick="reviewRegistration('${x.id}','reject')">Từ chối</button></div></div>`).join(''):'<div class="empty">Không có đăng ký chờ duyệt.</div>';
-}
-async function reviewRegistration(id,action,scheduleId,employeeId){
- const reason=action==='reject'?(prompt('Lý do từ chối (có thể bỏ trống):','') ?? ''):'';
- const {error}=await sb.rpc('review_shift_registration',{p_registration_id:id,p_action:action,p_reason:reason});
- if(error){alert(error.message);return}
- await loadRegistrations();await loadAdminSchedules();await loadSchedules();
-}
-
-async function loadDevices(){
- const el=document.getElementById('deviceList');
- const {data,error}=await sb.from('devices').select('id,device_key,device_name,platform,status,requested_at,last_seen_at,employee_id,profiles:employee_id(full_name,email)').order('status').order('requested_at',{ascending:false});
- if(error){el.innerHTML='<div class="notice warn">Có lỗi xảy ra. Vui lòng thử lại.</div>';return}
- el.innerHTML=data?.length?data.map(x=>{const label={pending:'Chờ duyệt',approved:'Đã duyệt',rejected:'Từ chối',revoked:'Đã thu hồi'}[x.status]||x.status;const cls=x.status==='approved'?'ok':x.status==='pending'?'wait':'bad';let actions='';if(x.status==='pending'&&profile.role==='owner'){actions=`<button class="btn green" onclick="reviewDevice('${x.id}','approved')">Duyệt</button><button class="btn danger" onclick="reviewDevice('${x.id}','rejected')">Từ chối</button>`;}else if(x.status==='approved'&&profile.role==='owner'){actions=`<button class="btn danger" onclick="reviewDevice('${x.id}','revoked')">Thu hồi</button>`;}return `<div class="item"><div class="row"><div><b>${escapeHtml(x.profiles?.full_name||'Nhân viên')}</b><div class="muted">${escapeHtml(x.device_name||'Thiết bị')} · ${escapeHtml(x.platform||'')}</div><div class="mini">Mã thiết bị: ${escapeHtml(shortDeviceKey(x.device_key))} · ${x.last_seen_at?'Hoạt động '+formatTime(x.last_seen_at):'Chưa hoạt động'}</div></div><span class="badge ${cls}">${label}</span></div>${actions?`<div class="admin-actions" style="margin-top:9px">${actions}</div>`:''}</div>`}).join(''):'<div class="empty">Chưa có thiết bị.</div>';
-}
-async function reviewDevice(id,status){const action=status==='approved'?'approve':status==='rejected'?'reject':'revoke';if(profile?.role!=='owner'){alert('Chỉ Owner được quản lý thiết bị.');return}const reason=action==='reject'?(prompt('Lý do từ chối (có thể bỏ trống):','')??''):'';const {error}=await sb.rpc('review_attendance_device',{p_device_id:id,p_action:action,p_reason:reason});if(error)alert(error.message);else await loadDevices()}
-async function loadStore(){
- if(!profile?.store_id){document.getElementById('storeMsg').innerHTML='<div class="notice warn">Tài khoản Owner chưa được gán cửa hàng.</div>';return}
- const {data,error}=await sb.from('stores').select('*').eq('id',profile.store_id).single();if(error){document.getElementById('storeMsg').innerHTML='<div class="notice warn">Có lỗi xảy ra. Vui lòng thử lại.</div>';return}
- const lat=(data.latitude===null||data.latitude===undefined||data.latitude==='')?DEFAULT_STORE_LAT:data.latitude;const lng=(data.longitude===null||data.longitude===undefined||data.longitude==='')?DEFAULT_STORE_LNG:data.longitude;
-document.getElementById('storeName').value=data.name||'';document.getElementById('storeAddress').value=data.address||'';document.getElementById('storeLat').value=lat;document.getElementById('storeLng').value=lng;document.getElementById('storeRadius').value=data.gps_radius_m??DEFAULT_STORE_RADIUS;document.getElementById('storeGrace').value=data.late_grace_minutes??5;document.getElementById('storeEarly').value=data.checkin_early_minutes??60;document.getElementById('storeRate').value=data.hourly_default_rate??30000;
-if(data.latitude===null||data.latitude===undefined||data.longitude===null||data.longitude===undefined){document.getElementById('storeMsg').innerHTML='<div class="notice ok">Đã điền sẵn tọa độ quán: '+DEFAULT_STORE_LAT+', '+DEFAULT_STORE_LNG+'. Hãy bấm <b>Lưu cài đặt</b> để ghi vào Supabase.</div>';}
-}
-async function saveStore(){
- if(profile.role!=='owner'){alert('Chỉ Owner được sửa cài đặt cửa hàng.');return}
- const payload={name:document.getElementById('storeName').value.trim(),address:document.getElementById('storeAddress').value.trim(),latitude:Number(document.getElementById('storeLat').value),longitude:Number(document.getElementById('storeLng').value),gps_radius_m:Number(document.getElementById('storeRadius').value),late_grace_minutes:Number(document.getElementById('storeGrace').value),checkin_early_minutes:Number(document.getElementById('storeEarly').value),hourly_default_rate:Number(document.getElementById('storeRate').value)};
- const {error}=await sb.from('stores').update(payload).eq('id',profile.store_id);document.getElementById('storeMsg').innerHTML=error?'<div class="notice warn">Có lỗi xảy ra. Vui lòng thử lại.</div>':'<div class="notice ok">Đã lưu cài đặt cửa hàng.</div>';
-}
-
-
-
-
 // ===================== V18: DEVICE LOGIN GATE =====================
 
 async function getEmployeeDeviceAccess(){
@@ -792,7 +790,7 @@ function attendanceErrorText(msg){
   'CA_HOM_NAY_NOT_FOUND':'Hôm nay bạn chưa có ca được xếp.',
   'CHUA_DEN_GIO_CHECKIN':'Chưa đến thời gian được phép check-in.',
   'DA_QUA_CUA_CHECKIN':'Đã quá thời gian cho phép check-in của ca.',
-  'CHECKIN_QUA_HAN_CAN_QUAN_LY':'Đã quá 30 phút kể từ giờ bắt đầu. Vui lòng liên hệ quản lý để xác nhận công.',
+  'CHECKIN_QUA_HAN_CAN_QUAN_LY':'Đã quá thời gian check-in tự động. Vui lòng liên hệ Owner để bổ sung chấm công nếu bạn thực tế đã đi làm.',
   'TRUNG_CA':'Ca bị trùng với lịch hiện tại hoặc yêu cầu đăng ký đang chờ.',
   'NGOAI_VUNG_GPS':'Bạn đang ở ngoài bán kính chấm công của quán.',
   'CHUA_CHECKIN':'Chưa check-in nên chưa thể check-out.',
@@ -805,6 +803,31 @@ function attendanceErrorText(msg){
  };
  return map[msg]||msg;
 }
+async function loadSalarySummary(){
+ const p=profile,s=session,token=++salaryLoadToken;if(!sb||!p||!s||p.role!=='employee')return;
+ const money=n=>Number(n||0).toLocaleString('vi-VN')+'đ';
+ const today=localToday(),monthStart=today.slice(0,8)+'01',monthEnd=dateAdd(monthStart,32).slice(0,8)+'01';
+ const [{data:profRow,error:profErr},{data:storeRow,error:storeErr},{data:periods,error:periodErr}]=await Promise.all([
+   sb.from('profiles').select('hourly_rate').eq('id',s.user.id).single(),
+   sb.from('stores').select('hourly_default_rate').eq('id',p.store_id).single(),
+   sb.from('payroll_periods').select('id,period_name,start_date,end_date,status').eq('store_id',p.store_id).lte('start_date',today).gte('end_date',monthStart).order('start_date',{ascending:false}).limit(1)
+ ]);
+ if(token!==salaryLoadToken||session!==s||profile!==p)return;
+ if(profErr||storeErr||periodErr){if(el('salaryHero'))el('salaryHero').textContent='Chưa tải được';return}
+ const period=periods?.[0]||null;
+ if(period){
+   const {data:run,error:runErr}=await sb.from('payroll_runs').select('hourly_rate,worked_minutes,gross_amount,bonus_amount,penalty_amount,advance_amount,net_amount').eq('payroll_period_id',period.id).eq('employee_id',s.user.id).maybeSingle();
+   if(token!==salaryLoadToken||session!==s||profile!==p)return;
+   if(!runErr&&run){
+     const hours=Number(run.worked_minutes||0)/60;el('salaryHero').textContent=money(run.net_amount);el('salaryHoursBig').textContent=(Math.round(hours*100)/100).toLocaleString('vi-VN')+'h';el('salaryRateBig').textContent=money(run.hourly_rate)+'/h';el('hourly').textContent=money(run.hourly_rate)+'/giờ';el('salaryHours').textContent=(Math.round(hours*100)/100).toLocaleString('vi-VN')+' giờ';el('salaryNet').textContent=money(run.net_amount);const hero=el('salary')?.querySelector('.salary-hero div[style]');if(hero)hero.textContent=period.status==='paid'?'Kỳ lương đã trả.':period.status==='locked'?'Kỳ lương đã chốt.':'Kỳ lương đang được kiểm tra.';return;
+   }
+ }
+ const [{data:atts,error:attErr}]=await Promise.all([sb.from('attendance').select('check_in,check_out,worked_minutes').eq('employee_id',s.user.id).gte('check_in',monthStart+'T00:00:00+07:00').lt('check_in',monthEnd+'T00:00:00+07:00').order('check_in',{ascending:false})]);
+ if(token!==salaryLoadToken||session!==s||profile!==p)return;
+ if(attErr){if(el('salaryHero'))el('salaryHero').textContent='Chưa tải được';return}
+ const rate=Number(profRow?.hourly_rate ?? storeRow?.hourly_default_rate ?? 0),minutes=(atts||[]).reduce((sum,x)=>sum+Number(x.worked_minutes||0),0),hours=minutes/60,amount=Math.round(hours*rate);el('salaryHero').textContent=money(amount);el('salaryHoursBig').textContent=(Math.round(hours*100)/100).toLocaleString('vi-VN')+'h';el('salaryRateBig').textContent=money(rate)+'/h';el('hourly').textContent=money(rate)+'/giờ';el('salaryHours').textContent=(Math.round(hours*100)/100).toLocaleString('vi-VN')+' giờ';el('salaryNet').textContent=money(amount);const hero=el('salary')?.querySelector('.salary-hero div[style]');if(hero)hero.textContent='Tạm tính từ giờ công · chưa có kỳ lương chốt.';
+}
+
 async function getEmployeeWorkState(){
   if(!sb||!session||!profile||profile.role!=='employee')return {state:'NO_SHIFT'};
   const {data,error}=await sb.rpc('get_my_work_state');
@@ -831,12 +854,12 @@ function updateEmployeeHomeFromState(st){
 }
 async function refreshAttendanceState(){
   const btn=el('checkBtn'),msg=el('attendanceMsg');if(!btn||!msg)return;
-  const s=session,p=profile;
+  const s=session,p=profile,token=++employeeAttendanceStateToken;
   if(!sb||!s||!p){btn.disabled=true;btn.textContent='CHECK-IN';return}
   if(p.role!=='employee'){btn.disabled=true;btn.textContent='DÀNH CHO NHÂN VIÊN';msg.className='notice';msg.textContent='Owner/Manager xem chấm công trong khu vực quản trị.';return}
   try{
     const st=await getEmployeeWorkState();
-    if(session!==s||profile!==p||token!==employeeScheduleLoadToken||selected!==employeeSelectedDate)return;
+    if(session!==s||profile!==p||token!==employeeAttendanceStateToken)return;
     currentWorkState=st;updateEmployeeHomeFromState(st);
     if(st.state==='CHECKIN_AVAILABLE'){
       btn.disabled=false;btn.textContent='CHECK-IN';msg.className='notice warn';msg.textContent='Đã đến thời gian check-in. Hệ thống sẽ kiểm tra thiết bị và GPS khi bạn bấm.';
@@ -844,6 +867,8 @@ async function refreshAttendanceState(){
       btn.disabled=false;btn.textContent='CHECK-OUT';msg.className='notice ok';msg.textContent=`Đã check-in lúc ${formatTime(st.check_in)} · trễ ${st.late_minutes||0} phút.`;
     }else if(st.state==='MISSING_CHECKOUT'){
       btn.disabled=true;btn.textContent='CẦN XỬ LÝ';msg.className='notice warn';msg.textContent='Ca đã quá thời gian checkout. Vui lòng liên hệ Owner/Manager để xử lý.';
+    }else if(st.state==='CHECKIN_EXPIRED'){
+      btn.disabled=true;btn.textContent='QUÁ HẠN CHECK-IN';msg.className='notice warn';msg.textContent='Đã quá thời gian check-in tự động. Owner cần bổ sung chấm công nếu bạn thực tế đã đi làm.';
     }else if(st.state==='MISSED_CHECKIN'){
       btn.disabled=true;btn.textContent='CHƯA CHẤM CÔNG';msg.className='notice warn';msg.textContent='Ca đã kết thúc nhưng chưa có chấm công. Vui lòng liên hệ quản lý nếu có lý do.';
     }else if(st.state==='UPCOMING'){
@@ -868,31 +893,71 @@ async function submitLeave(){const a=el('leaveStart').value,b=el('leaveEnd').val
 async function loadLeaves(){const target=el('leaveList');if(!target)return;const {data,error}=await sb.from('leave_requests').select('id,start_date,end_date,reason,status,created_at,employee_id,profiles:employee_id(full_name,email)').eq('store_id',profile.store_id).order('created_at',{ascending:false}).limit(100);if(error){target.innerHTML='<div class="notice warn">Không tải được yêu cầu nghỉ.</div>';return}target.innerHTML=data?.length?data.map(x=>{const label={pending:'Chờ duyệt',approved:'Đã duyệt',rejected:'Từ chối',cancelled:'Đã hủy'}[x.status]||x.status;const cls=x.status==='approved'?'ok':x.status==='pending'?'wait':'bad';const actions=x.status==='pending'?`<div class="admin-actions" style="margin-top:9px"><button class="btn green" onclick="reviewLeave('${x.id}','approve')">Duyệt</button><button class="btn danger" onclick="reviewLeave('${x.id}','reject')">Từ chối</button></div>`:'';return `<div class="item"><div class="row"><div><b>${escapeHtml(x.profiles?.full_name||'Nhân viên')}</b><div class="muted">${escapeHtml(x.start_date)} → ${escapeHtml(x.end_date)}</div><div class="mini">${escapeHtml(x.reason)}</div></div><span class="badge ${cls}">${label}</span></div>${actions}</div>`}).join(''):'<div class="empty">Chưa có yêu cầu nghỉ.</div>'}
 async function reviewLeave(id,action){let reason='';if(action==='reject')reason=prompt('Lý do từ chối (không bắt buộc):','')??'';const {error}=await sb.rpc('review_leave',{p_leave_id:id,p_action:action,p_reason:reason});if(error){toast('Không thể xử lý yêu cầu nghỉ.');return}toast(action==='approve'?'Đã duyệt nghỉ phép.':'Đã từ chối nghỉ phép.');await loadLeaves()}
 async function loadAdminAttendance(){
- const target=el('adminAttendanceList');if(!target||!sb||!profile)return;const selected=adminAttendanceDate;
- const [{data:att,error},{data:sch,error:schError}]=await Promise.all([sb.from('attendance').select('id,schedule_id,employee_id,check_in,check_out,late_minutes,early_leave_minutes,worked_minutes,check_in_status,check_out_status,work_schedules:schedule_id(work_date,start_time,end_time,status,employee_id),profiles:employee_id(full_name)').eq('work_schedules.work_date',selected).eq('profiles.store_id',profile.store_id).order('check_in',{ascending:false}),sb.from('work_schedules').select('id,work_date,start_time,end_time,status,employee_id,shift_group_id,profiles:employee_id(full_name)').eq('store_id',profile.store_id).eq('work_date',selected).eq('status','assigned').not('employee_id','is',null).order('start_time')]);
- if(error||schError){target.innerHTML='<div class="notice warn">Không tải được bảng chấm công. Vui lòng thử lại.</div>';return}
- if(el('adminAttendanceDateTitle'))el('adminAttendanceDateTitle').textContent=selected===localToday()?'Hôm nay':prettyDate(selected);renderDayStrip('adminAttendanceDayStrip',adminAttendanceDate,adminAttendanceWindowStart,'selectAdminAttendanceDate','prevAdminAttendanceDays','nextAdminAttendanceDays');const days=sevenDayWindow(adminAttendanceDate,adminAttendanceWindowStart);days.forEach(d=>{const c=el('count_adminAttendanceDayStrip_'+d);if(c)c.textContent=d===selected?((sch||[]).length+' người'):''});
- const attendanceBySchedule=new Map();(att||[]).forEach(x=>{if(x.schedule_id)attendanceBySchedule.set(x.schedule_id,x)});
+ const target=el('adminAttendanceList');if(!target||!sb||!profile)return;
+ const selected=adminAttendanceDate;
+ target.innerHTML='<div class="loading-slot"><div class="notice info">Đang tải bảng chấm công…</div></div>';
+ const {data:sch,error:schError}=await sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at,status,employee_id,shift_group_id,profiles:employee_id(full_name)').eq('store_id',profile.store_id).eq('work_date',selected).eq('status','assigned').not('employee_id','is',null).order('start_time');
+ if(schError){target.innerHTML='<div class="notice warn">Không tải được lịch chấm công. Vui lòng thử lại.</div>';return}
+ const ids=(sch||[]).map(x=>x.id);
+ const {data:att,error}=ids.length?await sb.from('attendance').select('id,schedule_id,employee_id,check_in,check_out,late_minutes,early_leave_minutes,worked_minutes,check_in_status,check_out_status').in('schedule_id',ids):{data:[],error:null};
+ if(error){target.innerHTML='<div class="notice warn">Không tải được dữ liệu chấm công. Vui lòng thử lại.</div>';return}
+ window.__adminAttendanceRows=sch||[];window.__adminAttendanceData=att||[];
+ if(el('adminAttendanceDateTitle'))el('adminAttendanceDateTitle').textContent=selected===localToday()?'Hôm nay':prettyDate(selected);
+ renderDayStrip('adminAttendanceDayStrip',adminAttendanceDate,adminAttendanceWindowStart,'selectAdminAttendanceDate','prevAdminAttendanceDays','nextAdminAttendanceDays');
+ const days=sevenDayWindow(adminAttendanceDate,adminAttendanceWindowStart);const dayCount=(sch||[]).length;days.forEach(d=>{const c=el('count_adminAttendanceDayStrip_'+d);if(c)c.textContent=d===selected?(dayCount?dayCount+' người':'') :''});
+ const attendanceBySchedule=new Map((att||[]).map(x=>[x.schedule_id,x]));
  const groups=new Map();(sch||[]).forEach(x=>{const key=x.shift_group_id||x.id;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(x)});
  let working=0,done=0,missing=0,notyet=0,late=0;
- const html=[...groups.values()].map(items=>{const first=items[0];const people=items.map(x=>{const a=attendanceBySchedule.get(x.id);let label='Chưa chấm công',cls='missing',time='Chưa có check-in';if(a?.check_in&&!a?.check_out){working++;label='Đang làm việc';cls='working';time='IN '+formatTime(a.check_in)}else if(a?.check_in&&a?.check_out){done++;label='Đã ra ca';cls='done';time='IN '+formatTime(a.check_in)+' · OUT '+formatTime(a.check_out)}else if(new Date(first.start_at||selected+'T'+first.start_time).getTime()>Date.now()){notyet++;label='Chưa tới ca';cls='pending';time='Chờ đến giờ'}else{missing++}if(a?.late_minutes>0){late++;label='Đi muộn';cls='late';time+=' · trễ '+a.late_minutes+'p'}if(a?.early_leave_minutes>0){label='Về sớm';cls='late';time+=' · về sớm '+a.early_leave_minutes+'p'}return `<div class="attendance-person"><div class="person-avatar">${escapeHtml((x.profiles?.full_name||'N').slice(0,1).toUpperCase())}</div><div class="att-main"><div class="att-name">${escapeHtml(x.profiles?.full_name||'Nhân viên')}</div><div class="att-time">${time}</div></div><span class="att-state ${cls}">${label}</span></div>`}).join('');return `<div class="attendance-shift-card"><div class="shift-card-title">${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</div><div class="shift-card-sub">${items.length} nhân viên trong ca</div>${people}</div>`}).join('');
+ const html=[...groups.values()].map(items=>{const first=items[0];const people=items.map(x=>{const a=attendanceBySchedule.get(x.id);const startTs=new Date(x.start_at).getTime();const endTs=new Date(x.end_at).getTime();let label='Chưa chấm công',cls='missing',time='Chưa có check-in',action='';if(a?.check_in&&!a?.check_out){working++;label='Đang làm việc';cls='working';time='IN '+formatTime(a.check_in)}else if(a?.check_in&&a?.check_out){done++;label='Đã ra ca';cls='done';time='IN '+formatTime(a.check_in)+' · OUT '+formatTime(a.check_out)}else if(startTs>Date.now()){notyet++;label='Chưa tới ca';cls='pending';time='Chờ đến giờ'}else{missing++;label=Date.now()>endTs?'Chưa chấm công':'Chưa check-in';}if(profile?.role==='owner'&&startTs<=Date.now()){const actionLabel=a?.check_in?'Điều chỉnh chấm công':'Bổ sung chấm công';action=`<div class="attendance-person-actions"><button type="button" class="attendance-action btn ${a?.check_in?'light':'green'}" onclick="openSupplementAttendance('${x.id}','${a?.id||''}')"><span class="attendance-action-icon">✎</span>${actionLabel}</button></div>`}if(a?.late_minutes>0){late++;label='Đi muộn';cls='late';time+=' · trễ '+a.late_minutes+'p'}if(a?.early_leave_minutes>0){label='Về sớm';cls='late';time+=' · về sớm '+a.early_leave_minutes+'p'}return `<div class="attendance-person"><div class="person-avatar">${escapeHtml((x.profiles?.full_name||'N').slice(0,1).toUpperCase())}</div><div class="att-main"><div class="att-name">${escapeHtml(x.profiles?.full_name||'Nhân viên')}</div><div class="att-time">${time}</div>${action}</div><span class="att-state ${cls}">${label}</span></div>`}).join('');return `<div class="attendance-shift-card"><div class="shift-card-title">${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</div><div class="shift-card-sub">${items.length} vị trí · ${items.length} nhân viên</div>${people}</div>`}).join('');
  if(el('adminAttendanceSummary'))el('adminAttendanceSummary').innerHTML=`<div class="mini-stat"><b>${working}</b><span>ĐANG LÀM</span></div><div class="mini-stat"><b>${done}</b><span>ĐÃ RA CA</span></div><div class="mini-stat"><b>${missing}</b><span>CHƯA CHẤM</span></div>`;
  target.innerHTML=html||'<div class="empty-day">Ngày này chưa có nhân viên được xếp ca.</div>';
  if(missing>0&&selected===localToday())target.insertAdjacentHTML('afterbegin',`<div class="notice warn" style="margin-bottom:9px">Có <b>${missing}</b> người đang có ca nhưng chưa chấm công.</div>`);
 }
 
-async function confirmLateCheckin(scheduleId){
- if(!['owner','manager'].includes(profile?.role))return;const note=prompt('Ghi chú xác nhận (không bắt buộc):','')??'';
- const {error}=await sb.rpc('confirm_late_checkin',{p_schedule_id:scheduleId,p_note:note});
- if(error){toast(error.message==='CA_DA_KET_THUC'?'Ca đã kết thúc.':error.message==='DA_CHECKIN'?'Ca đã có check-in.':'Không thể xác nhận check-in.');return}
- toast('Đã xác nhận check-in muộn.');await loadAdminAttendance();await loadOwnerOverview();
+let supplementAttendanceContext=null;
+function toVNDateTimeLocal(ts){
+ if(!ts)return '';
+ const d=new Date(ts);const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Ho_Chi_Minh',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(d);const m=Object.fromEntries(parts.map(x=>[x.type,x.value]));return `${m.year}-${m.month}-${m.day}T${m.hour}:${m.minute}`;
+}
+function openSupplementAttendance(scheduleId,attendanceId=''){
+ if(profile?.role!=='owner'){toast('Chỉ Owner được bổ sung hoặc điều chỉnh chấm công.');return}
+ const row=[...(window.__adminAttendanceRows||[])].find(x=>x.id===scheduleId);
+ if(!row){toast('Không tìm thấy ca. Hãy tải lại bảng chấm công.');return}
+ const existing=attendanceId?[...(window.__adminAttendanceData||[])].find(x=>x.id===attendanceId):null;
+ supplementAttendanceContext={scheduleId,attendanceId:existing?.id||null,row};
+ el('supplementAttendanceTitle').textContent=existing?'Điều chỉnh chấm công':'Bổ sung chấm công';
+ el('supplementAttendanceSub').textContent=`${prettyDate(row.work_date)} · ${time5(row.start_time)} – ${time5(row.end_time)} · ${row.profiles?.full_name||'Nhân viên'}`;
+ el('supplementCheckIn').value=toVNDateTimeLocal(existing?.check_in||row.start_at);
+ let defaultOut=existing?.check_out||row.end_at;
+ if(new Date(defaultOut)>new Date())defaultOut=new Date();
+ el('supplementCheckOut').value=toVNDateTimeLocal(defaultOut);
+ el('supplementNote').value='';el('supplementAttendanceMsg').innerHTML='';el('supplementAttendanceModal').classList.add('open');
+}
+function closeSupplementAttendance(){el('supplementAttendanceModal')?.classList.remove('open');supplementAttendanceContext=null}
+function vnLocalInputToIso(value){return value?new Date(value+':00+07:00').toISOString():null}
+async function saveSupplementAttendance(){
+ if(profile?.role!=='owner'||!supplementAttendanceContext)return;
+ const ci=vnLocalInputToIso(el('supplementCheckIn').value),co=vnLocalInputToIso(el('supplementCheckOut').value),note=el('supplementNote').value.trim();
+ if(!ci||!co){el('supplementAttendanceMsg').innerHTML='<div class="notice warn">Vui lòng nhập đủ giờ bắt đầu và kết thúc.</div>';return}
+ if(new Date(co)<=new Date(ci)){el('supplementAttendanceMsg').innerHTML='<div class="notice warn">Giờ kết thúc phải sau giờ bắt đầu.</div>';return}
+ const btn=el('supplementAttendanceSave');setBusyButton(btn,true,'Đang lưu…');
+ try{
+   const {data,error}=await sb.rpc('owner_supplement_attendance',{p_schedule_id:supplementAttendanceContext.scheduleId,p_check_in_at:ci,p_check_out_at:co,p_note:note||null});
+   if(error)throw error;
+   toast(`Đã lưu chấm công · ${Math.floor((data?.worked_minutes||0)/60)}h ${(data?.worked_minutes||0)%60}p`);
+   closeSupplementAttendance();await loadAdminAttendance();await loadOwnerOverview();
+ }catch(e){
+   const map={'GIO_NAM_NGOAI_CA':'Thời gian phải nằm trong phạm vi ca.','GIO_TUONG_LAI':'Không được nhập thời gian ở tương lai.','GIO_KHONG_HOP_LE':'Giờ kết thúc phải sau giờ bắt đầu.','CA_KHONG_HOP_LE':'Ca không còn hợp lệ để bổ sung chấm công.','FORBIDDEN':'Chỉ Owner được bổ sung hoặc điều chỉnh chấm công.','KY_LUONG_DA_CHOT':'Kỳ lương đã chốt/đã trả. Không thể sửa chấm công của kỳ này.'};
+   el('supplementAttendanceMsg').innerHTML=`<div class="notice warn">${escapeHtml(map[e?.message]||e?.message||'Không thể lưu chấm công.')}</div>`;
+   setBusyButton(btn,false,'Lưu chấm công');
+ }
 }
 
 async function resolveMissingCheckout(id){const note=prompt('Ghi chú xử lý (không bắt buộc):','Quên checkout, chốt cuối ca')??'';const {error}=await sb.rpc('resolve_missing_checkout',{p_attendance_id:id,p_note:note});if(error){toast(error.message==='GIO_CHECKOUT_O_TUONG_LAI'?'Chưa thể chốt thời gian tương lai.':'Không thể xử lý checkout.');return}toast('Đã xử lý quên checkout.');await loadAdminAttendance();await loadOwnerOverview()}
 
 async function loadAttendanceHistory(){
  const el=document.getElementById('attendanceHistory');if(!el||!sb||!session)return;
- const {data,error}=await sb.from('attendance').select('id,check_in,check_out,late_minutes,worked_minutes,check_in_status,check_out_status,work_schedules: schedule_id(work_date,start_time,end_time)').eq('employee_id',session.user.id).order('check_in',{ascending:false}).limit(15);
+ const {data,error}=await sb.from('attendance').select('id,check_in,check_out,late_minutes,early_leave_minutes,worked_minutes,check_in_status,check_out_status,work_schedules: schedule_id(work_date,start_time,end_time)').eq('employee_id',session.user.id).order('check_in',{ascending:false}).limit(15);
  if(error){el.innerHTML='<div class="notice warn">Có lỗi xảy ra. Vui lòng thử lại.</div>';return}
  if(!data?.length){el.innerHTML='<div class="empty">Chưa có bản ghi chấm công.</div>';return}
  el.innerHTML=data.map(x=>`<div class="item"><div><b>${escapeHtml(x.work_schedules?.work_date||'')}</b><div class="muted">Ca ${escapeHtml((x.work_schedules?.start_time||'').slice(0,5))} – ${escapeHtml((x.work_schedules?.end_time||'').slice(0,5))}</div><div class="mini">IN ${formatTime(x.check_in)} · OUT ${formatTime(x.check_out)}</div></div><div class="center"><b>${Math.floor((x.worked_minutes||0)/60)}h ${(x.worked_minutes||0)%60}p</b><div class="mini">Trễ ${x.late_minutes||0}p · Về sớm ${x.early_leave_minutes||0}p</div></div></div>`).join('');
@@ -901,6 +966,22 @@ async function loadAttendanceHistory(){
 
 
 
+
+let payrollSelectedId=null;
+function initPayrollDates(){
+ const d=localToday();const start=d.slice(0,8)+'01';const end=d; if(el('payrollStart')&&!el('payrollStart').value)el('payrollStart').value=start;if(el('payrollEnd')&&!el('payrollEnd').value)el('payrollEnd').value=end;if(el('payrollPeriodName')&&!el('payrollPeriodName').value)el('payrollPeriodName').value='Lương tháng '+d.slice(5,7)+'/'+d.slice(0,4);
+}
+async function createPayrollPeriod(){
+ if(profile?.role!=='owner'){toast('Chỉ Owner được quản lý kỳ lương.');return}initPayrollDates();const name=el('payrollPeriodName').value.trim(),a=el('payrollStart').value,b=el('payrollEnd').value;if(!name||!a||!b){el('payrollMsg').innerHTML='<div class="notice warn">Vui lòng nhập đủ tên kỳ và khoảng ngày.</div>';return}const {data,error}=await sb.rpc('owner_create_payroll_period',{p_period_name:name,p_start_date:a,p_end_date:b,p_note:el('payrollNote').value.trim()||null});if(error){el('payrollMsg').innerHTML='<div class="notice warn">'+escapeHtml(error.message)+'</div>';return}el('payrollMsg').innerHTML='<div class="notice ok">Đã tạo kỳ lương.</div>';payrollSelectedId=data;await loadPayroll()}
+async function loadPayroll(){
+ if(!el('payrollPeriods')||profile?.role!=='owner')return;initPayrollDates();const {data,error}=await sb.from('payroll_periods').select('id,period_name,start_date,end_date,status,locked_at,paid_at,note,created_at').eq('store_id',profile.store_id).order('start_date',{ascending:false}).limit(24);if(error){el('payrollPeriods').innerHTML='<div class="notice warn">Không tải được kỳ lương.</div>';return}if(!data?.length){el('payrollPeriods').innerHTML='<div class="empty">Chưa có kỳ lương. Tạo kỳ đầu tiên ở phía trên.</div>';el('payrollSelected').style.display='none';return}el('payrollPeriods').innerHTML=data.map(x=>{const cls=x.status==='paid'?'ok':x.status==='locked'?'info':x.status==='review'?'wait':'info';return `<button type="button" class="item" style="text-align:left;width:100%;cursor:pointer" onclick="selectPayrollPeriod('${x.id}')"><div class="row"><div><b>${escapeHtml(x.period_name)}</b><div class="muted">${x.start_date} → ${x.end_date}</div></div><span class="badge ${cls}">${({draft:'Nháp',review:'Đang kiểm tra',locked:'Đã chốt',paid:'Đã trả'}[x.status]||x.status)}</span></div></button>`}).join('');if(payrollSelectedId&&data.some(x=>x.id===payrollSelectedId))await selectPayrollPeriod(payrollSelectedId);else await selectPayrollPeriod(data[0].id)}
+async function selectPayrollPeriod(id){payrollSelectedId=id;const {data:p,error}=await sb.from('payroll_periods').select('id,period_name,start_date,end_date,status,note').eq('id',id).eq('store_id',profile.store_id).single();if(error||!p)return;el('payrollSelected').style.display='block';const statusBtns=p.status==='draft'?`<button type="button" class="btn light" onclick="setPayrollStatus('${p.id}','review')">Đưa kiểm tra</button>`:p.status==='review'?`<button type="button" class="btn light" onclick="setPayrollStatus('${p.id}','locked')">Chốt lương</button>`:p.status==='locked'?`<button type="button" class="btn green" onclick="setPayrollStatus('${p.id}','paid')">Đánh dấu đã trả</button>`:'';el('payrollSelectedHead').innerHTML=`<div class="row"><div><b>${escapeHtml(p.period_name)}</b><div class="muted">${p.start_date} → ${p.end_date} · ${({draft:'Nháp',review:'Đang kiểm tra',locked:'Đã chốt',paid:'Đã trả'}[p.status]||p.status)}</div></div><div class="admin-actions" style="margin-top:0"><button type="button" class="btn primary" ${['locked','paid'].includes(p.status)?'disabled':''} onclick="calculatePayroll('${p.id}')">Tính lương</button>${statusBtns}</div></div>`;await loadPayrollRuns(p)}
+async function calculatePayroll(id){const {data,error}=await sb.rpc('owner_calculate_payroll',{p_payroll_period_id:id});if(error){toast(error.message);return}toast('Đã tính lại bảng lương.');await loadPayroll();await selectPayrollPeriod(id)}
+async function loadPayrollRuns(p){const {data:runs,error}=await sb.from('payroll_runs').select('id,employee_id,hourly_rate,worked_minutes,gross_amount,bonus_amount,penalty_amount,advance_amount,net_amount,profiles:employee_id(full_name)').eq('payroll_period_id',p.id).order('net_amount',{ascending:false});if(error){el('payrollRuns').innerHTML='<div class="notice warn">Không tải được bảng lương.</div>';return}const total=runs?.reduce((s,x)=>s+Number(x.net_amount||0),0)||0,minutes=runs?.reduce((s,x)=>s+Number(x.worked_minutes||0),0)||0;el('payrollKpis').innerHTML=`<div class="payroll-kpi"><b>${runs?.length||0}</b><span>NHÂN VIÊN</span></div><div class="payroll-kpi"><b>${Math.floor(minutes/60)}h ${(minutes%60)}p</b><span>GIỜ CÔNG</span></div><div class="payroll-kpi"><b>${total.toLocaleString('vi-VN')}đ</b><span>LƯƠNG THỰC NHẬN</span></div>`;el('payrollRuns').innerHTML=runs?.length?runs.map(x=>`<div class="payroll-run"><div><div class="name">${escapeHtml(x.profiles?.full_name||'Nhân viên')}</div><div class="meta">${Math.floor((x.worked_minutes||0)/60)}h ${(x.worked_minutes||0)%60}p · ${Number(x.hourly_rate||0).toLocaleString('vi-VN')}đ/giờ · Gộp ${Number(x.gross_amount||0).toLocaleString('vi-VN')}đ</div><div class="meta">Thưởng ${Number(x.bonus_amount||0).toLocaleString('vi-VN')}đ · Phạt ${Number(x.penalty_amount||0).toLocaleString('vi-VN')}đ · Ứng ${Number(x.advance_amount||0).toLocaleString('vi-VN')}đ</div></div><div class="amount">${Number(x.net_amount||0).toLocaleString('vi-VN')}đ<small>THỰC NHẬN</small></div></div>`).join(''):'<div class="empty">Chưa có bảng lương. Bấm Tính lương.</div>';const {data:emps}=await sb.from('profiles').select('id,full_name').eq('store_id',profile.store_id).eq('role','employee').order('full_name');if(el('payrollAdjEmployee'))el('payrollAdjEmployee').innerHTML=(emps||[]).map(x=>`<option value="${x.id}">${escapeHtml(x.full_name||'Nhân viên')}</option>`).join('');const {data:adj}=await sb.from('payroll_adjustments').select('id,employee_id,adjustment_type,amount,reason,status,created_at,profiles:employee_id(full_name)').eq('payroll_period_id',p.id).order('created_at',{ascending:false});el('payrollAdjustments').innerHTML=adj?.length?adj.map(x=>`<div class="item"><div class="row"><div><b>${escapeHtml(x.profiles?.full_name||'Nhân viên')}</b><div class="muted">${({bonus:'Thưởng',penalty:'Phạt',advance:'Tạm ứng'}[x.adjustment_type]||x.adjustment_type)} · ${Number(x.amount||0).toLocaleString('vi-VN')}đ</div><div class="mini">${escapeHtml(x.reason)}</div></div><span class="badge ${x.status==='approved'?'ok':x.status==='pending'?'wait':'bad'}">${({approved:'Đã duyệt',pending:'Chờ duyệt',rejected:'Từ chối'}[x.status]||x.status)}</span></div>${x.status==='pending'?`<div class="admin-actions"><button type="button" class="btn green" onclick="reviewPayrollAdjustment('${x.id}','approve')">Duyệt</button><button type="button" class="btn danger" onclick="reviewPayrollAdjustment('${x.id}','reject')">Từ chối</button></div>`:''}</div>`).join(''):'<div class="empty">Chưa có khoản điều chỉnh.</div>'}
+async function setPayrollStatus(id,status){const {error}=await sb.rpc('owner_set_payroll_status',{p_payroll_period_id:id,p_status:status});if(error){toast(error.message);return}toast(status==='locked'?'Đã chốt kỳ lương.':status==='paid'?'Đã đánh dấu kỳ lương đã trả.':'Đã chuyển kỳ lương sang kiểm tra.');await loadPayroll();await selectPayrollPeriod(id)}
+async function addPayrollAdjustment(){if(!payrollSelectedId)return;const employee=el('payrollAdjEmployee').value,type=el('payrollAdjType').value,amount=Number(el('payrollAdjAmount').value||0),reason=el('payrollAdjReason').value.trim();if(!employee||amount<=0||!reason){toast('Nhập đủ nhân viên, số tiền và lý do.');return}const {error}=await sb.rpc('owner_add_payroll_adjustment',{p_employee_id:employee,p_payroll_period_id:payrollSelectedId,p_type:type,p_amount:amount,p_reason:reason});if(error){toast(error.message);return}el('payrollAdjAmount').value='';el('payrollAdjReason').value='';toast('Đã thêm khoản điều chỉnh ở trạng thái chờ duyệt.');await selectPayrollPeriod(payrollSelectedId)}
+async function reviewPayrollAdjustment(id,action){const {error}=await sb.rpc('owner_review_payroll_adjustment',{p_adjustment_id:id,p_action:action});if(error){toast(error.message);return}toast(action==='approve'?'Đã duyệt khoản điều chỉnh.':'Đã từ chối khoản điều chỉnh.');await selectPayrollPeriod(payrollSelectedId)}
+async function loadAudit(){const target=el('auditList');if(!target||!sb||!profile)return;const {data,error}=await sb.from('audit_logs').select('id,action,entity_type,entity_id,created_at,actor_id,profiles:actor_id(full_name)').order('created_at',{ascending:false}).limit(100);if(error){target.innerHTML='<div class="notice warn">Không tải được nhật ký.</div>';return}target.innerHTML=data?.length?data.map(x=>`<div class="audit-row"><div class="audit-action">${escapeHtml(x.action)}</div><div class="audit-meta">${escapeHtml(x.profiles?.full_name||'Hệ thống')} · ${new Date(x.created_at).toLocaleString('vi-VN')} · ${escapeHtml(x.entity_type||'')} ${x.entity_id?'· '+escapeHtml(x.entity_id):''}</div></div>`).join(''):'<div class="empty">Chưa có nhật ký.</div>'}
 window.addEventListener('error',e=>{console.error('HongCha HRM:',e.error||e.message)});
 window.addEventListener('unhandledrejection',e=>{console.error('HongCha HRM:',e.reason)});
 </script></body></html>
