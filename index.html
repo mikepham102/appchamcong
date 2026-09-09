@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V33 · UI Flow &amp; Auth Fix</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V37 · Device Reactivation</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -122,7 +122,7 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
 .salary-summary-card{background:var(--ink);color:#fff;border-radius:var(--radius-xl);padding:21px;min-width:0}.salary-summary-card .card-kicker{color:#AAA7A1}.salary-value{margin-top:7px;font-size:36px;line-height:1.05;letter-spacing:-1px;font-weight:800;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.salary-note{margin-top:7px;color:#C8C5C1;font-size:12px;line-height:1.4;overflow-wrap:anywhere}.salary-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:9px}.salary-metrics>div{min-width:0;padding:15px;background:#fff;border:1px solid var(--line);border-radius:15px}.salary-metrics b{display:block;font-size:21px;line-height:1.1;font-weight:780;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.salary-metrics span{display:block;margin-top:4px;color:var(--muted);font-size:11px}.detail-card{margin-top:9px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:7px 15px}.detail-row{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--line);min-width:0}.detail-row:last-child{border-bottom:0}.detail-row span{color:var(--muted);font-size:13px;line-height:1.4;min-width:0;overflow-wrap:anywhere}.detail-row b{font-size:13px;text-align:right;font-variant-numeric:tabular-nums;max-width:58%;overflow-wrap:anywhere}.detail-row.total{padding-top:15px}.detail-row.total b{font-size:15px}
 
 /* ---------- Attendance ---------- */
-.attendance-focus-card{background:var(--ink);color:#fff;border-radius:var(--radius-xl);padding:22px;min-width:0;box-shadow:var(--shadow)}.attendance-focus-card .attendance-live-label{color:#AAA7A1}.attendance-clock{margin-top:5px;font-size:52px;line-height:1;font-weight:780;letter-spacing:-1.5px;font-variant-numeric:tabular-nums}.attendance-date{margin-top:6px;color:#C8C5C1;font-size:13px}.attendance-state{margin-top:20px;padding-top:15px;border-top:1px solid rgba(255,255,255,.14)}.state-label{font-size:10px;color:#AAA7A1;font-weight:750;letter-spacing:.1em}.state-shift{margin-top:3px;font-size:17px;font-weight:700;line-height:1.3;overflow-wrap:anywhere}.attendance-primary{width:100%;min-height:54px;margin-top:18px;border-radius:13px;background:#fff;color:var(--ink);font-size:15px;font-weight:800}.attendance-primary:disabled{background:#E8E5E1;color:#97938D;opacity:1}.precheck-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:9px}.precheck-item{display:grid;grid-template-columns:8px minmax(0,1fr);gap:8px;padding:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.09);border-radius:11px;min-width:0}.precheck-item b{display:block;font-size:11px}.precheck-item span:not(.dot){display:block;margin-top:2px;color:#B9B6B1;font-size:10px;line-height:1.35;overflow-wrap:anywhere}.dot{width:8px;height:8px;border-radius:50%;background:#B8B4AE;margin-top:4px}.attendance-help{display:grid;grid-template-columns:38px minmax(0,1fr);gap:11px;margin-top:12px;padding:13px 14px;background:#fff;border:1px solid var(--line);border-radius:15px}.help-icon{width:38px;height:38px;border-radius:11px;background:var(--info-soft);color:var(--info);display:grid;place-items:center;font-weight:800}.attendance-help b{font-size:13px}.attendance-help p{margin:3px 0 0;color:var(--muted);font-size:12px;line-height:1.4;overflow-wrap:anywhere}
+.attendance-focus-card{background:var(--ink);color:#fff;border-radius:var(--radius-xl);padding:22px;min-width:0;box-shadow:var(--shadow)}.attendance-focus-card .attendance-live-label{color:#AAA7A1}.attendance-clock{margin-top:5px;font-size:52px;line-height:1;font-weight:780;letter-spacing:-1.5px;font-variant-numeric:tabular-nums}.attendance-date{margin-top:6px;color:#C8C5C1;font-size:13px}.attendance-state{margin-top:20px;padding-top:15px;border-top:1px solid rgba(255,255,255,.14)}.state-label{font-size:10px;color:#AAA7A1;font-weight:750;letter-spacing:.1em}.state-shift{margin-top:3px;font-size:17px;font-weight:700;line-height:1.3;overflow-wrap:anywhere}.attendance-primary{width:100%;min-height:54px;margin-top:18px;border-radius:13px;background:#fff;color:var(--ink);font-size:15px;font-weight:800}.attendance-primary:disabled{background:#E8E5E1;color:#97938D;opacity:1}.precheck-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:9px}.precheck-item{display:grid;grid-template-columns:8px minmax(0,1fr);gap:8px;padding:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.09);border-radius:11px;min-width:0}.precheck-item b{display:block;font-size:11px}.precheck-item span:not(.dot){display:block;margin-top:2px;color:#B9B6B1;font-size:10px;line-height:1.35;overflow-wrap:anywhere}.dot{width:8px;height:8px;border-radius:50%;background:#B8B4AE;margin-top:4px}.gps-action{display:none;margin-top:8px;width:100%;min-height:36px;padding:8px 10px;border-radius:9px;border:1px solid rgba(255,255,255,.18);background:#fff;color:#242321;font-size:11px;font-weight:800;touch-action:manipulation;-webkit-tap-highlight-color:transparent}.gps-action.show{display:block}.gps-action:active{transform:scale(.985)}.attendance-help{display:grid;grid-template-columns:38px minmax(0,1fr);gap:11px;margin-top:12px;padding:13px 14px;background:#fff;border:1px solid var(--line);border-radius:15px}.help-icon{width:38px;height:38px;border-radius:11px;background:var(--info-soft);color:var(--info);display:grid;place-items:center;font-weight:800}.attendance-help b{font-size:13px}.attendance-help p{margin:3px 0 0;color:var(--muted);font-size:12px;line-height:1.4;overflow-wrap:anywhere}
 
 /* ---------- Profile ---------- */
 .settings-list{display:grid;gap:20px}.settings-group{min-width:0}.settings-group-title{margin:0 3px 7px;color:#8C877F;font-size:11px;font-weight:750;letter-spacing:.1em;text-transform:uppercase}.settings-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px;min-width:0}.settings-card .field+.field{margin-top:12px}.settings-card .btn{margin-top:14px;width:100%}.settings-action{width:100%;min-height:48px;background:transparent;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;font-size:14px;font-weight:650}.settings-action+.settings-action{border-top:1px solid var(--line)}.danger-action{color:var(--danger)}
@@ -443,7 +443,7 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
 <button class="attendance-primary" disabled="" id="checkBtn" onclick="punchAttendance()">CHECK-IN</button>
 <div class="notice info" id="attendanceMsg">Đang kiểm tra trạng thái…</div>
 <div class="precheck-grid">
-<div class="precheck-item"><span class="dot" id="homeGpsDot"></span><div><b>Vị trí</b><span id="homeGpsText">GPS sẽ được kiểm tra khi chấm công.</span></div></div>
+<div class="precheck-item"><span class="dot" id="homeGpsDot"></span><div><b>Vị trí</b><span id="homeGpsText">Đang kiểm tra vị trí…</span><button class="gps-action" id="homeGpsAction" type="button" onclick="requestGpsFromAttendanceUI()">Cho phép vị trí</button></div></div>
 <div class="precheck-item"><span class="dot" id="homeDeviceDot"></span><div><b>Thiết bị</b><span id="homeDeviceText">Đang kiểm tra</span></div></div>
 </div>
 </section>
@@ -786,7 +786,7 @@ function hideDeviceGate(){el('deviceGate').classList.remove('active')}
 async function refreshDeviceGate(){if(!session||!profile)return;const access=await getEmployeeDeviceAccess();if(access.allowed){hideDeviceGate();await loadApp()}else showDeviceGate(access)}
 async function registerDeviceAndRefresh(){const b=el('gateAction');b.disabled=true;b.textContent='Đang gửi…';await registerDevice();const access=await getEmployeeDeviceAccess();b.disabled=false;if(access.allowed)await loadApp();else showDeviceGate(access)}
 function syncDeviceUI(){if(!profile||profile.role!=='employee')return;const key=getDeviceKey();sb.from('devices').select('status,device_name').eq('employee_id',session.user.id).eq('device_key',key).maybeSingle().then(({data})=>{const ok=data?.status==='approved',label=data?({approved:'Đã duyệt',pending:'Chờ xác nhận',rejected:'Bị từ chối',revoked:'Đã thu hồi'}[data.status]||data.status):'Chưa liên kết';if(el('homeDeviceText'))el('homeDeviceText').textContent=label;if(el('homeDeviceDot'))el('homeDeviceDot').className='dot '+(ok?'ok':data?'bad':'')})}
-let attendanceEnvironmentToken=0;function haversineMeters(lat1,lon1,lat2,lon2){const R=6371000,toRad=v=>v*Math.PI/180,dLat=toRad(lat2-lat1),dLon=toRad(lon2-lon1),a=Math.sin(dLat/2)**2+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;return 2*R*Math.asin(Math.sqrt(a))}async function checkAttendanceEnvironment(){if(profile?.role!=='employee'||!sb||!session)return;const token=++attendanceEnvironmentToken;syncDeviceUI();setGpsState(false,'Đang kiểm tra vị trí…');try{const {data:store,error}=await sb.from('stores').select('latitude,longitude,gps_radius_m').eq('id',profile.store_id).single();if(error)throw error;const lat=Number(store?.latitude??DEFAULT_STORE_LAT),lng=Number(store?.longitude??DEFAULT_STORE_LNG),radius=Number(store?.gps_radius_m??DEFAULT_STORE_RADIUS);const pos=await getPosition();if(token!==attendanceEnvironmentToken)return;const distance=haversineMeters(lat,lng,pos.coords.latitude,pos.coords.longitude);if(distance<=radius)setGpsState(true,'Đã xác nhận vị trí',Math.round(distance)+'m · trong bán kính '+Math.round(radius)+'m');else setGpsState(false,'Ngoài khu vực chấm công',Math.round(distance)+'m · cần ≤ '+Math.round(radius)+'m')}catch(e){if(token!==attendanceEnvironmentToken)return;setGpsState(false,e?.code===1?'Chưa được cấp quyền vị trí':'Không xác định được vị trí','Hãy bật GPS và cho phép trình duyệt truy cập vị trí.')}}
+let attendanceEnvironmentToken=0;function haversineMeters(lat1,lon1,lat2,lon2){const R=6371000,toRad=v=>v*Math.PI/180,dLat=toRad(lat2-lat1),dLon=toRad(lon2-lon1),a=Math.sin(dLat/2)**2+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;return 2*R*Math.asin(Math.sqrt(a))}async function checkAttendanceEnvironment(opts={}){if(profile?.role!=='employee'||!sb||!session)return;const token=++attendanceEnvironmentToken;syncDeviceUI();setGpsState(false,'Đang kiểm tra vị trí…');try{const {data:store,error}=await sb.from('stores').select('latitude,longitude,gps_radius_m').eq('id',profile.store_id).single();if(error)throw error;const lat=Number(store?.latitude??DEFAULT_STORE_LAT),lng=Number(store?.longitude??DEFAULT_STORE_LNG),radius=Number(store?.gps_radius_m??DEFAULT_STORE_RADIUS);const pos=await getPosition();if(token!==attendanceEnvironmentToken)return;const distance=haversineMeters(lat,lng,pos.coords.latitude,pos.coords.longitude);if(distance<=radius)setGpsState(true,'Đã xác nhận vị trí',Math.round(distance)+'m · trong bán kính '+Math.round(radius)+'m');else setGpsState(false,'Ngoài khu vực chấm công',Math.round(distance)+'m · cần ≤ '+Math.round(radius)+'m','Thử lại vị trí')}catch(e){if(token!==attendanceEnvironmentToken)return;const code=e?.code; if(code===1){setGpsState(false,'Chưa được cấp quyền vị trí','Hãy bấm nút bên dưới để cho phép trình duyệt truy cập vị trí.','Cho phép vị trí')}else if(code===2){setGpsState(false,'Không xác định được vị trí','Hãy bật Dịch vụ định vị trên iPhone rồi thử lại.','Thử lại vị trí')}else if(code===3){setGpsState(false,'Lấy vị trí quá lâu','Hãy kiểm tra GPS/mạng rồi thử lại.','Thử lại vị trí')}else{setGpsState(false,'Không xác định được vị trí','Hãy thử lại.','Thử lại vị trí')}}}
 
 async function signOut(){if(sb)await sb.auth.signOut();session=null;profile=null;appHydratedUserId=null;currentView='dashboard';currentAdminTab='employees';hideDeviceGate();showLogin()}
 function openAdminQuick(tab){if(!['owner','manager'].includes(profile?.role))return;navigate('admin');setTimeout(()=>{const b=document.querySelector('#admin .admin-group-item[data-admin-tab="'+tab+'"]');adminTab(tab,b||null);},0)}
@@ -1110,7 +1110,7 @@ async function loadDevices(){
    return `<article class="device-row"><div class="device-person"><div class="device-avatar">${initials}</div><div class="device-person-copy"><b>${escapeHtml(x.profiles?.full_name||'Nhân viên')}</b><span>${escapeHtml(x.device_name||'Thiết bị')} · ${escapeHtml(x.platform||'')}</span><small>Mã ${escapeHtml(shortDeviceKey(x.device_key))} · ${escapeHtml(last)}</small></div></div><span class="badge ${tone} device-status">${label}</span>${actions}</article>`;
  }).join('');
 }
-async function reviewDevice(id,status){const action=status==='approved'?'approve':status==='rejected'?'reject':'revoke';if(profile?.role!=='owner'){alert('Chỉ Owner được quản lý thiết bị.');return}const reason=action==='reject'?(prompt('Lý do từ chối (có thể bỏ trống):','')??''):'';const {error}=await sb.rpc('review_attendance_device',{p_device_id:id,p_action:action,p_reason:reason});if(error)alert(error.message);else await loadDevices()}
+async function reviewDevice(id,status){const action=status==='approved'?'approve':status==='rejected'?'reject':'revoke';if(profile?.role!=='owner'){toast('Chỉ Owner được quản lý thiết bị.');return}const reason=action==='reject'?(prompt('Lý do từ chối (có thể bỏ trống):','')??''):'';const {error}=await sb.rpc('review_attendance_device',{p_device_id:id,p_action:action,p_reason:reason});if(error){const raw=String(error.message||'');const friendly=raw.includes('NHAN_VIEN_DA_CO_THIET_BI_DUOC_DUYET')?'Nhân viên này đã có một thiết bị được duyệt. Nếu muốn đổi thiết bị, hãy thu hồi thiết bị đang được duyệt trước.':raw.includes('THIET_BI_DA_XU_LY')?'Yêu cầu thiết bị này đã được xử lý. Vui lòng làm mới danh sách.':raw.includes('THIET_BI_CHUA_DUOC_DUYET')?'Thiết bị này chưa được duyệt nên không thể thu hồi.':'Không thể cập nhật thiết bị. Vui lòng thử lại.';toast(friendly);return}toast(action==='approve'?'Đã duyệt thiết bị.':action==='reject'?'Đã từ chối thiết bị.':'Đã thu hồi thiết bị.');await loadDevices()}
 async function loadStore(){
  if(!profile?.store_id){document.getElementById('storeMsg').innerHTML='<div class="notice warn">Tài khoản Owner chưa được gán cửa hàng.</div>';return}
  const {data,error}=await sb.from('stores').select('*').eq('id',profile.store_id).single();if(error){document.getElementById('storeMsg').innerHTML='<div class="notice warn">Có lỗi xảy ra. Vui lòng thử lại.</div>';return}
@@ -1235,23 +1235,51 @@ function deviceInfo(){
   return {device_key:getDeviceKey(),device_name:name,platform:String(platform).slice(0,80),user_agent:ua.slice(0,500)};
 }
 async function registerDevice(){
-  if(!sb||!session||!profile){alert('Hãy đăng nhập trước.');return}
-  if(profile.role!=='employee'){alert('Tính năng này dành cho tài khoản Employee.');return}
+  if(!sb||!session||!profile){toast('Vui lòng đăng nhập trước.');return}
+  if(profile.role!=='employee'){toast('Chức năng này dành cho nhân viên.');return}
   const d=deviceInfo();
   const {data,error}=await sb.rpc('request_attendance_device',{p_device_key:d.device_key,p_device_name:d.device_name,p_platform:d.platform,p_user_agent:d.user_agent});
-  if(error){alert(error.message);return}
-  alert(data?.status==='approved'?'Thiết bị này đã được duyệt.':'Đã gửi yêu cầu đăng ký thiết bị. Owner cần duyệt trước khi chấm công.');
+  if(error){
+    const raw=String(error.message||'');
+    const friendly=raw.includes('THIET_BI_DA_LIEN_KET_TAI_KHOAN_KHAC')
+      ? 'Thiết bị này đang được liên kết với một tài khoản khác.'
+      : raw.includes('NHAN_VIEN_DA_CO_THIET_BI_DUOC_DUYET')
+      ? 'Tài khoản đang có một thiết bị được duyệt. Hãy dùng thiết bị đó hoặc liên hệ Owner nếu muốn đổi thiết bị.'
+      : 'Không thể gửi yêu cầu thiết bị. Vui lòng thử lại.';
+    toast(friendly);
+    return;
+  }
+  const status=data?.status;
+  const reused=data?.reused===true;
+  if(status==='approved'){
+    toast('Thiết bị này đã được duyệt. Bạn có thể chấm công.');
+  }else if(reused){
+    toast('Đã gửi yêu cầu cấp lại quyền cho thiết bị này. Chờ Owner duyệt.');
+  }else if(status==='pending'){
+    toast('Đã gửi yêu cầu thiết bị. Chờ Owner duyệt.');
+  }else{
+    toast('Đã cập nhật trạng thái thiết bị.');
+  }
   await refreshAttendanceState();
 }
 function localDateVN(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Ho_Chi_Minh'}).format(new Date())}
 function formatTime(ts){return ts?new Date(ts).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'}):'—'}
 function formatDate(ts){return ts?new Date(ts).toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'}):'—'}
-function setGpsState(ok,text,detail){const t=el('homeGpsText'),dot=el('homeGpsDot');if(t)t.textContent=detail?text+' · '+detail:text;if(dot)dot.className='dot '+(ok?'ok':'bad')}
+function setGpsState(ok,text,detail,action){const t=el('homeGpsText'),dot=el('homeGpsDot'),btn=el('homeGpsAction');if(t)t.textContent=detail?text+' · '+detail:text;if(dot)dot.className='dot '+(ok?'ok':'bad');if(btn){btn.classList.toggle('show',!!action);btn.textContent=action||'Cho phép vị trí'}}
 function getPosition(){
  return new Promise((resolve,reject)=>{
    if(!navigator.geolocation){reject(new Error('Trình duyệt không hỗ trợ GPS.'));return}
    navigator.geolocation.getCurrentPosition(resolve,reject,{enableHighAccuracy:true,timeout:15000,maximumAge:0});
  });
+}
+async function requestGpsFromAttendanceUI(){
+  const btn=el('homeGpsAction');
+  if(btn){btn.disabled=true;btn.textContent='Đang xin quyền vị trí…'}
+  try{
+    await checkAttendanceEnvironment({userAction:true});
+  }finally{
+    if(btn)btn.disabled=false;
+  }
 }
 async function punchAttendance(){
   if(!sb||!session||!profile){alert('Hãy đăng nhập trước.');return}
