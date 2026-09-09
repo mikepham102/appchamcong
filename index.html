@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V37 · Device Reactivation</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V38 · Device Reactivation</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -129,7 +129,7 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
 
 /* ---------- Auth / device gate ---------- */
 .auth-card{width:min(420px,100%);min-height:480px;background:#fff;border:1px solid var(--line);border-radius:22px;padding:25px 21px;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:center}.auth-brand{display:flex;align-items:center;gap:11px}.auth-logo{width:46px;height:46px;border-radius:13px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:800;font-size:19px}.auth-card h1{font-size:25px;line-height:1.15;margin:20px 0 6px;letter-spacing:-.5px}.auth-card .desc{font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 18px}.login-toggle{display:flex;gap:4px;padding:4px;background:#F1EFEC;border-radius:11px;margin-bottom:12px}.login-toggle button{flex:1;min-height:36px;border-radius:8px;background:transparent;color:#77736D;font-size:11px;font-weight:750}.login-toggle button.active{background:#fff;color:var(--brand);box-shadow:0 1px 4px rgba(0,0,0,.07)}.auth-actions{display:grid;gap:8px}.auth-foot{font-size:10px;color:#9B9790;text-align:center;margin-top:13px;line-height:1.5}.auth-msg{min-height:44px;margin-top:9px}.auth-msg .notice{min-height:44px}.password-box{padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--surface-soft)}
-#deviceGate{display:none;position:fixed;inset:0;z-index:120;background:var(--bg);align-items:center;justify-content:center;padding:20px}#deviceGate.active{display:flex}.device-gate-card{width:min(430px,100%);background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px 20px;text-align:center;box-shadow:var(--shadow)}.gate-icon{width:60px;height:60px;border-radius:18px;margin:0 auto 13px;display:grid;place-items:center;background:var(--brand-soft);color:var(--brand);font-size:25px;font-weight:800}.device-gate-card h1{font-size:22px;line-height:1.2;margin:0}.device-gate-card p{min-height:42px;font-size:12px;color:var(--muted);line-height:1.5;overflow-wrap:anywhere}.device-name{min-height:42px;margin:13px 0 7px;padding:10px;border-radius:12px;background:var(--surface-soft);font-weight:750;font-size:12px;display:grid;place-items:center;overflow-wrap:anywhere}.device-id{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:8px;word-break:break-all;color:#89847D;background:var(--surface-soft);padding:8px;border-radius:9px;min-height:32px}.gate-button{width:100%;margin-top:11px;min-height:48px;border-radius:12px;background:var(--brand);color:#fff;font-weight:800;font-size:13px}.gate-secondary{width:100%;margin-top:7px;min-height:44px;border-radius:11px;background:#F1EFEC;color:#57534F;font-size:12px;font-weight:750}.gate-note{font-size:9px;color:#9B9790;margin-top:10px;line-height:1.4}
+#deviceGate{display:none;position:fixed;inset:0;z-index:120;background:var(--bg);align-items:center;justify-content:center;padding:20px}#deviceGate.active{display:flex}.device-gate-card{width:min(430px,100%);background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px 20px;text-align:center;box-shadow:var(--shadow)}.gate-icon{width:60px;height:60px;border-radius:18px;margin:0 auto 13px;display:grid;place-items:center;background:var(--brand-soft);color:var(--brand);font-size:25px;font-weight:800}.device-gate-card h1{font-size:22px;line-height:1.2;margin:0}.device-gate-card p{min-height:42px;font-size:12px;color:var(--muted);line-height:1.5;overflow-wrap:anywhere}.device-gate-card p.gate-warning{min-height:0;margin:12px 0 14px;padding:14px 15px;border:1px solid #F0C9C1;border-radius:14px;background:#FFF4F1;color:#6F3027;text-align:left;font-size:14px;line-height:1.55}.device-gate-card p.gate-warning strong{display:block;color:#A52F20;font-size:15px;line-height:1.35;margin-bottom:6px}.device-gate-card p.gate-warning span{display:block;margin-top:6px;color:#704E48;font-size:13px}.device-name{min-height:42px;margin:13px 0 7px;padding:10px;border-radius:12px;background:var(--surface-soft);font-weight:750;font-size:12px;display:grid;place-items:center;overflow-wrap:anywhere}.device-name.device-compare{margin-top:8px;background:#F7F6F3;border:1px solid #E6E2DD;font-size:13px;line-height:1.4;text-align:left;place-items:start}.device-id{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:8px;word-break:break-all;color:#89847D;background:var(--surface-soft);padding:8px;border-radius:9px;min-height:32px}.device-id.device-compare{font-family:inherit;font-size:11px;line-height:1.45;color:#66615C;text-align:left;word-break:normal}.gate-button{width:100%;margin-top:11px;min-height:48px;border-radius:12px;background:var(--brand);color:#fff;font-weight:800;font-size:13px}.gate-secondary{width:100%;margin-top:7px;min-height:44px;border-radius:11px;background:#F1EFEC;color:#57534F;font-size:12px;font-weight:750}.gate-note{font-size:9px;color:#9B9790;margin-top:10px;line-height:1.4}
 
 /* ---------- Modals / bottom sheets ---------- */
 .modal{display:none;position:fixed;inset:0;z-index:110;background:rgba(20,18,16,.38);align-items:flex-end;justify-content:center;padding:0}.modal.open{display:flex}.modalbox,.modal-card{width:min(620px,100%);max-height:min(88svh,760px);overflow:auto;overscroll-behavior:contain;background:#fff;border-radius:22px 22px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));box-shadow:var(--shadow-sheet);min-width:0}.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;min-width:0}.modal-head>div{min-width:0}.modal-head h2{margin:0;font-size:20px;line-height:1.2;letter-spacing:-.25px}.modal-close{width:40px;height:40px;flex:0 0 40px;border-radius:11px;background:#F2F0ED;color:#66615C;font-size:23px;line-height:1}.modal-actions{display:flex;gap:8px;margin-top:15px}.modal-actions .btn{flex:1}.schedule-request-modal-grid .field{min-width:0}
@@ -1169,20 +1169,36 @@ function showDeviceGate(access){
   el('gateDeviceName').textContent=currentDevice?.device_name||currentInfo.device_name||'Thiết bị này';
   el('gateDeviceId').textContent=currentDevice?.device_key||getDeviceKey();
   const title=el('gateTitle'),desc=el('gateDesc'),icon=el('gateIcon'),action=el('gateAction');
+  action.style.display='block';
+  desc.classList.remove('gate-warning');
+  el('gateDeviceName').classList.remove('device-compare');
+  el('gateDeviceId').classList.remove('device-compare');
   if(access.status==='pending'){
-    title.textContent='Đang chờ Owner duyệt';desc.textContent='Thiết bị này đã gửi yêu cầu. Hãy chờ Owner phê duyệt rồi bấm “Kiểm tra lại”.';icon.textContent='⏳';action.textContent='Kiểm tra lại';action.onclick=refreshDeviceGate;
+    title.textContent='Đang chờ Owner duyệt';desc.textContent='Thiết bị này đã gửi yêu cầu. Hãy chờ Owner phê duyệt rồi kiểm tra lại.';icon.textContent='⏳';action.textContent='Kiểm tra lại';action.onclick=refreshDeviceGate;
   }else if(access.status==='rejected'){
     title.textContent='Thiết bị bị từ chối';desc.textContent=access.device?.rejected_reason||'Owner chưa chấp thuận thiết bị này. Bạn có thể gửi lại yêu cầu.';icon.textContent='!';action.textContent='Gửi lại yêu cầu';action.onclick=registerDeviceAndRefresh;
   }else if(access.status==='revoked'){
     title.textContent='Thiết bị đã bị thu hồi';desc.textContent='Thiết bị này không còn quyền sử dụng tài khoản. Bạn cần được liên kết lại và Owner phê duyệt.';icon.textContent='×';action.textContent='Yêu cầu liên kết lại';action.onclick=registerDeviceAndRefresh;
   }else if(access.status==='other_device_approved'){
-    title.textContent='Tài khoản đang liên kết với thiết bị khác';desc.textContent='Owner đã duyệt một thiết bị khác cho tài khoản này. Thiết bị hiện tại không được tự động thay thế thiết bị đã duyệt.';icon.textContent='🔒';action.textContent='Kiểm tra lại';action.onclick=refreshDeviceGate;
-    el('gateDeviceName').textContent='Thiết bị hiện tại: '+currentInfo.device_name;
-    el('gateDeviceId').textContent='Mã hiện tại: '+getDeviceKey()+' · Đã duyệt: '+shortDeviceKey(access.approved.device_key);
+    title.textContent='Tài khoản đã đăng ký thiết bị khác';
+    desc.className='gate-warning';
+    desc.innerHTML='<strong>⚠️ Bạn đang đăng nhập bằng thiết bị khác thiết bị đã đăng ký ban đầu.</strong><span>Hệ thống không cho phép đăng ký thêm thiết bị cho tài khoản này. Nếu bạn đang đổi máy hoặc đổi trình duyệt, hãy kiểm tra lại thiết bị đang dùng hoặc thông tin đến Chủ Quán để được xử lý.</span>';
+    icon.textContent='🔒';
+    action.style.display='none';
+    el('gateDeviceName').className='device-name device-compare';
+    el('gateDeviceName').textContent='Thiết bị đang đăng nhập: '+currentInfo.device_name;
+    el('gateDeviceId').className='device-id device-compare';
+    el('gateDeviceId').textContent='Thiết bị đã được Owner đăng ký: '+(access.approved?.device_name||'Thiết bị đã duyệt');
   }else if(access.status==='other_device_pending'){
-    title.textContent='Đã có yêu cầu thiết bị khác';desc.textContent='Tài khoản đang có một yêu cầu liên kết khác. Hãy dùng đúng thiết bị đã gửi yêu cầu hoặc kiểm tra lại với Owner.';icon.textContent='⏳';action.textContent='Kiểm tra lại';action.onclick=refreshDeviceGate;
-    el('gateDeviceName').textContent='Thiết bị hiện tại: '+currentInfo.device_name;
-    el('gateDeviceId').textContent='Mã hiện tại: '+getDeviceKey()+' · Đang chờ: '+shortDeviceKey(access.pending.device_key);
+    title.textContent='Tài khoản đang có thiết bị khác';
+    desc.className='gate-warning';
+    desc.innerHTML='<strong>⚠️ Bạn đang đăng nhập bằng thiết bị khác với thiết bị đang chờ Owner duyệt.</strong><span>Hệ thống không tạo thêm yêu cầu cho tài khoản này. Hãy dùng đúng thiết bị đã đăng ký hoặc thông tin đến Chủ Quán nếu bạn đang đổi máy/trình duyệt.</span>';
+    icon.textContent='⏳';
+    action.style.display='none';
+    el('gateDeviceName').className='device-name device-compare';
+    el('gateDeviceName').textContent='Thiết bị đang đăng nhập: '+currentInfo.device_name;
+    el('gateDeviceId').className='device-id device-compare';
+    el('gateDeviceId').textContent='Thiết bị đang chờ Owner: '+(access.pending?.device_name||'Thiết bị đang chờ duyệt');
   }else if(access.status==='error'){
     title.textContent='Không thể kiểm tra thiết bị';desc.textContent=access.message||'Vui lòng thử lại.';icon.textContent='!';action.textContent='Thử lại';action.onclick=refreshDeviceGate;
   }else{
@@ -1201,8 +1217,11 @@ async function getEmployeeDeviceAccess(){
   const approved=devices.find(d=>d.status==='approved')||null;
   const pending=devices.find(d=>d.status==='pending')||null;
   if(current?.status==='approved') return {allowed:true,status:'approved',device:current,devices,currentKey:key};
+  // Một tài khoản chỉ có 1 thiết bị được duyệt. Nếu browser hiện tại khác
+  // thiết bị đã duyệt, ưu tiên cảnh báo này trước cả trạng thái pending/rejected/revoked
+  // của browser hiện tại để nhân viên không gửi thêm yêu cầu rồi gặp lỗi xung đột.
+  if(approved && current?.device_key!==approved.device_key) return {allowed:false,status:'other_device_approved',device:current,approved,devices,currentKey:key};
   if(current) return {allowed:false,status:current.status,device:current,devices,approved,currentKey:key};
-  if(approved) return {allowed:false,status:'other_device_approved',device:null,approved,devices,currentKey:key};
   if(pending) return {allowed:false,status:'other_device_pending',device:null,pending,devices,currentKey:key};
   return {allowed:false,status:'not_registered',device:null,devices,currentKey:key};
 }
@@ -1238,6 +1257,14 @@ async function registerDevice(){
   if(!sb||!session||!profile){toast('Vui lòng đăng nhập trước.');return}
   if(profile.role!=='employee'){toast('Chức năng này dành cho nhân viên.');return}
   const d=deviceInfo();
+  // Kiểm tra ngay tại thời điểm nhân viên bấm đăng ký: nếu tài khoản đã có
+  // thiết bị được Owner duyệt và browser hiện tại không phải thiết bị đó,
+  // không gửi thêm yêu cầu mới và không tạo trạng thái xung đột.
+  const currentAccess=await getEmployeeDeviceAccess();
+  if(currentAccess.status==='other_device_approved'){
+    toast('Bạn đang đăng nhập bằng thiết bị khác với thiết bị đã đăng ký ban đầu. Hãy kiểm tra lại hoặc thông tin đến Chủ Quán.');
+    return;
+  }
   const {data,error}=await sb.rpc('request_attendance_device',{p_device_key:d.device_key,p_device_name:d.device_name,p_platform:d.platform,p_user_agent:d.user_agent});
   if(error){
     const raw=String(error.message||'');
