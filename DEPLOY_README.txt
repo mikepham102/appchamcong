@@ -8,3 +8,6 @@ UI-only adjustment based on the current payroll/app baseline.
 - No database schema, permissions, attendance rules, payroll logic, or other business logic changed.
 
 Deploy: upload the contents of this folder to the GitHub Pages publishing root, with index.html at root.
+
+V63: Nếu bấm Tạo kỳ lương nhưng kỳ đó đã tồn tại (KY_LUONG_DA_TON_TAI), app sẽ tự mở báo cáo của kỳ lương hiện có thay vì chỉ báo lỗi.
+QUAN TRỌNG: index.html nằm ngay thư mục gốc của gói để upload trực tiếp lên GitHub Pages.
