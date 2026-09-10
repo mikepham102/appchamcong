@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V55 · UI Polish</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V64 · Design Director UI</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -1064,6 +1064,668 @@ button:not(:disabled):active{transform:scale(.965)}
   <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
 
+
+<style id="hongcha-v64-design-director">
+/*
+ V64 — Design Director UI pass
+ UI/UX ONLY: no data, permissions, RPC, business rules, or event handlers changed.
+ Goal: clearer hierarchy, faster scanning, calmer visual language, better mobile density.
+*/
+
+/* ===== 1. Global visual hierarchy ===== */
+:root{
+  --ui-accent:#A9482D;
+  --ui-accent-soft:#F8EEE9;
+  --ui-ink:#252320;
+  --ui-muted:#77716A;
+  --ui-line:#E7E2DC;
+  --ui-surface:#FFFFFF;
+  --ui-soft:#F7F5F2;
+  --ui-success:#177A52;
+  --ui-success-soft:#EAF5EF;
+  --ui-warning:#A86512;
+  --ui-warning-soft:#FBF2E5;
+  --ui-danger:#C43D35;
+  --ui-danger-soft:#FBECE9;
+  --ui-info:#496A87;
+  --ui-info-soft:#EDF3F7;
+}
+.page-screen-header,
+.screen-header{
+  margin-bottom:18px;
+}
+.page-screen-header .page-title,
+.screen-header .page-title{
+  color:var(--ui-ink);
+  letter-spacing:-.7px;
+}
+.page-screen-header .eyebrow,
+.screen-header .eyebrow{
+  color:#9A766A;
+}
+.page-sub{
+  color:var(--ui-muted);
+}
+
+/* ===== 2. Cards: subtle elevation, stronger hierarchy ===== */
+.card,
+.schedule-browser,
+.admin-situation,
+.settings-card,
+.detail-card,
+.attendance-help,
+.salary-metrics>div{
+  border-color:var(--ui-line);
+  box-shadow:0 1px 2px rgba(35,30,25,.025);
+}
+.card,
+.schedule-browser{
+  background:var(--ui-surface);
+}
+.card>.row:first-child b,
+.schedule-browser .selected-date{
+  color:var(--ui-ink);
+}
+
+/* ===== 3. Buttons: tactile but restrained ===== */
+.btn,
+.primary-compact,
+.today-btn,
+.icon-button,
+.attendance-primary,
+.owner-action,
+.quick-actions button,
+.admin-group-item{
+  transition:
+    transform .14s ease,
+    box-shadow .16s ease,
+    background-color .16s ease,
+    border-color .16s ease,
+    color .16s ease;
+}
+.btn:not(:disabled):hover,
+.primary-compact:not(:disabled):hover,
+.today-btn:hover,
+.icon-button:hover{
+  box-shadow:0 3px 10px rgba(35,30,25,.07);
+}
+.btn.primary,
+.primary-compact{
+  box-shadow:0 2px 5px rgba(169,72,45,.14);
+}
+.btn.green{
+  box-shadow:0 2px 5px rgba(23,122,82,.12);
+}
+
+/* ===== 4. Calendar/date selector: scan first, details second ===== */
+.schedule-browser{
+  padding:16px;
+}
+.schedule-browser-top{
+  padding-bottom:2px;
+}
+.selected-date{
+  font-size:20px;
+  font-weight:790;
+}
+.selected-date-sub{
+  color:#858078;
+}
+.schedule-days{
+  gap:6px;
+  margin-top:15px;
+}
+.day-cell{
+  position:relative;
+  height:68px;
+  border-color:#E6E1DB;
+  background:#FCFBFA;
+}
+.day-cell .dow{
+  color:#8A847D;
+  font-weight:760;
+}
+.day-cell .num{
+  color:#302D29;
+}
+.day-cell .day-count,
+.day-cell .mark{
+  color:#918B84;
+}
+.day-cell.today{
+  background:#FBF1ED;
+  border-color:#E4B9AA;
+}
+.day-cell.today .num{
+  color:var(--ui-accent);
+}
+.day-cell.selected{
+  box-shadow:0 3px 9px rgba(169,72,45,.18)!important;
+}
+.day-cell.selected .num{
+  font-weight:820;
+}
+
+/* ===== 5. Employee schedule — each shift becomes a fast-scanning information row ===== */
+.schedule-results{
+  margin-top:13px;
+}
+.shift-card{
+  position:relative;
+  overflow:hidden;
+  padding:0;
+  margin-bottom:10px;
+  border-radius:16px;
+  border:1px solid #E4DED8;
+  background:#fff;
+  box-shadow:0 1px 2px rgba(35,30,25,.025);
+}
+.shift-card::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:4px;
+  background:#B86A50;
+}
+.shift-card:nth-child(3n+2)::before{background:#7189A3}
+.shift-card:nth-child(3n+3)::before{background:#5E9478}
+.shift-card-head{
+  min-height:68px;
+  padding:13px 13px 12px 17px;
+  align-items:center;
+  background:linear-gradient(90deg,#FCFAF8 0%,#fff 70%);
+}
+.shift-card-title{
+  color:#302C28;
+  font-size:15px;
+  font-weight:820;
+  letter-spacing:-.15px;
+}
+.shift-card-time{
+  display:inline-flex;
+  align-items:center;
+  margin-left:3px;
+  padding:3px 7px;
+  border-radius:7px;
+  background:#F2EEEA;
+  color:#625C55!important;
+  font-size:11px;
+  font-weight:760;
+  letter-spacing:0;
+}
+.shift-card-sub{
+  margin-top:5px;
+  color:#858078;
+  font-size:11px;
+}
+.shift-card-head>div:last-child{
+  flex:0 0 auto;
+  max-width:46%;
+}
+.schedule-status-stack{
+  max-width:170px;
+}
+.schedule-status{
+  min-height:28px;
+  padding:5px 8px;
+  border-radius:8px;
+  font-size:10.5px;
+  font-weight:780;
+  border:1px solid transparent;
+}
+.schedule-status.ok{
+  background:var(--ui-success-soft);
+  color:var(--ui-success);
+  border-color:#D6E9DE;
+}
+.schedule-status.warn{
+  background:var(--ui-warning-soft);
+  color:var(--ui-warning);
+  border-color:#F0DEC5;
+}
+.schedule-status.danger{
+  background:var(--ui-danger-soft);
+  color:var(--ui-danger);
+  border-color:#F0D2CE;
+}
+.schedule-status.info{
+  background:var(--ui-info-soft);
+  color:var(--ui-info);
+  border-color:#DCE7EE;
+}
+.schedule-status.pending{
+  background:#F1EFEC;
+  color:#6E6963;
+  border-color:#E4E0DB;
+}
+.selected-day-note{
+  margin:0 12px 12px 16px!important;
+  background:#F3F8F5;
+  border-color:#D9E9DF;
+  color:#2E6D50;
+  font-size:11px;
+}
+
+/* ===== 6. Owner attendance — shift title is the visual anchor ===== */
+#staffAttendanceContent .card{
+  overflow:hidden;
+}
+#adminAttendanceList{
+  display:grid;
+  gap:10px;
+}
+#staffAttendanceContent .attendance-shift-card{
+  position:relative;
+  margin-bottom:0;
+  border-radius:16px;
+  border:1px solid #E2DDD7;
+  box-shadow:0 1px 2px rgba(35,30,25,.025);
+  background:#fff;
+}
+#staffAttendanceContent .attendance-shift-card::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:4px;
+  background:#B86A50;
+}
+#staffAttendanceContent .attendance-shift-card:nth-child(3n+2)::before{background:#7189A3}
+#staffAttendanceContent .attendance-shift-card:nth-child(3n+3)::before{background:#5E9478}
+#staffAttendanceContent .attendance-shift-head{
+  min-height:66px;
+  padding:12px 13px 11px 17px;
+  background:linear-gradient(90deg,#FCFAF8 0%,#fff 74%);
+  border-bottom:1px solid #ECE7E1;
+}
+#staffAttendanceContent .attendance-shift-head .shift-card-title{
+  color:#302C28;
+  font-size:15px;
+  font-weight:830;
+}
+#staffAttendanceContent .attendance-shift-head .shift-card-time{
+  background:#F1EEEA;
+  color:#625C55!important;
+}
+#staffAttendanceContent .attendance-shift-head .shift-card-sub{
+  color:#88827B;
+  font-size:10.5px;
+  font-weight:620;
+}
+.attendance-shift-supplement{
+  box-shadow:0 2px 5px rgba(23,122,82,.12);
+}
+#staffAttendanceContent .attendance-person{
+  position:relative;
+  min-height:62px;
+  padding:10px 13px 10px 17px;
+  border-top-color:#EEEAE5;
+  grid-template-columns:36px minmax(0,1fr) auto;
+  gap:9px;
+}
+#staffAttendanceContent .attendance-person:hover{
+  background:#FCFBFA;
+}
+#staffAttendanceContent .person-avatar{
+  width:36px;
+  height:36px;
+  flex-basis:36px;
+  border-radius:10px;
+  background:#F1EEEA;
+  color:#5A554F;
+  font-size:13px;
+}
+#staffAttendanceContent .att-name{
+  color:#312E2A;
+  font-size:13px;
+  font-weight:790;
+}
+#staffAttendanceContent .att-time{
+  color:#8A847D;
+  font-size:10.5px;
+}
+#staffAttendanceContent .att-state{
+  min-width:78px;
+  max-width:128px;
+  padding:5px 7px;
+  border-radius:8px;
+  font-size:10px;
+  font-weight:790;
+  border:1px solid transparent;
+}
+#staffAttendanceContent .att-state.working{
+  background:var(--ui-success-soft);
+  color:var(--ui-success);
+  border-color:#D5E9DD;
+}
+#staffAttendanceContent .att-state.late{
+  background:var(--ui-warning-soft);
+  color:var(--ui-warning);
+  border-color:#EFDEC6;
+}
+#staffAttendanceContent .att-state.missing{
+  background:var(--ui-danger-soft);
+  color:var(--ui-danger);
+  border-color:#F0D1CD;
+}
+#staffAttendanceContent .att-state.pending{
+  background:#F2F0ED;
+  color:#716C65;
+  border-color:#E5E1DC;
+}
+#staffAttendanceContent .attendance-person-actions{
+  margin-top:6px;
+}
+#staffAttendanceContent .attendance-inline-action{
+  background:#F4F1EE;
+  border-color:#E7E2DC;
+  color:#5D5751;
+}
+#staffAttendanceContent .attendance-inline-action:hover{
+  background:#EEEAE6;
+}
+#staffAttendanceContent .attendance-legend{
+  margin-top:12px;
+  padding-top:11px;
+  border-top:1px solid #EEEAE5;
+}
+
+/* ===== 7. Attendance summary: semantic but quiet ===== */
+#adminAttendanceSummary{
+  gap:7px;
+}
+#adminAttendanceSummary .mini-stat{
+  position:relative;
+  padding:11px 12px 10px 14px;
+  overflow:hidden;
+  background:#fff;
+  border-color:#E6E1DB;
+}
+#adminAttendanceSummary .mini-stat::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:3px;
+  background:#6F9680;
+}
+#adminAttendanceSummary .mini-stat:nth-child(2)::before{background:#7A8FA7}
+#adminAttendanceSummary .mini-stat:nth-child(3)::before{background:#C56A61}
+#adminAttendanceSummary .mini-stat b{
+  color:#2E2B27;
+  font-size:20px;
+}
+#adminAttendanceSummary .mini-stat span{
+  color:#88827B;
+  font-size:9.5px;
+  font-weight:750;
+  letter-spacing:.04em;
+}
+
+/* ===== 8. Home: one clear primary action, everything else secondary ===== */
+.home-section{
+  margin-top:24px;
+}
+.section-title-row{
+  margin-bottom:9px;
+}
+.section-title-row h2{
+  color:#2E2B27;
+  font-size:16px;
+  font-weight:790;
+}
+.current-shift-card{
+  border-color:#DDD8D2;
+  box-shadow:0 2px 10px rgba(35,30,25,.045);
+}
+.home-status-card{
+  box-shadow:0 1px 2px rgba(35,30,25,.025);
+}
+.quick-actions{
+  gap:8px;
+}
+.quick-actions button{
+  border-color:#E5E0DA;
+  min-height:68px;
+}
+.quick-actions button:hover{
+  border-color:#D9C5BB;
+  box-shadow:0 3px 10px rgba(35,30,25,.055);
+}
+
+/* ===== 9. Employee attendance: compact status board ===== */
+.attendance-focus-card{
+  box-shadow:0 2px 10px rgba(35,30,25,.04);
+}
+.attendance-state{
+  margin-top:16px;
+  padding-top:14px;
+}
+.precheck-grid{
+  gap:7px;
+}
+.precheck-item{
+  min-height:76px;
+  padding:10px 11px;
+  border-color:#E6E1DB;
+  background:#FBFAF8;
+}
+.attendance-history-list{
+  gap:7px;
+}
+.attendance-history-item{
+  border-color:#E5E0DA;
+  box-shadow:0 1px 2px rgba(35,30,25,.02);
+}
+
+/* ===== 10. Employee salary + Owner payroll: make numbers primary ===== */
+.salary-summary-card{
+  box-shadow:0 2px 10px rgba(35,30,25,.045);
+}
+.salary-value{
+  letter-spacing:-1.6px;
+}
+.salary-metrics>div{
+  position:relative;
+  overflow:hidden;
+}
+.salary-metrics>div::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:3px;
+  background:#B86A50;
+}
+.salary-metrics>div:nth-child(2)::before{background:#7189A3}
+.payroll-shell .card{
+  box-shadow:0 1px 2px rgba(35,30,25,.025);
+}
+.payroll-period-card,
+.payroll-run{
+  border-color:#E4DED8;
+}
+.payroll-kpis{
+  gap:7px;
+}
+
+/* ===== 11. Admin: stronger parent grouping, less visual noise ===== */
+.admin-groups{
+  gap:10px;
+}
+.admin-group{
+  border-color:#E1DBD5;
+  box-shadow:0 1px 4px rgba(35,30,25,.03);
+}
+.admin-group summary{
+  min-height:64px;
+}
+.admin-group-items{
+  background:#FCFBFA;
+}
+.admin-group-item{
+  background:#fff;
+  border-color:#E7E2DC;
+}
+.admin-group-item:hover{
+  border-color:#D8C7BF;
+}
+.admin-group-item.active{
+  box-shadow:inset 3px 0 0 var(--brand),0 2px 7px rgba(169,72,45,.07);
+}
+
+/* ===== 12. Forms: reduce cognitive load ===== */
+.field label{
+  color:#5F5952;
+  font-size:12px;
+  font-weight:720;
+}
+input,select,textarea{
+  border-color:#DDD7D0;
+  background:#fff;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:#C6816C;
+  box-shadow:0 0 0 3px rgba(169,72,45,.09);
+}
+
+/* ===== 13. Mobile: preserve hierarchy, never crowd controls ===== */
+@media(max-width:700px){
+  main{
+    padding:18px 12px 28px;
+  }
+  .page-title{
+    font-size:25px;
+  }
+  .page-sub{
+    font-size:12px;
+  }
+  .schedule-browser{
+    padding:13px;
+  }
+  .schedule-days{
+    gap:4px;
+  }
+  .day-cell{
+    height:62px;
+    border-radius:11px;
+  }
+  .shift-card-head{
+    min-height:64px;
+    padding:11px 10px 10px 15px;
+    gap:8px;
+  }
+  .shift-card-title{
+    font-size:14px;
+  }
+  .shift-card-time{
+    padding:2px 6px;
+    font-size:10px;
+  }
+  .shift-card-sub{
+    font-size:10px;
+  }
+  .shift-card-head>div:last-child{
+    max-width:48%;
+  }
+  #staffAttendanceContent .attendance-shift-head{
+    min-height:62px;
+    padding:10px 10px 9px 15px;
+    gap:7px;
+  }
+  #staffAttendanceContent .attendance-shift-head .shift-card-title{
+    font-size:13.5px;
+  }
+  #staffAttendanceContent .attendance-shift-head .shift-card-sub{
+    font-size:9.5px;
+  }
+  #staffAttendanceContent .attendance-shift-supplement{
+    min-height:31px!important;
+    height:31px;
+    padding:0 8px!important;
+    font-size:9.5px!important;
+  }
+  #staffAttendanceContent .attendance-person{
+    grid-template-columns:34px minmax(0,1fr) auto;
+    min-height:58px;
+    padding:9px 10px 9px 15px;
+    gap:8px;
+  }
+  #staffAttendanceContent .person-avatar{
+    width:34px;
+    height:34px;
+    flex-basis:34px;
+  }
+  #staffAttendanceContent .att-name{
+    font-size:12px;
+  }
+  #staffAttendanceContent .att-time{
+    font-size:9.5px;
+  }
+  #staffAttendanceContent .att-state{
+    min-width:70px;
+    max-width:105px;
+    font-size:9px;
+    padding:5px 6px;
+  }
+  #adminAttendanceSummary .mini-stat{
+    padding:9px 8px 9px 11px;
+  }
+  #adminAttendanceSummary .mini-stat b{
+    font-size:18px;
+  }
+  #adminAttendanceSummary .mini-stat span{
+    font-size:8.5px;
+  }
+}
+@media(max-width:390px){
+  main{
+    padding-left:10px;
+    padding-right:10px;
+  }
+  .page-title{
+    font-size:23px;
+  }
+  .schedule-browser{
+    padding:11px;
+  }
+  .day-cell{
+    height:58px;
+  }
+  .day-cell .num{
+    font-size:16px;
+  }
+  .shift-card-head{
+    padding-right:8px;
+  }
+  .schedule-status{
+    font-size:9.5px;
+    padding:5px 6px;
+  }
+  #staffAttendanceContent .attendance-shift-head{
+    padding-left:13px;
+    padding-right:8px;
+  }
+  #staffAttendanceContent .attendance-shift-supplement{
+    padding:0 7px!important;
+    font-size:9px!important;
+  }
+}
+
+/* Respect reduced-motion accessibility */
+@media(prefers-reduced-motion:reduce){
+  .btn,.primary-compact,.today-btn,.icon-button,.attendance-primary,.owner-action,.quick-actions button,.admin-group-item{
+    transition:none!important;
+  }
+}
+</style>
+
+<meta name="hongcha-release" content="V64 Design Director UI"/>
 </head><body><div id="bootScreen"><div class="auth-card ui-center"><div class="auth-logo ui-auto">H</div><div class="ui-boot-title">HongCha HRM</div><div class="muted ui-boot-sub">Đang mở ứng dụng…</div></div></div><div class="hidden" id="loginScreen"><div class="auth-card v33-auth"><div class="auth-brand"><div class="auth-logo">H</div><div><div class="ui-brand-title">HongCha HRM</div><div class="muted ui-brand-foot">Quản lý nhân sự &amp; chấm công</div></div></div><h1>Chào mừng trở lại</h1><div class="desc">Đăng nhập để chấm công, xem lịch làm việc và theo dõi giờ công.</div><div class="login-toggle"><button class="active" id="loginModePassword" onclick="setLoginMode('password')">Mật khẩu</button><button id="loginModeOtp" onclick="setLoginMode('otp')">Email</button></div><div class="stack" id="passwordLoginFields"><div class="field"><label>Email</label><input autocomplete="username" id="loginEmail" placeholder="email của bạn" type="email"/></div><div class="field"><label>Mật khẩu</label><input autocomplete="current-password" id="loginPassword" placeholder="Mật khẩu" type="password"/></div><label class="remember-login"><input checked="" id="rememberLogin" type="checkbox"/><span><b>Lưu đăng nhập</b><small>Giữ phiên đăng nhập trên thiết bị này</small></span></label><button class="btn primary ui-w-full" onclick="signIn()">Đăng nhập</button><button class="btn light ui-w-full" onclick="sendResetPassword()">Quên mật khẩu</button></div><div class="stack ui-hidden" id="otpLoginFields"><div class="field"><label>Email</label><input autocomplete="email" id="loginEmailOtp" placeholder="email của bạn" type="email"/></div><button class="btn primary ui-w-full" onclick="sendMagicLink()">Gửi link đăng nhập</button><div class="notice info">Mở email và bấm link để đăng nhập nhanh. Không cần nhập mật khẩu.</div></div><div class="auth-msg" id="loginMsg"></div><div class="auth-foot">Tài khoản nhân viên chỉ sử dụng được trên thiết bị đã được cửa hàng phê duyệt.</div></div></div>
 <div class="app" id="app">
 <header class="app-topbar"><div class="app-topbar-inner"><div class="app-brand-center"><div class="brand-mark">H</div><div class="app-brand-copy"><div class="brand">HongCha HRM</div><div class="sub" id="roleLabel">—</div></div></div><button class="topbar-admin-action" id="adminTopAction" onclick="openAdminHome()" type="button"><span>Quản trị</span></button></div></header>
