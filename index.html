@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V39 · Native Design System</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -937,7 +937,7 @@ button,input,select,textarea{min-width:0}
 </style>
 </head><body><div id="bootScreen"><div class="auth-card ui-center"><div class="auth-logo ui-auto">H</div><div class="ui-boot-title">HongCha HRM</div><div class="muted ui-boot-sub">Đang mở ứng dụng…</div></div></div><div class="hidden" id="loginScreen"><div class="auth-card v33-auth"><div class="auth-brand"><div class="auth-logo">H</div><div><div class="ui-brand-title">HongCha HRM</div><div class="muted ui-brand-foot">Quản lý nhân sự &amp; chấm công</div></div></div><h1>Chào mừng trở lại</h1><div class="desc">Đăng nhập để chấm công, xem lịch làm việc và theo dõi giờ công.</div><div class="login-toggle"><button class="active" id="loginModePassword" onclick="setLoginMode('password')">Mật khẩu</button><button id="loginModeOtp" onclick="setLoginMode('otp')">Email</button></div><div class="stack" id="passwordLoginFields"><div class="field"><label>Email</label><input autocomplete="username" id="loginEmail" placeholder="email của bạn" type="email"/></div><div class="field"><label>Mật khẩu</label><input autocomplete="current-password" id="loginPassword" placeholder="Mật khẩu" type="password"/></div><label class="remember-login"><input checked="" id="rememberLogin" type="checkbox"/><span><b>Lưu đăng nhập</b><small>Giữ phiên đăng nhập trên thiết bị này</small></span></label><button class="btn primary ui-w-full" onclick="signIn()">Đăng nhập</button><button class="btn light ui-w-full" onclick="sendResetPassword()">Quên mật khẩu</button></div><div class="stack ui-hidden" id="otpLoginFields"><div class="field"><label>Email</label><input autocomplete="email" id="loginEmailOtp" placeholder="email của bạn" type="email"/></div><button class="btn primary ui-w-full" onclick="sendMagicLink()">Gửi link đăng nhập</button><div class="notice info">Mở email và bấm link để đăng nhập nhanh. Không cần nhập mật khẩu.</div></div><div class="auth-msg" id="loginMsg"></div><div class="auth-foot">Tài khoản nhân viên chỉ sử dụng được trên thiết bị đã được cửa hàng phê duyệt.</div></div></div>
 <div class="app" id="app">
-<header class="app-topbar"><div class="app-topbar-inner"><div class="brand-mark">H</div><div><div class="brand">HongCha HRM</div><div class="sub" id="roleLabel">—</div></div><button class="topbar-admin-action" id="adminTopAction" onclick="navigate('admin')" type="button"><span>Quản trị</span></button></div></header>
+<header class="app-topbar"><div class="app-topbar-inner"><div class="brand-mark">H</div><div><div class="brand">HongCha HRM</div><div class="sub" id="roleLabel">—</div></div><button class="topbar-admin-action" id="adminTopAction" onclick="openAdminHome()" type="button"><span>Quản trị</span></button></div></header>
 <main>
 <section class="view active" id="dashboard">
 <div class="screen employee-home-screen" id="employeeHome">
@@ -1288,6 +1288,13 @@ function readUiState(){try{const raw=localStorage.getItem(uiStateKey());return r
 function restoreUiState(){const st=readUiState();if(!st){navigate('dashboard',{restore:true});return}if(profile?.role==='employee'&&st.currentView==='admin')st.currentView='dashboard';if(st.employeeSelectedDate)employeeSelectedDate=st.employeeSelectedDate;if(st.employeeDayWindowStart)employeeDayWindowStart=st.employeeDayWindowStart;if(['owner','manager'].includes(profile?.role)){mainScheduleDate=localToday();mainScheduleWindowStart=mondayOfWeek(mainScheduleDate)}else{if(st.mainScheduleDate)mainScheduleDate=st.mainScheduleDate;if(st.mainScheduleWindowStart)mainScheduleWindowStart=st.mainScheduleWindowStart}if(st.adminSelectedDate)adminSelectedDate=st.adminSelectedDate;if(st.adminDayWindowStart)adminDayWindowStart=st.adminDayWindowStart;if(st.adminAttendanceDate)adminAttendanceDate=st.adminAttendanceDate;if(st.adminAttendanceWindowStart)adminAttendanceWindowStart=st.adminAttendanceWindowStart;currentAdminTab=st.currentAdminTab||'employees';navigate(st.currentView||'dashboard',{restore:true,scrollY:Number(st.scrollY||0)})}
 function openAttendanceNav(){navigate('attendance')}
 function syncRoleContent(){const staff=['owner','manager'].includes(profile?.role);document.querySelectorAll('.role-employee').forEach(x=>x.classList.toggle('ui-hidden',staff));document.querySelectorAll('.role-staff').forEach(x=>x.classList.toggle('ui-hidden',!staff));const aTitle=el('attendancePageTitle'),aSub=el('attendancePageSub'),sTitle=el('salaryPageTitle'),sSub=el('salaryPageSub');if(aTitle)aTitle.textContent=staff?'Chấm công nhân sự':'Chấm công';if(aSub)aSub.textContent=staff?'Theo dõi ca, trạng thái chấm công và xử lý thiếu công.':'Trạng thái ca và thao tác chấm công của bạn.';if(sTitle)sTitle.textContent=staff?'Lương':'Lương';if(sSub)sSub.textContent=staff?'Quản lý kỳ lương, bảng lương và các khoản điều chỉnh.':'Tổng hợp theo giờ công đã được ghi nhận.';const top=el('adminTopAction');if(top)top.classList.toggle('hidden',!staff)}
+function openAdminHome(){
+ const role=profile?.role;
+ if(!['owner','manager'].includes(role))return;
+ // Nút Quản trị chỉ mở TRANG DANH MỤC quản trị.
+ // Không tự mở lại chức năng/popup trước đó. Người dùng tự chọn chức năng sau.
+ navigate('admin',{adminHome:true});
+}
 function navigate(id,opts={}){const s=session,p=profile;if(!s||!p){showLogin('Vui lòng đăng nhập để tiếp tục.');return}if(p.role==='employee'&&id==='admin')return;const previousView=currentView;document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));const v=el(id);if(!v)return;v.classList.add('active');currentView=id;document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.nav===id));syncRoleContent();if(!opts.restore&&id!==previousView)window.scrollTo(0,0);if(id==='dashboard'){if(p.role==='employee'){refreshAttendanceState();loadSchedules()}else loadOwnerOverview()}if(id==='attendance'){if(p.role==='employee'){refreshAttendanceState();loadAttendanceHistory();syncDeviceUI();checkAttendanceEnvironment()}else{adminAttendanceDate=localToday();adminAttendanceWindowStart=mondayOfWeek(adminAttendanceDate);renderScheduleForKind('attendance')}}if(id==='schedule'){
   if(p.role==='employee'){
     employeeSelectedDate=localToday();
@@ -1298,7 +1305,12 @@ function navigate(id,opts={}){const s=session,p=profile;if(!s||!p){showLogin('Vu
     mainScheduleWindowStart=mondayOfWeek(mainScheduleDate);
     renderScheduleForKind('main');
   }
-}if(id==='salary'){if(['owner','manager'].includes(p.role))loadPayroll();else loadSalarySummary()}if(id==='admin'){const b=document.querySelector('#admin .admin-group-item[data-admin-tab="'+currentAdminTab+'"]')||document.querySelector('#admin .admin-group-item[data-admin-tab="employees"]');adminTab(currentAdminTab,b,{skipPersist:true})}if(id==='profile')el('profileMsg').innerHTML='';saveUiState();if(opts.restore)setTimeout(()=>window.scrollTo(0,Number(opts.scrollY||0)),0)}
+}if(id==='salary'){if(['owner','manager'].includes(p.role))loadPayroll();else loadSalarySummary()}if(id==='admin'){
+  // Trang Quản trị luôn bắt đầu ở danh mục; không tự bật popup/chức năng cũ.
+  closeAdminPane();
+  document.querySelectorAll('#admin .admin-pane').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('#admin .admin-group-item').forEach(x=>x.classList.remove('active'));
+}if(id==='profile')el('profileMsg').innerHTML='';saveUiState();if(opts.restore)setTimeout(()=>window.scrollTo(0,Number(opts.scrollY||0)),0)}
 async function loadOwnerOverview(){
  if(!profile||!['owner','manager'].includes(profile.role)||!sb)return;
  const storeId=profile.store_id,today=localToday();
@@ -2498,4 +2510,14 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&el('adminContent')?
 window.addEventListener('error',e=>{console.error('HongCha HRM:',e.error||e.message)});
 window.addEventListener('unhandledrejection',e=>{console.error('HongCha HRM:',e.reason)});
 
-</script></body></html>
+</script>
+<style id="hongcha-v52-admin-reopen-fix">
+/* V52: Quản trị luôn mở lại đúng chức năng đang chọn; content là panel/modal, không nằm chìm dưới danh mục. */
+.admin-content{position:fixed!important;z-index:80!important;left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;width:min(920px,calc(100vw - 32px))!important;max-width:920px!important;max-height:min(86vh,820px)!important;margin:0!important;padding:0!important;background:var(--bg);border:1px solid var(--line);border-radius:22px;box-shadow:0 24px 70px rgba(20,18,16,.22);transform:translate(-50%,-47%) scale(.985);opacity:0;visibility:hidden;pointer-events:none;overflow:hidden;transition:transform .18s ease,opacity .16s ease,visibility .16s ease}
+.admin-content.open{transform:translate(-50%,-50%) scale(1);opacity:1;visibility:visible;pointer-events:auto}
+@media(max-width:699px){
+ .admin-content{left:0!important;top:auto!important;right:0!important;bottom:0!important;width:100%!important;max-width:none!important;max-height:84svh!important;border-radius:22px 22px 0 0;transform:translateY(105%);}
+ .admin-content.open{transform:translateY(0)}
+}
+</style>
+</body></html>
