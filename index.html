@@ -382,6 +382,68 @@ body.admin-sheet-open{overflow:hidden}
 }
 @media(max-width:375px){.admin-content{max-height:88svh}.admin-content>.admin-pane{height:calc(88svh - 64px);padding-left:10px;padding-right:10px}.admin-sheet-head{padding-left:12px;padding-right:12px}}
 @media(prefers-reduced-motion:reduce){.admin-content,.admin-sheet-backdrop{transition:none}.admin-content.is-loading:after{animation:none}}
+</style><style id="hongcha-v50-employee-polish-css">
+/* V50 — employee schedule/attendance stable frame + compact semantic status UI */
+#mainScheduleList{min-height:220px;contain:layout paint;position:relative;overflow-anchor:none}
+.schedule-results{min-height:234px;contain:layout paint}
+.schedule-browser{contain:layout paint}
+#mainScheduleDayStrip{min-height:72px;contain:layout paint;overflow-anchor:none}
+#employeeAttendanceContent{min-width:0}
+.attendance-focus-card{min-height:345px;contain:layout paint}
+.precheck-grid{grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.precheck-item{grid-template-columns:24px minmax(0,1fr);align-items:start;gap:8px;padding:9px 10px;min-height:58px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.1);border-radius:12px;transition:background .15s,border-color .15s}
+.precheck-item .dot{width:9px;height:9px;margin-top:4px;box-shadow:0 0 0 4px rgba(255,255,255,.04)}
+.precheck-item:before{grid-column:1;grid-row:1;content:'⌖';width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.09);color:#D6D2CC;font-size:12px;font-weight:800;margin-top:-2px}
+.precheck-item:nth-child(2):before{content:'▣'}
+.precheck-item .dot{position:absolute;opacity:0}
+.precheck-item>div{grid-column:2;min-width:0}
+.precheck-item b{font-size:10px;letter-spacing:.02em;color:#DCD8D2}
+.precheck-item span:not(.dot){font-size:10px;line-height:1.35;margin-top:2px;color:#B9B6B1}
+.precheck-item[data-state="ok"]{border-color:rgba(92,194,143,.25);background:rgba(36,125,83,.12)}
+.precheck-item[data-state="ok"] span:not(.dot){color:#BCE8D1}
+.precheck-item[data-state="wait"]{border-color:rgba(224,174,87,.28);background:rgba(168,101,18,.12)}
+.precheck-item[data-state="wait"] span:not(.dot){color:#E8CB9C}
+.precheck-item[data-state="warn"]{border-color:rgba(224,174,87,.28);background:rgba(168,101,18,.12)}
+.precheck-item[data-state="warn"] span:not(.dot){color:#E8CB9C}
+.precheck-item[data-state="bad"]{border-color:rgba(220,95,84,.28);background:rgba(196,61,53,.11)}
+.precheck-item[data-state="bad"] span:not(.dot){color:#F0B7B1}
+.precheck-item[data-state="neutral"]{border-color:rgba(255,255,255,.1)}
+.gps-action{margin-top:6px;min-height:32px;padding:6px 9px;font-size:10px}
+.recent-attendance-list{min-height:260px;contain:layout paint}
+.attendance-history-table{min-width:0;width:100%;display:grid;gap:7px}
+.attendance-history-row{min-width:0!important;width:100%;grid-template-columns:minmax(92px,1fr) minmax(88px,1fr) minmax(72px,.8fr) minmax(72px,.8fr) minmax(72px,.8fr) minmax(118px,1.35fr);gap:7px;padding:10px 11px}
+.attendance-history-row .history-cell{min-width:0}
+.attendance-history-row .history-cell>span:not(.history-status-chip){font-size:9px;color:var(--muted);font-weight:700}
+.attendance-history-row .history-cell>b{font-size:11px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.history-status-chip{display:inline-flex;max-width:100%;padding:5px 7px;border-radius:8px;font-size:9px;line-height:1.25;font-weight:800;white-space:normal}
+.history-status-chip.ok{background:var(--success-soft);color:var(--success)}
+.history-status-chip.warn,.history-status-chip.wait{background:var(--warning-soft);color:var(--warning)}
+.history-status-chip.danger{background:var(--danger-soft);color:var(--danger)}
+@media(max-width:699px){
+  .schedule-browser{padding:14px;border-radius:17px}
+  .schedule-results{min-height:228px}
+  #mainScheduleList{min-height:205px}
+  .attendance-focus-card{min-height:0}
+  .precheck-grid{grid-template-columns:1fr;gap:7px}
+  .precheck-item{min-height:52px;grid-template-columns:24px minmax(0,1fr)}
+  .recent-attendance-list{min-height:0}
+  .attendance-history-row{grid-template-columns:minmax(0,1fr) auto;gap:6px 10px;padding:11px 12px;border-radius:13px}
+  .attendance-history-row .history-date{grid-column:1;grid-row:1}
+  .attendance-history-row .history-shift{grid-column:2;grid-row:1;text-align:right}
+  .attendance-history-row .history-in{grid-column:1;grid-row:2}
+  .attendance-history-row .history-out{grid-column:2;grid-row:2;text-align:right}
+  .attendance-history-row .history-worked{grid-column:1;grid-row:3}
+  .attendance-history-row .history-status{grid-column:2;grid-row:3;justify-self:end;max-width:150px}
+  .attendance-history-row .history-cell{display:grid;gap:2px;align-content:center}
+  .attendance-history-row .history-cell>b{font-size:12px;white-space:nowrap}
+}
+@media(max-width:375px){
+  .schedule-browser{padding:12px}
+  #mainScheduleDayStrip{min-height:64px}
+  .attendance-history-row{padding:10px}
+  .attendance-history-row .history-cell>b{font-size:11px}
+  .history-status-chip{font-size:8.5px;padding:4px 6px}
+}
 </style><style id="hongcha-v48-admin-attendance-css">
 /* V48 — owner attendance loads one visible week, then switches days from memory without page reflow */
 #adminAttendanceList{min-height:360px;contain:layout paint;position:relative;overflow-anchor:none}
@@ -1388,7 +1450,7 @@ async function loadSchedules(opts={}){
   const selected=employeeSelectedDate;
   const weekStart=employeeDayWindowStart||mondayOfWeek(selected);
   const rangeEnd=dateAdd(weekStart,6);
-  if(!opts.keepContent)target.innerHTML='<div class="loading-slot"><div class="notice info">Đang tải lịch…</div></div>';
+  if(!opts.keepContent && !employeeScheduleCache[employeeCacheKey(weekStart,rangeEnd)])target.innerHTML='<div class="loading-slot"><div class="notice info">Đang tải lịch…</div></div>';
   try{
     const data=await fetchEmployeeScheduleRange(weekStart,rangeEnd,!!opts.force);
     if(session!==s||profile!==p||token!==employeeScheduleLoadToken||selected!==employeeSelectedDate)return;
@@ -2106,7 +2168,7 @@ async function registerDevice(){
 function localDateVN(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Ho_Chi_Minh'}).format(new Date())}
 function formatTime(ts){return ts?new Date(ts).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'}):'—'}
 function formatDate(ts){return ts?new Date(ts).toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'}):'—'}
-function setGpsState(ok,text,detail,action){const t=el('homeGpsText'),dot=el('homeGpsDot'),btn=el('homeGpsAction');if(t)t.textContent=detail?text+' · '+detail:text;if(dot)dot.className='dot '+(ok?'ok':'bad');if(btn){btn.classList.toggle('show',!!action);btn.textContent=action||'Cho phép vị trí'}}
+function setGpsState(ok,text,detail,action){const t=el('homeGpsText'),dot=el('homeGpsDot'),btn=el('homeGpsAction'),item=dot?.closest('.precheck-item');if(t)t.textContent=detail?text+' · '+detail:text;let tone=ok?'ok':/đang kiểm tra/i.test(text)?'neutral':/ngoài khu vực/i.test(text)?'warn':'bad';if(dot)dot.className='dot '+tone;if(item)item.dataset.state=tone;if(btn){btn.classList.toggle('show',!!action);btn.textContent=action||'Cho phép vị trí'}}
 function getPosition(){
  return new Promise((resolve,reject)=>{
    if(!navigator.geolocation){reject(new Error('Trình duyệt không hỗ trợ GPS.'));return}
@@ -2391,12 +2453,12 @@ async function loadAttendanceHistory(){
    const worked=Number(x.worked_minutes||0),hours=Math.floor(worked/60),mins=worked%60;
    const late=Number(x.late_minutes||0),early=Number(x.early_leave_minutes||0);
    const workDate=String(s.work_date||'');const statusParts=[];if(late>0)statusParts.push(`Đi trễ ${late}p`);if(early>0)statusParts.push(`Về sớm ${early}p`);if(!x.check_out&&x.check_in&&workDate<localToday())statusParts.push('Quên checkout');if(!statusParts.length)statusParts.push(x.check_out?'Đã hoàn tất':'Chưa checkout');const status=statusParts.join(' · ');
-   const statusCls=late>0||early>0?'warn':(!x.check_out&&x.check_in&&workDate<localToday())?'pending':'ok';
+   const statusCls=late>0||early>0?'warn':(!x.check_out&&x.check_in&&workDate<localToday())?'danger':(!x.check_out&&x.check_in)?'wait':'ok';
    return `<div class="attendance-history-row">
-      <div class="history-cell history-date"><b>${escapeHtml(s.work_date||'—')}</b></div>
+      <div class="history-cell history-date"><span>Ngày</span><b>${escapeHtml(s.work_date||'—')}</b></div>
       <div class="history-cell history-shift"><span>Ca</span><b>${escapeHtml((s.start_time||'').slice(0,5))}–${escapeHtml((s.end_time||'').slice(0,5))}</b></div>
-      <div class="history-cell"><span>IN</span><b>${formatTime(x.check_in)}</b></div>
-      <div class="history-cell"><span>OUT</span><b>${formatTime(x.check_out)}</b></div>
+      <div class="history-cell history-in"><span>Check-in</span><b>${formatTime(x.check_in)}</b></div>
+      <div class="history-cell history-out"><span>Check-out</span><b>${formatTime(x.check_out)}</b></div>
       <div class="history-cell history-worked"><span>Giờ công</span><b>${hours}h ${mins}p</b></div>
       <div class="history-cell history-status"><span class="history-status-chip ${statusCls}">${status}</span></div>
    </div>`;
