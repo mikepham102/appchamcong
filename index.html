@@ -1728,7 +1728,214 @@ input:focus,select:focus,textarea:focus{
 </style>
 
 <meta name="hongcha-release" content="V71 Employee Home Shift Summary"/>
-<meta name="hongcha-release" content="V72 Employee Schedule Fix"><style id="v72-schedule-fix">.employee-shift-people-title{color:var(--info)!important}.employee-shift-person-copy b{font-weight:780}.shift-card{overflow:hidden}.shift-card-head{padding-bottom:12px}.shift-card-title{color:var(--ink)}.shift-card-time{color:var(--brand);font-weight:800}</style></head><body><div id="bootScreen"><div class="auth-card ui-center"><div class="auth-logo ui-auto">H</div><div class="ui-boot-title">HongCha HRM</div><div class="muted ui-boot-sub">Đang mở ứng dụng…</div></div></div><div class="hidden" id="loginScreen"><div class="auth-card v33-auth"><div class="auth-brand"><div class="auth-logo">H</div><div><div class="ui-brand-title">HongCha HRM</div><div class="muted ui-brand-foot">Quản lý nhân sự &amp; chấm công</div></div></div><h1>Chào mừng trở lại</h1><div class="desc">Đăng nhập để chấm công, xem lịch làm việc và theo dõi giờ công.</div><div class="login-toggle"><button class="active" id="loginModePassword" onclick="setLoginMode('password')">Mật khẩu</button><button id="loginModeOtp" onclick="setLoginMode('otp')">Email</button></div><div class="stack" id="passwordLoginFields"><div class="field"><label>Email</label><input autocomplete="username" id="loginEmail" placeholder="email của bạn" type="email"/></div><div class="field"><label>Mật khẩu</label><input autocomplete="current-password" id="loginPassword" placeholder="Mật khẩu" type="password"/></div><label class="remember-login"><input checked="" id="rememberLogin" type="checkbox"/><span><b>Lưu đăng nhập</b><small>Giữ phiên đăng nhập trên thiết bị này</small></span></label><button class="btn primary ui-w-full" onclick="signIn()">Đăng nhập</button><button class="btn light ui-w-full" onclick="sendResetPassword()">Quên mật khẩu</button></div><div class="stack ui-hidden" id="otpLoginFields"><div class="field"><label>Email</label><input autocomplete="email" id="loginEmailOtp" placeholder="email của bạn" type="email"/></div><button class="btn primary ui-w-full" onclick="sendMagicLink()">Gửi link đăng nhập</button><div class="notice info">Mở email và bấm link để đăng nhập nhanh. Không cần nhập mật khẩu.</div></div><div class="auth-msg" id="loginMsg"></div><div class="auth-foot">Tài khoản nhân viên chỉ sử dụng được trên thiết bị đã được cửa hàng phê duyệt.</div></div></div>
+<meta name="hongcha-release" content="V73 Employee Schedule UI Polish"><style id="v72-schedule-fix">.employee-shift-people-title{color:var(--info)!important}.employee-shift-person-copy b{font-weight:780}.shift-card{overflow:hidden}.shift-card-head{padding-bottom:12px}.shift-card-title{color:var(--ink)}.shift-card-time{color:var(--brand);font-weight:800}</style>
+<style id="v73-employee-schedule-ui">
+/* V73 — Employee schedule visual cleanup: mobile-first, no clipping, clearer hierarchy */
+#mainScheduleList{
+  display:grid;
+  gap:12px;
+  min-width:0;
+}
+#mainScheduleList .shift-card{
+  width:100%;
+  box-sizing:border-box;
+  margin:0;
+  overflow:hidden;
+  border-radius:18px;
+  border:1px solid #D9E3ED;
+  background:#fff;
+  box-shadow:0 2px 8px rgba(31,52,72,.045);
+}
+#mainScheduleList .shift-card::before{
+  width:4px;
+  background:#C52A20;
+}
+#mainScheduleList .shift-card:nth-child(3n+2)::before{background:#2F6FA8}
+#mainScheduleList .shift-card:nth-child(3n+3)::before{background:#3F8A68}
+#mainScheduleList .shift-card-head{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+  min-height:0;
+  padding:15px 14px 14px 18px;
+  background:#F8FBFE;
+  border-bottom:1px solid #E4ECF3;
+}
+#mainScheduleList .shift-card-head>div{min-width:0}
+#mainScheduleList .shift-card-head>div:last-child{
+  width:auto;
+  max-width:100%;
+  flex:0 0 auto;
+  justify-self:end;
+}
+#mainScheduleList .shift-card-title{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:6px;
+  min-width:0;
+  color:#172331;
+  font-size:17px;
+  line-height:1.25;
+  font-weight:820;
+  letter-spacing:-.2px;
+  overflow-wrap:anywhere;
+}
+#mainScheduleList .shift-card-time{
+  display:inline-flex;
+  align-items:center;
+  margin:0;
+  padding:4px 8px;
+  border-radius:8px;
+  background:#EEF4FA;
+  color:#28679D!important;
+  font-size:11px;
+  line-height:1.1;
+  font-weight:800;
+  white-space:nowrap;
+}
+#mainScheduleList .shift-card-sub{
+  margin-top:6px;
+  color:#718092;
+  font-size:11px;
+  line-height:1.4;
+  overflow-wrap:anywhere;
+}
+#mainScheduleList .schedule-status-stack{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  max-width:160px;
+}
+#mainScheduleList .schedule-status{
+  max-width:160px;
+  min-height:30px;
+  box-sizing:border-box;
+  padding:6px 9px;
+  border-radius:9px;
+  font-size:10.5px;
+  line-height:1.2;
+  white-space:normal;
+}
+#mainScheduleList .employee-shift-people{
+  margin:0;
+  padding:13px 16px 10px 18px;
+  border-top:0;
+  min-width:0;
+  box-sizing:border-box;
+}
+#mainScheduleList .employee-shift-people-title{
+  display:block;
+  margin:0 0 8px;
+  padding:0;
+  color:#28679D!important;
+  font-size:10px;
+  line-height:1.25;
+  font-weight:850;
+  letter-spacing:.55px;
+  text-transform:uppercase;
+  white-space:normal;
+  overflow:visible;
+}
+#mainScheduleList .employee-shift-person{
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  min-width:0;
+  padding:8px 0;
+  border-top:1px solid #EDF1F5;
+}
+#mainScheduleList .employee-shift-person:first-of-type{border-top:0}
+#mainScheduleList .employee-shift-person-avatar{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  background:#EAF3FB;
+  color:#28679D;
+  font-size:12px;
+}
+#mainScheduleList .employee-shift-person-copy{
+  min-width:0;
+  overflow:hidden;
+}
+#mainScheduleList .employee-shift-person-copy b{
+  display:block;
+  min-width:0;
+  color:#1D2A38;
+  font-size:13px;
+  line-height:1.3;
+  font-weight:780;
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+#mainScheduleList .employee-shift-person-copy span{
+  display:block;
+  margin-top:2px;
+  color:#718092;
+  font-size:11px;
+  line-height:1.3;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#mainScheduleList .employee-shift-open{
+  margin:0;
+  padding:11px 16px 13px 18px;
+  border-top:1px solid #EAF0F5;
+  background:#FAFCFE;
+  color:#718092;
+  font-size:11px;
+  line-height:1.4;
+}
+#mainScheduleList .selected-day-note{
+  margin:0 16px 13px 18px!important;
+  padding:9px 10px!important;
+  border-radius:10px;
+  font-size:11px;
+  line-height:1.35;
+}
+#mainScheduleList .btn.primary{
+  min-height:40px;
+  padding:0 14px;
+  border-radius:11px;
+  white-space:nowrap;
+}
+@media(max-width:520px){
+  #mainScheduleList .shift-card-head{
+    grid-template-columns:minmax(0,1fr);
+    gap:9px;
+    padding:14px 13px 12px 17px;
+  }
+  #mainScheduleList .shift-card-head>div:last-child{
+    justify-self:stretch;
+    max-width:none;
+  }
+  #mainScheduleList .shift-card-head>div:last-child:has(.btn){
+    display:flex;
+    justify-content:flex-start;
+  }
+  #mainScheduleList .shift-card-head>div:last-child:has(.schedule-status-stack){
+    justify-self:start;
+  }
+  #mainScheduleList .schedule-status-stack{
+    justify-content:flex-start;
+    max-width:none;
+  }
+  #mainScheduleList .schedule-status{max-width:none}
+  #mainScheduleList .shift-card-title{font-size:16px}
+  #mainScheduleList .btn.primary{min-height:39px}
+}
+@media(max-width:375px){
+  #mainScheduleList .shift-card-head{padding-left:16px}
+  #mainScheduleList .employee-shift-people{padding-left:16px;padding-right:13px}
+  #mainScheduleList .employee-shift-open{padding-left:16px;padding-right:13px}
+  #mainScheduleList .shift-card-time{font-size:10.5px;padding:4px 7px}
+}
+</style>
+</head><body><div id="bootScreen"><div class="auth-card ui-center"><div class="auth-logo ui-auto">H</div><div class="ui-boot-title">HongCha HRM</div><div class="muted ui-boot-sub">Đang mở ứng dụng…</div></div></div><div class="hidden" id="loginScreen"><div class="auth-card v33-auth"><div class="auth-brand"><div class="auth-logo">H</div><div><div class="ui-brand-title">HongCha HRM</div><div class="muted ui-brand-foot">Quản lý nhân sự &amp; chấm công</div></div></div><h1>Chào mừng trở lại</h1><div class="desc">Đăng nhập để chấm công, xem lịch làm việc và theo dõi giờ công.</div><div class="login-toggle"><button class="active" id="loginModePassword" onclick="setLoginMode('password')">Mật khẩu</button><button id="loginModeOtp" onclick="setLoginMode('otp')">Email</button></div><div class="stack" id="passwordLoginFields"><div class="field"><label>Email</label><input autocomplete="username" id="loginEmail" placeholder="email của bạn" type="email"/></div><div class="field"><label>Mật khẩu</label><input autocomplete="current-password" id="loginPassword" placeholder="Mật khẩu" type="password"/></div><label class="remember-login"><input checked="" id="rememberLogin" type="checkbox"/><span><b>Lưu đăng nhập</b><small>Giữ phiên đăng nhập trên thiết bị này</small></span></label><button class="btn primary ui-w-full" onclick="signIn()">Đăng nhập</button><button class="btn light ui-w-full" onclick="sendResetPassword()">Quên mật khẩu</button></div><div class="stack ui-hidden" id="otpLoginFields"><div class="field"><label>Email</label><input autocomplete="email" id="loginEmailOtp" placeholder="email của bạn" type="email"/></div><button class="btn primary ui-w-full" onclick="sendMagicLink()">Gửi link đăng nhập</button><div class="notice info">Mở email và bấm link để đăng nhập nhanh. Không cần nhập mật khẩu.</div></div><div class="auth-msg" id="loginMsg"></div><div class="auth-foot">Tài khoản nhân viên chỉ sử dụng được trên thiết bị đã được cửa hàng phê duyệt.</div></div></div>
 <div class="app" id="app">
 <header class="app-topbar"><div class="app-topbar-inner"><div class="app-brand-center"><div class="brand-mark">H</div><div class="app-brand-copy"><div class="brand">HongCha HRM</div><div class="sub" id="roleLabel">—</div></div></div><button class="topbar-admin-action" id="adminTopAction" onclick="openAdminHome()" type="button"><span>Quản trị</span></button></div></header>
 <main>
