@@ -3869,4 +3869,109 @@ window.addEventListener('unhandledrejection',e=>{console.error('HongCha HRM:',e.
   .owner-schedule-add{font-size:13px}
 }
 </style>
+
+<style id="hongcha-v78-schedule-header-final">
+/* V78 — schedule header: compact two-column layout, all controls grouped on the right */
+.schedule-browser-top{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(150px,190px)!important;
+  align-items:start!important;
+  gap:16px!important;
+  width:100%!important;
+  min-width:0!important;
+}
+.schedule-browser-top>div:first-child{
+  min-width:0!important;
+  width:auto!important;
+  padding:0!important;
+}
+.schedule-browser-top .selected-date{
+  min-width:0!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  line-height:1.2!important;
+}
+.schedule-browser-top .selected-date-sub{
+  min-width:0!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.schedule-browser-top .date-nav{
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 40px 40px!important;
+  grid-template-rows:42px 38px!important;
+  gap:7px!important;
+  align-items:center!important;
+  justify-items:stretch!important;
+}
+.schedule-browser-top .owner-schedule-add{
+  grid-column:1/-1!important;
+  grid-row:1!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:42px!important;
+  height:42px!important;
+  padding:0 12px!important;
+  font-size:13px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.schedule-browser-top .date-nav .icon-button,
+.schedule-browser-top .date-nav .today-btn{
+  grid-row:2!important;
+  width:100%!important;
+  min-width:0!important;
+  height:38px!important;
+  min-height:38px!important;
+  padding:0 7px!important;
+}
+.schedule-browser-top .date-nav .icon-button:first-of-type{grid-column:1!important}
+.schedule-browser-top .date-nav .today-btn{grid-column:2!important;font-size:11px!important;white-space:nowrap!important}
+.schedule-browser-top .date-nav .icon-button:last-of-type{grid-column:3!important}
+@media(max-width:699px){
+  .schedule-browser-top{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) minmax(142px,164px)!important;
+    gap:10px!important;
+    align-items:start!important;
+  }
+  .schedule-browser-top .selected-date{font-size:21px!important}
+  .schedule-browser-top .selected-date-sub{font-size:11px!important;margin-top:3px!important}
+  .schedule-browser-top .date-nav{
+    grid-template-columns:minmax(0,1fr) 40px 40px!important;
+    grid-template-rows:42px 36px!important;
+    gap:6px!important;
+  }
+  .schedule-browser-top .owner-schedule-add{
+    min-height:42px!important;
+    height:42px!important;
+    font-size:12px!important;
+  }
+  .schedule-browser-top .date-nav .icon-button,
+  .schedule-browser-top .date-nav .today-btn{
+    height:36px!important;
+    min-height:36px!important;
+  }
+}
+@media(max-width:375px){
+  .schedule-browser-top{
+    grid-template-columns:minmax(0,1fr) 144px!important;
+    gap:8px!important;
+  }
+  .schedule-browser-top .selected-date{font-size:20px!important}
+  .schedule-browser-top .selected-date-sub{font-size:10px!important}
+  .schedule-browser-top .date-nav{
+    grid-template-columns:minmax(0,1fr) 38px 38px!important;
+    gap:5px!important;
+  }
+  .schedule-browser-top .owner-schedule-add{font-size:11.5px!important;padding:0 8px!important}
+}
+</style>
+
 </body></html>
