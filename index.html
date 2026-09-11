@@ -2,7 +2,7 @@
 
 <html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V66 · Owner Schedule & Red Blue UI</title><style id="hongcha-v25-design-system">
 :root{
-  --bg:#F5F3EF;
+  --bg:#09b786;
   --surface:#FFFFFF;
   --surface-soft:#FAF9F7;
   --surface-tint:#F4F1EC;
@@ -3974,4 +3974,87 @@ window.addEventListener('unhandledrejection',e=>{console.error('HongCha HRM:',e.
 }
 </style>
 
+<style id="hongcha-v79-schedule-controls-final">
+/* V79 — final mobile schedule controls: compact right-side action cluster */
+.schedule-browser-top .date-nav{
+  display:grid!important;
+  grid-template-columns:34px minmax(0,1fr) 34px!important;
+  grid-template-rows:42px 36px!important;
+  gap:6px!important;
+  align-items:center!important;
+  width:100%!important;
+  min-width:0!important;
+}
+.schedule-browser-top .owner-schedule-add{
+  grid-column:1/-1!important;
+  grid-row:1!important;
+  width:100%!important;
+  height:42px!important;
+  min-height:42px!important;
+  margin:0!important;
+  padding:0 10px!important;
+  border-radius:11px!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  white-space:nowrap!important;
+}
+.schedule-browser-top .date-nav .icon-button,
+.schedule-browser-top .date-nav .today-btn{
+  grid-row:2!important;
+  height:36px!important;
+  min-height:36px!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  border-radius:10px!important;
+  box-sizing:border-box!important;
+}
+.schedule-browser-top .date-nav .icon-button:first-of-type{grid-column:1!important}
+.schedule-browser-top .date-nav .today-btn{
+  grid-column:2!important;
+  font-size:11px!important;
+  font-weight:800!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.schedule-browser-top .date-nav .icon-button:last-of-type{grid-column:3!important}
+@media(max-width:699px){
+  .schedule-browser-top{
+    grid-template-columns:minmax(0,1fr) minmax(148px,166px)!important;
+    gap:10px!important;
+  }
+  .schedule-browser-top>div:first-child{padding-top:1px!important}
+  .schedule-browser-top .selected-date{
+    font-size:21px!important;
+    line-height:1.2!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  .schedule-browser-top .selected-date-sub{
+    font-size:11px!important;
+    line-height:1.35!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+}
+@media(max-width:375px){
+  .schedule-browser-top{
+    grid-template-columns:minmax(0,1fr) 148px!important;
+    gap:8px!important;
+  }
+  .schedule-browser-top .date-nav{
+    grid-template-columns:32px minmax(0,1fr) 32px!important;
+    gap:5px!important;
+  }
+  .schedule-browser-top .owner-schedule-add{
+    font-size:11.5px!important;
+    padding:0 8px!important;
+  }
+  .schedule-browser-top .date-nav .today-btn{font-size:10.5px!important}
+}
+</style>
 </body></html>
