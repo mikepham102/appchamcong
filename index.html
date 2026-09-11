@@ -3031,8 +3031,25 @@ async function punchAttendance(){
     el('attendanceMsg').textContent=action==='checkin'?`Check-in thành công lúc ${formatTime(data.check_in)} · trễ ${data.late_minutes||0} phút.`:`Check-out thành công lúc ${formatTime(data.check_out)} · giờ công ${Math.floor((data.worked_minutes||0)/60)}h ${(data.worked_minutes||0)%60}p.`;
     await refreshAttendanceState();await loadAttendanceHistory();
   }catch(e){
+    // Xác minh lại dữ liệu thực tế sau lỗi RPC để nhân viên không phải đoán
+    // rằng ca đã được ghi nhận hay chưa. Nếu RPC lỗi trong transaction, bản ghi
+    // chấm công phải được rollback; nếu đã có bản ghi hợp lệ thì hiển thị rõ.
+    let verifyMsg='';
+    try{
+      const {data:verify,error:verifyError}=await sb.from('attendance')
+        .select('id,check_in,check_out,late_minutes,worked_minutes')
+        .eq('schedule_id',scheduleId).eq('employee_id',session.user.id)
+        .order('created_at',{ascending:false}).limit(1).maybeSingle();
+      if(!verifyError&&verify?.check_in){
+        verifyMsg=` Đã ghi nhận check-in lúc ${formatTime(verify.check_in)}.`;
+      }else{
+        verifyMsg=' Chưa ghi nhận chấm công cho ca này.';
+      }
+    }catch(_verify){
+      verifyMsg=' Không xác minh được dữ liệu; vui lòng thử lại.';
+    }
     el('attendanceMsg').className='notice warn';
-    el('attendanceMsg').textContent=attendanceErrorText(e?.message||String(e));
+    el('attendanceMsg').textContent=attendanceErrorText(e?.message||String(e))+verifyMsg;
     await refreshAttendanceState();
   }finally{setBusyButton(btn,false,currentWorkState?.state==='WORKING'?'CHECK-OUT':currentWorkState?.state==='CHECKIN_AVAILABLE'?'CHECK-IN':'THỬ LẠI');}
 }
@@ -3052,7 +3069,9 @@ function attendanceErrorText(msg){
   'GPS_CHUA_CAU_HINH':'Quán chưa được cấu hình tọa độ GPS.',
   'TOA_DO_KHONG_HOP_LE':'Tọa độ GPS không hợp lệ.',
   'PROFILE_NOT_ACTIVE':'Tài khoản nhân viên chưa active.',
-  'FORBIDDEN':'Bạn không có quyền thực hiện thao tác này.'
+  'FORBIDDEN':'Bạn không có quyền thực hiện thao tác này.',
+  'column "check_in_status" is of type attendance_status but expression is of type text':'Lỗi cấu hình hệ thống chấm công (trạng thái check-in). Chưa ghi nhận chấm công; vui lòng thử lại sau khi hệ thống được sửa.',
+  'column "check_out_status" is of type attendance_status but expression is of type text':'Lỗi cấu hình hệ thống chấm công (trạng thái check-out). Chưa ghi nhận chấm công; vui lòng thử lại sau khi hệ thống được sửa.'
  };
  return map[msg]||msg;
 }
