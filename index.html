@@ -198,7 +198,7 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
 
 /* V27 — separated navigation + grouped admin + one-row week */
 /* V28 visual fixes: selected-today contrast + compact week strip + horizontal history */
-.request-pair{padding:12px;border:1px solid var(--line);border-radius:14px;background:#FAF9F7}.request-pair+.request-pair{margin-top:9px}.request-pair-title{font-size:13px;font-weight:760;margin-bottom:8px;color:var(--ink)}.request-pair .formgrid{margin-top:0}.schedule-status-stack{display:flex;justify-content:flex-end;max-width:150px}.schedule-status{display:inline-flex;align-items:center;justify-content:center;min-height:30px;padding:6px 9px;border-radius:9px;font-size:11px;font-weight:760;line-height:1.2;text-align:center;white-space:normal}.schedule-status.ok{background:var(--success-soft);color:var(--success)}.schedule-status.warn{background:var(--warning-soft);color:var(--warning)}.schedule-status.danger{background:var(--danger-soft);color:var(--danger)}.schedule-status.info{background:var(--info-soft);color:var(--info)}.schedule-status.pending{background:#F1EFEC;color:#6B6864}
+.request-pair{padding:12px;border:1px solid var(--line);border-radius:14px;background:#FAF9F7}.request-pair+.request-pair{margin-top:9px}.request-pair-title{font-size:13px;font-weight:760;margin-bottom:8px;color:var(--ink)}.request-pair .formgrid{margin-top:0}.employee-shift-people{margin-top:11px;padding-top:10px;border-top:1px solid var(--line)}.employee-shift-people-title{font-size:11px;font-weight:800;letter-spacing:.4px;color:var(--muted-2);text-transform:uppercase;margin-bottom:6px}.employee-shift-person{display:flex;align-items:center;gap:8px;padding:7px 0}.employee-shift-person-avatar{width:30px;height:30px;border-radius:9px;background:var(--info-soft);color:var(--info);display:grid;place-items:center;font-size:12px;font-weight:800;flex:0 0 30px}.employee-shift-person-copy{min-width:0}.employee-shift-person-copy b{display:block;font-size:12px;line-height:1.25;overflow-wrap:anywhere}.employee-shift-person-copy span{display:block;margin-top:2px;color:var(--muted);font-size:11px;line-height:1.25}.employee-shift-open{margin-top:10px;padding:9px 10px;border-radius:10px;background:var(--surface-soft);color:var(--muted);font-size:11px}.schedule-status-stack{display:flex;justify-content:flex-end;max-width:150px}.schedule-status{display:inline-flex;align-items:center;justify-content:center;min-height:30px;padding:6px 9px;border-radius:9px;font-size:11px;font-weight:760;line-height:1.2;text-align:center;white-space:normal}.schedule-status.ok{background:var(--success-soft);color:var(--success)}.schedule-status.warn{background:var(--warning-soft);color:var(--warning)}.schedule-status.danger{background:var(--danger-soft);color:var(--danger)}.schedule-status.info{background:var(--info-soft);color:var(--info)}.schedule-status.pending{background:#F1EFEC;color:#6B6864}
 .schedule-days .day-cell.selected .num{color:#fff!important}
 .schedule-days .day-cell.today.selected{background:#A94022!important;border-color:#A94022!important;color:#fff!important}
 .schedule-days .day-cell.today.selected .dow,.schedule-days .day-cell.today.selected .num,.schedule-days .day-cell.today.selected .day-count{color:#fff!important}
@@ -455,7 +455,7 @@ body.admin-sheet-open{overflow:hidden}
 @media(max-width:699px){#adminAttendanceList{min-height:330px}.attendance-shift-card{contain:layout paint}}
 </style><style id="hongcha-v57-attendance-month-picker">
 .attendance-week-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 13px;border:1px solid color-mix(in srgb,var(--brand) 28%,var(--line));border-radius:12px;background:linear-gradient(180deg,var(--brand-soft),var(--surface));color:var(--ink);font:inherit;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.06);transition:transform .16s ease,background .16s ease,border-color .16s ease,box-shadow .16s ease}.attendance-week-button:hover{border-color:var(--brand);background:var(--brand-soft);box-shadow:0 5px 14px rgba(0,0,0,.09);transform:translateY(-1px)}.attendance-week-button:active{transform:translateY(0) scale(.97);box-shadow:0 2px 6px rgba(0,0,0,.06)}.attendance-week-button:focus-visible{outline:2px solid var(--brand);outline-offset:2px}.attendance-week-button b{font-size:12px;white-space:nowrap;font-weight:800}.attendance-week-button b::before{content:""}.attendance-week-chevron{font-size:14px;color:var(--muted);line-height:1;margin-left:1px}.attendance-month-backdrop{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(20,18,16,.38);backdrop-filter:blur(3px)}.attendance-month-backdrop.open{display:flex}.attendance-month-sheet{width:min(430px,100%);max-height:min(720px,calc(100vh - 32px));overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:0 22px 60px rgba(0,0,0,.18);padding:17px}.attendance-month-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.attendance-month-head h3{margin:2px 0 2px;font-size:19px;line-height:1.2}.attendance-month-head p{margin:0;color:var(--muted);font-size:11px}.attendance-month-nav{display:grid;grid-template-columns:38px 1fr 38px;gap:7px;align-items:center;margin:14px 0 9px}.attendance-month-nav .icon-button{width:38px;height:36px}.month-current-btn{height:36px;border:1px solid var(--line);border-radius:10px;background:var(--surface-soft);color:var(--ink);font:inherit;font-size:11px;font-weight:780;cursor:pointer}.attendance-month-weekdays,.attendance-month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.attendance-month-weekdays{margin-bottom:5px}.attendance-month-weekdays span{text-align:center;color:var(--muted);font-size:9px;font-weight:800}.attendance-month-grid{grid-auto-rows:minmax(54px,auto)}.attendance-month-cell{position:relative;min-width:0;min-height:54px;border:1px solid transparent;border-radius:11px;background:var(--surface-soft);padding:6px 5px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;cursor:pointer;color:var(--ink);transition:background .14s ease,border-color .14s ease,transform .14s ease}.attendance-month-cell:active{transform:scale(.97)}.attendance-month-cell.outside{background:transparent;color:#aaa6a1}.attendance-month-cell.today{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand)}.attendance-month-cell.in-week{background:var(--brand-soft);border-color:rgba(0,0,0,.05)}.attendance-month-cell.selected-day{background:var(--brand);color:#fff;border-color:var(--brand)}.attendance-month-cell.selected-day .month-dow{color:rgba(255,255,255,.8)}.month-week-label{font-size:8px;font-weight:800;line-height:1;margin-bottom:3px;color:var(--brand);min-height:8px}.selected-day .month-week-label{color:rgba(255,255,255,.78)}.month-day-num{font-size:15px;font-weight:780;line-height:1.1;font-variant-numeric:tabular-nums}.month-dow{font-size:8px;color:var(--muted);margin-top:3px}.attendance-month-note{display:flex;gap:7px;align-items:flex-start;margin-top:12px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;color:var(--muted);font-size:10px;line-height:1.4}.month-week-dot{width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:var(--brand);margin-top:3px}@media(max-width:699px){.admin-attendance-week-nav{width:auto;display:flex;gap:7px}.attendance-week-button{flex:1;min-width:0}.attendance-week-button b{overflow:hidden;text-overflow:ellipsis}.attendance-month-backdrop{align-items:flex-end;padding:0}.attendance-month-sheet{width:100%;max-height:calc(100vh - 18px);border-radius:20px 20px 0 0;padding:15px 14px 18px}}@media(max-width:430px){.attendance-month-grid{gap:4px}.attendance-month-cell{min-height:50px;padding:5px 3px}.month-day-num{font-size:14px}.attendance-month-weekdays,.attendance-month-grid{gap:4px}.attendance-month-head h3{font-size:18px}}@media(max-width:375px){.attendance-week-button{padding:0 8px}.attendance-week-button-label{display:none}.attendance-week-button b{font-size:11px}.attendance-month-grid{grid-auto-rows:minmax(46px,auto)}.attendance-month-cell{min-height:46px}.month-week-label{font-size:7px}.month-dow{display:none}}
-</style><style id="hongcha-v49-attendance-week-picker">.admin-attendance-week-nav{gap:7px;align-items:center}.attendance-week-picker{display:flex;align-items:center;gap:5px;min-height:38px;padding:0 9px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--muted);font-size:10px;font-weight:760;white-space:nowrap}.attendance-week-picker input{width:118px;min-width:0;height:30px;padding:0 3px;border:0;background:transparent;color:var(--ink);font:inherit;font-size:11px;font-weight:800;outline:none}.attendance-week-picker input::-webkit-calendar-picker-indicator{opacity:.72;cursor:pointer}@media(max-width:699px){.admin-attendance-week-nav{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px}.attendance-week-picker{width:100%;justify-content:space-between;min-width:0}.attendance-week-picker input{width:130px}.admin-attendance-week-nav .today-btn{min-width:76px}}@media(max-width:375px){.attendance-week-picker input{width:116px;font-size:10px}.attendance-week-picker{padding-left:7px;padding-right:7px}}</style><meta content="V63 Payroll Existing Period Report" name="hongcha-release"/><meta content="V49 Attendance Week Picker" name="hongcha-ui-version"/><style id="hongcha-v60-payroll-report-css">
+</style><style id="hongcha-v49-attendance-week-picker">.admin-attendance-week-nav{gap:7px;align-items:center}.attendance-week-picker{display:flex;align-items:center;gap:5px;min-height:38px;padding:0 9px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--muted);font-size:10px;font-weight:760;white-space:nowrap}.attendance-week-picker input{width:118px;min-width:0;height:30px;padding:0 3px;border:0;background:transparent;color:var(--ink);font:inherit;font-size:11px;font-weight:800;outline:none}.attendance-week-picker input::-webkit-calendar-picker-indicator{opacity:.72;cursor:pointer}@media(max-width:699px){.admin-attendance-week-nav{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px}.attendance-week-picker{width:100%;justify-content:space-between;min-width:0}.attendance-week-picker input{width:130px}.admin-attendance-week-nav .today-btn{min-width:76px}}@media(max-width:375px){.attendance-week-picker input{width:116px;font-size:10px}.attendance-week-picker{padding-left:7px;padding-right:7px}}</style><meta content="V70 Attendance + Employee Schedule Logic" name="hongcha-release"/><meta content="V49 Attendance Week Picker" name="hongcha-ui-version"/><style id="hongcha-v60-payroll-report-css">
 /* V60 — Owner payroll creation report + Excel export */
 .payroll-report-modal .modalbox{width:min(760px,100%);max-height:min(92svh,900px)}
 .payroll-report-headline{padding:13px 14px;border:1px solid var(--line);border-radius:15px;background:linear-gradient(135deg,#fff,#FBF7F4)}
@@ -1725,7 +1725,7 @@ input:focus,select:focus,textarea:focus{
 }
 </style>
 
-<meta name="hongcha-release" content="V64 Design Director UI"/>
+<meta name="hongcha-release" content="V70 Attendance + Employee Schedule Logic"/>
 </head><body><div id="bootScreen"><div class="auth-card ui-center"><div class="auth-logo ui-auto">H</div><div class="ui-boot-title">HongCha HRM</div><div class="muted ui-boot-sub">Đang mở ứng dụng…</div></div></div><div class="hidden" id="loginScreen"><div class="auth-card v33-auth"><div class="auth-brand"><div class="auth-logo">H</div><div><div class="ui-brand-title">HongCha HRM</div><div class="muted ui-brand-foot">Quản lý nhân sự &amp; chấm công</div></div></div><h1>Chào mừng trở lại</h1><div class="desc">Đăng nhập để chấm công, xem lịch làm việc và theo dõi giờ công.</div><div class="login-toggle"><button class="active" id="loginModePassword" onclick="setLoginMode('password')">Mật khẩu</button><button id="loginModeOtp" onclick="setLoginMode('otp')">Email</button></div><div class="stack" id="passwordLoginFields"><div class="field"><label>Email</label><input autocomplete="username" id="loginEmail" placeholder="email của bạn" type="email"/></div><div class="field"><label>Mật khẩu</label><input autocomplete="current-password" id="loginPassword" placeholder="Mật khẩu" type="password"/></div><label class="remember-login"><input checked="" id="rememberLogin" type="checkbox"/><span><b>Lưu đăng nhập</b><small>Giữ phiên đăng nhập trên thiết bị này</small></span></label><button class="btn primary ui-w-full" onclick="signIn()">Đăng nhập</button><button class="btn light ui-w-full" onclick="sendResetPassword()">Quên mật khẩu</button></div><div class="stack ui-hidden" id="otpLoginFields"><div class="field"><label>Email</label><input autocomplete="email" id="loginEmailOtp" placeholder="email của bạn" type="email"/></div><button class="btn primary ui-w-full" onclick="sendMagicLink()">Gửi link đăng nhập</button><div class="notice info">Mở email và bấm link để đăng nhập nhanh. Không cần nhập mật khẩu.</div></div><div class="auth-msg" id="loginMsg"></div><div class="auth-foot">Tài khoản nhân viên chỉ sử dụng được trên thiết bị đã được cửa hàng phê duyệt.</div></div></div>
 <div class="app" id="app">
 <header class="app-topbar"><div class="app-topbar-inner"><div class="app-brand-center"><div class="brand-mark">H</div><div class="app-brand-copy"><div class="brand">HongCha HRM</div><div class="sub" id="roleLabel">—</div></div></div><button class="topbar-admin-action" id="adminTopAction" onclick="openAdminHome()" type="button"><span>Quản trị</span></button></div></header>
@@ -2161,27 +2161,24 @@ let employeeScheduleCache={};let registrationOptionsToken=0;let scheduleRequestC
 function employeeCacheKey(start,end){return start+'|'+end}
 async function fetchEmployeeScheduleRange(start,end,force=false){
  const key=employeeCacheKey(start,end);if(!force&&employeeScheduleCache[key]&&Date.now()-employeeScheduleCache[key].cachedAt<20000)return employeeScheduleCache[key];
- const userId=session.user.id,storeId=profile.store_id;
- const [{data:assignedRows,error:assignedError},{data:openRows,error:openError}]=await Promise.all([
-   sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at,status,note,employee_id,shift_group_id').eq('store_id',storeId).gte('work_date',start).lte('work_date',end).eq('employee_id',userId).neq('status','cancelled').order('work_date').order('start_time'),
-   sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at,status,note,employee_id,shift_group_id').eq('store_id',storeId).gte('work_date',start).lte('work_date',end).eq('status','open').is('employee_id',null).order('work_date').order('start_time')
+ const userId=session.user.id;
+ // Employee calendar must see the full store schedule for the selected period:
+ // every shift, who is assigned to it and their phone number. Attendance status of
+ // other employees is intentionally NOT returned by this RPC.
+ const [{data:rows,error:scheduleError},{data:regs,error:regError}]=await Promise.all([
+   sb.rpc('get_employee_schedule_overview',{p_start_date:start,p_end_date:end}),
+   sb.from('shift_registrations').select('id,schedule_id,status,rejection_reason,created_at').eq('employee_id',userId).order('created_at',{ascending:false})
  ]);
- if(assignedError||openError)throw assignedError||openError;
- const rows=[...(assignedRows||[]),...(openRows||[])],scheduleIds=rows.map(x=>x.id);
- const [{data:regs,error:regError},{data:pendingRegs,error:pendingError}]=await Promise.all([
-   sb.from('shift_registrations').select('id,schedule_id,status,rejection_reason,created_at').eq('employee_id',userId).order('created_at',{ascending:false}),
-   scheduleIds.length?sb.from('shift_registrations').select('id,schedule_id,status,employee_id,profiles:employee_id(full_name,phone),created_at').in('schedule_id',scheduleIds).eq('status','pending'):Promise.resolve({data:[],error:null})
- ]);
- const {data:templates,error:templateError}=await sb.from('shift_templates').select('id,name,start_time,end_time,is_active').eq('store_id',storeId).order('start_time').order('name');
- if(templateError)throw templateError;
- const templateByTime=new Map((templates||[]).filter(t=>t.is_active!==false).map(t=>[`${String(t.start_time||'').slice(0,5)}_${String(t.end_time||'').slice(0,5)}`,t.name]));
- rows.forEach(x=>{const key=`${String(x.start_time||'').slice(0,5)}_${String(x.end_time||'').slice(0,5)}`;x.template_name=templateByTime.get(key)||'Ca'});
- if(regError||pendingError)throw regError||pendingError;
- const assignedIds=rows.filter(x=>x.employee_id===userId).map(x=>x.id);
+ if(scheduleError||regError)throw scheduleError||regError;
+ const scheduleRows=(rows||[]).map(x=>({...x,employee_name:x.employee_name||null,employee_phone:x.employee_phone||null}));
+ const scheduleIds=scheduleRows.map(x=>x.id);
+ const pendingRegs=scheduleIds.length?await sb.from('shift_registrations').select('id,schedule_id,status,employee_id,profiles:employee_id(full_name,phone),created_at').in('schedule_id',scheduleIds).eq('status','pending'): {data:[],error:null};
+ if(pendingRegs.error)throw pendingRegs.error;
+ const assignedIds=scheduleRows.filter(x=>x.employee_id===userId).map(x=>x.id);
  let attendanceRows=[];
  if(assignedIds.length){const {data:a,error:aErr}=await sb.from('attendance').select('id,schedule_id,check_in,check_out,worked_minutes,late_minutes,early_leave_minutes,check_in_status,check_out_status').in('schedule_id',assignedIds).eq('employee_id',userId);if(aErr)throw aErr;attendanceRows=a||[]}
- const attendanceBySchedule=new Map(attendanceRows.map(a=>[a.schedule_id,a]));rows.forEach(x=>{if(x.employee_id===userId)x.attendance=attendanceBySchedule.get(x.id)||null});
- const value={rows,regs:regs||[],pendingRegs:pendingRegs||[],cachedAt:Date.now()};employeeScheduleCache[key]=value;return value
+ const attendanceBySchedule=new Map(attendanceRows.map(a=>[a.schedule_id,a]));scheduleRows.forEach(x=>{if(x.employee_id===userId)x.attendance=attendanceBySchedule.get(x.id)||null});
+ const value={rows:scheduleRows,regs:regs||[],pendingRegs:pendingRegs.data||[],cachedAt:Date.now()};employeeScheduleCache[key]=value;return value
 }
 function employeeScheduleStatus(row){
  const a=row?.attendance||null,now=Date.now();
@@ -2228,7 +2225,12 @@ function renderEmployeeScheduleFromCache(data){
      else action=`<button type="button" class="btn primary" onclick="registerForShift('${open.id}')">Đăng ký ca</button>`
    }
    const shiftName=first.template_name||'Ca';
-   return `<div class="shift-card"><div class="shift-card-head"><div><div class="shift-card-title">${escapeHtml(shiftName)} <span class="shift-card-time">· ${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</span></div><div class="shift-card-sub">${items.length} vị trí · ${items.filter(x=>x.employee_id).length} đã xếp${first.note?' · '+escapeHtml(first.note):''}</div></div><div>${action}</div></div>${own?'<div class="selected-day-note" style="margin:11px 0 0">Bạn đang được xếp trong ca này.</div>':''}</div>`
+   const people=[...new Map(items.filter(x=>x.employee_id).map(x=>[x.employee_id,x])).values()];
+   const peopleHtml=people.length?`<div class="employee-shift-people"><div class="employee-shift-people-title">Người làm ca</div>${people.map(person=>{
+     const isMe=person.employee_id===session.user.id;
+     return `<div class="employee-shift-person"><span class="employee-shift-person-avatar">${escapeHtml((person.employee_name||'N').slice(0,1).toUpperCase())}</span><div class="employee-shift-person-copy"><b>${escapeHtml(person.employee_name||'Nhân viên')}${isMe?' · Bạn':''}</b><span>${escapeHtml(person.employee_phone||'Chưa có số điện thoại')}</span></div></div>`;
+   }).join('')}</div>`:'<div class="employee-shift-open">Ca này hiện còn chỗ trống.</div>';
+   return `<div class="shift-card"><div class="shift-card-head"><div><div class="shift-card-title">${escapeHtml(shiftName)} <span class="shift-card-time">· ${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</span></div><div class="shift-card-sub">${items.length} vị trí · ${people.length} đã xếp${first.note?' · '+escapeHtml(first.note):''}</div></div><div>${action}</div></div>${peopleHtml}${own?'<div class="selected-day-note" style="margin:11px 0 0">Bạn đang được xếp trong ca này.</div>':''}</div>`
  }).join('')
 }
 function openRegistrationOptions(){const m=el('registrationOptionsModal');if(m){m.classList.add('open');loadRegistrationOptions()}}
@@ -3051,7 +3053,7 @@ async function punchAttendance(){
     el('attendanceMsg').className='notice warn';
     el('attendanceMsg').textContent=attendanceErrorText(e?.message||String(e))+verifyMsg;
     await refreshAttendanceState();
-  }finally{setBusyButton(btn,false,currentWorkState?.state==='WORKING'?'CHECK-OUT':currentWorkState?.state==='CHECKIN_AVAILABLE'?'CHECK-IN':'THỬ LẠI');}
+  }finally{setBusyButton(btn,false,currentWorkState?.state==='WORKING'?'CHECK-OUT':currentWorkState?.state==='CHECKIN_AVAILABLE'?'CHECK-IN':currentWorkState?.state==='EARLY_CHECKED_IN'?'ĐÃ CHECK-IN':'THỬ LẠI');}
 }
 function attendanceErrorText(msg){
  const map={
@@ -3064,6 +3066,7 @@ function attendanceErrorText(msg){
   'TRUNG_CA':'Ca bị trùng với lịch hiện tại hoặc yêu cầu đăng ký đang chờ.',
   'NGOAI_VUNG_GPS':'Bạn đang ở ngoài bán kính chấm công của quán.',
   'CHUA_CHECKIN':'Chưa check-in nên chưa thể check-out.',
+  'CHUA_DEN_GIO_CHECKOUT':'Chưa đến giờ mở ca nên chưa thể check-out.',
   'DA_CHECKOUT':'Ca này đã check-out.',
   'QUA_GIO_CHECKOUT':'Đã quá thời gian cho phép check-out.',
   'GPS_CHUA_CAU_HINH':'Quán chưa được cấu hình tọa độ GPS.',
@@ -3121,8 +3124,19 @@ async function getEmployeeWorkState(){
 
   // Chỉ trạng thái của ca HÔM NAY được phép điều khiển nút check-in/check-out.
   // Ca hôm trước quên checkout không được làm khóa ca hôm nay.
-  const working=enriched.find(x=>x.attendance?.check_in&&!x.attendance?.check_out&&now>=x.startTs&&now<=x.endTs+240*60000);
-  if(working)return {state:'WORKING',schedule_id:working.id,attendance_id:working.attendance.id,check_in:working.attendance.check_in,start_at:working.start_at,end_at:working.end_at,late_minutes:working.attendance.late_minutes||0};
+  // A check-in record always belongs to its exact schedule. If an employee checked in
+  // during the early window, that record must remain visible even before shift start.
+  // It must NOT fall through to NO_SHIFT/COMPLETED. Checkout is enabled only after start.
+  const checkedIn=enriched.find(x=>x.attendance?.check_in&&!x.attendance?.check_out);
+  if(checkedIn){
+    if(now<checkedIn.startTs){
+      return {state:'EARLY_CHECKED_IN',schedule_id:checkedIn.id,attendance_id:checkedIn.attendance.id,check_in:checkedIn.attendance.check_in,start_at:checkedIn.start_at,end_at:checkedIn.end_at,late_minutes:checkedIn.attendance.late_minutes||0};
+    }
+    if(now<=checkedIn.endTs+240*60000){
+      return {state:'WORKING',schedule_id:checkedIn.id,attendance_id:checkedIn.attendance.id,check_in:checkedIn.attendance.check_in,start_at:checkedIn.start_at,end_at:checkedIn.end_at,late_minutes:checkedIn.attendance.late_minutes||0};
+    }
+    return {state:'MISSING_CHECKOUT',schedule_id:checkedIn.id,attendance_id:checkedIn.attendance.id,check_in:checkedIn.attendance.check_in,start_at:checkedIn.start_at,end_at:checkedIn.end_at,late_minutes:checkedIn.attendance.late_minutes||0};
+  }
 
   const available=enriched.find(x=>!x.attendance?.check_in&&now>=x.startTs-early*60000&&now<=x.startTs+cutoff*60000);
   if(available)return {state:'CHECKIN_AVAILABLE',schedule_id:available.id,start_at:available.start_at,end_at:available.end_at,cutoff_at:new Date(available.startTs+cutoff*60000).toISOString()};
@@ -3142,7 +3156,7 @@ async function getEmployeeWorkState(){
   return {state:'NO_SHIFT'};
 }
 function workStateLabel(state){
-  return ({NO_SHIFT:'Chưa đến ca',UPCOMING:'Ca sắp tới',CHECKIN_AVAILABLE:'Đến giờ check-in',WORKING:'Đang làm việc',COMPLETED:'Đã hoàn tất ca',MISSING_CHECKOUT:'Quên checkout',MISSED_CHECKIN:'Chưa chấm công',CHECKIN_EXPIRED:'Quá hạn check-in · cần quản lý',ON_LEAVE:'Đang nghỉ phép',DATA_CONFLICT:'Cần kiểm tra lịch'}[state]||'Trạng thái ca');
+  return ({NO_SHIFT:'Chưa có ca',UPCOMING:'Ca sắp tới',CHECKIN_AVAILABLE:'Đến giờ check-in',EARLY_CHECKED_IN:'Đã check-in sớm',WORKING:'Đang làm việc',COMPLETED:'Đã hoàn tất ca',MISSING_CHECKOUT:'Quên checkout',MISSED_CHECKIN:'Chưa chấm công',CHECKIN_EXPIRED:'Quá hạn check-in · cần quản lý',ON_LEAVE:'Đang nghỉ phép',DATA_CONFLICT:'Cần kiểm tra lịch'}[state]||'Trạng thái ca');
 }
 function formatStateSchedule(x){
   if(!x?.start_at||!x?.end_at)return '';
@@ -3170,8 +3184,10 @@ async function refreshAttendanceState(){
     currentWorkState=st;updateEmployeeHomeFromState(st);if(el('attendanceShiftLabel'))el('attendanceShiftLabel').textContent=st?.start_at?formatStateSchedule(st)+' · '+workStateLabel(st.state):workStateLabel(st?.state);
     if(st.state==='CHECKIN_AVAILABLE'){
       btn.disabled=false;btn.textContent='CHECK-IN';msg.className='notice warn';msg.textContent='Đã đến thời gian check-in. Hệ thống sẽ kiểm tra thiết bị và GPS khi bạn bấm.';
+    }else if(st.state==='EARLY_CHECKED_IN'){
+      btn.disabled=true;btn.textContent='ĐÃ CHECK-IN';msg.className='notice ok';msg.textContent=`Đã check-in lúc ${formatTime(st.check_in)} · ca bắt đầu ${formatTime(st.start_at)}. Chỉ có thể checkout từ giờ mở ca.`;
     }else if(st.state==='WORKING'){
-      btn.disabled=false;btn.textContent='CHECK-OUT';msg.className='notice ok';msg.textContent=`Đã check-in lúc ${formatTime(st.check_in)} · trễ ${st.late_minutes||0} phút.`;
+      btn.disabled=false;btn.textContent='CHECK-OUT';msg.className='notice ok';msg.textContent=`Đã check-in lúc ${formatTime(st.check_in)} · ${Date.now()>new Date(st.end_at).getTime()?'đã qua giờ kết thúc ca, giờ công sẽ chốt theo giờ kết thúc.':'đang trong ca.'}`;
     }else if(st.state==='MISSING_CHECKOUT'){
       btn.disabled=true;btn.textContent='CẦN XỬ LÝ';msg.className='notice warn';msg.textContent='Ca đã quá thời gian checkout. Vui lòng liên hệ Owner/Manager để xử lý.';
     }else if(st.state==='CHECKIN_EXPIRED'){
