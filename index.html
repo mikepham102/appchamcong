@@ -3253,7 +3253,7 @@ function renderEmployeeScheduleFromCache(data){
    if(own){const mine=items.find(x=>x.employee_id===session.user.id);action=`<div class="schedule-status-stack"><span class="schedule-status mine">Ca của bạn</span>${employeeScheduleStatus(mine||first)}</div>`}
    else if(open){
      const reg=rm.get(open.id);
-     if(reg?.status==='pending')action=`<div><span class="badge wait">Bạn đã giữ chỗ · Chờ chốt tuần</span><button type="button" class="btn light" style="margin-top:6px" onclick="withdrawShiftRegistration('${reg.id}')">Hủy đăng ký</button></div>`;
+     if(reg?.status==='pending')action=`<button type="button" class="btn light" style="margin-top:6px" onclick="withdrawShiftRegistration('${reg.id}')">Hủy đăng ký</button>`;
      else if(reg?.status==='rejected')action=`<div><span class="badge bad">Đã từ chối</span>${availableCount>0?`<button type="button" class="btn primary" style="margin-top:6px" onclick="registerForShift('${open.id}')">Đăng ký lại</button>`:'<div class="muted" style="margin-top:4px">Hiện đã đủ người giữ chỗ.</div>'}</div>`;
      else if(availableCount>0)action=`<button type="button" class="btn primary" onclick="registerForShift('${open.id}')">Đăng ký ca</button>`;
      else action='';
