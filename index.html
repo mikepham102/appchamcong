@@ -2059,7 +2059,7 @@ input:focus,select:focus,textarea:focus{
 <button class="request-chip" onclick="openScheduleRequestModal('swap')" type="button"><span>⇄</span> Xin đổi ca</button>
 </div>
 <section class="schedule-browser">
-<div class="schedule-browser-top"><div><div class="eyebrow">NGÀY ĐANG CHỌN</div><div class="selected-date" id="mainScheduleSelectedDateTitle">—</div><div class="selected-date-sub" id="mainScheduleSelectedDateSub">—</div></div><div class="date-nav"><button class="primary-compact owner-schedule-add" id="ownerScheduleAddBtn" onclick="openDirectScheduleModal()" type="button">＋ Thêm ca</button><button aria-label="Tuần trước" class="icon-button" onclick="goSchedulePreviousWeek()" type="button">‹</button><button class="today-btn" onclick="goScheduleToday()" type="button">Hôm nay</button><button aria-label="Tuần sau" class="icon-button" onclick="goScheduleNextWeek()" type="button">›</button></div></div>
+<div class="schedule-browser-top"><div><div class="eyebrow">NGÀY ĐANG CHỌN</div><div class="selected-date" id="mainScheduleSelectedDateTitle">—</div><div class="selected-date-sub" id="mainScheduleSelectedDateSub">—</div></div><div class="date-nav"><button class="primary-compact owner-schedule-add" id="ownerScheduleAddBtn" onclick="openDirectScheduleModal()" style="display:none" type="button">＋ Thêm ca</button><button aria-label="Tuần trước" class="icon-button" onclick="goSchedulePreviousWeek()" type="button">‹</button><button class="today-btn" onclick="goScheduleToday()" type="button">Hôm nay</button><button aria-label="Tuần sau" class="icon-button" onclick="goScheduleNextWeek()" type="button">›</button></div></div>
 <div class="schedule-days" id="mainScheduleDayStrip"></div>
 </section>
 <section class="schedule-results"><div id="mainScheduleList"><div class="empty">Đang tải lịch…</div></div></section>
@@ -2449,7 +2449,11 @@ function navigate(id,opts={}){const s=session,p=profile;if(!s||!p){showLogin('Vu
   if(p.role==='employee'){
     employeeSelectedDate=localToday();
     employeeDayWindowStart=mondayOfWeek(employeeSelectedDate);
-    if(!opts.deferLoad)renderScheduleForKind('employee');
+    // Render the calendar frame immediately, even during deferred app hydration.
+    // Data loading happens separately so the T2–CN date strip is never blank on first open.
+    renderDayStrip('mainScheduleDayStrip',employeeSelectedDate,employeeDayWindowStart,'selectEmployeeDate','prevEmployeeDays','nextEmployeeDays');
+    syncMainScheduleRoleUI();
+    if(!opts.deferLoad)loadSchedules();
   }else{
     mainScheduleDate=localToday();
     mainScheduleWindowStart=mondayOfWeek(mainScheduleDate);
