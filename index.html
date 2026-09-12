@@ -2818,6 +2818,125 @@ async function runWithoutGlobalDataLoading(task){
   }
 }
 
+/* V84.3 PERFORMANCE COMPREHENSIVE — based on V84.2
+   Behavior-preserving performance layer. UI/HTML/CSS and business rules stay intact.
+   Strategy: one in-flight request per employee data resource, background prefetch,
+   and no duplicate foreground reads when a warm request is already running. */
+const hcPerf84={
+  inFlight:new Map(),
+  warmTimer:null,
+  warmStarted:false,
+  userKey:null,
+  generation:0
+};
+function hcPerf84Key(){return `${session?.user?.id||''}|${getActiveStoreId()||''}`}
+function hcPerf84Reset(){
+  hcPerf84.inFlight.clear();
+  hcPerf84.generation++;
+  hcPerf84.userKey=hcPerf84Key();
+}
+function hcPerf84Dedupe(key,task){
+  if(hcPerf84.inFlight.has(key))return hcPerf84.inFlight.get(key);
+  const p=Promise.resolve().then(task).finally(()=>{
+    if(hcPerf84.inFlight.get(key)===p)hcPerf84.inFlight.delete(key);
+  });
+  hcPerf84.inFlight.set(key,p);return p;
+}
+function hcPerf84CanWarm(){
+  if(!session||!profile||!sb||document.hidden)return false;
+  const c=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
+  if(c?.saveData)return false;
+  if(['slow-2g','2g'].includes(c?.effectiveType))return false;
+  return true;
+}
+async function hcPerf84EmployeeSchedule(weekStart,weekEnd,force=false){
+  const key='emp-schedule|'+weekStart+'|'+weekEnd+'|'+(force?'force':'normal');
+  return hcPerf84Dedupe(key,()=>fetchEmployeeScheduleRange(weekStart,weekEnd,force));
+}
+async function hcPerf84EmployeeAttendance(){
+  return hcPerf84Dedupe('emp-attendance-state',()=>refreshAttendanceState());
+}
+async function hcPerf84EmployeeHistory(){
+  return hcPerf84Dedupe('emp-attendance-history',()=>loadAttendanceHistory());
+}
+async function hcPerf84EmployeeSalary(){
+  return hcPerf84Dedupe('emp-salary',()=>loadSalarySummary());
+}
+async function hcPerf84EmployeeHome(){
+  return hcPerf84Dedupe('emp-home',()=>loadEmployeeHomeShiftSummary());
+}
+async function hcPerf84WarmEmployee(current){
+  const start=mondayOfWeek(localToday()),next=dateAdd(start,7),end=dateAdd(next,6);
+  const tasks=[];
+  // Schedule is the shared source for Home/Lịch/registration. Prefetch both visible
+  // and immediately following week; the existing 20s cache remains the authority.
+  if(current!=='schedule')tasks.push(hcPerf84EmployeeSchedule(start,dateAdd(start,6),false));
+  tasks.push(hcPerf84EmployeeSchedule(next,end,false));
+  if(current!=='attendance')tasks.push(hcPerf84EmployeeAttendance());
+  if(current!=='attendance')tasks.push(hcPerf84EmployeeHistory());
+  if(current!=='salary')tasks.push(hcPerf84EmployeeSalary());
+  if(current!=='dashboard')tasks.push(hcPerf84EmployeeHome());
+  await Promise.allSettled(tasks);
+}
+function hcPerf84WarmAll(current){
+  if(!hcPerf84CanWarm())return;
+  const key=hcPerf84Key();
+  if(hcPerf84.userKey!==key)hcPerf84Reset();
+  clearTimeout(hcPerf84.warmTimer);
+  hcPerf84.warmTimer=setTimeout(async()=>{
+    if(hcPerf84.warmStarted||!hcPerf84CanWarm())return;
+    hcPerf84.warmStarted=true;
+    try{
+      if(profile?.role==='employee')await hcPerf84WarmEmployee(current);
+      // Owner/Manager V84.2 warm-up remains active; this layer only adds deduplication
+      // and Employee coverage, so existing management behavior is preserved.
+    }catch(e){console.debug('[HongCha Performance Comprehensive]',e)}
+    finally{hcPerf84.warmStarted=false;}
+  },250);
+}
+
+// Replace the old narrow Employee warm-up scheduler with the comprehensive one.
+if(typeof hcPerfScheduleWarmup==='function'){
+  const _hcPerfScheduleWarmup=hcPerfScheduleWarmup;
+  hcPerfScheduleWarmup=function(current){
+    try{_hcPerfScheduleWarmup(current)}catch(e){}
+    hcPerf84WarmAll(current);
+  };
+}
+
+// Dedupe simultaneous Employee reads. This changes timing only; every original
+// loader still owns the exact same rendering and error behavior.
+{
+  const _loadSchedules=loadSchedules;
+  loadSchedules=function(opts={}){
+    if(profile?.role!=='employee'||!session||!sb)return _loadSchedules(opts);
+    const weekStart=employeeDayWindowStart||mondayOfWeek(employeeSelectedDate||localToday());
+    const weekEnd=dateAdd(weekStart,6);
+    const key='emp-load-schedule|'+weekStart+'|'+weekEnd+'|'+(opts.force?'force':'normal');
+    return hcPerf84Dedupe(key,()=>_loadSchedules(opts));
+  };
+  const _refreshAttendanceState=refreshAttendanceState;
+  refreshAttendanceState=function(opts={}){
+    if(profile?.role!=='employee'||!session||!sb)return _refreshAttendanceState(opts);
+    const key='emp-refresh-attendance|'+(opts.refreshHome?'home':'state');
+    return hcPerf84Dedupe(key,()=>_refreshAttendanceState(opts));
+  };
+  const _loadAttendanceHistory=loadAttendanceHistory;
+  loadAttendanceHistory=function(){
+    if(profile?.role!=='employee'||!session||!sb)return _loadAttendanceHistory();
+    return hcPerf84Dedupe('emp-history',_loadAttendanceHistory);
+  };
+  const _loadSalarySummary=loadSalarySummary;
+  loadSalarySummary=function(){
+    if(profile?.role!=='employee'||!session||!sb)return _loadSalarySummary();
+    return hcPerf84Dedupe('emp-salary-load',_loadSalarySummary);
+  };
+  const _loadEmployeeHomeShiftSummary=loadEmployeeHomeShiftSummary;
+  loadEmployeeHomeShiftSummary=function(){
+    if(profile?.role!=='employee'||!session||!sb)return _loadEmployeeHomeShiftSummary();
+    return hcPerf84Dedupe('emp-home-load',_loadEmployeeHomeShiftSummary);
+  };
+}
 async function init(){
   if(bootStarted)return;
   initProfileFieldEvents();
@@ -3073,20 +3192,19 @@ async function fetchEmployeeScheduleRange(start,end,force=false){
  ]);
  if(scheduleError||regError)throw scheduleError||regError;
  const scheduleRows=(rows||[]).map(x=>({...x,employee_name:x.employee_name||null,employee_phone:x.employee_phone||null}));
- if(!scheduleRows.length){
-   // A successful RPC with zero rows is a real empty calendar; do not fall back to a misleading state.
- }
  const scheduleIds=scheduleRows.map(x=>x.id);
- const [capacityResult,registrantResult]=await Promise.all([
+ const assignedIds=scheduleRows.filter(x=>x.employee_id===userId).map(x=>x.id);
+ // All dependent reads are independent once the schedule ids are known. Keep them
+ // in the same network round so Employee calendar does not wait through serial hops.
+ const [capacityResult,registrantResult,attendanceResult]=await Promise.all([
    scheduleIds.length?sb.rpc('get_employee_shift_capacity',{p_schedule_ids:scheduleIds}):Promise.resolve({data:[],error:null}),
-   scheduleIds.length?sb.rpc('get_employee_shift_registrants',{p_schedule_ids:scheduleIds}):Promise.resolve({data:[],error:null})
+   scheduleIds.length?sb.rpc('get_employee_shift_registrants',{p_schedule_ids:scheduleIds}):Promise.resolve({data:[],error:null}),
+   assignedIds.length?sb.from('attendance').select('id,schedule_id,check_in,check_out,worked_minutes,late_minutes,early_leave_minutes,check_in_status,check_out_status').in('schedule_id',assignedIds).eq('employee_id',userId):Promise.resolve({data:[],error:null})
  ]);
- if(capacityResult.error||registrantResult.error)throw capacityResult.error||registrantResult.error;
+ if(capacityResult.error||registrantResult.error||attendanceResult.error)throw capacityResult.error||registrantResult.error||attendanceResult.error;
  const capacityRows=capacityResult.data||[];
  const registrantRows=registrantResult.data||[];
- const assignedIds=scheduleRows.filter(x=>x.employee_id===userId).map(x=>x.id);
- let attendanceRows=[];
- if(assignedIds.length){const {data:a,error:aErr}=await sb.from('attendance').select('id,schedule_id,check_in,check_out,worked_minutes,late_minutes,early_leave_minutes,check_in_status,check_out_status').in('schedule_id',assignedIds).eq('employee_id',userId);if(aErr)throw aErr;attendanceRows=a||[]}
+ const attendanceRows=attendanceResult.data||[];
  const attendanceBySchedule=new Map(attendanceRows.map(a=>[a.schedule_id,a]));scheduleRows.forEach(x=>{if(x.employee_id===userId)x.attendance=attendanceBySchedule.get(x.id)||null});
  const value={rows:scheduleRows,regs:regs||[],capacityRows,registrantRows:registrantRows||[],cachedAt:Date.now()};employeeScheduleCache[key]=value;return value
 }
@@ -3255,7 +3373,7 @@ async function registerDeviceAndRefresh(){const b=el('gateAction');b.disabled=tr
 function syncDeviceUI(){if(!profile||profile.role!=='employee')return;const key=getDeviceKey();sb.from('devices').select('status,device_name').eq('employee_id',session.user.id).eq('device_key',key).maybeSingle().then(({data})=>{const ok=data?.status==='approved',label=data?({approved:'Đã duyệt',pending:'Chờ xác nhận',rejected:'Bị từ chối',revoked:'Đã thu hồi'}[data.status]||data.status):'Chưa liên kết';if(el('homeDeviceText'))el('homeDeviceText').textContent=label;if(el('homeDeviceDot'))el('homeDeviceDot').className='dot '+(ok?'ok':data?'bad':'')})}
 let attendanceEnvironmentToken=0;function haversineMeters(lat1,lon1,lat2,lon2){const R=6371000,toRad=v=>v*Math.PI/180,dLat=toRad(lat2-lat1),dLon=toRad(lon2-lon1),a=Math.sin(dLat/2)**2+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;return 2*R*Math.asin(Math.sqrt(a))}async function checkAttendanceEnvironment(opts={}){if(profile?.role!=='employee'||!sb||!session)return;const token=++attendanceEnvironmentToken;syncDeviceUI();setGpsState(false,'Đang kiểm tra vị trí…');try{const {data:store,error}=await sb.from('stores').select('latitude,longitude,gps_radius_m').eq('id',getActiveStoreId()).single();if(error)throw error;const lat=Number(store?.latitude??DEFAULT_STORE_LAT),lng=Number(store?.longitude??DEFAULT_STORE_LNG),radius=Number(store?.gps_radius_m??DEFAULT_STORE_RADIUS);const pos=await getPosition();if(token!==attendanceEnvironmentToken)return;const distance=haversineMeters(lat,lng,pos.coords.latitude,pos.coords.longitude);if(distance<=radius)setGpsState(true,'Đã xác nhận vị trí',Math.round(distance)+'m · trong bán kính '+Math.round(radius)+'m');else setGpsState(false,'Ngoài khu vực chấm công',Math.round(distance)+'m · cần ≤ '+Math.round(radius)+'m','Thử lại vị trí')}catch(e){if(token!==attendanceEnvironmentToken)return;const code=e?.code; if(code===1){setGpsState(false,'Chưa được cấp quyền vị trí','Hãy bấm nút bên dưới để cho phép trình duyệt truy cập vị trí.','Cho phép vị trí')}else if(code===2){setGpsState(false,'Không xác định được vị trí','Hãy bật Dịch vụ định vị trên iPhone rồi thử lại.','Thử lại vị trí')}else if(code===3){setGpsState(false,'Lấy vị trí quá lâu','Hãy kiểm tra GPS/mạng rồi thử lại.','Thử lại vị trí')}else{setGpsState(false,'Không xác định được vị trí','Hãy thử lại.','Thử lại vị trí')}}}
 
-async function signOut(){await stopRealtime();if(sb)await sb.auth.signOut();session=null;profile=null;activeStoreId=null;branchContextReady=false;appHydratedUserId=null;currentView='dashboard';currentAdminTab='employees';hideDeviceGate();showLogin()}
+async function signOut(){await stopRealtime();hcPerf84Reset();if(sb)await sb.auth.signOut();session=null;profile=null;activeStoreId=null;branchContextReady=false;appHydratedUserId=null;currentView='dashboard';currentAdminTab='employees';hideDeviceGate();showLogin()}
 function openAdminQuick(tab){if(!['owner','manager'].includes(profile?.role))return;navigate('admin');setTimeout(()=>{const b=document.querySelector('#admin .admin-group-item[data-admin-tab="'+tab+'"]');adminTab(tab,b||null);},0)}
 function attendanceDisplayStatus(item,a){
  const now=Date.now();
