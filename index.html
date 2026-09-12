@@ -2313,31 +2313,53 @@ function loadSupabaseLibrary(timeoutMs=5000){
 let globalDataLoadingCount=0;
 let globalDataLoadingTimer=null;
 let globalDataLoadingHideTimer=null;
+let globalDataLoadingSuppressed=0;
+let globalDataLoadingShownAt=0;
 function beginGlobalDataLoading(){
   globalDataLoadingCount++;
+  if(globalDataLoadingSuppressed>0)return;
   clearTimeout(globalDataLoadingHideTimer);
   if(!globalDataLoadingTimer){
+    // Only show for genuinely noticeable network work. This prevents a fast
+    // sequence of background requests from making the pill flash/jump.
     globalDataLoadingTimer=setTimeout(()=>{
       globalDataLoadingTimer=null;
-      if(globalDataLoadingCount>0){
+      if(globalDataLoadingCount>0 && globalDataLoadingSuppressed===0){
         document.getElementById('globalDataLoader')?.classList.add('show');
         document.body.classList.add('data-fetching');
+        globalDataLoadingShownAt=Date.now();
       }
-    },90);
+    },260);
   }
 }
 function endGlobalDataLoading(){
   globalDataLoadingCount=Math.max(0,globalDataLoadingCount-1);
+  if(globalDataLoadingSuppressed>0)return;
   if(globalDataLoadingCount>0)return;
   clearTimeout(globalDataLoadingTimer);
   globalDataLoadingTimer=null;
   clearTimeout(globalDataLoadingHideTimer);
+  const wait=Math.max(0,420-(Date.now()-globalDataLoadingShownAt));
   globalDataLoadingHideTimer=setTimeout(()=>{
-    if(globalDataLoadingCount===0){
+    if(globalDataLoadingCount===0 && globalDataLoadingSuppressed===0){
       document.getElementById('globalDataLoader')?.classList.remove('show');
       document.body.classList.remove('data-fetching');
     }
-  },120);
+  },wait);
+}
+async function runWithoutGlobalDataLoading(task){
+  globalDataLoadingSuppressed++;
+  clearTimeout(globalDataLoadingTimer);
+  globalDataLoadingTimer=null;
+  try{ return await task(); }
+  finally{
+    globalDataLoadingSuppressed=Math.max(0,globalDataLoadingSuppressed-1);
+    if(globalDataLoadingSuppressed===0 && globalDataLoadingCount===0){
+      clearTimeout(globalDataLoadingHideTimer);
+      document.getElementById('globalDataLoader')?.classList.remove('show');
+      document.body.classList.remove('data-fetching');
+    }
+  }
 }
 
 async function init(){
@@ -3391,6 +3413,8 @@ async function loadCurrentViewData(){
 let realtimeChannel=null;
 let realtimeReloadTimer=null;
 let realtimeStartedStoreId=null;
+let realtimeRefreshInFlight=false;
+let realtimeRefreshPending=false;
 function clearScheduleDataCaches(){
   mainScheduleWeekCountCache={};
   mainScheduleWeekDataCache={};
@@ -3399,10 +3423,17 @@ function clearScheduleDataCaches(){
   employeeScheduleCache={};
 }
 function scheduleRealtimeRefresh(reason='realtime'){
+  // Realtime is an invalidation signal, not a command to reload once per event.
+  // Coalesce bursts and never let multiple refreshes run at the same time.
+  realtimeRefreshPending=true;
   clearTimeout(realtimeReloadTimer);
   realtimeReloadTimer=setTimeout(async()=>{
+    if(realtimeRefreshInFlight)return;
+    if(!realtimeRefreshPending)return;
+    realtimeRefreshPending=false;
     try{
       if(!session||!profile||!getActiveStoreId())return;
+      realtimeRefreshInFlight=true;
       clearScheduleDataCaches();
       const tasks=[];
       if(currentView==='schedule'){
@@ -3418,9 +3449,19 @@ function scheduleRealtimeRefresh(reason='realtime'){
       if(currentAdminTab==='registrations'&&['owner','manager'].includes(profile.role))tasks.push(loadRegistrations(),loadScheduleRequests());
       if(currentAdminTab==='templates'&&['owner','manager'].includes(profile.role))tasks.push(loadTemplates());
       if(currentAdminTab==='schedules'&&['owner','manager'].includes(profile.role))tasks.push(loadWeeklyPlan());
-      await Promise.allSettled(tasks);
+      // Background realtime refresh must not animate the global loader.
+      await runWithoutGlobalDataLoading(()=>Promise.allSettled(tasks));
     }catch(e){console.error('[HongCha Realtime]',reason,e)}
-  },180);
+    finally{
+      realtimeRefreshInFlight=false;
+      // If another event arrived while the refresh was running, do one more
+      // coalesced refresh after a quiet 500ms window instead of a reload loop.
+      if(realtimeRefreshPending){
+        clearTimeout(realtimeReloadTimer);
+        realtimeReloadTimer=setTimeout(()=>scheduleRealtimeRefresh('coalesced'),500);
+      }
+    }
+  },220);
 }
 async function startRealtime(storeId=getActiveStoreId()){
   if(!sb||!session||!storeId)return;
