@@ -386,10 +386,10 @@ body.admin-sheet-open{overflow:hidden}
 @media(prefers-reduced-motion:reduce){.admin-content,.admin-sheet-backdrop{transition:none}.admin-content.is-loading:after{animation:none}}
 </style><style id="hongcha-v50-employee-polish-css">
 /* V50 — employee schedule/attendance stable frame + compact semantic status UI */
-#mainScheduleList{min-height:220px;contain:layout paint;position:relative;overflow-anchor:none}
+#mainScheduleList,#employeeScheduleList{min-height:220px;contain:layout paint;position:relative;overflow-anchor:none}
 .schedule-results{min-height:234px;contain:layout paint}
 .schedule-browser{contain:layout paint}
-#mainScheduleDayStrip{min-height:72px;contain:layout paint;overflow-anchor:none}
+#mainScheduleDayStrip,#employeeScheduleDayStrip{min-height:72px;contain:layout paint;overflow-anchor:none}
 #employeeAttendanceContent{min-width:0}
 .attendance-focus-card{min-height:345px;contain:layout paint}
 .precheck-grid{grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
@@ -424,7 +424,7 @@ body.admin-sheet-open{overflow:hidden}
 @media(max-width:699px){
   .schedule-browser{padding:14px;border-radius:17px}
   .schedule-results{min-height:228px}
-  #mainScheduleList{min-height:205px}
+  #mainScheduleList,#employeeScheduleList{min-height:205px}
   .attendance-focus-card{min-height:0}
   .precheck-grid{grid-template-columns:1fr;gap:7px}
   .precheck-item{min-height:52px;grid-template-columns:24px minmax(0,1fr)}
@@ -441,7 +441,7 @@ body.admin-sheet-open{overflow:hidden}
 }
 @media(max-width:375px){
   .schedule-browser{padding:12px}
-  #mainScheduleDayStrip{min-height:64px}
+  #mainScheduleDayStrip,#employeeScheduleDayStrip{min-height:64px}
   .attendance-history-row{padding:10px}
   .attendance-history-row .history-cell>b{font-size:11px}
   .history-status-chip{font-size:8.5px;padding:4px 6px}
@@ -1731,7 +1731,7 @@ input:focus,select:focus,textarea:focus{
 <meta name="hongcha-release" content="V73 Employee Schedule UI Polish"><style id="v72-schedule-fix">.employee-shift-people-title{color:var(--info)!important}.employee-shift-person-copy b{font-weight:780}.shift-card{overflow:hidden}.shift-card-head{padding-bottom:12px}.shift-card-title{color:var(--ink)}.shift-card-time{color:var(--brand);font-weight:800}</style>
 <style id="v73-employee-schedule-ui">
 /* V73 — Employee schedule visual cleanup: mobile-first, no clipping, clearer hierarchy */
-#mainScheduleList{
+#mainScheduleList,#employeeScheduleList{
   display:grid;
   gap:12px;
   min-width:0;
@@ -1937,10 +1937,10 @@ input:focus,select:focus,textarea:focus{
 </style>
 <style id="hongcha-v77-date-strip-fix">
 /* V77 — date selector must always remain visible on the schedule screen. */
-#mainScheduleDayStrip{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:5px!important;width:100%!important;min-width:0!important;min-height:66px!important;margin-top:15px!important;visibility:visible!important;opacity:1!important;overflow:visible!important;position:relative!important;z-index:2!important;}
+#mainScheduleDayStrip,#employeeScheduleDayStrip{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:5px!important;width:100%!important;min-width:0!important;min-height:66px!important;margin-top:15px!important;visibility:visible!important;opacity:1!important;overflow:visible!important;position:relative!important;z-index:2!important;}
 #mainScheduleDayStrip .day-cell{display:flex!important;visibility:visible!important;opacity:1!important;width:100%!important;min-width:0!important;height:66px!important;}
-@media(max-width:430px){#mainScheduleDayStrip{gap:4px!important;min-height:64px!important;}#mainScheduleDayStrip .day-cell{height:64px!important;padding:5px 2px!important;}#mainScheduleDayStrip .day-cell .dow{font-size:9px!important;}#mainScheduleDayStrip .day-cell .num{font-size:17px!important;}#mainScheduleDayStrip .day-cell .day-count{font-size:8px!important;}}
-@media(max-width:375px){#mainScheduleDayStrip{gap:3px!important;}#mainScheduleDayStrip .day-cell{height:62px!important;}#mainScheduleDayStrip .day-cell .num{font-size:16px!important;}#mainScheduleDayStrip .day-cell .dow{font-size:8px!important;}}
+@media(max-width:430px){#mainScheduleDayStrip,#employeeScheduleDayStrip{gap:4px!important;min-height:64px!important;}#mainScheduleDayStrip .day-cell{height:64px!important;padding:5px 2px!important;}#mainScheduleDayStrip .day-cell .dow{font-size:9px!important;}#mainScheduleDayStrip .day-cell .num{font-size:17px!important;}#mainScheduleDayStrip .day-cell .day-count{font-size:8px!important;}}
+@media(max-width:375px){#mainScheduleDayStrip,#employeeScheduleDayStrip{gap:3px!important;}#mainScheduleDayStrip .day-cell{height:62px!important;}#mainScheduleDayStrip .day-cell .num{font-size:16px!important;}#mainScheduleDayStrip .day-cell .dow{font-size:8px!important;}}
 </style>
 <style id="hongcha-v80-multi-branch-css">
 /* V80.2 — branch identity / responsive header + clearer attendance actions */
@@ -2001,7 +2001,6 @@ input:focus,select:focus,textarea:focus{
 <style id="v82-2-employee-flow-fix">
 /* V82.2 — Employee Flow: role-safe actions + deterministic calendar + contextual states */
 #scheduleRegisterBtn{display:none!important}
-#ownerScheduleAddBtn{display:none!important}
 #employeeScheduleRequests{display:none}
 #attendancePrecheckGrid{display:none}
 #employeeHomePrimaryBtn{display:flex;align-items:center;justify-content:space-between}
@@ -2014,6 +2013,334 @@ input:focus,select:focus,textarea:focus{
  #mainScheduleList .schedule-status{font-size:10px;padding:6px 7px}
 }
 </style>
+<style id="hongcha-v83-role-isolation">
+.schedule-role-panel{min-width:0}.schedule-role-panel.ui-hidden{display:none!important}.schedule-role-employee,.schedule-role-staff{min-width:0}.schedule-role-employee .schedule-browser{margin-top:0}.schedule-role-employee .schedule-days,.schedule-role-staff .schedule-days{min-width:0}.schedule-role-employee .schedule-results,.schedule-role-staff .schedule-results{min-width:0}
+</style>
+</style>
+<style id="v83-employee-schedule-styles">
+/* V50 — employee schedule/attendance stable frame + compact semantic status UI */
+#employeeScheduleList,#employeeScheduleList{min-height:220px;contain:layout paint;position:relative;overflow-anchor:none}
+.schedule-results{min-height:234px;contain:layout paint}
+.schedule-browser{contain:layout paint}
+#employeeScheduleDayStrip,#employeeScheduleDayStrip{min-height:72px;contain:layout paint;overflow-anchor:none}
+#employeeAttendanceContent{min-width:0}
+.attendance-focus-card{min-height:345px;contain:layout paint}
+.precheck-grid{grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.precheck-item{grid-template-columns:24px minmax(0,1fr);align-items:start;gap:8px;padding:9px 10px;min-height:58px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.1);border-radius:12px;transition:background .15s,border-color .15s}
+.precheck-item .dot{width:9px;height:9px;margin-top:4px;box-shadow:0 0 0 4px rgba(255,255,255,.04)}
+.precheck-item:before{grid-column:1;grid-row:1;content:'⌖';width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.09);color:#D6D2CC;font-size:12px;font-weight:800;margin-top:-2px}
+.precheck-item:nth-child(2):before{content:'▣'}
+.precheck-item .dot{position:absolute;opacity:0}
+.precheck-item>div{grid-column:2;min-width:0}
+.precheck-item b{font-size:10px;letter-spacing:.02em;color:#DCD8D2}
+.precheck-item span:not(.dot){font-size:10px;line-height:1.35;margin-top:2px;color:#B9B6B1}
+.precheck-item[data-state="ok"]{border-color:rgba(92,194,143,.25);background:rgba(36,125,83,.12)}
+.precheck-item[data-state="ok"] span:not(.dot){color:#BCE8D1}
+.precheck-item[data-state="wait"]{border-color:rgba(224,174,87,.28);background:rgba(168,101,18,.12)}
+.precheck-item[data-state="wait"] span:not(.dot){color:#E8CB9C}
+.precheck-item[data-state="warn"]{border-color:rgba(224,174,87,.28);background:rgba(168,101,18,.12)}
+.precheck-item[data-state="warn"] span:not(.dot){color:#E8CB9C}
+.precheck-item[data-state="bad"]{border-color:rgba(220,95,84,.28);background:rgba(196,61,53,.11)}
+.precheck-item[data-state="bad"] span:not(.dot){color:#F0B7B1}
+.precheck-item[data-state="neutral"]{border-color:rgba(255,255,255,.1)}
+.gps-action{margin-top:6px;min-height:32px;padding:6px 9px;font-size:10px}
+.recent-attendance-list{min-height:260px;contain:layout paint}
+.attendance-history-table{min-width:0;width:100%;display:grid;gap:7px}
+.attendance-history-row{min-width:0!important;width:100%;grid-template-columns:minmax(92px,1fr) minmax(88px,1fr) minmax(72px,.8fr) minmax(72px,.8fr) minmax(72px,.8fr) minmax(118px,1.35fr);gap:7px;padding:10px 11px}
+.attendance-history-row .history-cell{min-width:0}
+.attendance-history-row .history-cell>span:not(.history-status-chip){font-size:9px;color:var(--muted);font-weight:700}
+.attendance-history-row .history-cell>b{font-size:11px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.history-status-chip{display:inline-flex;max-width:100%;padding:5px 7px;border-radius:8px;font-size:9px;line-height:1.25;font-weight:800;white-space:normal}
+.history-status-chip.ok{background:var(--success-soft);color:var(--success)}
+.history-status-chip.warn,.history-status-chip.wait{background:var(--warning-soft);color:var(--warning)}
+.history-status-chip.danger{background:var(--danger-soft);color:var(--danger)}
+@media(max-width:699px){
+  .schedule-browser{padding:14px;border-radius:17px}
+  .schedule-results{min-height:228px}
+  #employeeScheduleList,#employeeScheduleList{min-height:205px}
+  .attendance-focus-card{min-height:0}
+  .precheck-grid{grid-template-columns:1fr;gap:7px}
+  .precheck-item{min-height:52px;grid-template-columns:24px minmax(0,1fr)}
+  .recent-attendance-list{min-height:0}
+  .attendance-history-row{grid-template-columns:minmax(0,1fr) auto;gap:6px 10px;padding:11px 12px;border-radius:13px}
+  .attendance-history-row .history-date{grid-column:1;grid-row:1}
+  .attendance-history-row .history-shift{grid-column:2;grid-row:1;text-align:right}
+  .attendance-history-row .history-in{grid-column:1;grid-row:2}
+  .attendance-history-row .history-out{grid-column:2;grid-row:2;text-align:right}
+  .attendance-history-row .history-worked{grid-column:1;grid-row:3}
+  .attendance-history-row .history-status{grid-column:2;grid-row:3;justify-self:end;max-width:150px}
+  .attendance-history-row .history-cell{display:grid;gap:2px;align-content:center}
+  .attendance-history-row .history-cell>b{font-size:12px;white-space:nowrap}
+}
+@media(max-width:375px){
+  .schedule-browser{padding:12px}
+  #employeeScheduleDayStrip,#employeeScheduleDayStrip{min-height:64px}
+  .attendance-history-row{padding:10px}
+  .attendance-history-row .history-cell>b{font-size:11px}
+  .history-status-chip{font-size:8.5px;padding:4px 6px}
+}
+
+
+/* V73 — Employee schedule visual cleanup: mobile-first, no clipping, clearer hierarchy */
+#employeeScheduleList,#employeeScheduleList{
+  display:grid;
+  gap:12px;
+  min-width:0;
+}
+#employeeScheduleList .shift-card{
+  width:100%;
+  box-sizing:border-box;
+  margin:0;
+  overflow:hidden;
+  border-radius:18px;
+  border:1px solid #D9E3ED;
+  background:#fff;
+  box-shadow:0 2px 8px rgba(31,52,72,.045);
+}
+#employeeScheduleList .shift-card::before{
+  width:4px;
+  background:#C52A20;
+}
+#employeeScheduleList .shift-card:nth-child(3n+2)::before{background:#2F6FA8}
+#employeeScheduleList .shift-card:nth-child(3n+3)::before{background:#3F8A68}
+#employeeScheduleList .shift-card-head{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+  min-height:0;
+  padding:15px 14px 14px 18px;
+  background:#F8FBFE;
+  border-bottom:1px solid #E4ECF3;
+}
+#employeeScheduleList .shift-card-head>div{min-width:0}
+#employeeScheduleList .shift-card-head>div:last-child{
+  width:auto;
+  max-width:100%;
+  flex:0 0 auto;
+  justify-self:end;
+}
+#employeeScheduleList .shift-card-title{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:6px;
+  min-width:0;
+  color:#172331;
+  font-size:17px;
+  line-height:1.25;
+  font-weight:820;
+  letter-spacing:-.2px;
+  overflow-wrap:anywhere;
+}
+#employeeScheduleList .shift-card-time{
+  display:inline-flex;
+  align-items:center;
+  margin:0;
+  padding:4px 8px;
+  border-radius:8px;
+  background:#EEF4FA;
+  color:#28679D!important;
+  font-size:11px;
+  line-height:1.1;
+  font-weight:800;
+  white-space:nowrap;
+}
+#employeeScheduleList .shift-card-sub{
+  margin-top:6px;
+  color:#718092;
+  font-size:11px;
+  line-height:1.4;
+  overflow-wrap:anywhere;
+}
+#employeeScheduleList .schedule-status-stack{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  max-width:160px;
+}
+#employeeScheduleList .schedule-status{
+  max-width:160px;
+  min-height:30px;
+  box-sizing:border-box;
+  padding:6px 9px;
+  border-radius:9px;
+  font-size:10.5px;
+  line-height:1.2;
+  white-space:normal;
+}
+#employeeScheduleList .employee-shift-people{
+  margin:0;
+  padding:13px 16px 10px 18px;
+  border-top:0;
+  min-width:0;
+  box-sizing:border-box;
+}
+#employeeScheduleList .employee-shift-people-title{
+  display:block;
+  margin:0 0 8px;
+  padding:0;
+  color:#28679D!important;
+  font-size:10px;
+  line-height:1.25;
+  font-weight:850;
+  letter-spacing:.55px;
+  text-transform:uppercase;
+  white-space:normal;
+  overflow:visible;
+}
+#employeeScheduleList .employee-shift-person{
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  min-width:0;
+  padding:8px 0;
+  border-top:1px solid #EDF1F5;
+}
+#employeeScheduleList .employee-shift-person:first-of-type{border-top:0}
+#employeeScheduleList .employee-shift-person-avatar{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  background:#EAF3FB;
+  color:#28679D;
+  font-size:12px;
+}
+#employeeScheduleList .employee-shift-person-copy{
+  min-width:0;
+  overflow:hidden;
+}
+#employeeScheduleList .employee-shift-person-copy b{
+  display:block;
+  min-width:0;
+  color:#1D2A38;
+  font-size:13px;
+  line-height:1.3;
+  font-weight:780;
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+#employeeScheduleList .employee-shift-person-copy span{
+  display:block;
+  margin-top:2px;
+  color:#718092;
+  font-size:11px;
+  line-height:1.3;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#employeeScheduleList .employee-shift-open{
+  margin:0;
+  padding:11px 16px 13px 18px;
+  border-top:1px solid #EAF0F5;
+  background:#FAFCFE;
+  color:#718092;
+  font-size:11px;
+  line-height:1.4;
+}
+#employeeScheduleList .selected-day-note{
+  margin:0 16px 13px 18px!important;
+  padding:9px 10px!important;
+  border-radius:10px;
+  font-size:11px;
+  line-height:1.35;
+}
+#employeeScheduleList .btn.primary{
+  min-height:40px;
+  padding:0 14px;
+  border-radius:11px;
+  white-space:nowrap;
+}
+@media(max-width:520px){
+  #employeeScheduleList .shift-card-head{
+    grid-template-columns:minmax(0,1fr);
+    gap:9px;
+    padding:14px 13px 12px 17px;
+  }
+  #employeeScheduleList .shift-card-head>div:last-child{
+    justify-self:stretch;
+    max-width:none;
+  }
+  #employeeScheduleList .shift-card-head>div:last-child:has(.btn){
+    display:flex;
+    justify-content:flex-start;
+  }
+  #employeeScheduleList .shift-card-head>div:last-child:has(.schedule-status-stack){
+    justify-self:start;
+  }
+  #employeeScheduleList .schedule-status-stack{
+    justify-content:flex-start;
+    max-width:none;
+  }
+  #employeeScheduleList .schedule-status{max-width:none}
+  #employeeScheduleList .shift-card-title{font-size:16px}
+  #employeeScheduleList .btn.primary{min-height:39px}
+}
+@media(max-width:375px){
+  #employeeScheduleList .shift-card-head{padding-left:16px}
+  #employeeScheduleList .employee-shift-people{padding-left:16px;padding-right:13px}
+  #employeeScheduleList .employee-shift-open{padding-left:16px;padding-right:13px}
+  #employeeScheduleList .shift-card-time{font-size:10.5px;padding:4px 7px}
+}
+
+
+/* V77 — date selector must always remain visible on the schedule screen. */
+#employeeScheduleDayStrip,#employeeScheduleDayStrip{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:5px!important;width:100%!important;min-width:0!important;min-height:66px!important;margin-top:15px!important;visibility:visible!important;opacity:1!important;overflow:visible!important;position:relative!important;z-index:2!important;}
+#employeeScheduleDayStrip .day-cell{display:flex!important;visibility:visible!important;opacity:1!important;width:100%!important;min-width:0!important;height:66px!important;}
+@media(max-width:430px){#employeeScheduleDayStrip,#employeeScheduleDayStrip{gap:4px!important;min-height:64px!important;}#employeeScheduleDayStrip .day-cell{height:64px!important;padding:5px 2px!important;}#employeeScheduleDayStrip .day-cell .dow{font-size:9px!important;}#employeeScheduleDayStrip .day-cell .num{font-size:17px!important;}#employeeScheduleDayStrip .day-cell .day-count{font-size:8px!important;}}
+@media(max-width:375px){#employeeScheduleDayStrip,#employeeScheduleDayStrip{gap:3px!important;}#employeeScheduleDayStrip .day-cell{height:62px!important;}#employeeScheduleDayStrip .day-cell .num{font-size:16px!important;}#employeeScheduleDayStrip .day-cell .dow{font-size:8px!important;}}
+
+
+/* V80.3 — branch selector sits below product name; avoids horizontal header pressure on mobile. */
+.app-topbar-inner{height:100%;justify-content:flex-start!important;gap:10px!important}
+.app-brand-center{position:static!important;left:auto!important;top:auto!important;transform:none!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:9px!important;min-width:0!important;flex:1 1 auto!important}
+.app-brand-copy{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto auto!important;align-content:center!important;gap:1px!important;min-width:0!important;text-align:left!important}
+.app-brand-copy .brand{grid-column:1;grid-row:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.05!important}
+.app-brand-copy .sub{display:none!important}
+.topbar-branch-action{grid-column:1;grid-row:2;display:inline-flex!important;align-items:center!important;justify-content:flex-start!important;gap:4px!important;width:auto!important;max-width:min(190px,42vw)!important;height:22px!important;min-height:22px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:var(--ink)!important;font-size:10px!important;font-weight:760!important;line-height:1!important;white-space:nowrap!important;overflow:hidden!important;text-align:left!important}
+.topbar-branch-action.hidden{display:none!important}
+.branch-top-dot{font-size:8px!important;line-height:1!important;flex:0 0 auto!important}
+.branch-top-name{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;font-size:10px!important;font-weight:800!important;line-height:1!important}
+.branch-top-chevron{font-size:12px!important;color:var(--muted)!important;line-height:1!important;flex:0 0 auto!important;margin-left:1px!important}
+.topbar-actions{margin-left:auto!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:5px!important;flex:0 0 auto!important}
+.topbar-admin-action{position:static!important;transform:none!important}
+@media(max-width:430px){
+ .app-topbar-inner{padding-left:12px!important;padding-right:9px!important;gap:8px!important}
+ .app-brand-center{gap:7px!important}
+ .app-brand-center .brand-mark{width:36px!important;height:36px!important;flex-basis:36px!important;border-radius:11px!important}
+ .app-brand-copy .brand{font-size:13px!important}
+ .topbar-branch-action{max-width:min(165px,44vw)!important;height:21px!important;min-height:21px!important}
+ .branch-top-name{font-size:10px!important}
+ .topbar-admin-action{min-height:36px!important;height:36px!important;padding:0 9px!important;font-size:10px!important}
+}
+@media(max-width:375px){
+ .app-topbar-inner{padding-left:10px!important;padding-right:8px!important;gap:7px!important}
+ .app-brand-center{gap:6px!important}
+ .app-brand-center .brand-mark{width:34px!important;height:34px!important;flex-basis:34px!important}
+ .app-brand-copy .brand{font-size:12.5px!important}
+ .topbar-branch-action{max-width:min(145px,45vw)!important}
+ .branch-top-name{font-size:9.5px!important}
+ .topbar-admin-action{padding-left:8px!important;padding-right:8px!important;font-size:9.5px!important}
+}
+<style id="v82-2-employee-flow-fix-2">
+/* V82.2 — Employee Flow: role-safe actions + deterministic calendar + contextual states */
+#scheduleRegisterBtn{display:none!important}
+#employeeScheduleRequests{display:none}
+#attendancePrecheckGrid{display:none}
+#employeeHomePrimaryBtn{display:flex;align-items:center;justify-content:space-between}
+#saveProfileBtn:disabled{opacity:.48;cursor:default;filter:none}
+.schedule-status.mine{background:var(--brand-soft);color:var(--brand);border:1px solid #EBC9BA}
+@media(max-width:430px){
+ #employeeScheduleList .shift-card-head{gap:9px}
+ #employeeScheduleList .shift-card-head>div:last-child{max-width:44%}
+ #employeeScheduleList .schedule-status-stack{max-width:132px}
+ #employeeScheduleList .schedule-status{font-size:10px;padding:6px 7px}
+}
+</style><style id="v83-role-isolation-final">
+.schedule-role-panel{min-width:0}.schedule-role-panel.ui-hidden{display:none!important}.schedule-role-staff .employee-only-schedule{display:none!important}.schedule-role-employee #ownerScheduleAddBtn,.schedule-role-employee .owner-schedule-add{display:none!important}
 </style>
 </head><body><div id="bootScreen"><div class="auth-card ui-center"><div class="auth-logo ui-auto">H</div><div class="ui-boot-title">HongCha HRM</div><div class="muted ui-boot-sub">Đang mở ứng dụng…</div></div></div><div class="hidden" id="loginScreen"><div class="auth-card v33-auth"><div class="auth-brand"><div class="auth-logo">H</div><div><div class="ui-brand-title">HongCha HRM</div><div class="muted ui-brand-foot">Quản lý nhân sự &amp; chấm công</div></div></div><h1>Chào mừng trở lại</h1><div class="desc">Đăng nhập để chấm công, xem lịch làm việc và theo dõi giờ công.</div><div class="login-toggle"><button class="active" id="loginModePassword" onclick="setLoginMode('password')">Mật khẩu</button><button id="loginModeOtp" onclick="setLoginMode('otp')">Email</button></div><div class="stack" id="passwordLoginFields"><div class="field"><label>Email</label><input autocomplete="username" id="loginEmail" placeholder="email của bạn" type="email"/></div><div class="field"><label>Mật khẩu</label><input autocomplete="current-password" id="loginPassword" placeholder="Mật khẩu" type="password"/></div><label class="remember-login"><input checked="" id="rememberLogin" type="checkbox"/><span><b>Lưu đăng nhập</b><small>Giữ phiên đăng nhập trên thiết bị này</small></span></label><button class="btn primary ui-w-full" onclick="signIn()">Đăng nhập</button><button class="btn light ui-w-full" onclick="sendResetPassword()">Quên mật khẩu</button></div><div class="stack ui-hidden" id="otpLoginFields"><div class="field"><label>Email</label><input autocomplete="email" id="loginEmailOtp" placeholder="email của bạn" type="email"/></div><button class="btn primary ui-w-full" onclick="sendMagicLink()">Gửi link đăng nhập</button><div class="notice info">Mở email và bấm link để đăng nhập nhanh. Không cần nhập mật khẩu.</div></div><div class="auth-msg" id="loginMsg"></div><div class="auth-foot">Tài khoản nhân viên chỉ sử dụng được trên thiết bị đã được cửa hàng phê duyệt.</div></div></div>
 <div class="app" id="app">
@@ -2067,18 +2394,30 @@ input:focus,select:focus,textarea:focus{
 <section class="view" id="schedule">
 <header class="screen-header page-screen-header">
 <div><div class="eyebrow">LỊCH LÀM VIỆC</div><h1 class="page-title">Lịch</h1><p class="page-sub" id="schedulePageSub">Chọn ngày để xem đúng các ca của ngày đó.</p></div>
-
 </header>
-<div class="request-row employee-only-schedule" id="employeeScheduleRequests">
-<button class="request-chip" id="employeeLateRequestBtn" onclick="openScheduleRequestModal('late')" type="button"><span>⏱</span> Xin đi trễ</button>
-<button class="request-chip" id="employeeLeaveRequestBtn" onclick="openScheduleRequestModal('emergency_leave')" type="button"><span>⚠</span> Xin nghỉ ca</button>
-<button class="request-chip" id="employeeSwapRequestBtn" onclick="openScheduleRequestModal('swap')" type="button"><span>⇄</span> Xin đổi ca</button>
+
+<!-- EMPLOYEE CALENDAR: isolated UI/state from Owner/Manager calendar -->
+<div class="schedule-role-panel schedule-role-employee" id="employeeSchedulePanel">
+  <div class="request-row employee-only-schedule" id="employeeScheduleRequests" style="display:none">
+    <button class="request-chip" id="employeeLateRequestBtn" onclick="openScheduleRequestModal('late')" type="button"><span>⏱</span> Xin đi trễ</button>
+    <button class="request-chip" id="employeeLeaveRequestBtn" onclick="openScheduleRequestModal('emergency_leave')" type="button"><span>⚠</span> Xin nghỉ ca</button>
+    <button class="request-chip" id="employeeSwapRequestBtn" onclick="openScheduleRequestModal('swap')" type="button"><span>⇄</span> Xin đổi ca</button>
+  </div>
+  <section class="schedule-browser">
+    <div class="schedule-browser-top"><div><div class="eyebrow">NGÀY ĐANG CHỌN</div><div class="selected-date" id="employeeScheduleSelectedDateTitle">—</div><div class="selected-date-sub" id="employeeScheduleSelectedDateSub">—</div></div><div class="date-nav"><button aria-label="Tuần trước" class="icon-button" onclick="prevEmployeeDays()" type="button">‹</button><button class="today-btn" onclick="goEmployeeToday()" type="button">Hôm nay</button><button aria-label="Tuần sau" class="icon-button" onclick="nextEmployeeDays()" type="button">›</button></div></div>
+    <div class="schedule-days" id="employeeScheduleDayStrip"></div>
+  </section>
+  <section class="schedule-results"><div id="employeeScheduleList"><div class="empty">Đang tải lịch…</div></div></section>
 </div>
-<section class="schedule-browser">
-<div class="schedule-browser-top"><div><div class="eyebrow">NGÀY ĐANG CHỌN</div><div class="selected-date" id="mainScheduleSelectedDateTitle">—</div><div class="selected-date-sub" id="mainScheduleSelectedDateSub">—</div></div><div class="date-nav"><button class="primary-compact owner-schedule-add" id="ownerScheduleAddBtn" onclick="openDirectScheduleModal()" style="display:none" type="button">＋ Thêm ca</button><button aria-label="Tuần trước" class="icon-button" onclick="goSchedulePreviousWeek()" type="button">‹</button><button class="today-btn" onclick="goScheduleToday()" type="button">Hôm nay</button><button aria-label="Tuần sau" class="icon-button" onclick="goScheduleNextWeek()" type="button">›</button></div></div>
-<div class="schedule-days" id="mainScheduleDayStrip"></div>
-</section>
-<section class="schedule-results"><div id="mainScheduleList"><div class="empty">Đang tải lịch…</div></div></section>
+
+<!-- OWNER / MANAGER CALENDAR: completely separate UI/actions -->
+<div class="schedule-role-panel schedule-role-staff" id="staffSchedulePanel">
+  <section class="schedule-browser">
+    <div class="schedule-browser-top"><div><div class="eyebrow">NGÀY ĐANG CHỌN</div><div class="selected-date" id="mainScheduleSelectedDateTitle">—</div><div class="selected-date-sub" id="mainScheduleSelectedDateSub">—</div></div><div class="date-nav"><button class="primary-compact owner-schedule-add" id="ownerScheduleAddBtn" onclick="openDirectScheduleModal()" style="display:none" type="button">＋ Thêm ca</button><button aria-label="Tuần trước" class="icon-button" onclick="goSchedulePreviousWeek()" type="button">‹</button><button class="today-btn" onclick="goMainScheduleToday()" type="button">Hôm nay</button><button aria-label="Tuần sau" class="icon-button" onclick="goScheduleNextWeek()" type="button">›</button></div></div>
+    <div class="schedule-days" id="mainScheduleDayStrip"></div>
+  </section>
+  <section class="schedule-results"><div id="mainScheduleList"><div class="empty">Đang tải lịch…</div></div></section>
+</div>
 </section>
 <section class="view" id="attendance">
 <header class="screen-header page-screen-header"><div><div class="eyebrow">HÔM NAY</div><h1 class="page-title" id="attendancePageTitle">Chấm công</h1><p class="page-sub" id="attendancePageSub">Trạng thái ca và thao tác chấm công của bạn.</p></div></header>
@@ -2215,11 +2554,14 @@ function selectAdminAttendanceWeek(value){const monday=normalizeMondayInput(valu
 function renderScheduleForKind(kind){
  if(kind==='employee'){
   if(!employeeDayWindowStart)employeeDayWindowStart=mondayOfWeek(employeeSelectedDate);
-  renderDayStrip('mainScheduleDayStrip',employeeSelectedDate,employeeDayWindowStart,'selectEmployeeDate','prevEmployeeDays','nextEmployeeDays');
-  syncMainScheduleRoleUI();
+  el('employeeSchedulePanel')?.classList.remove('ui-hidden');
+  el('staffSchedulePanel')?.classList.add('ui-hidden');
+  renderDayStrip('employeeScheduleDayStrip',employeeSelectedDate,employeeDayWindowStart,'selectEmployeeDate','prevEmployeeDays','nextEmployeeDays');
   loadSchedules();
  }else if(kind==='main'){
   if(!mainScheduleWindowStart)mainScheduleWindowStart=mondayOfWeek(mainScheduleDate);
+  el('employeeSchedulePanel')?.classList.add('ui-hidden');
+  el('staffSchedulePanel')?.classList.remove('ui-hidden');
   renderDayStrip('mainScheduleDayStrip',mainScheduleDate,mainScheduleWindowStart,'selectMainScheduleDate','prevMainScheduleDays','nextMainScheduleDays');
   syncMainScheduleRoleUI();
   loadMainSchedule();
@@ -2244,16 +2586,18 @@ function shiftMainScheduleWindow(delta){
  mainScheduleDate=mainScheduleWindowStart;
  saveUiState();renderScheduleForKind('main');
 }
+function syncScheduleRolePanels(){
+ const emp=profile?.role==='employee';
+ el('employeeSchedulePanel')?.classList.toggle('ui-hidden',!emp);
+ el('staffSchedulePanel')?.classList.toggle('ui-hidden',emp);
+}
 function syncMainScheduleRoleUI(){
  const manager=['owner','manager'].includes(profile?.role);
  const leave=el('leaveFromScheduleBtn'),sub=el('schedulePageSub'),add=el('ownerScheduleAddBtn');
+ syncScheduleRolePanels();
  if(leave)leave.style.display=manager?'none':'inline-flex';
  if(add)add.style.display=manager?'inline-flex':'none';
- document.querySelectorAll('.employee-only-schedule').forEach(x=>{
-   if(manager)x.style.display='none';
-   else if(x.id==='employeeScheduleRequests')x.style.display='none';
-   else x.style.display='inline-flex';
- });
+ document.querySelectorAll('.employee-only-schedule').forEach(x=>x.style.display='none');
  if(sub)sub.textContent=manager?'Lịch toàn cửa hàng · thêm người và xử lý ca trực tiếp tại đây.':'Lịch của bạn và các ca còn chỗ để đăng ký.';
 }
 
@@ -2262,11 +2606,11 @@ function selectEmployeeDate(d){
   employeeSelectedDate=d;
   if(!employeeDayWindowStart||!sevenDayWindow(d,employeeDayWindowStart).includes(d))employeeDayWindowStart=mondayOfWeek(d);
   saveUiState();
-  updateDayStripSelection('mainScheduleDayStrip',d);
+  updateDayStripSelection('employeeScheduleDayStrip',d);
   const key=employeeCacheKey(employeeDayWindowStart,dateAdd(employeeDayWindowStart,6));
   const cached=employeeScheduleCache[key];
   if(cached)renderEmployeeScheduleFromCache(cached);
-  else el('mainScheduleList').innerHTML='<div class="loading-slot"><div class="notice info">Đang tải lịch…</div></div>';
+  else el('employeeScheduleList').innerHTML='<div class="loading-slot"><div class="notice info">Đang tải lịch…</div></div>';
   loadSchedules({keepContent:!!cached});
 }
 function prevEmployeeDays(){shiftWindowSelected('employee',-7)}
@@ -2490,26 +2834,51 @@ function openAdminHome(){
  // Không tự mở lại chức năng/popup trước đó. Người dùng tự chọn chức năng sau.
  navigate('admin',{adminHome:true});
 }
-function navigate(id,opts={}){const s=session,p=profile;if(!s||!p){showLogin('Vui lòng đăng nhập để tiếp tục.');return}if(p.role==='employee'&&id==='admin')return;const previousView=currentView;document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));const v=el(id);if(!v)return;v.classList.add('active');currentView=id;document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.nav===id));syncRoleContent();if(!opts.restore&&id!==previousView)window.scrollTo(0,0);if(!opts.deferLoad){if(id==='dashboard'){if(p.role==='employee'){refreshAttendanceState({refreshHome:true})}else loadOwnerOverview()}if(id==='attendance'){if(p.role==='employee'){refreshAttendanceState();loadAttendanceHistory();syncDeviceUI();checkAttendanceEnvironment()}else{adminAttendanceDate=localToday();adminAttendanceWindowStart=mondayOfWeek(adminAttendanceDate);renderScheduleForKind('attendance')}}}if(id==='schedule'){
-  if(p.role==='employee'){
-    employeeSelectedDate=localToday();
-    employeeDayWindowStart=mondayOfWeek(employeeSelectedDate);
-    // Render the calendar frame immediately, even during deferred app hydration.
-    // Data loading happens separately so the T2–CN date strip is never blank on first open.
-    renderDayStrip('mainScheduleDayStrip',employeeSelectedDate,employeeDayWindowStart,'selectEmployeeDate','prevEmployeeDays','nextEmployeeDays');
-    syncMainScheduleRoleUI();
-    if(!opts.deferLoad)loadSchedules();
-  }else{
-    mainScheduleDate=localToday();
-    mainScheduleWindowStart=mondayOfWeek(mainScheduleDate);
-    if(!opts.deferLoad)renderScheduleForKind('main');
-  }
-}if(id==='salary'&&!opts.deferLoad){if(['owner','manager'].includes(p.role))loadPayroll();else loadSalarySummary()}if(id==='admin'){
-  // Trang Quản trị luôn bắt đầu ở danh mục; không tự bật popup/chức năng cũ.
-  closeAdminPane();
-  document.querySelectorAll('#admin .admin-pane').forEach(x=>x.classList.remove('active'));
-  document.querySelectorAll('#admin .admin-group-item').forEach(x=>x.classList.remove('active'));
-}if(id==='profile')el('profileMsg').innerHTML='';saveUiState();if(opts.restore)setTimeout(()=>window.scrollTo(0,Number(opts.scrollY||0)),0)}
+function navigate(id,opts={}){
+ const s=session,p=profile;if(!s||!p){showLogin('Vui lòng đăng nhập để tiếp tục.');return}
+ if(p.role==='employee'&&id==='admin')return;
+ const previousView=currentView;
+ document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+ const v=el(id);if(!v)return;
+ v.classList.add('active');currentView=id;
+ document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.nav===id));
+ syncRoleContent();
+ if(!opts.restore&&id!==previousView)window.scrollTo(0,0);
+ if(id==='schedule'){
+   if(p.role==='employee'){
+     employeeSelectedDate=employeeSelectedDate||localToday();
+     employeeDayWindowStart=employeeDayWindowStart||mondayOfWeek(employeeSelectedDate);
+     el('employeeSchedulePanel')?.classList.remove('ui-hidden');
+     el('staffSchedulePanel')?.classList.add('ui-hidden');
+     renderDayStrip('employeeScheduleDayStrip',employeeSelectedDate,employeeDayWindowStart,'selectEmployeeDate','prevEmployeeDays','nextEmployeeDays');
+     const t=el('employeeScheduleSelectedDateTitle'),sub=el('employeeScheduleSelectedDateSub');
+     if(t)t.textContent=employeeSelectedDate===localToday()?'Hôm nay':prettyDate(employeeSelectedDate);
+     if(sub)sub.textContent='Đang tải lịch…';
+     if(!opts.deferLoad)loadSchedules();
+   }else if(['owner','manager'].includes(p.role)){
+     mainScheduleDate=mainScheduleDate||localToday();
+     mainScheduleWindowStart=mainScheduleWindowStart||mondayOfWeek(mainScheduleDate);
+     el('employeeSchedulePanel')?.classList.add('ui-hidden');
+     el('staffSchedulePanel')?.classList.remove('ui-hidden');
+     syncMainScheduleRoleUI();
+     if(!opts.deferLoad)renderScheduleForKind('main');
+   }
+ }else if(!opts.deferLoad&&id==='dashboard'){
+   if(p.role==='employee')refreshAttendanceState({refreshHome:true});else loadOwnerOverview();
+ }else if(!opts.deferLoad&&id==='attendance'){
+   if(p.role==='employee'){refreshAttendanceState();loadAttendanceHistory();syncDeviceUI();checkAttendanceEnvironment();}
+   else{adminAttendanceDate=localToday();adminAttendanceWindowStart=mondayOfWeek(adminAttendanceDate);renderScheduleForKind('attendance');}
+ }
+ if(id==='salary'&&!opts.deferLoad){if(['owner','manager'].includes(p.role))loadPayroll();else loadSalarySummary()}
+ if(id==='admin'){
+   closeAdminPane();
+   document.querySelectorAll('#admin .admin-pane').forEach(x=>x.classList.remove('active'));
+   document.querySelectorAll('#admin .admin-group-item').forEach(x=>x.classList.remove('active'));
+ }
+ if(id==='profile')el('profileMsg').innerHTML='';
+ saveUiState();
+ if(opts.restore)setTimeout(()=>window.scrollTo(0,Number(opts.scrollY||0)),0);
+}
 async function loadOwnerOverview(){
  if(!profile||!['owner','manager'].includes(profile.role)||!sb)return;
  const storeId=getActiveStoreId(),today=localToday();
@@ -2643,12 +3012,12 @@ function employeeScheduleStatus(row){
  return badges.join('');
 }
 function renderEmployeeScheduleFromCache(data){
- const selected=employeeSelectedDate,target=el('mainScheduleList');if(!target)return;const requestRow=el('employeeScheduleRequests');if(requestRow)requestRow.style.display='none';
+ const selected=employeeSelectedDate,target=el('employeeScheduleList');if(!target)return;const requestRow=el('employeeScheduleRequests');if(requestRow)requestRow.style.display='none';
  const rm=new Map();(data.regs||[]).forEach(r=>{if(!rm.has(r.schedule_id)||r.status==='pending'||r.status==='approved')rm.set(r.schedule_id,r)});
  const prm=new Map();(data.pendingRegs||[]).forEach(r=>{if(!prm.has(r.schedule_id))prm.set(r.schedule_id,r)});
  const activeRows=(data.rows||[]).filter(x=>x.work_date===selected&&x.status!=='cancelled').sort((a,b)=>String(a.start_time||'').localeCompare(String(b.start_time||'')));
- el('mainScheduleSelectedDateTitle').textContent=selected===localToday()?'Hôm nay':prettyDate(selected);const dayShiftCount=new Set(activeRows.map(x=>x.shift_group_id||x.id)).size;el('mainScheduleSelectedDateSub').textContent=`Toàn bộ lịch · ${dayShiftCount} ca`;updateDayStripSelection('mainScheduleDayStrip',selected);
- const days=sevenDayWindow(selected,employeeDayWindowStart),counts=new Map(days.map(d=>[d,new Set()]));(data.rows||[]).filter(x=>x.status!=='cancelled').forEach(x=>{if(counts.has(x.work_date))counts.get(x.work_date).add(x.shift_group_id||x.id)});days.forEach(d=>{const c=el('count_mainScheduleDayStrip_'+d);if(c)c.textContent=counts.get(d)?.size?`${counts.get(d).size} ca`:''});
+ el('employeeScheduleSelectedDateTitle').textContent=selected===localToday()?'Hôm nay':prettyDate(selected);const dayShiftCount=new Set(activeRows.map(x=>x.shift_group_id||x.id)).size;el('employeeScheduleSelectedDateSub').textContent=`Toàn bộ lịch · ${dayShiftCount} ca`;updateDayStripSelection('employeeScheduleDayStrip',selected);
+ const days=sevenDayWindow(selected,employeeDayWindowStart),counts=new Map(days.map(d=>[d,new Set()]));(data.rows||[]).filter(x=>x.status!=='cancelled').forEach(x=>{if(counts.has(x.work_date))counts.get(x.work_date).add(x.shift_group_id||x.id)});days.forEach(d=>{const c=el('count_employeeScheduleDayStrip_'+d);if(c)c.textContent=counts.get(d)?.size?`${counts.get(d).size} ca`:''});
  const groups=new Map();activeRows.forEach(x=>{const key=x.shift_group_id||x.id;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(x)});
  if(!groups.size){target.innerHTML='<div class="empty-day"><b>Ngày này chưa có ca.</b><span>Không có ca được tạo trong ngày này. Bạn có thể chọn ngày khác để kiểm tra.</span></div>';return}
  const hasOwnShift=activeRows.some(x=>x.employee_id===session.user.id);if(requestRow&&hasOwnShift){requestRow.style.display='flex';}
@@ -2713,7 +3082,7 @@ async function submitScheduleRequest(){if(!scheduleRequestContext)return;const t
 async function loadSchedules(opts={}){
   const s=session,p=profile;
   if(!sb||!s||!p||p.role!=='employee')return;
-  const token=++employeeScheduleLoadToken,target=el('mainScheduleList');
+  const token=++employeeScheduleLoadToken,target=el('employeeScheduleList');
   if(!target)return;
   const selected=employeeSelectedDate;
   const weekStart=employeeDayWindowStart||mondayOfWeek(selected);
@@ -3121,7 +3490,7 @@ async function loadMainSchedule(){
     x.template_name=vv?.name||linked?.name||'';
   });
 
-  el('mainScheduleSelectedDateTitle').textContent=selected===localToday()?'Hôm nay':prettyDate(selected);
+  el('employeeScheduleSelectedDateTitle').textContent=selected===localToday()?'Hôm nay':prettyDate(selected);
   el('mainScheduleSelectedDateSub').textContent=`Lịch toàn cửa hàng · ${new Set(selectedRows.map(x=>x.shift_group_id||x.id)).size} ca`;
   updateDayStripSelection('mainScheduleDayStrip',selected);
 
@@ -3131,7 +3500,7 @@ async function loadMainSchedule(){
     mainScheduleWeekCountCache[weekKey]=counts;
   }
   week.forEach(d=>{
-    const c=el('count_mainScheduleDayStrip_'+d);
+    const c=el('count_employeeScheduleDayStrip_'+d);
     if(c)c.textContent=counts.get(d)?.size?`${counts.get(d).size} ca`:'';
   });
 
@@ -3577,11 +3946,17 @@ async function loadApp(){
       if(!act.error){const r=await sb.from('profiles').select('*').eq('id',session.user.id).single();if(r.data)p=r.data}
     }
     if(p.employment_status==='terminated'){await sb.auth.signOut();showLogin('Tài khoản đã kết thúc sử dụng.');return}
-    profile=p;activeStoreId=p.store_id||null;branchContextReady=!!activeStoreId;appHydratedUserId=session.user.id;syncHeader();updateGreetingAndClock();syncBranchUI();await startRealtime(activeStoreId);
+    profile=p;activeStoreId=p.store_id||null;branchContextReady=!!activeStoreId;appHydratedUserId=session.user.id;syncHeader();updateGreetingAndClock();syncBranchUI();
+    // Realtime is a background enhancement; it must never block app entry.
+    startRealtime(activeStoreId).catch(e=>console.warn('[HongCha Realtime] startup',e));
     el('fullName').value=p.full_name||'';el('email').value=session.user.email||p.email||'';el('phone').value=p.phone||'';el('address').value=p.address||'';syncProfileSaveState();
     if(p.role==='employee'){
-      const access=await getEmployeeDeviceAccess();
-      if(!access.allowed){showDeviceGate(access);return}
+      let access;
+      try{ access=await Promise.race([
+        getEmployeeDeviceAccess(),
+        new Promise(resolve=>setTimeout(()=>resolve({allowed:false,status:'error',message:'Kiểm tra thiết bị quá lâu. Vui lòng thử lại.'}),7000))
+      ]);}catch(e){access={allowed:false,status:'error',message:'Không thể kiểm tra thiết bị. Vui lòng thử lại.'}}
+      if(!access?.allowed){showDeviceGate(access||{allowed:false,status:'error'});return}
     }
     hideDeviceGate();hideLogin();
     // Render the shell first. Data loading is deliberately deferred until after the app is visible.
