@@ -3272,7 +3272,7 @@ function renderEmployeeScheduleFromCache(data){
      const isMe=person.employee_id===session.user.id;
      return `<div class="employee-shift-person"><span class="employee-shift-person-avatar">${escapeHtml((person.employee_name||'N').slice(0,1).toUpperCase())}</span><div class="employee-shift-person-copy"><b>${escapeHtml(person.employee_name||'Nhân viên')}${isMe?' · Bạn':''}</b><span>${escapeHtml(person.employee_phone||'Chưa có số điện thoại')}</span></div></div>`;
    }).join('')}</div>`:'';
-   const pendingHtml=pendingPeople.length?`<div class="employee-shift-people employee-shift-reserved"><div class="employee-shift-people-title">Đang giữ chỗ · chờ chốt</div>${pendingPeople.map(person=>{
+   const pendingHtml=pendingPeople.length?`<div class="employee-shift-people employee-shift-reserved">${pendingPeople.map(person=>{
      const isMe=person.employee_id===session.user.id;
      return `<div class="employee-shift-person"><span class="employee-shift-person-avatar">${escapeHtml((person.employee_name||'N').slice(0,1).toUpperCase())}</span><div class="employee-shift-person-copy"><b>${escapeHtml(person.employee_name||'Nhân viên')}${isMe?' · Bạn':''}</b><span>Đã đăng ký ca</span></div></div>`;
    }).join('')}</div>`:'';
