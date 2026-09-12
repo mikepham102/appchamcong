@@ -1762,7 +1762,7 @@ input:focus,select:focus,textarea:focus{
 #employeeScheduleList .shift-card-sub{
   margin-top:6px;color:#718092;font-size:11px;line-height:1.4;overflow-wrap:anywhere;
 }
-#employeeScheduleList .employee-shift-action-note{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0}
+#employeeScheduleList 
 #employeeScheduleList .employee-shift-action-note .muted{font-size:10.5px;line-height:1.35}
 #employeeScheduleList .shift-card-head .btn.primary{
   min-height:40px;padding:0 15px;border-radius:11px;white-space:nowrap;font-size:13px;
@@ -1808,7 +1808,7 @@ input:focus,select:focus,textarea:focus{
   margin:0;padding:10px 14px 12px 18px;border-top:1px solid #EAF0F5;
   background:#FAFCFE;color:#718092;font-size:11px;line-height:1.4;
 }
-#employeeScheduleList .employee-shift-reserved-empty{color:#A76612;background:#FFFBF4}
+#employeeScheduleList .employee-shift-reserved-empty{display:none!important}
 #employeeScheduleList .selected-day-note{margin:10px 14px 12px 18px!important;padding:9px 10px!important;border-radius:10px;font-size:11px;line-height:1.35}
 @media(max-width:375px){
   #employeeScheduleList .shift-card-head{padding-left:16px;gap:9px}
@@ -3270,7 +3270,7 @@ function renderEmployeeScheduleFromCache(data){
      const isMe=person.employee_id===session.user.id;
      return `<div class="employee-shift-person"><span class="employee-shift-person-avatar">${escapeHtml((person.employee_name||'N').slice(0,1).toUpperCase())}</span><div class="employee-shift-person-copy"><b>${escapeHtml(person.employee_name||'Nhân viên')}${isMe?' · Bạn':''}</b><span>Đã đăng ký ca</span></div></div>`;
    }).join('')}</div>`:'';
-   const peopleHtml=(assignedHtml||pendingHtml)?assignedHtml+pendingHtml:(reservedCount>0?`<div class="employee-shift-open employee-shift-reserved-empty">Ca này đang có người giữ chỗ · chờ chốt.</div>`:'<div class="employee-shift-open">Ca này hiện còn chỗ trống.</div>');
+   const peopleHtml=(assignedHtml||pendingHtml)?assignedHtml+pendingHtml:'<div class="employee-shift-open">Ca này hiện còn chỗ trống.</div>';
    return `<div class="shift-card"><div class="shift-card-head"><div><div class="shift-card-title">${escapeHtml(shiftName)} <span class="shift-card-time">· ${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</span></div><div class="shift-card-sub">${capacity} vị trí · ${assignedCount} đã xếp${reservedCount?` · ${reservedCount} đang giữ chỗ`:''}${first.note?' · '+escapeHtml(first.note):''}</div></div><div>${action}</div></div>${peopleHtml}${own?'<div class="selected-day-note" style="margin:11px 0 0">Bạn đang được xếp trong ca này.</div>':''}</div>`
  }).join('')
 }
