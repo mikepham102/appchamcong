@@ -2822,10 +2822,13 @@ async function loadRegistrationWindow(targetWeekStart=null){
  if(error){msg.innerHTML='<div class="notice warn">Chưa thể tải mẫu đăng ký. '+escapeHtml(error.message||'')+'</div>';return}
  if(!data){el('registrationWindowOpenDay').value='1';el('registrationWindowOpenTime').value='09:00';el('registrationWindowCloseDay').value='2';el('registrationWindowCloseTime').value='18:00';el('registrationWindowStatus').textContent='Chưa cài';el('registrationWindowStatus').className='badge wait';msg.innerHTML='<div class="notice info">Chưa cài mẫu. Hãy chọn ngày và giờ mở/đóng một lần.</div>';return}
  el('registrationWindowOpenDay').value=String(data.open_weekday);el('registrationWindowOpenTime').value=String(data.open_time).slice(0,5);el('registrationWindowCloseDay').value=String(data.close_weekday);el('registrationWindowCloseTime').value=String(data.close_time).slice(0,5);
- const targetInput=el('weeklyGenerateStart');const targetWeek=targetWeekStart||targetInput?.value||dateAdd(mondayOfWeek(localToday()),7);if(targetInput)targetInput.value=normalizeMondayInput(targetWeek);
- let w=null;const {data:targetWindow,error:targetError}=await sb.rpc('get_shift_registration_window',{p_week_start:normalizeMondayInput(targetWeek)});if(!targetError)w=targetWindow||null;
+ const targetInput=el('weeklyGenerateStart');const targetWeek=normalizeMondayInput(targetWeekStart||targetInput?.value||dateAdd(mondayOfWeek(localToday()),7));if(targetInput)targetInput.value=targetWeek;
+ let w=null;
+ if(targetWeek===mondayOfWeek((new Date()).toLocaleDateString('en-CA',{timeZone:'Asia/Ho_Chi_Minh'}))){w=data.current_window||null}
+ else if(targetWeek===dateAdd(mondayOfWeek((new Date()).toLocaleDateString('en-CA',{timeZone:'Asia/Ho_Chi_Minh'})),7)){w=data.next_window||null}
+ else {const r=await sb.rpc('get_shift_registration_window',{p_week_start:targetWeek});if(!r.error)w=r.data||null}
  const [label,tone]=registrationWindowLabel(w?.status,w?.open_at,w?.close_at);const st=el('registrationWindowStatus');st.textContent=label;st.className='badge '+tone;
- const targetLabel=normalizeMondayInput(targetWeek)?prettyDate(normalizeMondayInput(targetWeek)):'—';
+ const targetLabel=targetWeek?prettyDate(targetWeek):'—';
  msg.innerHTML=`<div class="muted"><b>${escapeHtml(registrationDayName(data.open_weekday))} ${escapeHtml(String(data.open_time).slice(0,5))}</b> → <b>${escapeHtml(registrationDayName(data.close_weekday))} ${escapeHtml(String(data.close_time).slice(0,5))}</b> · <b>Tuần áp dụng: ${escapeHtml(targetLabel)}</b></div><div class="muted ui-mt-4">${w?.open_at&&w?.close_at?'Cửa sổ của tuần này: '+new Date(w.open_at).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'})+' → '+new Date(w.close_at).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}):'Chưa có cửa sổ cho tuần đã chọn.'}</div><div class="muted ui-mt-4">Nếu ngày đóng nằm trước ngày mở (ví dụ T6 → T4), hệ thống hiểu ngày mở là T6 của tuần trước và ngày đóng là T4 của tuần mục tiêu. Khi tạo tuần, hệ thống dùng chính cửa sổ này; nếu hiện tại đang nằm trong cửa sổ thì nhân viên được đăng ký ngay.</div>`;
 }
 async function saveRegistrationWindow(){
@@ -2840,7 +2843,7 @@ async function loadWeeklyPlan(){
  const target=el('weeklyPlanGrid');if(!target||!sb||!profile)return;
  const [{data:templates,error:tErr},{data:plan,error:pErr}]=await Promise.all([sb.from('shift_templates').select('id,name,start_time,end_time,capacity,is_active').eq('store_id',getActiveStoreId()).order('start_time'),sb.from('weekly_shift_plan_items').select('id,weekday,shift_template_id,capacity,note,sort_order,is_active').eq('store_id',getActiveStoreId()).eq('is_active',true).order('weekday').order('sort_order').order('id')]);
  if(tErr||pErr){target.innerHTML='<div class="notice warn">Không tải được mẫu tuần. Vui lòng thử lại.</div>';return}
- window.__weeklyTemplates=templates||[];weeklyPlanItems=(plan||[]).map(x=>({...x,capacity:Math.max(1,Math.min(10,Number(x.capacity||1)))}));renderWeeklyPlan();loadRegistrationWindow().catch(e=>console.error('loadRegistrationWindow',e));const input=el('weeklyGenerateStart');if(input&&!input.value)input.value=dateAdd(mondayOfWeek(localToday()),7);
+ window.__weeklyTemplates=templates||[];weeklyPlanItems=(plan||[]).map(x=>({...x,capacity:Math.max(1,Math.min(10,Number(x.capacity||1)))}));renderWeeklyPlan();const input=el('weeklyGenerateStart');if(input&&!input.value)input.value=dateAdd(mondayOfWeek(localToday()),7);await loadRegistrationWindow(input?.value||null);
 }
 function weeklyTemplateOptions(selected){return '<option value="">Chọn mẫu ca</option>'+(window.__weeklyTemplates||[]).map(t=>`<option value="${t.id}" ${t.id===selected?'selected':''} ${t.is_active?'':'disabled'}>${escapeHtml(t.name)} · ${time5(t.start_time)}–${time5(t.end_time)}${t.is_active?'':' · Tắt'}</option>`).join('')}
 function renderWeeklyPlan(){
