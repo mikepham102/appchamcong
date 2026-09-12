@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V83.3 · Registration Robust</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V83.4 · Registration Capacity & Cancel</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -2988,13 +2988,14 @@ async function fetchEmployeeScheduleRange(start,end,force=false){
    // A successful RPC with zero rows is a real empty calendar; do not fall back to a misleading state.
  }
  const scheduleIds=scheduleRows.map(x=>x.id);
- const pendingRegs=scheduleIds.length?await sb.from('shift_registrations').select('id,schedule_id,status,employee_id,profiles:employee_id(full_name,phone),created_at').in('schedule_id',scheduleIds).eq('status','pending'): {data:[],error:null};
- if(pendingRegs.error)throw pendingRegs.error;
+ const capacityResult=scheduleIds.length?await sb.rpc('get_employee_shift_capacity',{p_schedule_ids:scheduleIds}):{data:[],error:null};
+ if(capacityResult.error)throw capacityResult.error;
+ const capacityRows=capacityResult.data||[];
  const assignedIds=scheduleRows.filter(x=>x.employee_id===userId).map(x=>x.id);
  let attendanceRows=[];
  if(assignedIds.length){const {data:a,error:aErr}=await sb.from('attendance').select('id,schedule_id,check_in,check_out,worked_minutes,late_minutes,early_leave_minutes,check_in_status,check_out_status').in('schedule_id',assignedIds).eq('employee_id',userId);if(aErr)throw aErr;attendanceRows=a||[]}
  const attendanceBySchedule=new Map(attendanceRows.map(a=>[a.schedule_id,a]));scheduleRows.forEach(x=>{if(x.employee_id===userId)x.attendance=attendanceBySchedule.get(x.id)||null});
- const value={rows:scheduleRows,regs:regs||[],pendingRegs:pendingRegs.data||[],cachedAt:Date.now()};employeeScheduleCache[key]=value;return value
+ const value={rows:scheduleRows,regs:regs||[],capacityRows,cachedAt:Date.now()};employeeScheduleCache[key]=value;return value
 }
 function employeeScheduleStatus(row){
  const a=row?.attendance||null,now=Date.now();
@@ -3024,7 +3025,7 @@ function employeeScheduleStatus(row){
 function renderEmployeeScheduleFromCache(data){
  const selected=employeeSelectedDate,target=el('employeeScheduleList');if(!target)return;const requestRow=el('employeeScheduleRequests');if(requestRow)requestRow.style.display='none';
  const rm=new Map();(data.regs||[]).forEach(r=>{if(!rm.has(r.schedule_id)||r.status==='pending'||r.status==='approved')rm.set(r.schedule_id,r)});
- const prm=new Map();(data.pendingRegs||[]).forEach(r=>{if(!prm.has(r.schedule_id))prm.set(r.schedule_id,r)});
+ const capm=new Map((data.capacityRows||[]).map(r=>[r.schedule_id,r]));
  const activeRows=(data.rows||[]).filter(x=>x.work_date===selected&&x.status!=='cancelled').sort((a,b)=>String(a.start_time||'').localeCompare(String(b.start_time||'')));
  el('employeeScheduleSelectedDateTitle').textContent=selected===localToday()?'Hôm nay':prettyDate(selected);const dayShiftCount=new Set(activeRows.map(x=>x.shift_group_id||x.id)).size;el('employeeScheduleSelectedDateSub').textContent=`Toàn bộ lịch · ${dayShiftCount} ca`;updateDayStripSelection('employeeScheduleDayStrip',selected);
  const days=sevenDayWindow(selected,employeeDayWindowStart),counts=new Map(days.map(d=>[d,new Set()]));(data.rows||[]).filter(x=>x.status!=='cancelled').forEach(x=>{if(counts.has(x.work_date))counts.get(x.work_date).add(x.shift_group_id||x.id)});days.forEach(d=>{const c=el('count_employeeScheduleDayStrip_'+d);if(c)c.textContent=counts.get(d)?.size?`${counts.get(d).size} ca`:''});
@@ -3033,13 +3034,18 @@ function renderEmployeeScheduleFromCache(data){
  const hasOwnShift=activeRows.some(x=>x.employee_id===session.user.id);if(requestRow&&hasOwnShift){requestRow.style.display='flex';}
  target.innerHTML=[...groups.values()].map(items=>{
    const first=items[0],own=items.some(x=>x.employee_id===session.user.id),open=items.find(x=>x.status==='open'&&!x.employee_id);let action='';
+   const cap=capm.get(first.id)||{};
+   const capacity=Number(cap.capacity??items.length);
+   const assignedCount=Number(cap.assigned_count??items.filter(x=>x.employee_id).length);
+   const reservedCount=Number(cap.reserved_count??0);
+   const availableCount=Math.max(0,capacity-assignedCount-reservedCount);
    if(own){const mine=items.find(x=>x.employee_id===session.user.id);action=`<div class="schedule-status-stack"><span class="schedule-status mine">Ca của bạn</span>${employeeScheduleStatus(mine||first)}</div>`}
    else if(open){
-     const reg=rm.get(open.id),pending=prm.get(open.id);
+     const reg=rm.get(open.id);
      if(reg?.status==='pending')action=`<div><span class="badge wait">Bạn đã giữ chỗ · Chờ chốt tuần</span><button type="button" class="btn light" style="margin-top:6px" onclick="withdrawShiftRegistration('${reg.id}')">Hủy đăng ký</button></div>`;
-     else if(pending){const pn=pending.profiles?.full_name||'Nhân viên';action=`<div><span class="badge wait">${escapeHtml(pn)} đã đăng ký · Chờ chốt</span><div class="muted" style="margin-top:4px">Ca đang được giữ chỗ</div></div>`}
-     else if(reg?.status==='rejected')action=`<div><span class="badge bad">Đã từ chối</span><button type="button" class="btn primary" style="margin-top:6px" onclick="registerForShift('${open.id}')">Đăng ký lại</button></div>`;
-     else action=`<button type="button" class="btn primary" onclick="registerForShift('${open.id}')">Đăng ký ca</button>`
+     else if(reg?.status==='rejected')action=`<div><span class="badge bad">Đã từ chối</span>${availableCount>0?`<button type="button" class="btn primary" style="margin-top:6px" onclick="registerForShift('${open.id}')">Đăng ký lại</button>`:'<div class="muted" style="margin-top:4px">Hiện đã đủ người giữ chỗ.</div>'}</div>`;
+     else if(availableCount>0)action=`<button type="button" class="btn primary" onclick="registerForShift('${open.id}')">Đăng ký ca</button>`;
+     else action=`<div><span class="badge wait">Ca đang được giữ chỗ · Chờ chốt</span><div class="muted" style="margin-top:4px">Không còn vị trí đăng ký.</div></div>`;
    }
    const shiftName=first.template_name||'Ca';
    const people=[...new Map(items.filter(x=>x.employee_id).map(x=>[x.employee_id,x])).values()];
@@ -3047,7 +3053,7 @@ function renderEmployeeScheduleFromCache(data){
      const isMe=person.employee_id===session.user.id;
      return `<div class="employee-shift-person"><span class="employee-shift-person-avatar">${escapeHtml((person.employee_name||'N').slice(0,1).toUpperCase())}</span><div class="employee-shift-person-copy"><b>${escapeHtml(person.employee_name||'Nhân viên')}${isMe?' · Bạn':''}</b><span>${escapeHtml(person.employee_phone||'Chưa có số điện thoại')}</span></div></div>`;
    }).join('')}</div>`:'<div class="employee-shift-open">Ca này hiện còn chỗ trống.</div>';
-   return `<div class="shift-card"><div class="shift-card-head"><div><div class="shift-card-title">${escapeHtml(shiftName)} <span class="shift-card-time">· ${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</span></div><div class="shift-card-sub">${items.length} vị trí · ${people.length} đã xếp${first.note?' · '+escapeHtml(first.note):''}</div></div><div>${action}</div></div>${peopleHtml}${own?'<div class="selected-day-note" style="margin:11px 0 0">Bạn đang được xếp trong ca này.</div>':''}</div>`
+   return `<div class="shift-card"><div class="shift-card-head"><div><div class="shift-card-title">${escapeHtml(shiftName)} <span class="shift-card-time">· ${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</span></div><div class="shift-card-sub">${capacity} vị trí · ${assignedCount} đã xếp${reservedCount?` · ${reservedCount} đang giữ chỗ`:''}${first.note?' · '+escapeHtml(first.note):''}</div></div><div>${action}</div></div>${peopleHtml}${own?'<div class="selected-day-note" style="margin:11px 0 0">Bạn đang được xếp trong ca này.</div>':''}</div>`
  }).join('')
 }
 function openRegistrationOptions(){const m=el('registrationOptionsModal');if(m){m.classList.add('open');loadRegistrationOptions()}}
@@ -3074,8 +3080,8 @@ async function loadRegistrationOptions(){
    const data=await rpcWithTimeout(fetchEmployeeRegistrationRange(targetWeekStart,end,true),'REGISTRATION_SCHEDULE',10000);
    if(token!==registrationOptionsToken)return;
    const rm=new Map();(data.regs||[]).forEach(r=>{if(!rm.has(r.schedule_id)||r.status==='pending'||r.status==='approved')rm.set(r.schedule_id,r)});
-   const prm=new Map();(data.pendingRegs||[]).forEach(r=>{if(!prm.has(r.schedule_id))prm.set(r.schedule_id,r)});
-   const byDay=new Map();(data.rows||[]).filter(x=>x.status==='open'&&!x.employee_id&&x.work_date>=targetWeekStart&&x.work_date<=end).forEach(x=>{const reg=rm.get(x.id),pending=prm.get(x.id);if(reg?.status==='pending'||reg?.status==='approved'||pending)return;if(!byDay.has(x.work_date))byDay.set(x.work_date,[]);byDay.get(x.work_date).push(x)});
+   const capm=new Map((data.capacityRows||[]).map(r=>[r.schedule_id,r]));
+   const byDay=new Map();(data.rows||[]).filter(x=>x.status==='open'&&!x.employee_id&&x.work_date>=targetWeekStart&&x.work_date<=end).forEach(x=>{const reg=rm.get(x.id),cap=capm.get(x.id)||{},available=Math.max(0,Number(cap.capacity??1)-Number(cap.assigned_count??0)-Number(cap.reserved_count??0));if(reg?.status==='pending'||reg?.status==='approved'||available<=0)return;if(!byDay.has(x.work_date))byDay.set(x.work_date,[]);byDay.get(x.work_date).push(x)});
    const dates=[...byDay.keys()].sort();
    const weekLabel=targetWeekStart===currentWeekStart?'Tuần này':'Tuần sắp tới';
    if(!dates.length){target.innerHTML=`<div class="registration-empty">${weekLabel} hiện không còn ca trống.</div>`;return}
@@ -3099,9 +3105,10 @@ async function fetchEmployeeRegistrationRange(start,end,force=false){
  if(scheduleError||regError)throw scheduleError||regError;
  const scheduleRows=(rows||[]).map(x=>({...x,employee_name:x.employee_name||null,employee_phone:x.employee_phone||null}));
  const scheduleIds=scheduleRows.map(x=>x.id);
- const pendingResult=scheduleIds.length?await sb.from('shift_registrations').select('id,schedule_id,status,employee_id,profiles:employee_id(full_name,phone),created_at').in('schedule_id',scheduleIds).eq('status','pending'):{data:[],error:null};
- if(pendingResult.error)throw pendingResult.error;
- const value={rows:scheduleRows,regs:regs||[],pendingRegs:pendingResult.data||[],cachedAt:Date.now()};employeeScheduleCache[key]=value;return value;
+ const capacityResult=scheduleIds.length?await sb.rpc('get_employee_shift_capacity',{p_schedule_ids:scheduleIds}):{data:[],error:null};
+ if(capacityResult.error)throw capacityResult.error;
+ const capacityRows=capacityResult.data||[];
+ const value={rows:scheduleRows,regs:regs||[],capacityRows,cachedAt:Date.now()};employeeScheduleCache[key]=value;return value;
 }
 
 async function withdrawShiftRegistration(registrationId){
