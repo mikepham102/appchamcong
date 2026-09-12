@@ -1728,7 +1728,95 @@ input:focus,select:focus,textarea:focus{
 </style>
 
 <meta name="hongcha-release" content="V71 Employee Home Shift Summary"/>
-<meta name="hongcha-release" content="V84.1 Employee Registration Visibility"><style id="v72-schedule-fix">.employee-shift-people-title{color:var(--info)!important}.employee-shift-person-copy b{font-weight:780}.shift-card{overflow:hidden}.shift-card-head{padding-bottom:12px}.shift-card-title{color:var(--ink)}.shift-card-time{color:var(--brand);font-weight:800}</style>
+<meta name="hongcha-release" content="V84.2 Employee Schedule UI Fix">
+<style id="v84-2-employee-schedule-ui-fix">
+/* V84.2 — Employee schedule only. No Owner/Manager selectors. */
+#employeeScheduleList .shift-card{
+  width:100%;box-sizing:border-box;overflow:hidden;margin:0 0 10px;
+  border:1px solid #D9E3ED;border-radius:17px;background:#fff;
+  box-shadow:0 2px 8px rgba(31,52,72,.045);position:relative;
+}
+#employeeScheduleList .shift-card::before{width:4px;background:#C52A20}
+#employeeScheduleList .shift-card:nth-child(3n+2)::before{background:#2F6FA8}
+#employeeScheduleList .shift-card:nth-child(3n+3)::before{background:#3F8A68}
+#employeeScheduleList .shift-card-head{
+  display:flex;flex-direction:column;align-items:stretch;gap:10px;
+  min-width:0;min-height:0;padding:14px 13px 13px 18px;
+  background:#F8FBFE;border-bottom:1px solid #E4ECF3;
+}
+#employeeScheduleList .shift-card-head>div:first-child{min-width:0;width:100%}
+#employeeScheduleList .shift-card-head>div:last-child{
+  width:100%;max-width:none;min-width:0;display:flex;justify-content:flex-start;
+  align-items:flex-start;flex:0 0 auto;justify-self:stretch;
+}
+#employeeScheduleList .shift-card-title{
+  display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+  min-width:0;color:#172331;font-size:17px;line-height:1.25;font-weight:820;
+  letter-spacing:-.2px;overflow-wrap:anywhere;
+}
+#employeeScheduleList .shift-card-time{
+  display:inline-flex;align-items:center;margin:0;padding:4px 8px;border-radius:8px;
+  background:#EEF4FA;color:#28679D!important;font-size:11px;line-height:1.1;
+  font-weight:800;white-space:nowrap;
+}
+#employeeScheduleList .shift-card-sub{
+  margin-top:6px;color:#718092;font-size:11px;line-height:1.4;overflow-wrap:anywhere;
+}
+#employeeScheduleList .employee-shift-action-note{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0}
+#employeeScheduleList .employee-shift-action-note .muted{font-size:10.5px;line-height:1.35}
+#employeeScheduleList .shift-card-head .btn.primary{
+  min-height:40px;padding:0 15px;border-radius:11px;white-space:nowrap;font-size:13px;
+}
+#employeeScheduleList .shift-card-head .btn.light{
+  min-height:38px;padding:0 14px;border-radius:10px;white-space:nowrap;font-size:12px;
+}
+#employeeScheduleList .badge.wait,#employeeScheduleList .badge.bad{
+  display:inline-flex;align-items:center;min-height:30px;box-sizing:border-box;
+  padding:6px 10px;border-radius:9px;font-size:10.5px;line-height:1.2;
+  white-space:normal;max-width:100%;
+}
+#employeeScheduleList .employee-shift-people{
+  margin:0;padding:12px 14px 8px 18px;border-top:0;min-width:0;box-sizing:border-box;
+  background:#fff;
+}
+#employeeScheduleList .employee-shift-people-title{
+  display:block;margin:0 0 7px;padding:0;color:#5F7D99!important;font-size:10px;
+  line-height:1.25;font-weight:850;letter-spacing:.55px;text-transform:uppercase;
+  white-space:normal;overflow:visible;
+}
+#employeeScheduleList .employee-shift-reserved .employee-shift-people-title{color:#A76612!important}
+#employeeScheduleList .employee-shift-person{
+  display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:center;
+  min-width:0;padding:8px 0;border-top:1px solid #EDF1F5;
+}
+#employeeScheduleList .employee-shift-person:first-of-type{border-top:0}
+#employeeScheduleList .employee-shift-person-avatar{
+  width:34px;height:34px;border-radius:10px;background:#EAF3FB;color:#28679D;
+  display:grid;place-items:center;font-size:12px;font-weight:800;
+}
+#employeeScheduleList .employee-shift-reserved .employee-shift-person-avatar{background:#FFF2DF;color:#A76612}
+#employeeScheduleList .employee-shift-person-copy{min-width:0;overflow:hidden}
+#employeeScheduleList .employee-shift-person-copy b{
+  display:block;min-width:0;color:#1D2A38;font-size:13px;line-height:1.3;font-weight:780;
+  white-space:normal;overflow-wrap:anywhere;
+}
+#employeeScheduleList .employee-shift-person-copy span{
+  display:block;margin-top:2px;color:#718092;font-size:10.5px;line-height:1.3;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+#employeeScheduleList .employee-shift-open{
+  margin:0;padding:10px 14px 12px 18px;border-top:1px solid #EAF0F5;
+  background:#FAFCFE;color:#718092;font-size:11px;line-height:1.4;
+}
+#employeeScheduleList .employee-shift-reserved-empty{color:#A76612;background:#FFFBF4}
+#employeeScheduleList .selected-day-note{margin:10px 14px 12px 18px!important;padding:9px 10px!important;border-radius:10px;font-size:11px;line-height:1.35}
+@media(max-width:375px){
+  #employeeScheduleList .shift-card-head{padding-left:16px;gap:9px}
+  #employeeScheduleList .employee-shift-people{padding-left:16px}
+  #employeeScheduleList .shift-card-title{font-size:16px}
+}
+</style>
+<style id="v72-schedule-fix">.employee-shift-people-title{color:var(--info)!important}.employee-shift-person-copy b{font-weight:780}.shift-card{overflow:hidden}.shift-card-head{padding-bottom:12px}.shift-card-title{color:var(--ink)}.shift-card-time{color:var(--brand);font-weight:800}</style>
 <style id="v73-employee-schedule-ui">
 /* V73 — Employee schedule visual cleanup: mobile-first, no clipping, clearer hierarchy */
 #mainScheduleList,#employeeScheduleList{
@@ -3000,7 +3088,7 @@ async function fetchEmployeeScheduleRange(start,end,force=false){
  let attendanceRows=[];
  if(assignedIds.length){const {data:a,error:aErr}=await sb.from('attendance').select('id,schedule_id,check_in,check_out,worked_minutes,late_minutes,early_leave_minutes,check_in_status,check_out_status').in('schedule_id',assignedIds).eq('employee_id',userId);if(aErr)throw aErr;attendanceRows=a||[]}
  const attendanceBySchedule=new Map(attendanceRows.map(a=>[a.schedule_id,a]));scheduleRows.forEach(x=>{if(x.employee_id===userId)x.attendance=attendanceBySchedule.get(x.id)||null});
- const value={rows:scheduleRows,regs:regs||[],capacityRows,cachedAt:Date.now()};employeeScheduleCache[key]=value;return value
+ const value={rows:scheduleRows,regs:regs||[],capacityRows,registrantRows:registrantRows||[],cachedAt:Date.now()};employeeScheduleCache[key]=value;return value
 }
 function employeeScheduleStatus(row){
  const a=row?.attendance||null,now=Date.now();
@@ -3050,7 +3138,7 @@ function renderEmployeeScheduleFromCache(data){
      if(reg?.status==='pending')action=`<div><span class="badge wait">Bạn đã giữ chỗ · Chờ chốt tuần</span><button type="button" class="btn light" style="margin-top:6px" onclick="withdrawShiftRegistration('${reg.id}')">Hủy đăng ký</button></div>`;
      else if(reg?.status==='rejected')action=`<div><span class="badge bad">Đã từ chối</span>${availableCount>0?`<button type="button" class="btn primary" style="margin-top:6px" onclick="registerForShift('${open.id}')">Đăng ký lại</button>`:'<div class="muted" style="margin-top:4px">Hiện đã đủ người giữ chỗ.</div>'}</div>`;
      else if(availableCount>0)action=`<button type="button" class="btn primary" onclick="registerForShift('${open.id}')">Đăng ký ca</button>`;
-     else action=`<div><span class="badge wait">Ca đang được giữ chỗ · Chờ chốt</span><div class="muted" style="margin-top:4px">Không còn vị trí đăng ký.</div></div>`;
+     else action=`<div class="employee-shift-action-note"><span class="badge wait">Đã đủ chỗ đăng ký</span><div class="muted">Ca đang có người giữ chỗ · chờ chốt.</div></div>`;
    }
    const shiftName=first.template_name||'Ca';
    const people=[...new Map(items.filter(x=>x.employee_id).map(x=>[x.employee_id,x])).values()];
@@ -3064,7 +3152,7 @@ function renderEmployeeScheduleFromCache(data){
      const isMe=person.employee_id===session.user.id;
      return `<div class="employee-shift-person"><span class="employee-shift-person-avatar">${escapeHtml((person.employee_name||'N').slice(0,1).toUpperCase())}</span><div class="employee-shift-person-copy"><b>${escapeHtml(person.employee_name||'Nhân viên')}${isMe?' · Bạn':''}</b><span>Đã đăng ký ca</span></div></div>`;
    }).join('')}</div>`:'';
-   const peopleHtml=(assignedHtml||pendingHtml)?assignedHtml+pendingHtml:'<div class="employee-shift-open">Ca này hiện còn chỗ trống.</div>';
+   const peopleHtml=(assignedHtml||pendingHtml)?assignedHtml+pendingHtml:(reservedCount>0?`<div class="employee-shift-open employee-shift-reserved-empty">Ca này đang có người giữ chỗ · chờ chốt.</div>`:'<div class="employee-shift-open">Ca này hiện còn chỗ trống.</div>');
    return `<div class="shift-card"><div class="shift-card-head"><div><div class="shift-card-title">${escapeHtml(shiftName)} <span class="shift-card-time">· ${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</span></div><div class="shift-card-sub">${capacity} vị trí · ${assignedCount} đã xếp${reservedCount?` · ${reservedCount} đang giữ chỗ`:''}${first.note?' · '+escapeHtml(first.note):''}</div></div><div>${action}</div></div>${peopleHtml}${own?'<div class="selected-day-note" style="margin:11px 0 0">Bạn đang được xếp trong ca này.</div>':''}</div>`
  }).join('')
 }
