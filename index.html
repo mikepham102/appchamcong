@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V83.4 · Registration Capacity & Cancel</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V83.5 · Owner Attendance QA</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -2885,7 +2885,7 @@ async function loadOwnerOverview(){
  try{
   const [{data:emps,error:empErr},{data:todayShifts,error:shiftErr},{data:atts,error:attErr},{data:regs,error:regErr},{data:devs,error:devErr},{data:leaves,error:leaveErr}]=await Promise.all([
    sb.from('profiles').select('id').eq('store_id',storeId).eq('employment_status','active'),
-   sb.from('work_schedules').select('id,status').eq('store_id',storeId).eq('work_date',today),
+   sb.from('work_schedules').select('id,status,employee_id,start_at,end_at,start_time,end_time').eq('store_id',storeId).eq('work_date',today),
    sb.from('attendance').select('id,employee_id,late_minutes,check_in,check_out,schedule_id,work_schedules:schedule_id!inner(store_id)').eq('work_schedules.store_id',storeId).gte('check_in',today+'T00:00:00+07:00').lt('check_in',dateAdd(today,1)+'T00:00:00+07:00'),
    sb.from('shift_registrations').select('id,schedule_id').eq('status','pending').limit(100),
    sb.from('devices').select('id,employee_id').eq('status','pending').limit(100),
@@ -2897,17 +2897,22 @@ async function loadOwnerOverview(){
   if(regIds.length){const {data,error}=await sb.from('work_schedules').select('id').eq('store_id',storeId).in('id',regIds);if(error)throw error;const ok=new Set((data||[]).map(x=>x.id));storeRegs=(regs||[]).filter(x=>ok.has(x.schedule_id))}
   if(devIds.length){const {data,error}=await sb.from('profiles').select('id').eq('store_id',storeId).in('id',devIds);if(error)throw error;const ok=new Set((data||[]).map(x=>x.id));storeDevs=(devs||[]).filter(x=>ok.has(x.employee_id))}
   const storeAtts=atts||[];
-  if(el('statEmployees'))el('statEmployees').textContent=(emps||[]).length;if(el('statPending'))el('statPending').textContent=storeRegs.length+(profile.role==='owner'?storeDevs.length:0)+(leaves||[]).length;if(el('statShift'))el('statShift').textContent=(todayShifts||[]).filter(x=>x.status!=='cancelled').length;if(el('statLate'))el('statLate').textContent=storeAtts.filter(x=>Number(x.late_minutes||0)>0).length;
+  const todayAssigned=(todayShifts||[]).filter(x=>x.status!=='cancelled'&&x.employee_id);
+  const todayAttendanceBySchedule=new Map(storeAtts.map(x=>[x.schedule_id,x]));
+  const ownerTodaySummary=ownerAttendanceSummary(todayAssigned,todayAttendanceBySchedule);
+  const ownerActionCount=ownerTodaySummary.needsAction;
+  if(el('statEmployees'))el('statEmployees').textContent=(emps||[]).length;if(el('statPending'))el('statPending').textContent=storeRegs.length+(profile.role==='owner'?storeDevs.length:0)+(leaves||[]).length+ownerActionCount;if(el('statShift'))el('statShift').textContent=(todayShifts||[]).filter(x=>x.status!=='cancelled').length;if(el('statLate'))el('statLate').textContent=storeAtts.filter(x=>Number(x.late_minutes||0)>0).length;
   const pending=[];
   
   if((leaves||[]).length)pending.push(`<button type="button" class="owner-task" onclick="openOwnerTask('leaves')"><span class="owner-task-icon">OFF</span><span class="owner-task-copy"><b>Duyệt Off Ca</b><span>${leaves.length} yêu cầu nghỉ đang chờ.</span></span><span class="owner-task-count">${leaves.length}</span></button>`);
   if(storeDevs.length&&profile.role==='owner')pending.push(`<button type="button" class="owner-task" onclick="openOwnerTask('devices')"><span class="owner-task-icon">⌁</span><span class="owner-task-copy"><b>Duyệt thiết bị</b><span>${storeDevs.length} thiết bị cần Owner xác nhận.</span></span><span class="owner-task-count">${storeDevs.length}</span></button>`);
-  const openMissing=storeAtts.filter(x=>x.check_in&&!x.check_out).length;if(openMissing)pending.push(`<button type="button" class="owner-task" onclick="openOwnerTask('missing_checkout')"><span class="owner-task-icon">!</span><span class="owner-task-copy"><b>Xử lý quên checkout</b><span>${openMissing} ca chưa checkout · chưa ghi nhận đủ công.</span></span><span class="owner-task-count">${openMissing}</span></button>`);
+  if(ownerTodaySummary.missingCheckout)pending.push(`<button type="button" class="owner-task" onclick="openOwnerTask('missing_checkout')"><span class="owner-task-icon">!</span><span class="owner-task-copy"><b>Xử lý quên checkout</b><span>${ownerTodaySummary.missingCheckout} ca chưa checkout · cần bổ sung giờ ra.</span></span><span class="owner-task-count">${ownerTodaySummary.missingCheckout}</span></button>`);
+  if(ownerTodaySummary.noCheckin)pending.push(`<button type="button" class="owner-task" onclick="openOwnerTask('attendance')"><span class="owner-task-icon">!</span><span class="owner-task-copy"><b>Ca chưa check-in</b><span>${ownerTodaySummary.noCheckin} ca đã đến giờ nhưng chưa chấm công.</span></span><span class="owner-task-count">${ownerTodaySummary.noCheckin}</span></button>`);
   if(el('ownerPending'))el('ownerPending').innerHTML=`<div class="owner-task-list">${pending.join('')||'<div class="notice ok">Không có việc chờ xử lý.</div>'}</div>`;
  }catch(e){console.error('loadOwnerOverview',e);if(el('ownerPending'))el('ownerPending').innerHTML='<div class="notice warn">Không tải được tổng quan. Vui lòng thử lại.</div>';}
 }
-function openOwnerTask(type){if(!['owner','manager'].includes(profile?.role))return;if(type==='registrations'){navigate('schedule');return}if(type==='leaves'){navigate('admin');const b=document.querySelector('#admin .admin-group-item[data-admin-tab="leaves"]');adminTab('leaves',b);return}if(type==='devices'){navigate('admin');const b=document.querySelector('#admin .admin-group-item[data-admin-tab="devices"]');adminTab('devices',b);return}if(type==='missing_checkout'){navigate('attendance');setTimeout(findAndOpenMissingCheckout,100);return}}
-async function findAndOpenMissingCheckout(){if(!sb||!profile||!['owner','manager'].includes(profile.role))return;try{const {data:sch,error:sErr}=await sb.from('work_schedules').select('id,work_date').eq('store_id',getActiveStoreId()).lt('work_date',localToday()).neq('status','cancelled').order('work_date',{ascending:false}).limit(60);if(sErr)throw sErr;const ids=(sch||[]).map(x=>x.id);if(!ids.length)return;const {data:att,error:aErr}=await sb.from('attendance').select('id,schedule_id,check_in,check_out').in('schedule_id',ids).is('check_out',null).not('check_in','is',null).order('check_in',{ascending:false}).limit(1);if(aErr)throw aErr;const row=att?.[0],sched=(sch||[]).find(x=>x.id===row?.schedule_id);if(sched){adminAttendanceDate=sched.work_date;adminAttendanceWindowStart=mondayOfWeek(sched.work_date);renderScheduleForKind('attendance')}}catch(e){console.error('findAndOpenMissingCheckout',e)}}
+function openOwnerTask(type){if(!['owner','manager'].includes(profile?.role))return;if(type==='registrations'){navigate('schedule');return}if(type==='leaves'){navigate('admin');const b=document.querySelector('#admin .admin-group-item[data-admin-tab="leaves"]');adminTab('leaves',b);return}if(type==='devices'){navigate('admin');const b=document.querySelector('#admin .admin-group-item[data-admin-tab="devices"]');adminTab('devices',b);return}if(type==='attendance'){navigate('attendance');return}if(type==='missing_checkout'){navigate('attendance');setTimeout(findAndOpenMissingCheckout,100);return}}
+async function findAndOpenMissingCheckout(){if(!sb||!profile||!['owner','manager'].includes(profile.role))return;try{const today=localToday(),now=Date.now();const {data:sch,error:sErr}=await sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at').eq('store_id',getActiveStoreId()).lte('work_date',today).neq('status','cancelled').order('work_date',{ascending:false}).limit(120);if(sErr)throw sErr;const ids=(sch||[]).filter(x=>new Date(x.end_at||(`${x.work_date}T${x.end_time}`)).getTime()<=now).map(x=>x.id);if(!ids.length)return;const {data:att,error:aErr}=await sb.from('attendance').select('id,schedule_id,check_in,check_out').in('schedule_id',ids).is('check_out',null).not('check_in','is',null).order('check_in',{ascending:false}).limit(1);if(aErr)throw aErr;const row=att?.[0],sched=(sch||[]).find(x=>x.id===row?.schedule_id);if(sched){adminAttendanceDate=sched.work_date;adminAttendanceWindowStart=mondayOfWeek(sched.work_date);renderScheduleForKind('attendance')}}catch(e){console.error('findAndOpenMissingCheckout',e)}}
 
 function greetingByTime(date=new Date()){const h=Number(new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',hourCycle:'h23'}).format(date));if(h>=5&&h<12)return 'Chào buổi sáng';if(h>=12&&h<18)return 'Chào buổi chiều';return 'Chào buổi tối'}
 function updateGreetingAndClock(){const g=greetingByTime();const name=profile?.full_name||'Bạn';if(el('empGreeting'))el('empGreeting').textContent=g;if(el('empName'))el('empName').textContent=name;if(el('ownerGreeting'))el('ownerGreeting').textContent=g;if(el('ownerName'))el('ownerName').textContent=name;const now=new Date();const time=new Intl.DateTimeFormat('vi-VN',{timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).format(now);const date=new Intl.DateTimeFormat('vi-VN',{timeZone:'Asia/Ho_Chi_Minh',weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'}).format(now);if(el('homeClock'))el('homeClock').textContent=time;if(el('homeDate'))el('homeDate').textContent=date;if(el('empToday'))el('empToday').textContent=date}
@@ -3173,6 +3178,34 @@ function attendanceDisplayStatus(item,a){
  if(late)return {label:`Đi trễ ${late} phút`,tone:'warn',meta:'IN '+formatTime(a.check_in)+' · OUT '+formatTime(a.check_out)};
  if(early)return {label:`Về sớm ${early} phút`,tone:'warn',meta:'IN '+formatTime(a.check_in)+' · OUT '+formatTime(a.check_out)};
  return {label:'Đã check out',tone:'ok',meta:'IN '+formatTime(a.check_in)+' · OUT '+formatTime(a.check_out)};
+}
+
+// V83.5 — Owner/Manager-only attendance state engine.
+// Employee attendance logic is intentionally untouched. This engine is the single source
+// for Owner dashboard + Owner/Manager attendance board so an ended open attendance can
+// never remain displayed as "Đang làm".
+function ownerAttendanceState(item,a,now=Date.now()){
+ const start=new Date(item.start_at||(`${item.work_date}T${item.start_time}`)).getTime();
+ const end=new Date(item.end_at||(`${item.work_date}T${item.end_time}`)).getTime();
+ if(a?.check_in&&a?.check_out){
+   const late=Number(a.late_minutes||0),early=Number(a.early_leave_minutes||0);
+   if(late&&early)return {key:'CHECKED_OUT',label:`Đi trễ ${late} phút · Về sớm ${early} phút`,tone:'warn',meta:'IN '+formatTime(a.check_in)+' · OUT '+formatTime(a.check_out),needsAction:false,working:false,done:true};
+   if(late)return {key:'CHECKED_OUT',label:`Đi trễ ${late} phút`,tone:'warn',meta:'IN '+formatTime(a.check_in)+' · OUT '+formatTime(a.check_out),needsAction:false,working:false,done:true};
+   if(early)return {key:'CHECKED_OUT',label:`Về sớm ${early} phút`,tone:'warn',meta:'IN '+formatTime(a.check_in)+' · OUT '+formatTime(a.check_out),needsAction:false,working:false,done:true};
+   return {key:'CHECKED_OUT',label:'Đã check out',tone:'ok',meta:'IN '+formatTime(a.check_in)+' · OUT '+formatTime(a.check_out),needsAction:false,working:false,done:true};
+ }
+ if(!a?.check_in){
+   if(now<start)return {key:'UPCOMING',label:'Chưa tới ca',tone:'neutral',meta:'Chờ đến giờ check-in',needsAction:false,working:false,done:false};
+   return {key:'NO_CHECKIN',label:'Chưa check-in',tone:'danger',meta:now>end?'Ca đã kết thúc · chưa ghi nhận check-in':'Đã đến giờ ca · chưa ghi nhận check-in',needsAction:true,working:false,done:false};
+ }
+ if(now>=end)return {key:'MISSING_CHECKOUT',label:'Quên checkout',tone:'danger',meta:'IN '+formatTime(a.check_in)+' · chưa ghi nhận giờ công',needsAction:true,working:false,done:false};
+ const late=Number(a.late_minutes||0);
+ return {key:'WORKING',label:late?`Đi trễ ${late} phút`:'Đang làm',tone:late?'warn':'ok',meta:'IN '+formatTime(a.check_in)+' · đang làm',needsAction:false,working:true,done:false};
+}
+function ownerAttendanceSummary(rows,attendanceBySchedule,now=Date.now()){
+ let working=0,done=0,needsAction=0,late=0,missingCheckout=0,noCheckin=0;
+ (rows||[]).forEach(x=>{const a=attendanceBySchedule.get(x.id);const st=ownerAttendanceState(x,a,now);if(st.working)working++;if(st.done)done++;if(st.needsAction)needsAction++;if(st.key==='MISSING_CHECKOUT')missingCheckout++;if(st.key==='NO_CHECKIN')noCheckin++;if(Number(a?.late_minutes||0)>0)late++;});
+ return {working,done,needsAction,late,missingCheckout,noCheckin};
 }
 const adminTabLoaded={};
 const adminTabMeta={employees:['Nhân viên','Hồ sơ, trạng thái và đơn giá giờ'],leaves:['Nghỉ phép','Xem và duyệt yêu cầu nghỉ'],registrations:['Yêu cầu nhân viên','Yêu cầu đổi ca / đi trễ'],templates:['Mẫu ca','Khung giờ chuẩn dùng để tạo lịch'],schedules:['Mẫu lịch tuần','Thiết lập cấu trúc ca T2–CN'],registrationSettings:['Đăng ký ca','Thời gian mở/đóng và tự động duyệt'],store:['Cửa hàng','Vị trí và quy tắc chấm công'],audit:['Nhật ký','Lịch sử thao tác'],devices:['Thiết bị','Duyệt, khóa và thu hồi thiết bị']};
@@ -4402,26 +4435,23 @@ function renderAdminAttendanceFromWeekCache(cache,selected){
  days.forEach(d=>{const c=el('count_adminAttendanceDayStrip_'+d);if(c)c.textContent=cache.dayCounts?.[d]?(cache.dayCounts[d]+' người'):''});
  const attendanceBySchedule=new Map(att.map(x=>[x.schedule_id,x]));
  const groups=new Map();sch.forEach(x=>{const key=x.shift_group_id||x.id;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(x)});
- let working=0,done=0,missing=0,notyet=0,late=0;
+ const summary=ownerAttendanceSummary(sch,attendanceBySchedule);
  const html=[...groups.values()].map(items=>{
    const first=items[0];
    const people=items.map(x=>{
      const a=attendanceBySchedule.get(x.id);
-     const startTs=new Date(x.start_at).getTime(),endTs=new Date(x.end_at).getTime();
-     const selectedIsPast=selected<localToday();
-     const st=attendanceDisplayStatus(x,a); let label=st.label,cls=st.tone==='danger'?'missing':st.tone==='warn'?'late':st.tone==='ok'?'working':'pending',time=st.meta,action='';
-     if(a?.check_in&&!a?.check_out&&(!selectedIsPast&&Date.now()<=endTs+240*60000))working++;else if(a?.check_in&&a?.check_out)done++;else if(startTs>Date.now())notyet++;else missing++;
-     if(a?.check_in&&!a?.check_out&&selectedIsPast&&['owner','manager'].includes(profile?.role))action=`<div class="attendance-person-actions"><button type="button" class="attendance-action btn danger" onclick="resolveMissingCheckout('${a.id}')"><span class="attendance-action-icon">✓</span>Xác nhận checkout</button></div>`;else if(profile?.role==='owner'&&a?.check_in&&startTs<=Date.now())action=`<button type="button" class="attendance-inline-action btn light" onclick="openSupplementAttendance('${x.id}','${a.id}')"><span class="attendance-action-icon">✎</span>Điều chỉnh</button>`;
-     if(Number(a?.late_minutes||0)>0)late++;
+     const st=ownerAttendanceState(x,a); let label=st.label,cls=st.tone==='danger'?'missing':st.tone==='warn'?'late':st.tone==='ok'?'working':'pending',time=st.meta,action='';
+     if(st.key==='MISSING_CHECKOUT'&&['owner','manager'].includes(profile?.role))action=`<div class="attendance-person-actions"><button type="button" class="attendance-action btn danger" onclick="resolveMissingCheckout('${a.id}')"><span class="attendance-action-icon">✓</span>Xử lý quên checkout</button></div>`;else if(profile?.role==='owner'&&a?.check_in)action=`<button type="button" class="attendance-inline-action btn light" onclick="openSupplementAttendance('${x.id}','${a.id}')"><span class="attendance-action-icon">✎</span>Điều chỉnh</button>`;
      return `<div class="attendance-person"><div class="person-avatar">${escapeHtml((x.profiles?.full_name||'N').slice(0,1).toUpperCase())}</div><div class="att-main"><div class="att-name">${escapeHtml(x.profiles?.full_name||'Nhân viên')}</div><div class="att-time">${escapeHtml(time)}</div>${action}</div><span class="att-state ${cls}">${escapeHtml(label)}</span></div>`;
    }).join('');
    const shiftName=first.template_name||'Ca';
-   const supplementHeader=profile?.role==='owner'&&new Date(first.start_at).getTime()<=Date.now()&&!items.some(x=>x.attendance?.check_in)?`<button type="button" class="attendance-shift-supplement btn green" title="Bổ sung hoặc nhập lại giờ công cho ca này" onclick="openSupplementAttendance('${first.id}','')"><span class="attendance-action-icon">✎</span>Bổ sung công</button>`:'';
+   const firstAttendance=attendanceBySchedule.get(first.id);
+   const supplementHeader=profile?.role==='owner'&&new Date(first.start_at).getTime()<=Date.now()&&!firstAttendance?`<button type="button" class="attendance-shift-supplement btn green" title="Bổ sung chấm công cho ca này" onclick="openSupplementAttendance('${first.id}','')"><span class="attendance-action-icon">✎</span>Bổ sung chấm công</button>`:'';
    return `<div class="attendance-shift-card"><div class="attendance-shift-head"><div><div class="shift-card-title">${escapeHtml(shiftName)} <span class="shift-card-time">· ${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</span></div><div class="shift-card-sub">${items.length} vị trí · ${items.length} nhân viên</div></div>${supplementHeader}</div>${people}</div>`;
  }).join('');
- if(el('adminAttendanceSummary'))el('adminAttendanceSummary').innerHTML=`<div class="mini-stat"><b>${working}</b><span>ĐANG LÀM</span></div><div class="mini-stat"><b>${done}</b><span>ĐÃ RA CA</span></div><div class="mini-stat"><b>${missing}</b><span>CHƯA CHẤM</span></div>`;
+ if(el('adminAttendanceSummary'))el('adminAttendanceSummary').innerHTML=`<div class="mini-stat"><b>${summary.working}</b><span>ĐANG LÀM</span></div><div class="mini-stat"><b>${summary.done}</b><span>ĐÃ RA CA</span></div><div class="mini-stat"><b>${summary.needsAction}</b><span>CẦN XỬ LÝ</span></div>`;
  target.innerHTML=html||'<div class="empty-day">Ngày này chưa có nhân viên được xếp ca.</div>';
- if(missing>0&&selected===localToday())target.insertAdjacentHTML('afterbegin',`<div class="notice warn" style="margin-bottom:9px">Có <b>${missing}</b> người đang có ca nhưng chưa chấm công.</div>`);
+ if(summary.needsAction>0&&selected===localToday())target.insertAdjacentHTML('afterbegin',`<div class="notice warn" style="margin-bottom:9px">Có <b>${summary.needsAction}</b> lượt ca cần xử lý chấm công.</div>`);
 }
 async function loadAdminAttendance(opts={}){updateAdminAttendanceWeekButton();
  const target=el('adminAttendanceList');if(!target||!sb||!profile)return;
