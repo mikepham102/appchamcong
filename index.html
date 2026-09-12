@@ -3256,7 +3256,7 @@ function renderEmployeeScheduleFromCache(data){
      if(reg?.status==='pending')action=`<div><span class="badge wait">Bạn đã giữ chỗ · Chờ chốt tuần</span><button type="button" class="btn light" style="margin-top:6px" onclick="withdrawShiftRegistration('${reg.id}')">Hủy đăng ký</button></div>`;
      else if(reg?.status==='rejected')action=`<div><span class="badge bad">Đã từ chối</span>${availableCount>0?`<button type="button" class="btn primary" style="margin-top:6px" onclick="registerForShift('${open.id}')">Đăng ký lại</button>`:'<div class="muted" style="margin-top:4px">Hiện đã đủ người giữ chỗ.</div>'}</div>`;
      else if(availableCount>0)action=`<button type="button" class="btn primary" onclick="registerForShift('${open.id}')">Đăng ký ca</button>`;
-     else action=`<div class="employee-shift-action-note"><span class="badge wait">Đã đủ chỗ đăng ký</span><div class="muted">Ca đang có người giữ chỗ · chờ chốt.</div></div>`;
+     else action='';
    }
    const shiftName=first.template_name||'Ca';
    const people=[...new Map(items.filter(x=>x.employee_id).map(x=>[x.employee_id,x])).values()];
