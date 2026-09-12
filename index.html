@@ -3903,6 +3903,48 @@ async function saveStore(){
 
 
 
+
+/* V84 PERFORMANCE CORE — behavior-preserving only.
+   No HTML/CSS changes. This layer improves perceived speed by warming only
+   read-only screens after the current screen is ready. It never changes
+   business rules, permissions, database schema, or rendered markup. */
+const hcPerf={warmTimer:null,warming:false,lastUserId:null,lastStoreId:null,ran:new Set()};
+function hcPerfCanWarm(){
+  if(!session||!profile||!sb||document.hidden)return false;
+  const c=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
+  if(c?.saveData)return false;
+  if(['slow-2g','2g'].includes(c?.effectiveType))return false;
+  return true;
+}
+function hcPerfScheduleWarmup(current){
+  clearTimeout(hcPerf.warmTimer);
+  if(!hcPerfCanWarm())return;
+  const uid=session?.user?.id||'',store=getActiveStoreId()||'';
+  if(hcPerf.lastUserId!==uid||hcPerf.lastStoreId!==store){hcPerf.ran.clear();hcPerf.lastUserId=uid;hcPerf.lastStoreId=store;}
+  hcPerf.warmTimer=setTimeout(()=>hcPerfWarmViews(current),700);
+}
+async function hcPerfWarmViews(current){
+  if(hcPerf.warming||!hcPerfCanWarm())return;
+  hcPerf.warming=true;
+  try{
+    const role=profile?.role;
+    const tasks=[];
+    if(['owner','manager'].includes(role)){
+      // Schedule and Attendance already have week caches. Warming them once
+      // makes the next navigation local-first without changing their UI.
+      if(current!=='schedule'&&!hcPerf.ran.has('schedule')){hcPerf.ran.add('schedule');tasks.push(runWithoutGlobalDataLoading(()=>loadMainSchedule()));}
+      if(current!=='attendance'&&!hcPerf.ran.has('attendance')){hcPerf.ran.add('attendance');tasks.push(runWithoutGlobalDataLoading(()=>loadAdminAttendance()));}
+    }else if(role==='employee'){
+      if(current!=='schedule'&&!hcPerf.ran.has('schedule')){hcPerf.ran.add('schedule');tasks.push(runWithoutGlobalDataLoading(()=>loadSchedules({keepContent:true})));}
+      if(current!=='attendance'&&!hcPerf.ran.has('attendance')){hcPerf.ran.add('attendance');tasks.push(runWithoutGlobalDataLoading(()=>refreshAttendanceState()));}
+    }
+    // Never make the user wait for warming; the tasks are background only.
+    if(tasks.length)await Promise.allSettled(tasks);
+  }catch(e){console.debug('[HongCha Performance] warmup skipped',e)}
+  finally{hcPerf.warming=false;}
+}
+function hcPerfReset(){clearTimeout(hcPerf.warmTimer);hcPerf.warmTimer=null;hcPerf.warming=false;hcPerf.ran.clear();hcPerf.lastUserId=session?.user?.id||null;hcPerf.lastStoreId=getActiveStoreId()||null;}
+
 async function loadCurrentViewData(){
   if(!session||!profile||!sb)return;
   const role=profile.role,view=currentView;
@@ -3933,6 +3975,7 @@ let realtimeStartedStoreId=null;
 let realtimeRefreshInFlight=false;
 let realtimeRefreshPending=false;
 function clearScheduleDataCaches(){
+  hcPerf.ran.clear();
   mainScheduleWeekCountCache={};
   mainScheduleWeekDataCache={};
   mainScheduleWeekAuxCache={};
@@ -4040,6 +4083,9 @@ async function loadApp(){
     // Load only the active screen's data, in parallel where possible.
     await loadCurrentViewData();
     console.info('[HongCha Performance] active view ready',Math.round(performance.now()-appStart)+'ms',currentView);
+    // Warm the next likely data screens only after the current screen is ready.
+    // This is intentionally fire-and-forget so app entry and interaction never wait for it.
+    hcPerfScheduleWarmup(currentView);
   })();
   try{return await bootInFlight}finally{bootInFlight=null}
 }
@@ -4584,7 +4630,22 @@ async function loadPayroll(){
  if(!el('payrollPeriods')||profile?.role!=='owner')return;initPayrollDates();const {data,error}=await sb.from('payroll_periods').select('id,period_name,start_date,end_date,status,locked_at,paid_at,note,created_at').eq('store_id',getActiveStoreId()).order('start_date',{ascending:false}).limit(24);if(error){el('payrollPeriods').innerHTML='<div class="notice warn">Không tải được kỳ lương.</div>';return}if(!data?.length){el('payrollPeriods').innerHTML='<div class="empty">Chưa có kỳ lương. Tạo kỳ đầu tiên ở phía trên.</div>';el('payrollSelected').style.display='none';return}el('payrollPeriods').innerHTML=data.map(x=>{const cls=x.status==='paid'?'ok':x.status==='locked'?'info':x.status==='review'?'wait':'info';return `<button type="button" class="item" style="text-align:left;width:100%;cursor:pointer" onclick="selectPayrollPeriod('${x.id}')"><div class="row"><div><b>${escapeHtml(x.period_name)}</b><div class="muted">${x.start_date} → ${x.end_date}</div></div><span class="badge ${cls}">${({draft:'Nháp',review:'Đang kiểm tra',locked:'Đã chốt',paid:'Đã trả'}[x.status]||x.status)}</span></div></button>`}).join('');if(payrollSelectedId&&data.some(x=>x.id===payrollSelectedId))await selectPayrollPeriod(payrollSelectedId);else await selectPayrollPeriod(data[0].id)}
 async function selectPayrollPeriod(id){payrollSelectedId=id;const {data:p,error}=await sb.from('payroll_periods').select('id,period_name,start_date,end_date,status,note').eq('id',id).eq('store_id',getActiveStoreId()).single();if(error||!p)return;el('payrollSelected').style.display='block';const statusBtns=p.status==='draft'?`<button type="button" class="btn light" onclick="setPayrollStatus('${p.id}','review')">Đưa kiểm tra</button>`:p.status==='review'?`<button type="button" class="btn light" onclick="setPayrollStatus('${p.id}','locked')">Chốt lương</button>`:p.status==='locked'?`<button type="button" class="btn green" onclick="setPayrollStatus('${p.id}','paid')">Đánh dấu đã trả</button>`:'';el('payrollSelectedHead').innerHTML=`<div class="row"><div><b>${escapeHtml(p.period_name)}</b><div class="muted">${p.start_date} → ${p.end_date} · ${({draft:'Nháp',review:'Đang kiểm tra',locked:'Đã chốt',paid:'Đã trả'}[p.status]||p.status)}</div></div><div class="admin-actions" style="margin-top:0"><button type="button" class="btn primary" ${['locked','paid'].includes(p.status)?'disabled':''} onclick="calculatePayroll('${p.id}')">Tính lương</button>${statusBtns}</div></div>`;await loadPayrollRuns(p)}
 async function calculatePayroll(id){const {data,error}=await sb.rpc('owner_calculate_payroll',{p_payroll_period_id:id});if(error){toast(error.message);return}toast('Đã tính lại bảng lương.');await loadPayroll();await selectPayrollPeriod(id)}
-async function loadPayrollRuns(p){const {data:runs,error}=await sb.from('payroll_runs').select('id,employee_id,hourly_rate,worked_minutes,gross_amount,bonus_amount,penalty_amount,advance_amount,net_amount,profiles:employee_id(full_name)').eq('payroll_period_id',p.id).order('net_amount',{ascending:false});if(error){el('payrollRuns').innerHTML='<div class="notice warn">Không tải được bảng lương.</div>';return}const total=runs?.reduce((s,x)=>s+Number(x.net_amount||0),0)||0,minutes=runs?.reduce((s,x)=>s+Number(x.worked_minutes||0),0)||0;const {data:shiftRows}=await sb.from('attendance').select('id,work_schedules:schedule_id!inner(work_date,store_id)').eq('work_schedules.store_id',getActiveStoreId()).gte('work_schedules.work_date',p.start_date).lte('work_schedules.work_date',p.end_date).not('check_out','is',null);const totalShifts=shiftRows?.length||0;el('payrollKpis').innerHTML=`<button type="button" class="payroll-kpi" onclick="openPayrollDailyDetail('money')"><b>${total.toLocaleString('vi-VN')}đ</b><span>TỔNG TIỀN</span><small class="kpi-hint">Xem tiền theo ngày →</small></button><button type="button" class="payroll-kpi" onclick="openPayrollDailyDetail('hours')"><b>${Math.floor(minutes/60)}h ${(minutes%60)}p</b><span>TỔNG GIỜ</span><small class="kpi-hint">Xem giờ theo ngày →</small></button><button type="button" class="payroll-kpi" onclick="openPayrollDailyDetail('shifts')"><b id="payrollTotalShifts">${totalShifts}</b><span>TỔNG CA</span><small class="kpi-hint">Xem ca theo ngày →</small></button>`;el('payrollRuns').innerHTML=runs?.length?runs.map(x=>`<div class="payroll-run"><div><div class="name">${escapeHtml(x.profiles?.full_name||'Nhân viên')}</div><div class="meta">${Math.floor((x.worked_minutes||0)/60)}h ${(x.worked_minutes||0)%60}p · ${Number(x.hourly_rate||0).toLocaleString('vi-VN')}đ/giờ · Gộp ${Number(x.gross_amount||0).toLocaleString('vi-VN')}đ</div><div class="meta">Thưởng ${Number(x.bonus_amount||0).toLocaleString('vi-VN')}đ · Phạt ${Number(x.penalty_amount||0).toLocaleString('vi-VN')}đ · Ứng ${Number(x.advance_amount||0).toLocaleString('vi-VN')}đ</div></div><div class="amount">${Number(x.net_amount||0).toLocaleString('vi-VN')}đ<small>THỰC NHẬN</small></div></div>`).join(''):'<div class="empty">Chưa có bảng lương. Bấm Tính lương.</div>';const {data:emps}=await sb.from('profiles').select('id,full_name').eq('store_id',getActiveStoreId()).eq('role','employee').order('full_name');if(el('payrollAdjEmployee'))el('payrollAdjEmployee').innerHTML=(emps||[]).map(x=>`<option value="${x.id}">${escapeHtml(x.full_name||'Nhân viên')}</option>`).join('');const {data:adj}=await sb.from('payroll_adjustments').select('id,employee_id,adjustment_type,amount,reason,status,created_at,profiles:employee_id(full_name)').eq('payroll_period_id',p.id).order('created_at',{ascending:false});el('payrollAdjustments').innerHTML=adj?.length?adj.map(x=>`<div class="item"><div class="row"><div><b>${escapeHtml(x.profiles?.full_name||'Nhân viên')}</b><div class="muted">${({bonus:'Thưởng',penalty:'Phạt',advance:'Tạm ứng'}[x.adjustment_type]||x.adjustment_type)} · ${Number(x.amount||0).toLocaleString('vi-VN')}đ</div><div class="mini">${escapeHtml(x.reason)}</div></div><span class="badge ${x.status==='approved'?'ok':x.status==='pending'?'wait':'bad'}">${({approved:'Đã duyệt',pending:'Chờ duyệt',rejected:'Từ chối'}[x.status]||x.status)}</span></div>${x.status==='pending'?`<div class="admin-actions"><button type="button" class="btn green" onclick="reviewPayrollAdjustment('${x.id}','approve')">Duyệt</button><button type="button" class="btn danger" onclick="reviewPayrollAdjustment('${x.id}','reject')">Từ chối</button></div>`:''}</div>`).join(''):'<div class="empty">Chưa có khoản điều chỉnh.</div>'}
+async function loadPayrollRuns(p){
+ const {data:runs,error}=await sb.from('payroll_runs').select('id,employee_id,hourly_rate,worked_minutes,gross_amount,bonus_amount,advance_amount,net_amount,penalty_amount,profiles:employee_id(full_name)').eq('payroll_period_id',p.id).order('net_amount',{ascending:false});
+ if(error){el('payrollRuns').innerHTML='<div class="notice warn">Không tải được bảng lương.</div>';return}
+ const total=runs?.reduce((s,x)=>s+Number(x.net_amount||0),0)||0,minutes=runs?.reduce((s,x)=>s+Number(x.worked_minutes||0),0)||0;
+ // These reads are independent; run them together instead of serially.
+ const [{data:shiftRows},{data:emps},{data:adj}]=await Promise.all([
+   sb.from('attendance').select('id,work_schedules:schedule_id!inner(work_date,store_id)').eq('work_schedules.store_id',getActiveStoreId()).gte('work_schedules.work_date',p.start_date).lte('work_schedules.work_date',p.end_date).not('check_out','is',null),
+   sb.from('profiles').select('id,full_name').eq('store_id',getActiveStoreId()).eq('role','employee').order('full_name'),
+   sb.from('payroll_adjustments').select('id,employee_id,adjustment_type,amount,reason,status,created_at,profiles:employee_id(full_name)').eq('payroll_period_id',p.id).order('created_at',{ascending:false})
+ ]);
+ const totalShifts=shiftRows?.length||0;
+ el('payrollKpis').innerHTML=`<button type="button" class="payroll-kpi" onclick="openPayrollDailyDetail('money')"><b>${total.toLocaleString('vi-VN')}đ</b><span>TỔNG TIỀN</span><small class="kpi-hint">Xem tiền theo ngày →</small></button><button type="button" class="payroll-kpi" onclick="openPayrollDailyDetail('hours')"><b>${Math.floor(minutes/60)}h ${(minutes%60)}p</b><span>TỔNG GIỜ</span><small class="kpi-hint">Xem giờ theo ngày →</small></button><button type="button" class="payroll-kpi" onclick="openPayrollDailyDetail('shifts')"><b id="payrollTotalShifts">${totalShifts}</b><span>TỔNG CA</span><small class="kpi-hint">Xem ca theo ngày →</small></button>`;
+ el('payrollRuns').innerHTML=runs?.length?runs.map(x=>`<div class="payroll-run"><div><div class="name">${escapeHtml(x.profiles?.full_name||'Nhân viên')}</div><div class="meta">${Math.floor((x.worked_minutes||0)/60)}h ${(x.worked_minutes||0)%60}p · ${Number(x.hourly_rate||0).toLocaleString('vi-VN')}đ/giờ · Gộp ${Number(x.gross_amount||0).toLocaleString('vi-VN')}đ</div><div class="meta">Thưởng ${Number(x.bonus_amount||0).toLocaleString('vi-VN')}đ · Phạt ${Number(x.penalty_amount||0).toLocaleString('vi-VN')}đ · Ứng ${Number(x.advance_amount||0).toLocaleString('vi-VN')}đ</div></div><div class="amount">${Number(x.net_amount||0).toLocaleString('vi-VN')}đ<small>THỰC NHẬN</small></div></div>`).join(''):'<div class="empty">Chưa có bảng lương. Bấm Tính lương.</div>';
+ if(el('payrollAdjEmployee'))el('payrollAdjEmployee').innerHTML=(emps||[]).map(x=>`<option value="${x.id}">${escapeHtml(x.full_name||'Nhân viên')}</option>`).join('');
+ el('payrollAdjustments').innerHTML=adj?.length?adj.map(x=>`<div class="item"><div class="row"><div><b>${escapeHtml(x.profiles?.full_name||'Nhân viên')}</b><div class="muted">${({bonus:'Thưởng',penalty:'Phạt',advance:'Tạm ứng'}[x.adjustment_type]||x.adjustment_type)} · ${Number(x.amount||0).toLocaleString('vi-VN')}đ</div><div class="mini">${escapeHtml(x.reason)}</div></div><span class="badge ${x.status==='approved'?'ok':x.status==='pending'?'wait':'bad'}">${({approved:'Đã duyệt',pending:'Chờ duyệt',rejected:'Từ chối'}[x.status]||x.status)}</span></div>${x.status==='pending'?`<div class="admin-actions"><button type="button" class="btn green" onclick="reviewPayrollAdjustment('${x.id}','approve')">Duyệt</button><button type="button" class="btn danger" onclick="reviewPayrollAdjustment('${x.id}','reject')">Từ chối</button></div>`:''}</div>`).join(''):'<div class="empty">Chưa có khoản điều chỉnh.</div>';
+}
 let payrollReportData=null;
 function payrollMoney(v){return Number(v||0).toLocaleString('vi-VN')+'đ'}
 function payrollHours(mins){const n=Number(mins||0);return Math.floor(n/60)+'h '+(n%60)+'p'}
