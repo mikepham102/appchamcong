@@ -933,6 +933,15 @@ button,input,select,textarea{min-width:0}
   .admin-content:before{content:"";display:block;position:sticky;top:-14px;margin:-14px auto 6px;width:38px;height:4px;border-radius:999px;background:#D5D0C9;z-index:4}
   body.admin-sheet-open{overflow:hidden}
   .manager-shift-head{grid-template-columns:minmax(0,1fr) auto;gap:7px}
+  .manager-shift-title-wrap {display: flex;
+  align-items: center; /* Căn thẳng hàng theo chiều dọc */
+  gap: 8px; /* Khoảng cách giữa chữ 'Ca Sáng' và khung giờ */
+  }
+  .manager-shift-name,
+.manager-shift-time {
+  display: inline-block;
+  margin: 0;
+}
   .manager-shift-capacity{grid-column:1/-1;text-align:left;white-space:nowrap}
   .manager-shift-actions{grid-column:2;grid-row:1}
   .manager-shift-person{grid-template-columns:36px minmax(0,1fr);gap:8px;padding-top:10px;padding-bottom:10px}
@@ -3839,7 +3848,7 @@ async function loadMainSchedule(){
       return `<div class="manager-shift-person"><div class="person-avatar">${escapeHtml((x.profiles?.full_name||'N').slice(0,1).toUpperCase())}</div><div class="person-main"><div class="person-name">${escapeHtml(x.profiles?.full_name||'Nhân viên')}</div><div class="person-meta">${escapeHtml(x.profiles?.phone||'')} · ${escapeHtml(st.meta)}</div></div><div class="manager-person-status"><span class="manager-status-chip ${st.cls}">${escapeHtml(st.label)}</span></div><div class="manager-person-actions">${checkoutBtn}${unassignBtn}</div></div>`;
     }).join(''):'<div class="empty" style="padding:12px 14px">Chưa có nhân viên trong ca.</div>';
     const templateName=first.template_name||'Ca làm việc';
-    return `<div class="manager-shift-row"><div class="manager-shift-head"><div><div class="manager-shift-name">${escapeHtml(templateName)}</div><div class="manager-shift-time">${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</div><div class="manager-shift-meta">${first.note?escapeHtml(first.note):'Lịch ca trong ngày'}</div></div><div class="manager-shift-capacity">${assignedPeople.length}/${active.length} vị trí · ${assignedPeople.length} nhân viên${pendingPeople.length?` · ${pendingPeople.length} chờ duyệt`:''}</div><div class="manager-shift-actions">${addBtn}${cancel}</div></div>${personRows}${pendingRows}</div>`;
+    return `<div class="manager-shift-row"><div class="manager-shift-head"><div class="manager-shift-title-wrap"><div class="manager-shift-name">${escapeHtml(templateName)}</div><div class="manager-shift-time">${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</div></div><div class="manager-shift-meta">${first.note?escapeHtml(first.note):'Lịch ca trong ngày'}</div><div class="manager-shift-capacity">${assignedPeople.length}/${active.length} vị trí · ${assignedPeople.length} nhân viên${pendingPeople.length?` · ${pendingPeople.length} chờ duyệt`:''}</div><div class="manager-shift-actions">${addBtn}${cancel}</div></div>${personRows}${pendingRows}</div>`;
   }).join(''):'<div class="empty-day"><b>Ngày này chưa có ca.</b><span>Bạn vẫn có thể chọn ngày khác hoặc tạo ca mới trong Quản trị.</span></div>';
 
   resultsEl.classList.remove('is-loading');
