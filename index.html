@@ -1740,16 +1740,9 @@ input:focus,select:focus,textarea:focus{
 #employeeScheduleList .shift-card:nth-child(3n+2)::before{background:#2F6FA8}
 #employeeScheduleList .shift-card:nth-child(3n+3)::before{background:#3F8A68}
 #employeeScheduleList .shift-card-head{
- display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 12px;
-    min-width: 0;
-    min-height: 0;
-    padding: 15px 14px 14px 18px;
-    background: #F8FBFE;
-    border-bottom: 1px solid #E4ECF3;
-    grid-auto-flow: column;
+  display:flex;flex-direction:column;align-items:stretch;gap:10px;
+  min-width:0;min-height:0;padding:14px 13px 13px 18px;
+  background:#F8FBFE;border-bottom:1px solid #E4ECF3;
 }
 #employeeScheduleList .shift-card-head>div:first-child{min-width:0;width:100%}
 #employeeScheduleList .shift-card-head>div:last-child{
@@ -1763,13 +1756,13 @@ input:focus,select:focus,textarea:focus{
 }
 #employeeScheduleList .shift-card-time{
   display:inline-flex;align-items:center;margin:0;padding:4px 8px;border-radius:8px;
-  background:#EEF4FA;color:#b3261e!important;font-size:12px; font-weight: 500;line-height:1.1;
+  background:#EEF4FA;color:#28679D!important;font-size:11px;line-height:1.1;
   font-weight:800;white-space:nowrap;
 }
 #employeeScheduleList .shift-card-sub{
-  margin-top:6px;color:#718092;font-size:12px;line-height:1.4;overflow-wrap:anywhere;
+  margin-top:6px;color:#718092;font-size:11px;line-height:1.4;overflow-wrap:anywhere;
 }
-#employeeScheduleList 
+#employeeScheduleList .employee-shift-action-note{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0}
 #employeeScheduleList .employee-shift-action-note .muted{font-size:10.5px;line-height:1.35}
 #employeeScheduleList .shift-card-head .btn.primary{
   min-height:40px;padding:0 15px;border-radius:11px;white-space:nowrap;font-size:13px;
@@ -1815,7 +1808,7 @@ input:focus,select:focus,textarea:focus{
   margin:0;padding:10px 14px 12px 18px;border-top:1px solid #EAF0F5;
   background:#FAFCFE;color:#718092;font-size:11px;line-height:1.4;
 }
-#employeeScheduleList .employee-shift-reserved-empty{display:none!important}
+#employeeScheduleList .employee-shift-reserved-empty{color:#A76612;background:#FFFBF4}
 #employeeScheduleList .selected-day-note{margin:10px 14px 12px 18px!important;padding:9px 10px!important;border-radius:10px;font-size:11px;line-height:1.35}
 @media(max-width:375px){
   #employeeScheduleList .shift-card-head{padding-left:16px;gap:9px}
@@ -2230,16 +2223,17 @@ input:focus,select:focus,textarea:focus{
   overflow-wrap:anywhere;
 }
 #employeeScheduleList .shift-card-time{
-display: flex;
-    margin: 0;
-    padding: 4px 8px;
-    border-radius: 0px;
-    background: #fff8b2;
-    color: #1d4331 !important;
-    font-size: 15px;
-    line-height: 1.1;
-    font-weight: 800;
-    white-space: nowrap;
+  display:inline-flex;
+  align-items:center;
+  margin:0;
+  padding:4px 8px;
+  border-radius:8px;
+  background:#EEF4FA;
+  color:#28679D!important;
+  font-size:11px;
+  line-height:1.1;
+  font-weight:800;
+  white-space:nowrap;
 }
 #employeeScheduleList .shift-card-sub{
   margin-top:6px;
@@ -3259,10 +3253,10 @@ function renderEmployeeScheduleFromCache(data){
    if(own){const mine=items.find(x=>x.employee_id===session.user.id);action=`<div class="schedule-status-stack"><span class="schedule-status mine">Ca của bạn</span>${employeeScheduleStatus(mine||first)}</div>`}
    else if(open){
      const reg=rm.get(open.id);
-     if(reg?.status==='pending')action=`<button type="button" class="btn light" style="margin-top:6px" onclick="withdrawShiftRegistration('${reg.id}')">Hủy đăng ký</button>`;
+     if(reg?.status==='pending')action=`<div><span class="badge wait">Bạn đã giữ chỗ · Chờ chốt tuần</span><button type="button" class="btn light" style="margin-top:6px" onclick="withdrawShiftRegistration('${reg.id}')">Hủy đăng ký</button></div>`;
      else if(reg?.status==='rejected')action=`<div><span class="badge bad">Đã từ chối</span>${availableCount>0?`<button type="button" class="btn primary" style="margin-top:6px" onclick="registerForShift('${open.id}')">Đăng ký lại</button>`:'<div class="muted" style="margin-top:4px">Hiện đã đủ người giữ chỗ.</div>'}</div>`;
      else if(availableCount>0)action=`<button type="button" class="btn primary" onclick="registerForShift('${open.id}')">Đăng ký ca</button>`;
-     else action='';
+     else action=`<div class="employee-shift-action-note"><span class="badge wait">Đã đủ chỗ đăng ký</span><div class="muted">Ca đang có người giữ chỗ · chờ chốt.</div></div>`;
    }
    const shiftName=first.template_name||'Ca';
    const people=[...new Map(items.filter(x=>x.employee_id).map(x=>[x.employee_id,x])).values()];
@@ -3272,12 +3266,12 @@ function renderEmployeeScheduleFromCache(data){
      const isMe=person.employee_id===session.user.id;
      return `<div class="employee-shift-person"><span class="employee-shift-person-avatar">${escapeHtml((person.employee_name||'N').slice(0,1).toUpperCase())}</span><div class="employee-shift-person-copy"><b>${escapeHtml(person.employee_name||'Nhân viên')}${isMe?' · Bạn':''}</b><span>${escapeHtml(person.employee_phone||'Chưa có số điện thoại')}</span></div></div>`;
    }).join('')}</div>`:'';
-   const pendingHtml=pendingPeople.length?`<div class="employee-shift-people employee-shift-reserved">${pendingPeople.map(person=>{
+   const pendingHtml=pendingPeople.length?`<div class="employee-shift-people employee-shift-reserved"><div class="employee-shift-people-title">Đang giữ chỗ · chờ chốt</div>${pendingPeople.map(person=>{
      const isMe=person.employee_id===session.user.id;
      return `<div class="employee-shift-person"><span class="employee-shift-person-avatar">${escapeHtml((person.employee_name||'N').slice(0,1).toUpperCase())}</span><div class="employee-shift-person-copy"><b>${escapeHtml(person.employee_name||'Nhân viên')}${isMe?' · Bạn':''}</b><span>Đã đăng ký ca</span></div></div>`;
    }).join('')}</div>`:'';
-   const peopleHtml=(assignedHtml||pendingHtml)?assignedHtml+pendingHtml:'<div class="employee-shift-open">Ca này hiện còn chỗ trống.</div>';
-   return `<div class="shift-card"><div class="shift-card-head"><div><div class="shift-card-title">${escapeHtml(shiftName)} <span class="shift-card-time"> ${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</span></div><div class="shift-card-sub">${capacity} vị trí · ${assignedCount} đã xếp${reservedCount?` · ${reservedCount} đang giữ chỗ`:''}${first.note?' · '+escapeHtml(first.note):''}</div></div><div>${action}</div></div>${peopleHtml}${own?'<div class="selected-day-note" style="margin:11px 0 0">Bạn đang được xếp trong ca này.</div>':''}</div>`
+   const peopleHtml=(assignedHtml||pendingHtml)?assignedHtml+pendingHtml:(reservedCount>0?`<div class="employee-shift-open employee-shift-reserved-empty">Ca này đang có người giữ chỗ · chờ chốt.</div>`:'<div class="employee-shift-open">Ca này hiện còn chỗ trống.</div>');
+   return `<div class="shift-card"><div class="shift-card-head"><div><div class="shift-card-title">${escapeHtml(shiftName)} <span class="shift-card-time">· ${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</span></div><div class="shift-card-sub">${capacity} vị trí · ${assignedCount} đã xếp${reservedCount?` · ${reservedCount} đang giữ chỗ`:''}${first.note?' · '+escapeHtml(first.note):''}</div></div><div>${action}</div></div>${peopleHtml}${own?'<div class="selected-day-note" style="margin:11px 0 0">Bạn đang được xếp trong ca này.</div>':''}</div>`
  }).join('')
 }
 function openRegistrationOptions(){const m=el('registrationOptionsModal');if(m){m.classList.add('open');loadRegistrationOptions()}}
@@ -3482,12 +3476,23 @@ async function changeEmployeePassword(){
  const p1=document.getElementById('editEmployeePassword').value;
  const p2=document.getElementById('editEmployeePassword2').value;
  const msg=document.getElementById('employeePasswordMsg');
+ if(!id){msg.innerHTML='<div class="notice warn">Không xác định được tài khoản nhân viên.</div>';return}
  if(p1.length<8){msg.innerHTML='<div class="notice warn">Mật khẩu phải có ít nhất 8 ký tự.</div>';return}
  if(p1!==p2){msg.innerHTML='<div class="notice warn">Hai mật khẩu không giống nhau.</div>';return}
  msg.innerHTML='<div class="notice">Đang cập nhật mật khẩu...</div>';
  try{
-  const {data,error}=await sb.functions.invoke('change-employee-password',{body:{employee_id:id,new_password:p1}});
-  if(error)throw new Error(error.message||'Không thể đổi mật khẩu');
+  const invokePromise=sb.functions.invoke('change-employee-password',{body:{employee_id:id,new_password:p1}});
+  const timeoutPromise=new Promise((_,reject)=>setTimeout(()=>reject(new Error('Hệ thống đổi mật khẩu phản hồi quá lâu. Hãy kiểm tra Edge Function change-employee-password đã được deploy.')),15000));
+  const result=await Promise.race([invokePromise,timeoutPromise]);
+  const data=result?.data,error=result?.error;
+  if(error){
+   let detail='';
+   try{if(error.context instanceof Response){const ct=error.context.headers.get('content-type')||'';if(ct.includes('application/json')){const j=await error.context.json();detail=j?.error||j?.message||''}else{detail=(await error.context.text()).slice(0,300)}}}catch(_){}
+   const base=error.message||'Edge Function đổi mật khẩu thất bại.';
+   if(/non-2xx/i.test(base)&&detail)throw new Error(detail);
+   if(/non-2xx/i.test(base)&&!detail)throw new Error('Edge Function change-employee-password chưa chạy thành công. Hãy deploy đúng function này trong Supabase.');
+   throw new Error(detail||base);
+  }
   if(data?.error)throw new Error(data.error);
   msg.innerHTML='<div class="notice ok">Đã đổi mật khẩu thành công.</div>';
   document.getElementById('editEmployeePassword').value='';document.getElementById('editEmployeePassword2').value='';
