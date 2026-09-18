@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.21 · Attendance & Payroll UX</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.22 · Attendance & Payroll UX</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -2502,6 +2502,143 @@ input:focus,select:focus,textarea:focus{
   #staffAttendanceContent .attendance-compact-row{min-height:29px;padding:0 10px}
   #staffAttendanceContent .attendance-compact-row b{font-size:13px}
   #staffAttendanceContent .attendance-compact-row span{font-size:9.5px}
+}
+</style>
+<style id="hongcha-v84-22-attendance-header-layout">
+/* V84.22 — Attendance header: compact two-zone toolbar above the weekday strip. */
+#staffAttendanceContent .attendance-browser{
+  padding:12px 13px 13px;
+}
+#staffAttendanceContent .attendance-control-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 154px;
+  align-items:center;
+  gap:8px;
+  margin:0 0 10px;
+  min-width:0;
+}
+#staffAttendanceContent .attendance-status-summary-wrap{
+  min-width:0;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  align-items:center;
+  gap:7px;
+}
+#staffAttendanceContent .attendance-status-summary-label{
+  flex:0 0 auto;
+  font-size:10px;
+  line-height:1.1;
+  font-weight:820;
+  color:var(--ink);
+  white-space:nowrap;
+}
+#staffAttendanceContent #adminAttendanceSummary{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:4px!important;
+  min-width:0;
+  width:100%;
+  margin:0!important;
+}
+#staffAttendanceContent #adminAttendanceSummary .attendance-compact-summary{
+  display:contents;
+}
+#staffAttendanceContent #adminAttendanceSummary .attendance-compact-row{
+  min-width:0;
+  height:32px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  padding:0 5px;
+  background:#fff;
+  border:1px solid #E0E5E9;
+  border-radius:8px;
+  line-height:1;
+  overflow:hidden;
+}
+#staffAttendanceContent #adminAttendanceSummary .attendance-compact-row b{
+  flex:0 0 auto;
+  font-size:13px;
+  line-height:1;
+  font-weight:820;
+  font-variant-numeric:tabular-nums;
+}
+#staffAttendanceContent #adminAttendanceSummary .attendance-compact-row span{
+  min-width:0;
+  font-size:7.5px;
+  line-height:1.05;
+  font-weight:760;
+  color:var(--muted);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#staffAttendanceContent .attendance-date-nav{
+  width:154px;
+  min-width:154px;
+  display:grid!important;
+  grid-template-columns:32px minmax(0,1fr) 32px;
+  align-items:center;
+  gap:5px;
+  flex:0 0 154px;
+  white-space:nowrap;
+}
+#staffAttendanceContent .attendance-date-nav .icon-button{
+  width:32px!important;
+  min-width:32px!important;
+  height:32px!important;
+  padding:0!important;
+}
+#staffAttendanceContent .attendance-date-nav .today-btn{
+  width:100%;
+  min-width:0!important;
+  height:32px!important;
+  padding:0 6px!important;
+  font-size:9.5px!important;
+  overflow:hidden;
+}
+#staffAttendanceContent .schedule-days{
+  margin-top:0;
+}
+@media(max-width:430px){
+  #staffAttendanceContent .attendance-browser{padding:11px 12px 12px}
+  #staffAttendanceContent .attendance-control-row{
+    grid-template-columns:minmax(0,1fr) 148px;
+    gap:6px;
+  }
+  #staffAttendanceContent .attendance-date-nav{
+    width:148px;
+    min-width:148px;
+    flex-basis:148px;
+    grid-template-columns:30px minmax(0,1fr) 30px;
+    gap:4px;
+  }
+  #staffAttendanceContent .attendance-date-nav .icon-button{
+    width:30px!important;
+    min-width:30px!important;
+    height:30px!important;
+  }
+  #staffAttendanceContent .attendance-date-nav .today-btn{
+    height:30px!important;
+    font-size:9px!important;
+  }
+  #staffAttendanceContent .attendance-status-summary-wrap{gap:5px}
+  #staffAttendanceContent .attendance-status-summary-label{font-size:9px}
+  #staffAttendanceContent #adminAttendanceSummary{gap:3px!important}
+  #staffAttendanceContent #adminAttendanceSummary .attendance-compact-row{height:30px;padding:0 3px;gap:2px}
+  #staffAttendanceContent #adminAttendanceSummary .attendance-compact-row b{font-size:12px}
+  #staffAttendanceContent #adminAttendanceSummary .attendance-compact-row span{font-size:7px}
+}
+@media(max-width:375px){
+  #staffAttendanceContent .attendance-control-row{grid-template-columns:minmax(0,1fr) 142px}
+  #staffAttendanceContent .attendance-date-nav{width:142px;min-width:142px;flex-basis:142px;grid-template-columns:28px minmax(0,1fr) 28px}
+  #staffAttendanceContent .attendance-date-nav .icon-button{width:28px!important;min-width:28px!important;height:28px!important}
+  #staffAttendanceContent .attendance-date-nav .today-btn{height:28px!important;font-size:8.5px!important}
+  #staffAttendanceContent .attendance-status-summary-label{font-size:8px}
+  #staffAttendanceContent #adminAttendanceSummary .attendance-compact-row{height:28px;padding:0 2px}
+  #staffAttendanceContent #adminAttendanceSummary .attendance-compact-row b{font-size:11px}
+  #staffAttendanceContent #adminAttendanceSummary .attendance-compact-row span{font-size:6.5px}
 }
 </style>
 </head><body><div id="bootScreen"><div class="auth-card ui-center"><div class="auth-logo ui-auto">H</div><div class="ui-boot-title">HongCha HRM</div><div class="muted ui-boot-sub">Đang mở ứng dụng…</div></div></div><div class="hidden" id="loginScreen"><div class="auth-card v33-auth"><div class="auth-brand"><div class="auth-logo">H</div><div><div class="ui-brand-title">HongCha HRM</div><div class="muted ui-brand-foot">Quản lý nhân sự &amp; chấm công</div></div></div><h1>Chào mừng trở lại</h1><div class="desc">Đăng nhập để chấm công, xem lịch làm việc và theo dõi giờ công.</div><div class="login-toggle"><button class="active" id="loginModePassword" onclick="setLoginMode('password')">Mật khẩu</button><button id="loginModeOtp" onclick="setLoginMode('otp')">Email</button></div><div class="stack" id="passwordLoginFields"><div class="field"><label>Email</label><input autocomplete="username" id="loginEmail" placeholder="email của bạn" type="email"/></div><div class="field"><label>Mật khẩu</label><input autocomplete="current-password" id="loginPassword" placeholder="Mật khẩu" type="password"/></div><label class="remember-login"><input checked="" id="rememberLogin" type="checkbox"/><span><b>Lưu đăng nhập</b><small>Giữ phiên đăng nhập trên thiết bị này</small></span></label><button class="btn primary ui-w-full" onclick="signIn()">Đăng nhập</button><button class="btn light ui-w-full" onclick="sendResetPassword()">Quên mật khẩu</button></div><div class="stack ui-hidden" id="otpLoginFields"><div class="field"><label>Email</label><input autocomplete="email" id="loginEmailOtp" placeholder="email của bạn" type="email"/></div><button class="btn primary ui-w-full" onclick="sendMagicLink()">Gửi link đăng nhập</button><div class="notice info">Mở email và bấm link để đăng nhập nhanh. Không cần nhập mật khẩu.</div></div><div class="auth-msg" id="loginMsg"></div><div class="auth-foot">Tài khoản nhân viên chỉ sử dụng được trên thiết bị đã được cửa hàng phê duyệt.</div></div></div>
@@ -5426,7 +5563,7 @@ body.data-fetching .admin-content.open .admin-pane.active>.card,body.data-fetchi
 .payroll-report-primary-note b{font-size:12px}
 .payroll-report-primary-note span{font-size:11px;color:#687786;line-height:1.35}
 
-/* V84.21 — Attendance: compact status and week navigation share one row above day strip */
+/* V84.22 — Attendance: compact status and week navigation share one row above day strip */
 .attendance-control-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;margin-bottom:10px;min-width:0}
 .attendance-status-summary-wrap{min-width:0;display:flex;align-items:center;gap:8px}
 .attendance-status-summary-label{flex:0 0 auto;font-size:11px;font-weight:800;color:var(--ink);white-space:nowrap}
