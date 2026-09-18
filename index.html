@@ -3555,19 +3555,24 @@ async function changeEmployeePassword(){
  if(p1!==p2){msg.innerHTML='<div class="notice warn">Hai mật khẩu không giống nhau.</div>';return}
  msg.innerHTML='<div class="notice">Đang cập nhật mật khẩu...</div>';
  try{
-  // Refresh/verify the current Owner session before invoking the protected Edge Function.
-  // This prevents an apparently logged-in UI from sending an expired/stale access token.
+  // Always work from the live auth session. If the access token is missing
+  // or close to expiry, refresh it before calling the Edge Function.
   let liveSession=null;
   const sessionRes=await sb.auth.getSession();
   liveSession=sessionRes?.data?.session||null;
-  if(!liveSession?.access_token){
+  const expiresAt=Number(liveSession?.expires_at||0);
+  const nowSec=Math.floor(Date.now()/1000);
+  if(!liveSession?.access_token||!expiresAt||expiresAt<=nowSec+60){
     const refreshRes=await sb.auth.refreshSession();
     liveSession=refreshRes?.data?.session||null;
     if(refreshRes?.error||!liveSession?.access_token) throw new Error('Phiên đăng nhập đã hết hạn. Hãy đăng xuất và đăng nhập lại.');
   }
   const invokePromise=sb.functions.invoke('change-employee-password',{
     body:{employee_id:id,new_password:p1},
-    headers:{Authorization:'Bearer '+liveSession.access_token}
+    headers:{
+      Authorization:'Bearer '+liveSession.access_token,
+      apikey:DEFAULT_SUPABASE_KEY
+    }
   });
   const timeoutPromise=new Promise((_,reject)=>setTimeout(()=>reject(new Error('Hệ thống đổi mật khẩu phản hồi quá lâu. Hãy kiểm tra Edge Function change-employee-password đã được deploy.')),15000));
   const result=await Promise.race([invokePromise,timeoutPromise]);
