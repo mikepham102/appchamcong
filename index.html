@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.16 · Attendance & Payroll UX</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.17 · Attendance & Payroll UX</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -1747,7 +1747,7 @@ input:focus,select:focus,textarea:focus{
 </style>
 
 <meta name="hongcha-release" content="V71 Employee Home Shift Summary"/>
-<meta name="hongcha-release" content="V84.16 Attendance and Payroll UX">
+<meta name="hongcha-release" content="V84.17 Attendance and Payroll UX">
 <style id="v84-2-employee-schedule-ui-fix">
 /* V84.2 — Employee schedule only. No Owner/Manager selectors. */
 #employeeScheduleList .shift-card{
@@ -2585,7 +2585,7 @@ input:focus,select:focus,textarea:focus{
 <div class="role-content role-staff" id="staffAttendanceContent">
   <section class="schedule-browser attendance-browser">
     <div class="schedule-browser-top">
-      <div><div class="eyebrow">NGÀY ĐANG CHỌN</div><div class="selected-date" id="adminAttendanceDateTitle">—</div><div class="selected-date-sub" id="adminAttendanceDateSub">Trạng thái chấm công của toàn bộ nhân viên trong ngày.</div></div>
+      <div><div class="eyebrow">NGÀY ĐANG CHỌN</div><div class="selected-date" id="adminAttendanceDateTitle">—</div><div class="selected-date-sub" id="adminAttendanceDateSub">Hiển thị đầy đủ chấm công của cả tuần theo từng ca và từng nhân viên.</div></div>
       <div class="date-nav attendance-date-nav">
         <button aria-label="Tuần trước" class="icon-button" onclick="prevAdminAttendanceDays()" type="button">‹</button>
         <button class="today-btn" onclick="goAdminAttendanceToday()" type="button">Hôm nay</button>
@@ -2595,7 +2595,7 @@ input:focus,select:focus,textarea:focus{
     <div class="schedule-days" id="adminAttendanceDayStrip"></div>
   </section>
   <section class="schedule-results attendance-results">
-    <div class="attendance-results-head"><div><div class="section-title">Trạng thái chấm công</div><div class="muted">Xem theo từng ca và từng nhân viên của ngày đã chọn.</div></div><button class="btn light" onclick="loadAdminAttendance()" type="button">Làm mới</button></div>
+    <div class="attendance-results-head"><div><div class="section-title">Trạng thái chấm công</div><div class="muted">Xem đầy đủ từng ngày, từng ca và từng nhân viên trong tuần.</div></div><button class="btn light" onclick="loadAdminAttendance()" type="button">Làm mới</button></div>
     <div class="schedule-summary attendance-status-summary" id="adminAttendanceSummary"></div>
     <div id="adminAttendanceList"><div class="empty">Đang tải dữ liệu chấm công…</div></div>
     <div class="attendance-legend"><span><i class="legend-dot green"></i>Đã check in / check out</span><span><i class="legend-dot orange"></i>Đi trễ / về sớm</span><span><i class="legend-dot red"></i>Quên checkout / chưa chấm</span><span><i class="legend-dot gray"></i>Chưa tới ca</span></div>
@@ -4789,38 +4789,47 @@ async function reviewLeave(id,action){let reason='';if(action==='reject')reason=
 function adminAttendanceWeekKey(start){return `${start}_${dateAdd(start,6)}`}
 function renderAdminAttendanceFromWeekCache(cache,selected){
  const target=el('adminAttendanceList');if(!target)return;
- const sch=(cache?.schedules||[]).filter(x=>x.work_date===selected),attAll=cache?.attendance||[],templates=cache?.templates||[];
+ const allSch=cache?.schedules||[],attAll=cache?.attendance||[],templates=cache?.templates||[];
+ const week=sevenDayWindow(selected,adminAttendanceWindowStart),weekStart=week[0];
  const templateByTime=new Map((templates||[]).filter(t=>t.is_active!==false).map(t=>[`${String(t.start_time||'').slice(0,5)}_${String(t.end_time||'').slice(0,5)}`,t.name]));
- sch.forEach(x=>{const key=`${String(x.start_time||'').slice(0,5)}_${String(x.end_time||'').slice(0,5)}`;x.template_name=templateByTime.get(key)||'Ca'});
- const ids=new Set(sch.map(x=>x.id));const att=attAll.filter(x=>ids.has(x.schedule_id));
- window.__adminAttendanceRows=sch;window.__adminAttendanceData=att;
- if(el('adminAttendanceDateTitle'))el('adminAttendanceDateTitle').textContent=selected===localToday()?'Hôm nay':prettyDate(selected);
- if(el('adminAttendanceDateSub'))el('adminAttendanceDateSub').textContent=`${sch.length} vị trí · ${new Set(sch.map(x=>x.employee_id).filter(Boolean)).size} nhân viên`;
- const days=sevenDayWindow(adminAttendanceDate,adminAttendanceWindowStart);
- days.forEach(d=>{const c=el('count_adminAttendanceDayStrip_'+d);if(c)c.textContent=cache.dayCounts?.[d]?(cache.dayCounts[d]+' vị trí'):''});
+ allSch.forEach(x=>{const key=`${String(x.start_time||'').slice(0,5)}_${String(x.end_time||'').slice(0,5)}`;x.template_name=templateByTime.get(key)||'Ca'});
+ const ids=new Set(allSch.map(x=>x.id));const att=attAll.filter(x=>ids.has(x.schedule_id));
+ window.__adminAttendanceRows=allSch;window.__adminAttendanceData=att;
+ if(el('adminAttendanceDateTitle'))el('adminAttendanceDateTitle').textContent=`Tuần ${prettyDate(weekStart)} – ${prettyDate(week[6])}`;
+ if(el('adminAttendanceDateSub'))el('adminAttendanceDateSub').textContent=`Hiển thị đầy đủ chấm công của ${week.length} ngày · ${allSch.length} vị trí`;
+ week.forEach(d=>{const c=el('count_adminAttendanceDayStrip_'+d);if(c)c.textContent=cache.dayCounts?.[d]?(cache.dayCounts[d]+' vị trí'):''});
  const attendanceBySchedule=new Map(att.map(x=>[x.schedule_id,x]));
- const groups=new Map();sch.forEach(x=>{const key=x.shift_group_id||x.id;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(x)});
- const summary=ownerAttendanceSummary(sch,attendanceBySchedule);
- if(el('adminAttendanceSummary'))el('adminAttendanceSummary').innerHTML=`<div class="mini-stat"><b>${summary.working}</b><span>ĐANG LÀM</span></div><div class="mini-stat"><b>${summary.done}</b><span>ĐÃ RA CA</span></div><div class="mini-stat"><b>${summary.needsAction}</b><span>CHƯA HOÀN TẤT</span></div>`;
- const html=[...groups.values()].map(items=>{
-   const first=items[0];
-   const timeLabel=`${time5(first.start_time)} – ${time5(first.end_time)}`;
-   const slotLabel=`${items.filter(x=>x.employee_id).length}/${items.length} vị trí`;
-   const people=items.map(x=>{
-     const a=attendanceBySchedule.get(x.id),assigned=!!x.employee_id;
-     const st=assigned?ownerAttendanceState(x,a):{key:'EMPTY_SLOT',label:'Chưa có nhân viên',meta:'',tone:'warn',needsAction:false};
-     const cls=st.tone==='danger'?'missing':st.tone==='warn'?'late':st.tone==='ok'?'working':'pending';
-     let action='';
-     if(assigned&&st.key==='MISSING_CHECKOUT'&&['owner','manager'].includes(profile?.role))action=`<button class="attendance-inline-action btn danger" type="button" onclick="resolveMissingCheckout('${a.id}')">Xác nhận checkout</button>`;
-     else if(assigned&&profile?.role==='owner'&&a?.check_in)action=`<button class="attendance-inline-action btn light" type="button" onclick="openSupplementAttendance('${x.id}','${a.id}')">Điều chỉnh</button>`;
-     else if(!assigned&&profile?.role==='owner'&&new Date(x.start_at).getTime()<=Date.now())action=`<button type="button" class="attendance-inline-action btn green" onclick="openSupplementAttendance('${x.id}','')">Bổ sung chấm công</button>`;
-     const personName=assigned?(x.profiles?.full_name||'Nhân viên'):'Trống';
-     const phone=assigned?(x.profiles?.phone||''):'';
-     return `<div class="attendance-day-person"><div class="person-avatar">${escapeHtml((personName||'N').slice(0,1).toUpperCase())}</div><div class="attendance-day-person-main"><div class="attendance-day-person-name">${escapeHtml(personName)}</div><div class="attendance-day-person-meta">${escapeHtml(phone)}</div></div><div class="attendance-day-status"><span class="att-state ${cls}">${escapeHtml(st.label)}</span>${st.meta?`<span class="attendance-status-meta">${escapeHtml(st.meta)}</span>`:''}</div><div class="attendance-day-actions">${action}</div></div>`;
+ const summary=ownerAttendanceSummary(allSch,attendanceBySchedule);
+ if(el('adminAttendanceSummary'))el('adminAttendanceSummary').innerHTML=`<div class="mini-stat"><b>${summary.working}</b><span>ĐANG LÀM</span></div><div class="mini-stat"><b>${summary.done}</b><span>ĐÃ RA CA</span></div><div class="mini-stat"><b>${summary.needsAction}</b><span>CẦN XỬ LÝ</span></div>`;
+ const dayNames=['CN','T2','T3','T4','T5','T6','T7'];
+ const dayBlocks=week.map((day,dayIndex)=>{
+   const daySch=allSch.filter(x=>x.work_date===day);
+   const dt=new Date(day+'T12:00:00');
+   const dayLabel=day===localToday()?'Hôm nay':`${dayNames[dt.getDay()]} · ${prettyDate(day)}`;
+   const groups=new Map();daySch.forEach(x=>{const key=x.shift_group_id||x.id;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(x)});
+   const shifts=[...groups.values()].map(items=>{
+     const first=items[0];
+     const timeLabel=`${time5(first.start_time)} – ${time5(first.end_time)}`;
+     const slotLabel=`${items.filter(x=>x.employee_id).length}/${items.length} vị trí`;
+     const adjustmentTarget=items.length===1&&items[0].employee_id&&attendanceBySchedule.get(items[0].id);
+     const headAction=profile?.role==='owner'&&adjustmentTarget?`<button type="button" class="attendance-shift-adjust btn light" onclick="openSupplementAttendance('${first.id}','${adjustmentTarget.id}')">Điều chỉnh</button>`:'';
+     const people=items.map(x=>{
+       const a=attendanceBySchedule.get(x.id),assigned=!!x.employee_id;
+       const st=assigned?ownerAttendanceState(x,a):{key:'EMPTY_SLOT',label:'Chưa có nhân viên',meta:'',tone:'warn',needsAction:false};
+       const cls=st.tone==='danger'?'missing':st.tone==='warn'?'late':st.tone==='ok'?'working':'pending';
+       let action='';
+       if(assigned&&st.key==='MISSING_CHECKOUT'&&['owner','manager'].includes(profile?.role))action=`<button class="attendance-inline-action btn danger" type="button" onclick="resolveMissingCheckout('${a.id}')">Xác nhận checkout</button>`;
+       else if(assigned&&st.key==='NO_CHECKIN'&&profile?.role==='owner')action=`<button type="button" class="attendance-inline-action btn green" onclick="openSupplementAttendance('${x.id}','${a?.id||''}')">Bổ sung chấm công</button>`;
+       else if(!assigned&&profile?.role==='owner'&&new Date(x.start_at).getTime()<=Date.now())action=`<button type="button" class="attendance-inline-action btn green" onclick="openSupplementAttendance('${x.id}','')">Bổ sung chấm công</button>`;
+       const personName=assigned?(x.profiles?.full_name||'Nhân viên'):'Trống';
+       const phone=assigned?(x.profiles?.phone||''):'Vị trí trống';
+       return `<div class="attendance-day-person"><div class="person-avatar">${escapeHtml((personName||'N').slice(0,1).toUpperCase())}</div><div class="attendance-day-person-main"><div class="attendance-day-person-name">${escapeHtml(personName)}</div><div class="attendance-day-person-meta">${escapeHtml(phone)}</div></div><div class="attendance-day-status"><span class="att-state ${cls}">${escapeHtml(st.label)}</span>${st.meta?`<span class="attendance-status-meta">${escapeHtml(st.meta)}</span>`:''}</div><div class="attendance-day-actions">${action}</div></div>`;
+     }).join('');
+     return `<div class="attendance-day-shift"><div class="attendance-day-shift-head"><div class="attendance-day-shift-title"><b>${escapeHtml(first.template_name||'Ca')}</b><span>${escapeHtml(timeLabel)}</span></div><div class="attendance-day-shift-head-right"><span class="attendance-day-shift-meta">${escapeHtml(slotLabel)}</span>${headAction}</div></div><div class="attendance-day-people">${people||'<div class="empty">Chưa có vị trí trong ca.</div>'}</div></div>`;
    }).join('');
-   return `<div class="attendance-day-shift"><div class="attendance-day-shift-head"><div class="attendance-day-shift-title"><b>${escapeHtml(first.template_name||'Ca')}</b><span>${escapeHtml(timeLabel)}</span></div><div class="attendance-day-shift-meta">${escapeHtml(slotLabel)}</div></div><div class="attendance-day-people">${people||'<div class="empty">Chưa có vị trí trong ca.</div>'}</div></div>`;
+   return `<section class="attendance-week-day ${day===selected?'selected-day':''}" id="attendanceWeekDay_${day}"><div class="attendance-week-day-head"><b>${escapeHtml(dayLabel)}</b><span>${daySch.length?`${daySch.length} ca`:'Không có ca'}</span></div>${shifts||'<div class="empty-day"><span>Ngày này chưa có ca.</span></div>'}</section>`;
  }).join('');
- target.innerHTML=html||'<div class="empty-day"><b>Ngày này chưa có ca.</b><span>Không có vị trí được xếp ca trong ngày đã chọn.</span></div>';
+ target.innerHTML=dayBlocks||'<div class="empty-day"><b>Tuần này chưa có ca.</b></div>';
 }
 async function loadAdminAttendance(opts={}){updateAdminAttendanceWeekButton();
  const target=el('adminAttendanceList');if(!target||!sb||!profile)return;
@@ -5329,7 +5338,7 @@ body.data-fetching .admin-content.open .admin-pane.active>.card,body.data-fetchi
 </body></html>
 
 <style id="hongcha-v84-16-ui">
-/* V84.16 — requested schedule/attendance/payroll presentation. Business logic untouched. */
+/* V84.17 — requested schedule/attendance/payroll presentation. Business logic untouched. */
 .manager-shift-title-line{display:flex;align-items:baseline;gap:8px;min-width:0;flex-wrap:wrap}
 .manager-shift-title-line .manager-shift-name{margin:0;white-space:nowrap}
 .manager-shift-title-line .manager-shift-time{margin:0!important;white-space:nowrap}
@@ -5374,6 +5383,25 @@ body.data-fetching .admin-content.open .admin-pane.active>.card,body.data-fetchi
  .attendance-day-actions:empty{display:none}
  .attendance-day-person:has(.attendance-day-actions:not(:empty)){padding-bottom:9px}
  .attendance-day-person-main{align-self:center}
+}
+/* V84.17 — Owner attendance is a complete weekly board. */
+.attendance-week-day{display:grid;gap:8px;scroll-margin-top:12px}
+.attendance-week-day+.attendance-week-day{margin-top:14px}
+.attendance-week-day-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 3px 2px;color:#14202B}
+.attendance-week-day-head b{font-size:14px;font-weight:850}
+.attendance-week-day-head span{font-size:10px;color:#687786;font-weight:750}
+.attendance-day-shift-head-right{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
+.attendance-shift-adjust{min-height:32px!important;padding:0 10px!important;font-size:10px!important;white-space:nowrap}
+.attendance-day-shift-head{align-items:center!important}
+@media(max-width:560px){
+ .attendance-day-shift-head{gap:7px;padding-right:9px!important}
+ .attendance-day-shift-head-right{gap:5px}
+ .attendance-day-shift-meta{font-size:9px}
+ .attendance-shift-adjust{min-height:31px!important;padding:0 8px!important}
+ .attendance-day-person{grid-template-columns:36px minmax(0,1fr) auto!important;grid-template-rows:auto!important}
+ .attendance-day-status{grid-column:3!important;grid-row:1!important}
+ .attendance-day-actions{grid-column:2 / 4!important;grid-row:2!important}
+ .attendance-day-actions:empty{display:none}
 }
 /* Payroll: creation is a report action, not a second list to maintain. */
 .payroll-report-primary-note{display:flex;flex-direction:column;gap:2px;margin-top:10px;padding:10px 12px;border:1px dashed #C8D8E6;border-radius:12px;background:#F7FAFD}
