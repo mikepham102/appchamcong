@@ -1056,7 +1056,26 @@ button:not(:disabled):active{transform:scale(.965)}
 }
 </style>
 
-  <meta name="theme-color" content="#8F231A">
+  <style id="hongcha-v84-7-owner-attendance-schedule-ui">
+/* V84.7 — Owner/Manager attendance follows the Schedule visual model. Employee UI untouched. */
+#staffAttendanceContent .attendance-browser{margin-bottom:0}
+#staffAttendanceContent .attendance-results{margin-top:12px}
+#staffAttendanceContent .attendance-results-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 10px;padding:0 2px}
+#staffAttendanceContent .attendance-results-head .section-title{font-size:16px;font-weight:820;color:var(--ink)}
+#staffAttendanceContent .attendance-results-head .muted{margin-top:3px}
+#staffAttendanceContent .attendance-status-summary{margin:0 0 10px}
+#staffAttendanceContent #adminAttendanceList{display:grid;gap:10px;min-height:0}
+#staffAttendanceContent .attendance-shift-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(35,30,25,.025)}
+#staffAttendanceContent .attendance-shift-head{min-height:62px;padding:12px 13px 11px 16px;background:var(--surface);border-bottom:1px solid var(--line)}
+#staffAttendanceContent .attendance-person{background:var(--surface);padding:11px 13px 11px 15px;border-bottom:1px solid #EEEAE5}
+#staffAttendanceContent .attendance-person:last-child{border-bottom:0}
+#staffAttendanceContent .att-name{font-size:13px;font-weight:800;color:var(--ink)}
+#staffAttendanceContent .att-time{font-size:10.5px;line-height:1.35;color:var(--muted);margin-top:3px}
+#staffAttendanceContent .att-state{font-size:9.5px;font-weight:800;white-space:nowrap}
+#staffAttendanceContent .attendance-legend{margin-top:11px;padding:9px 2px 0;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 12px}
+@media(max-width:699px){#staffAttendanceContent .attendance-results-head{align-items:center}#staffAttendanceContent .attendance-results-head .btn{min-height:34px;padding:0 11px;font-size:10px}#staffAttendanceContent .attendance-shift-head{padding:11px 12px 10px 14px}#staffAttendanceContent .attendance-person{padding:10px 12px 10px 13px}}
+</style>
+<meta name="theme-color" content="#8F231A">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -2430,6 +2449,43 @@ input:focus,select:focus,textarea:focus{
 </style><style id="v83-role-isolation-final">
 .schedule-role-panel{min-width:0}.schedule-role-panel.ui-hidden{display:none!important}.schedule-role-staff .employee-only-schedule{display:none!important}.schedule-role-employee #ownerScheduleAddBtn,.schedule-role-employee .owner-schedule-add{display:none!important}
 </style>
+
+<style id="hongcha-v84-8-owner-attendance-2col-css">
+/* V84.8 — Owner/Manager attendance: every position is one two-column data row. */
+#staffAttendanceContent .attendance-2col-row{
+ display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,34%);align-items:center;
+ min-height:78px;border:1px solid var(--line);border-radius:14px;background:var(--surface);
+ overflow:hidden;box-shadow:0 1px 0 rgba(0,0,0,.02);margin:0 0 8px;
+}
+#staffAttendanceContent .attendance-2col-left{min-width:0;padding:13px 14px;display:grid;gap:7px;align-content:center;}
+#staffAttendanceContent .attendance-shift-line{display:flex;align-items:baseline;gap:5px;min-width:0;font-size:13px;line-height:1.25;color:var(--ink);}
+#staffAttendanceContent .attendance-shift-line b{font-weight:800;overflow-wrap:anywhere;}
+#staffAttendanceContent .attendance-shift-line span{color:var(--muted);white-space:nowrap;}
+#staffAttendanceContent .attendance-person-line{display:flex;align-items:center;gap:5px;min-width:0;font-size:11px;color:var(--muted);line-height:1.25;}
+#staffAttendanceContent .attendance-person-line strong{color:var(--ink);font-weight:750;overflow-wrap:anywhere;}
+#staffAttendanceContent .attendance-person-line strong.is-empty{color:var(--muted);font-weight:650;font-style:italic;}
+#staffAttendanceContent .attendance-2col-right{min-width:0;min-height:78px;padding:11px 13px;border-left:1px solid var(--line);display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap;text-align:right;}
+#staffAttendanceContent .attendance-2col-right .att-state{margin:0;}
+#staffAttendanceContent .attendance-status-meta{font-size:10px;color:var(--muted);white-space:nowrap;}
+#staffAttendanceContent .attendance-2col-right .attendance-inline-action{min-height:34px;padding:0 9px;font-size:10px;}
+#staffAttendanceContent .att-state.empty-slot{background:var(--warning-soft);color:var(--warning);}
+@media(max-width:560px){
+ #staffAttendanceContent .attendance-2col-row{grid-template-columns:minmax(0,1fr) minmax(128px,39%);min-height:74px;border-radius:12px;}
+ #staffAttendanceContent .attendance-2col-left{padding:11px 10px;gap:6px;}
+ #staffAttendanceContent .attendance-2col-right{min-height:74px;padding:9px 8px;gap:5px;}
+ #staffAttendanceContent .attendance-shift-line{font-size:12px;gap:4px;}
+ #staffAttendanceContent .attendance-person-line{font-size:10px;gap:4px;}
+ #staffAttendanceContent .attendance-status-meta{font-size:9px;}
+ #staffAttendanceContent .attendance-2col-right .attendance-inline-action{width:100%;min-height:32px;padding:0 7px;font-size:9px;}
+}
+@media(max-width:375px){
+ #staffAttendanceContent .attendance-2col-row{grid-template-columns:minmax(0,1fr) 43%;}
+ #staffAttendanceContent .attendance-2col-left{padding:10px 9px;}
+ #staffAttendanceContent .attendance-2col-right{padding:8px 6px;}
+ #staffAttendanceContent .attendance-shift-line{font-size:11px;}
+ #staffAttendanceContent .attendance-person-line{font-size:9px;}
+}
+</style>
 </head><body><div id="bootScreen"><div class="auth-card ui-center"><div class="auth-logo ui-auto">H</div><div class="ui-boot-title">HongCha HRM</div><div class="muted ui-boot-sub">Đang mở ứng dụng…</div></div></div><div class="hidden" id="loginScreen"><div class="auth-card v33-auth"><div class="auth-brand"><div class="auth-logo">H</div><div><div class="ui-brand-title">HongCha HRM</div><div class="muted ui-brand-foot">Quản lý nhân sự &amp; chấm công</div></div></div><h1>Chào mừng trở lại</h1><div class="desc">Đăng nhập để chấm công, xem lịch làm việc và theo dõi giờ công.</div><div class="login-toggle"><button class="active" id="loginModePassword" onclick="setLoginMode('password')">Mật khẩu</button><button id="loginModeOtp" onclick="setLoginMode('otp')">Email</button></div><div class="stack" id="passwordLoginFields"><div class="field"><label>Email</label><input autocomplete="username" id="loginEmail" placeholder="email của bạn" type="email"/></div><div class="field"><label>Mật khẩu</label><input autocomplete="current-password" id="loginPassword" placeholder="Mật khẩu" type="password"/></div><label class="remember-login"><input checked="" id="rememberLogin" type="checkbox"/><span><b>Lưu đăng nhập</b><small>Giữ phiên đăng nhập trên thiết bị này</small></span></label><button class="btn primary ui-w-full" onclick="signIn()">Đăng nhập</button><button class="btn light ui-w-full" onclick="sendResetPassword()">Quên mật khẩu</button></div><div class="stack ui-hidden" id="otpLoginFields"><div class="field"><label>Email</label><input autocomplete="email" id="loginEmailOtp" placeholder="email của bạn" type="email"/></div><button class="btn primary ui-w-full" onclick="sendMagicLink()">Gửi link đăng nhập</button><div class="notice info">Mở email và bấm link để đăng nhập nhanh. Không cần nhập mật khẩu.</div></div><div class="auth-msg" id="loginMsg"></div><div class="auth-foot">Tài khoản nhân viên chỉ sử dụng được trên thiết bị đã được cửa hàng phê duyệt.</div></div></div>
 <div class="app" id="app">
 <header class="app-topbar"><div class="app-topbar-inner"><div class="app-brand-center"><div class="brand-mark">H</div><div class="app-brand-copy"><div class="brand">HongCha HRM</div><button class="topbar-branch-action hidden" id="branchTopAction" onclick="openBranchSwitcher()" type="button"><span class="branch-top-dot">●</span><span class="branch-top-name" id="branchTopName">Chi nhánh</span><span class="branch-top-chevron">⌄</span></button><div class="sub" id="roleLabel" aria-hidden="true">—</div></div></div><div class="topbar-actions"><button class="topbar-admin-action" id="adminTopAction" onclick="openAdminHome()" type="button"><span>Quản trị</span></button></div></div></header>
@@ -2526,7 +2582,25 @@ input:focus,select:focus,textarea:focus{
 <div class="recent-attendance-list" id="attendanceHistory"><div class="empty">Chưa có dữ liệu.</div></div>
 </section>
 <section class="attendance-help"><div class="help-icon">i</div><div><b>Cần hỗ trợ?</b><p>Nếu ca đã hết, quên checkout hoặc dữ liệu không đúng, hãy liên hệ Owner/Manager.</p></div></section></div>
-<div class="role-content role-staff" id="staffAttendanceContent"><div class="schedule-toolbar"><div class="date-title"><b id="adminAttendanceDateTitle">—</b><span>Ai đang trong ca, đã chấm công, đã ra ca và ca chưa chấm công.</span></div><div class="date-nav admin-attendance-week-nav"><button class="attendance-week-button" id="adminAttendanceWeekButton" onclick="openAttendanceMonthPicker()" type="button" aria-haspopup="dialog" aria-expanded="false"><b id="adminAttendanceWeekButtonText">Tuần hiện tại</b><span class="attendance-week-chevron">⌄</span></button><button class="today-btn" onclick="goAdminAttendanceToday()" type="button">Hôm nay</button></div></div><div class="schedule-days" id="adminAttendanceDayStrip"></div><div class="schedule-summary" id="adminAttendanceSummary"></div><div class="card"><div class="row"><div><b>Bảng chấm công</b><div class="muted">Theo dõi theo từng ca của ngày đã chọn.</div></div><button class="btn light" onclick="loadAdminAttendance()" type="button">Làm mới</button></div><div class="ui-mt-10" id="adminAttendanceList"></div><div class="attendance-legend"><span><i class="legend-dot green"></i>Đã check in / check out</span><span><i class="legend-dot orange"></i>Đi trễ / về sớm</span><span><i class="legend-dot red"></i>Quên check out / chưa chấm</span><span><i class="legend-dot gray"></i>Chưa tới ca</span></div></div></div></section>
+<div class="role-content role-staff" id="staffAttendanceContent">
+  <section class="schedule-browser attendance-browser">
+    <div class="schedule-browser-top">
+      <div><div class="eyebrow">NGÀY ĐANG CHỌN</div><div class="selected-date" id="adminAttendanceDateTitle">—</div><div class="selected-date-sub" id="adminAttendanceDateSub">Trạng thái chấm công của toàn bộ nhân viên trong ngày.</div></div>
+      <div class="date-nav attendance-date-nav">
+        <button aria-label="Tuần trước" class="icon-button" onclick="prevAdminAttendanceDays()" type="button">‹</button>
+        <button class="today-btn" onclick="goAdminAttendanceToday()" type="button">Hôm nay</button>
+        <button aria-label="Tuần sau" class="icon-button" onclick="nextAdminAttendanceDays()" type="button">›</button>
+      </div>
+    </div>
+    <div class="schedule-days" id="adminAttendanceDayStrip"></div>
+  </section>
+  <section class="schedule-results attendance-results">
+    <div class="attendance-results-head"><div><div class="section-title">Trạng thái chấm công</div><div class="muted">Xem theo từng ca và từng nhân viên của ngày đã chọn.</div></div><button class="btn light" onclick="loadAdminAttendance()" type="button">Làm mới</button></div>
+    <div class="schedule-summary attendance-status-summary" id="adminAttendanceSummary"></div>
+    <div id="adminAttendanceList"><div class="empty">Đang tải dữ liệu chấm công…</div></div>
+    <div class="attendance-legend"><span><i class="legend-dot green"></i>Đã check in / check out</span><span><i class="legend-dot orange"></i>Đi trễ / về sớm</span><span><i class="legend-dot red"></i>Quên checkout / chưa chấm</span><span><i class="legend-dot gray"></i>Chưa tới ca</span></div>
+  </section>
+</div></section>
 <section class="view" id="salary">
 <header class="screen-header page-screen-header"><div><div class="eyebrow">THU NHẬP</div><h1 class="page-title" id="salaryPageTitle">Lương</h1><p class="page-sub" id="salaryPageSub">Tổng hợp theo giờ công đã được ghi nhận.</p></div></header>
 <div class="role-content role-employee" id="employeeSalaryContent"><section class="salary-summary-card"><div class="card-kicker">LƯƠNG TẠM TÍNH THÁNG NÀY</div><div class="salary-value" id="salaryHero">0đ</div><div class="salary-note">Chưa bao gồm các khoản điều chỉnh chưa chốt.</div></section><section class="salary-metrics"><div><b id="salaryHoursBig">0h</b><span>Giờ công</span></div><div><b id="salaryRateBig">—</b><span>Đơn giá/giờ</span></div></section><section class="detail-card"><div class="detail-row"><span>Đơn giá giờ</span><b id="hourly">—</b></div><div class="detail-row"><span>Giờ công kỳ này</span><b id="salaryHours">0 giờ</b></div><div class="detail-row"><span>Thưởng / phạt / ứng</span><b>Đang cập nhật</b></div><div class="detail-row total"><b>Lương tạm tính</b><b id="salaryNet">—</b></div></section></div>
@@ -3421,7 +3495,7 @@ function ownerAttendanceState(item,a,now=Date.now()){
 }
 function ownerAttendanceSummary(rows,attendanceBySchedule,now=Date.now()){
  let working=0,done=0,needsAction=0,late=0,missingCheckout=0,noCheckin=0;
- (rows||[]).forEach(x=>{const a=attendanceBySchedule.get(x.id);const st=ownerAttendanceState(x,a,now);if(st.working)working++;if(st.done)done++;if(st.needsAction)needsAction++;if(st.key==='MISSING_CHECKOUT')missingCheckout++;if(st.key==='NO_CHECKIN')noCheckin++;if(Number(a?.late_minutes||0)>0)late++;});
+ (rows||[]).forEach(x=>{if(!x.employee_id)return;const a=attendanceBySchedule.get(x.id);const st=ownerAttendanceState(x,a,now);if(st.working)working++;if(st.done)done++;if(st.needsAction)needsAction++;if(st.key==='MISSING_CHECKOUT')missingCheckout++;if(st.key==='NO_CHECKIN')noCheckin++;if(Number(a?.late_minutes||0)>0)late++;});
  return {working,done,needsAction,late,missingCheckout,noCheckin};
 }
 const adminTabLoaded={};
@@ -4705,28 +4779,34 @@ function renderAdminAttendanceFromWeekCache(cache,selected){
  const ids=new Set(sch.map(x=>x.id));const att=attAll.filter(x=>ids.has(x.schedule_id));
  window.__adminAttendanceRows=sch;window.__adminAttendanceData=att;
  if(el('adminAttendanceDateTitle'))el('adminAttendanceDateTitle').textContent=selected===localToday()?'Hôm nay':prettyDate(selected);
+ if(el('adminAttendanceDateSub'))el('adminAttendanceDateSub').textContent=`${sch.length} vị trí · ${new Set(sch.map(x=>x.employee_id).filter(Boolean)).size} nhân viên`;
  const days=sevenDayWindow(adminAttendanceDate,adminAttendanceWindowStart);
- days.forEach(d=>{const c=el('count_adminAttendanceDayStrip_'+d);if(c)c.textContent=cache.dayCounts?.[d]?(cache.dayCounts[d]+' người'):''});
+ days.forEach(d=>{const c=el('count_adminAttendanceDayStrip_'+d);if(c)c.textContent=cache.dayCounts?.[d]?(cache.dayCounts[d]+' vị trí'):''});
  const attendanceBySchedule=new Map(att.map(x=>[x.schedule_id,x]));
  const groups=new Map();sch.forEach(x=>{const key=x.shift_group_id||x.id;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(x)});
  const summary=ownerAttendanceSummary(sch,attendanceBySchedule);
+ if(el('adminAttendanceSummary'))el('adminAttendanceSummary').innerHTML=`<div class="mini-stat"><b>${summary.working}</b><span>ĐANG LÀM</span></div><div class="mini-stat"><b>${summary.done}</b><span>ĐÃ RA CA</span></div><div class="mini-stat"><b>${summary.needsAction}</b><span>CHƯA HOÀN TẤT</span></div>`;
  const html=[...groups.values()].map(items=>{
    const first=items[0];
-   const people=items.map(x=>{
+   return items.map(x=>{
      const a=attendanceBySchedule.get(x.id);
-     const st=ownerAttendanceState(x,a); let label=st.label,cls=st.tone==='danger'?'missing':st.tone==='warn'?'late':st.tone==='ok'?'working':'pending',time=st.meta,action='';
-     if(st.key==='MISSING_CHECKOUT'&&['owner','manager'].includes(profile?.role))action=`<div class="attendance-person-actions"><button type="button" class="attendance-action btn danger" onclick="resolveMissingCheckout('${a.id}')"><span class="attendance-action-icon">✓</span>Xử lý quên checkout</button></div>`;else if(profile?.role==='owner'&&a?.check_in)action=`<button type="button" class="attendance-inline-action btn light" onclick="openSupplementAttendance('${x.id}','${a.id}')"><span class="attendance-action-icon">✎</span>Điều chỉnh</button>`;
-     return `<div class="attendance-person"><div class="person-avatar">${escapeHtml((x.profiles?.full_name||'N').slice(0,1).toUpperCase())}</div><div class="att-main"><div class="att-name">${escapeHtml(x.profiles?.full_name||'Nhân viên')}</div><div class="att-time">${escapeHtml(time)}</div>${action}</div><span class="att-state ${cls}">${escapeHtml(label)}</span></div>`;
+     const assigned=!!x.employee_id;
+     const st=assigned?ownerAttendanceState(x,a):{key:'EMPTY_SLOT',label:'Chưa có nhân viên',meta:'',tone:'warn',needsAction:false};
+     let cls=st.tone==='danger'?'missing':st.tone==='warn'?'late':st.tone==='ok'?'working':'pending';
+     if(st.key==='EMPTY_SLOT')cls='empty-slot';
+     let action='';
+     if(assigned&&st.key==='MISSING_CHECKOUT'&&['owner','manager'].includes(profile?.role))action=`<button class="attendance-inline-action btn danger" type="button" onclick="resolveMissingCheckout('${a.id}')"><span class="attendance-action-icon">✓</span>Xử lý quên checkout</button>`;
+     else if(assigned&&profile?.role==='owner'&&a?.check_in)action=`<button class="attendance-inline-action btn light" type="button" onclick="openSupplementAttendance('${x.id}','${a.id}')"><span class="attendance-action-icon">✎</span>Điều chỉnh</button>`;
+     else if(!assigned&&profile?.role==='owner'&&new Date(x.start_at).getTime()<=Date.now())action=`<button type="button" class="attendance-inline-action btn green" onclick="openSupplementAttendance('${x.id}','')"><span class="attendance-action-icon">✎</span>Bổ sung chấm công</button>`;
+     const personName=assigned?(x.profiles?.full_name||'Nhân viên'):'Trống';
+     const positionLabel=items.length>1?`Vị trí ${items.indexOf(x)+1}/${items.length}`:'1 vị trí';
+     const timeLabel=`${time5(first.start_time)} – ${time5(first.end_time)}`;
+     return `<div class="attendance-2col-row"><div class="attendance-2col-left"><div class="attendance-shift-line"><b>${escapeHtml(first.template_name||'Ca')}</b><span>·</span><span>${escapeHtml(timeLabel)}</span></div><div class="attendance-person-line"><span>${escapeHtml(positionLabel)}</span><span>·</span><strong class="${assigned?'':'is-empty'}">${escapeHtml(personName)}</strong></div></div><div class="attendance-2col-right"><span class="att-state ${cls}">${escapeHtml(st.label)}</span>${st.meta?`<span class="attendance-status-meta">${escapeHtml(st.meta)}</span>`:''}${action}</div></div>`;
    }).join('');
-   const shiftName=first.template_name||'Ca';
-   const firstAttendance=attendanceBySchedule.get(first.id);
-   const supplementHeader=profile?.role==='owner'&&new Date(first.start_at).getTime()<=Date.now()&&!firstAttendance?`<button type="button" class="attendance-shift-supplement btn green" title="Bổ sung chấm công cho ca này" onclick="openSupplementAttendance('${first.id}','')"><span class="attendance-action-icon">✎</span>Bổ sung chấm công</button>`:'';
-   return `<div class="attendance-shift-card"><div class="attendance-shift-head"><div><div class="shift-card-title">${escapeHtml(shiftName)} <span class="shift-card-time">· ${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</span></div><div class="shift-card-sub">${items.length} vị trí · ${items.length} nhân viên</div></div>${supplementHeader}</div>${people}</div>`;
  }).join('');
- if(el('adminAttendanceSummary'))el('adminAttendanceSummary').innerHTML=`<div class="mini-stat"><b>${summary.working}</b><span>ĐANG LÀM</span></div><div class="mini-stat"><b>${summary.done}</b><span>ĐÃ RA CA</span></div><div class="mini-stat"><b>${summary.needsAction}</b><span>CẦN XỬ LÝ</span></div>`;
- target.innerHTML=html||'<div class="empty-day">Ngày này chưa có nhân viên được xếp ca.</div>';
- if(summary.needsAction>0&&selected===localToday())target.insertAdjacentHTML('afterbegin',`<div class="notice warn" style="margin-bottom:9px">Có <b>${summary.needsAction}</b> lượt ca cần xử lý chấm công.</div>`);
+ target.innerHTML=html||'<div class="empty-day"><b>Ngày này chưa có ca.</b><span>Không có vị trí được xếp ca trong ngày đã chọn.</span></div>';
 }
+
 async function loadAdminAttendance(opts={}){updateAdminAttendanceWeekButton();
  const target=el('adminAttendanceList');if(!target||!sb||!profile)return;
  const selected=adminAttendanceDate,week=sevenDayWindow(selected,adminAttendanceWindowStart),weekStart=week[0],weekKey=adminAttendanceWeekKey(weekStart),force=!!opts.force;
@@ -4734,7 +4814,7 @@ async function loadAdminAttendance(opts={}){updateAdminAttendanceWeekButton();
  const token=++adminAttendanceLoadToken;
  if(!adminAttendanceWeekCache[weekKey])target.classList.add('data-loading');
  const [{data:sch,error:schError},{data:templates,error:templateError}]=await Promise.all([
-   sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at,status,employee_id,shift_group_id,profiles:employee_id(full_name)').eq('store_id',getActiveStoreId()).gte('work_date',week[0]).lte('work_date',week[6]).eq('status','assigned').not('employee_id','is',null).order('work_date').order('start_time'),
+   sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at,status,employee_id,shift_group_id,profiles:employee_id(full_name)').eq('store_id',getActiveStoreId()).gte('work_date',week[0]).lte('work_date',week[6]).eq('status','assigned').order('work_date').order('start_time'),
    sb.from('shift_templates').select('id,name,start_time,end_time,is_active').eq('store_id',getActiveStoreId()).order('start_time').order('name')
  ]);
  if(token!==adminAttendanceLoadToken)return;
