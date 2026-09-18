@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.1 · Employee Registration Visibility</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.14 · Registration Window Fix</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -3364,7 +3364,7 @@ async function loadRegistrationOptions(){
    if(token!==registrationOptionsToken)return;
    if(currentResult.error||nextResult.error)throw currentResult.error||nextResult.error;
    const now=Date.now();
-   const isActive=w=>{if(!w||w.status==='finalized'||!w.open_at||!w.close_at)return false;const o=new Date(w.open_at).getTime(),c=new Date(w.close_at).getTime();return Number.isFinite(o)&&Number.isFinite(c)&&o<=now&&now<=c&&(w.status==='open'||w.auto_open===true)};
+   const isActive=w=>{if(!w||w.status==='finalized'||!w.open_at||!w.close_at)return false;const o=new Date(w.open_at).getTime(),c=new Date(w.close_at).getTime();return Number.isFinite(o)&&Number.isFinite(c)&&o<=now&&now<=c&&w.status==='open'};
    const registrationWindow=isActive(currentResult.data)?currentResult.data:(isActive(nextResult.data)?nextResult.data:null);
    if(!registrationWindow){target.innerHTML='<div class="notice info">Hiện chưa có tuần nào đang mở đăng ký.</div>';return}
    const targetWeekStart=registrationWindow.week_start,end=dateAdd(targetWeekStart,6);
@@ -3639,6 +3639,7 @@ let weeklyPlanItems=[];let currentAdminTab='employees';
 
 function registrationWeekValue(){return mondayOfWeek(dateAdd(localToday(),7))}
 function registrationDayName(day){return ['Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy','Chủ Nhật'][Number(day)-1]||'—'}
+/* V84.14 — registration-window safety: auto_open is configuration only; actual availability is status + time. */
 function registrationWindowLabel(status,openAt,closeAt){const now=Date.now(),o=openAt?new Date(openAt).getTime():0,c=closeAt?new Date(closeAt).getTime():0;if(status==='finalized')return ['Đã tự chốt','ok'];if(!openAt||!closeAt)return ['Chưa cài','wait'];if(now<o)return ['Chưa mở','info'];if(now<=c)return ['Đang mở','ok'];if(status==='closed')return ['Đã đóng · đang tự chốt','info'];return ['Đang tự chốt','wait']}
 async function loadRegistrationWindow(targetWeekStart=null){
  if(profile?.role!=='owner')return;const msg=el('registrationWindowMsg');if(!msg)return;msg.innerHTML='<div class="notice info">Đang tải mẫu đăng ký…</div>';
@@ -3668,7 +3669,16 @@ async function openRegistrationWindowNow(){
  msg.innerHTML='<div class="notice ok">Đã mở đăng ký cho tuần '+escapeHtml(week)+'. Nhân viên có thể đăng ký ngay.</div>';
  await loadRegistrationWindow(week);
 }
-async function closeRegistrationWindowNow(){toast('Đăng ký được đóng tự động theo mẫu đã cài.');}
+async function closeRegistrationWindowNow(){
+ if(profile?.role!=='owner')return;
+ const week=normalizeMondayInput(el('weeklyGenerateStart')?.value||dateAdd(mondayOfWeek(localToday()),7));
+ const msg=el('registrationWindowMsg');
+ msg.innerHTML='<div class="notice info">Đang đóng đăng ký tuần…</div>';
+ const {error}=await sb.rpc('close_shift_registration_window',{p_week_start:week});
+ if(error){msg.innerHTML='<div class="notice warn">Không thể đóng đăng ký: '+escapeHtml(error.message||'')+'</div>';return}
+ toast('Đã đóng đăng ký tuần.');
+ await loadRegistrationWindow(week);
+}
 async function finalizeRegistrationWeek(){toast('Hệ thống tự chốt đăng ký khi đến giờ đóng.');}
 
 function weeklyDayLabel(day){return ['T2','T3','T4','T5','T6','T7','CN'][day-1]||'—'}
