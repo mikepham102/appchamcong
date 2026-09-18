@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.20 · Attendance & Payroll UX</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.21 · Attendance & Payroll UX</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -2602,7 +2602,11 @@ input:focus,select:focus,textarea:focus{
 <section class="attendance-help"><div class="help-icon">i</div><div><b>Cần hỗ trợ?</b><p>Nếu ca đã hết, quên checkout hoặc dữ liệu không đúng, hãy liên hệ Owner/Manager.</p></div></section></div>
 <div class="role-content role-staff" id="staffAttendanceContent">
   <section class="schedule-browser attendance-browser">
-    <div class="schedule-browser-top attendance-day-nav-only">
+    <div class="attendance-control-row">
+      <div class="attendance-status-summary-wrap">
+        <div class="attendance-status-summary-label">Trạng thái chấm công</div>
+        <div class="schedule-summary attendance-status-summary" id="adminAttendanceSummary"></div>
+      </div>
       <div class="date-nav attendance-date-nav">
         <button aria-label="Tuần trước" class="icon-button" onclick="prevAdminAttendanceDays()" type="button">‹</button>
         <button class="today-btn" onclick="goAdminAttendanceToday()" type="button">Hôm nay</button>
@@ -2612,8 +2616,6 @@ input:focus,select:focus,textarea:focus{
     <div class="schedule-days" id="adminAttendanceDayStrip"></div>
   </section>
   <section class="schedule-results attendance-results">
-    <div class="attendance-results-head"><div><div class="section-title">Trạng thái chấm công</div><div class="muted">Xem đầy đủ từng ngày, từng ca và từng nhân viên trong tuần.</div></div><button class="btn light" onclick="loadAdminAttendance()" type="button">Làm mới</button></div>
-    <div class="schedule-summary attendance-status-summary" id="adminAttendanceSummary"></div>
     <div id="adminAttendanceList"><div class="empty">Đang tải dữ liệu chấm công…</div></div>
     <div class="attendance-legend"><span><i class="legend-dot green"></i>Đã check in / check out</span><span><i class="legend-dot orange"></i>Đi trễ / về sớm</span><span><i class="legend-dot red"></i>Quên checkout / chưa chấm</span><span><i class="legend-dot gray"></i>Chưa tới ca</span></div>
   </section>
@@ -5423,6 +5425,37 @@ body.data-fetching .admin-content.open .admin-pane.active>.card,body.data-fetchi
 .payroll-report-primary-note{display:flex;flex-direction:column;gap:2px;margin-top:10px;padding:10px 12px;border:1px dashed #C8D8E6;border-radius:12px;background:#F7FAFD}
 .payroll-report-primary-note b{font-size:12px}
 .payroll-report-primary-note span{font-size:11px;color:#687786;line-height:1.35}
+
+/* V84.21 — Attendance: compact status and week navigation share one row above day strip */
+.attendance-control-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;margin-bottom:10px;min-width:0}
+.attendance-status-summary-wrap{min-width:0;display:flex;align-items:center;gap:8px}
+.attendance-status-summary-label{flex:0 0 auto;font-size:11px;font-weight:800;color:var(--ink);white-space:nowrap}
+#adminAttendanceSummary{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px!important;min-height:0!important;margin:0!important;flex:1;min-width:0}
+#adminAttendanceSummary .attendance-compact-summary{display:contents}
+#adminAttendanceSummary .attendance-compact-row{min-width:0;display:flex;align-items:center;justify-content:center;gap:4px;padding:6px 7px;background:#fff;border:1px solid #E2E8ED;border-radius:8px;line-height:1.1}
+#adminAttendanceSummary .attendance-compact-row b{font-size:14px;line-height:1;font-weight:800;color:var(--ink)}
+#adminAttendanceSummary .attendance-compact-row span{font-size:8px;line-height:1.1;font-weight:750;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.attendance-date-nav{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.attendance-date-nav .icon-button{width:34px;height:34px;min-width:34px}
+.attendance-date-nav .today-btn{height:34px;min-width:78px;padding:0 10px;font-size:10px}
+@media(max-width:430px){
+  .attendance-control-row{grid-template-columns:minmax(0,1fr) auto;gap:7px}
+  .attendance-status-summary-wrap{gap:5px}
+  .attendance-status-summary-label{font-size:9px}
+  #adminAttendanceSummary{gap:3px!important}
+  #adminAttendanceSummary .attendance-compact-row{padding:6px 4px;gap:3px}
+  #adminAttendanceSummary .attendance-compact-row b{font-size:13px}
+  #adminAttendanceSummary .attendance-compact-row span{font-size:7.5px}
+  .attendance-date-nav{gap:4px}
+  .attendance-date-nav .icon-button{width:32px;height:32px;min-width:32px}
+  .attendance-date-nav .today-btn{min-width:70px;height:32px;padding:0 7px;font-size:9px}
+}
+@media(max-width:375px){
+  .attendance-status-summary-label{display:none}
+  #adminAttendanceSummary .attendance-compact-row{padding:6px 3px}
+  #adminAttendanceSummary .attendance-compact-row span{font-size:7px}
+  .attendance-date-nav .today-btn{min-width:64px}
+}
 </style>
 
 
