@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.19 · Attendance & Payroll UX</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.20 · Attendance & Payroll UX</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -2486,6 +2486,24 @@ input:focus,select:focus,textarea:focus{
  #staffAttendanceContent .attendance-person-line{font-size:9px;}
 }
 </style>
+
+<style id="hongcha-v84-20-attendance-compact-ui">
+/* V84.20 — Attendance: remove selected-date text block and compact status summary. UI-only. */
+#staffAttendanceContent .attendance-day-nav-only{justify-content:flex-end;align-items:center;margin-bottom:8px;min-height:38px}
+#staffAttendanceContent .attendance-day-nav-only .date-nav{margin-left:auto}
+#staffAttendanceContent .attendance-status-summary{margin:0 0 12px;display:block}
+#staffAttendanceContent .attendance-compact-summary{display:grid;gap:0;background:#fff;border:1px solid var(--line);border-radius:13px;overflow:hidden}
+#staffAttendanceContent .attendance-compact-row{display:grid;grid-template-columns:34px minmax(0,1fr);align-items:center;min-height:30px;padding:0 11px;border-bottom:1px solid var(--line);gap:6px}
+#staffAttendanceContent .attendance-compact-row:last-child{border-bottom:0}
+#staffAttendanceContent .attendance-compact-row b{font-size:14px;line-height:1;font-weight:800;font-variant-numeric:tabular-nums}
+#staffAttendanceContent .attendance-compact-row span{font-size:10px;line-height:1.2;color:var(--muted);font-weight:700}
+@media(max-width:699px){
+  #staffAttendanceContent .attendance-day-nav-only{margin-bottom:7px}
+  #staffAttendanceContent .attendance-compact-row{min-height:29px;padding:0 10px}
+  #staffAttendanceContent .attendance-compact-row b{font-size:13px}
+  #staffAttendanceContent .attendance-compact-row span{font-size:9.5px}
+}
+</style>
 </head><body><div id="bootScreen"><div class="auth-card ui-center"><div class="auth-logo ui-auto">H</div><div class="ui-boot-title">HongCha HRM</div><div class="muted ui-boot-sub">Đang mở ứng dụng…</div></div></div><div class="hidden" id="loginScreen"><div class="auth-card v33-auth"><div class="auth-brand"><div class="auth-logo">H</div><div><div class="ui-brand-title">HongCha HRM</div><div class="muted ui-brand-foot">Quản lý nhân sự &amp; chấm công</div></div></div><h1>Chào mừng trở lại</h1><div class="desc">Đăng nhập để chấm công, xem lịch làm việc và theo dõi giờ công.</div><div class="login-toggle"><button class="active" id="loginModePassword" onclick="setLoginMode('password')">Mật khẩu</button><button id="loginModeOtp" onclick="setLoginMode('otp')">Email</button></div><div class="stack" id="passwordLoginFields"><div class="field"><label>Email</label><input autocomplete="username" id="loginEmail" placeholder="email của bạn" type="email"/></div><div class="field"><label>Mật khẩu</label><input autocomplete="current-password" id="loginPassword" placeholder="Mật khẩu" type="password"/></div><label class="remember-login"><input checked="" id="rememberLogin" type="checkbox"/><span><b>Lưu đăng nhập</b><small>Giữ phiên đăng nhập trên thiết bị này</small></span></label><button class="btn primary ui-w-full" onclick="signIn()">Đăng nhập</button><button class="btn light ui-w-full" onclick="sendResetPassword()">Quên mật khẩu</button></div><div class="stack ui-hidden" id="otpLoginFields"><div class="field"><label>Email</label><input autocomplete="email" id="loginEmailOtp" placeholder="email của bạn" type="email"/></div><button class="btn primary ui-w-full" onclick="sendMagicLink()">Gửi link đăng nhập</button><div class="notice info">Mở email và bấm link để đăng nhập nhanh. Không cần nhập mật khẩu.</div></div><div class="auth-msg" id="loginMsg"></div><div class="auth-foot">Tài khoản nhân viên chỉ sử dụng được trên thiết bị đã được cửa hàng phê duyệt.</div></div></div>
 <div class="app" id="app">
 <header class="app-topbar"><div class="app-topbar-inner"><div class="app-brand-center"><div class="brand-mark">H</div><div class="app-brand-copy"><div class="brand">HongCha HRM</div><button class="topbar-branch-action hidden" id="branchTopAction" onclick="openBranchSwitcher()" type="button"><span class="branch-top-dot">●</span><span class="branch-top-name" id="branchTopName">Chi nhánh</span><span class="branch-top-chevron">⌄</span></button><div class="sub" id="roleLabel" aria-hidden="true">—</div></div></div><div class="topbar-actions"><button class="topbar-admin-action" id="adminTopAction" onclick="openAdminHome()" type="button"><span>Quản trị</span></button></div></div></header>
@@ -2584,8 +2602,7 @@ input:focus,select:focus,textarea:focus{
 <section class="attendance-help"><div class="help-icon">i</div><div><b>Cần hỗ trợ?</b><p>Nếu ca đã hết, quên checkout hoặc dữ liệu không đúng, hãy liên hệ Owner/Manager.</p></div></section></div>
 <div class="role-content role-staff" id="staffAttendanceContent">
   <section class="schedule-browser attendance-browser">
-    <div class="schedule-browser-top">
-      <div><div class="eyebrow">NGÀY ĐANG CHỌN</div><div class="selected-date" id="adminAttendanceDateTitle">—</div><div class="selected-date-sub" id="adminAttendanceDateSub">Hiển thị đầy đủ chấm công của ngày đang chọn theo từng ca và từng nhân viên.</div></div>
+    <div class="schedule-browser-top attendance-day-nav-only">
       <div class="date-nav attendance-date-nav">
         <button aria-label="Tuần trước" class="icon-button" onclick="prevAdminAttendanceDays()" type="button">‹</button>
         <button class="today-btn" onclick="goAdminAttendanceToday()" type="button">Hôm nay</button>
@@ -4807,7 +4824,7 @@ function renderAdminAttendanceFromWeekCache(cache,selected){
  if(el('adminAttendanceDateSub'))el('adminAttendanceDateSub').textContent=`Hiển thị đầy đủ chấm công của ngày này · ${daySch.length} ca · ${daySch.filter(x=>x.employee_id).length} vị trí`;
  week.forEach(d=>{const c=el('count_adminAttendanceDayStrip_'+d);if(c)c.textContent=cache.dayCounts?.[d]?(cache.dayCounts[d]+' vị trí'):''});
  const summary=ownerAttendanceSummary(daySch,attendanceBySchedule);
- if(el('adminAttendanceSummary'))el('adminAttendanceSummary').innerHTML=`<div class="mini-stat"><b>${summary.working}</b><span>ĐANG LÀM</span></div><div class="mini-stat"><b>${summary.done}</b><span>ĐÃ RA CA</span></div><div class="mini-stat"><b>${summary.needsAction}</b><span>CẦN XỬ LÝ</span></div>`;
+ if(el('adminAttendanceSummary'))el('adminAttendanceSummary').innerHTML=`<div class="attendance-compact-summary"><div class="attendance-compact-row"><b>${summary.working}</b><span>Đang làm</span></div><div class="attendance-compact-row"><b>${summary.done}</b><span>Đã ra ca</span></div><div class="attendance-compact-row"><b>${summary.needsAction}</b><span>Cần xử lý</span></div></div>`;
  const groups=new Map();daySch.forEach(x=>{const key=x.shift_group_id||x.id;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(x)});
  const shifts=[...groups.values()].map(items=>{
    const first=items[0];
