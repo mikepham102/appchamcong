@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.18 · Attendance & Payroll UX</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.19 · Attendance & Payroll UX</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -1747,7 +1747,7 @@ input:focus,select:focus,textarea:focus{
 </style>
 
 <meta name="hongcha-release" content="V71 Employee Home Shift Summary"/>
-<meta name="hongcha-release" content="V84.18 Attendance and Payroll UX">
+<meta name="hongcha-release" content="V84.19 Attendance and Payroll UX">
 <style id="v84-2-employee-schedule-ui-fix">
 /* V84.2 — Employee schedule only. No Owner/Manager selectors. */
 #employeeScheduleList .shift-card{
@@ -4837,7 +4837,7 @@ async function loadAdminAttendance(opts={}){updateAdminAttendanceWeekButton();
  const token=++adminAttendanceLoadToken;
  if(!adminAttendanceWeekCache[weekKey])target.classList.add('data-loading');
  const [{data:sch,error:schError},{data:templates,error:templateError}]=await Promise.all([
-   sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at,status,employee_id,shift_group_id,profiles:employee_id(full_name)').eq('store_id',getActiveStoreId()).gte('work_date',week[0]).lte('work_date',week[6]).eq('status','assigned').order('work_date').order('start_time'),
+   sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at,status,employee_id,shift_group_id,profiles:employee_id(full_name)').eq('store_id',getActiveStoreId()).gte('work_date',week[0]).lte('work_date',week[6]).neq('status','cancelled').order('work_date').order('start_time'),
    sb.from('shift_templates').select('id,name,start_time,end_time,is_active').eq('store_id',getActiveStoreId()).order('start_time').order('name')
  ]);
  if(token!==adminAttendanceLoadToken)return;
@@ -5337,7 +5337,7 @@ body.data-fetching .admin-content.open .admin-pane.active>.card,body.data-fetchi
 </body></html>
 
 <style id="hongcha-v84-16-ui">
-/* V84.18 — requested schedule/attendance/payroll presentation. Business logic untouched. */
+/* V84.19 — requested schedule/attendance/payroll presentation. Business logic untouched. */
 .manager-shift-title-line{display:flex;align-items:baseline;gap:8px;min-width:0;flex-wrap:wrap}
 .manager-shift-title-line .manager-shift-name{margin:0;white-space:nowrap}
 .manager-shift-title-line .manager-shift-time{margin:0!important;white-space:nowrap}
@@ -5383,7 +5383,7 @@ body.data-fetching .admin-content.open .admin-pane.active>.card,body.data-fetchi
  .attendance-day-person:has(.attendance-day-actions:not(:empty)){padding-bottom:9px}
  .attendance-day-person-main{align-self:center}
 }
-/* V84.18 — Owner attendance is a complete weekly board. */
+/* V84.19 — Owner attendance selected-day data fix. */
 .attendance-week-day{display:grid;gap:8px;scroll-margin-top:12px}
 .attendance-week-day+.attendance-week-day{margin-top:14px}
 .attendance-week-day-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 3px 2px;color:#14202B}
