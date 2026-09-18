@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.17 · Registration Window Fix</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.18 · Registration Window Fix</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -3639,7 +3639,7 @@ let weeklyPlanItems=[];let currentAdminTab='employees';
 
 function registrationWeekValue(){return mondayOfWeek(dateAdd(localToday(),7))}
 function registrationDayName(day){return ['Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy','Chủ Nhật'][Number(day)-1]||'—'}
-/* V84.16 — registration-window runtime close reconciliation. */
+/* V84.18 — registration-window backend consistency fix. */
 function registrationWindowLabel(status,openAt,closeAt){const now=Date.now(),o=openAt?new Date(openAt).getTime():0,c=closeAt?new Date(closeAt).getTime():0;if(status==='finalized')return ['Đã tự chốt','ok'];if(!openAt||!closeAt)return ['Chưa cài','wait'];if(now<o)return ['Chưa mở','info'];if(now<=c)return ['Đang mở','ok'];if(status==='closed')return ['Đã đóng · đang tự chốt','info'];return ['Đang tự chốt','wait']}
 async function loadRegistrationWindow(targetWeekStart=null){
  if(profile?.role!=='owner')return;const msg=el('registrationWindowMsg');if(!msg)return;msg.innerHTML='<div class="notice info">Đang tải mẫu đăng ký…</div>';
