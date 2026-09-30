@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.26 · Unassign Shift Fix</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.27 · Unassign Shift Fix</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -782,7 +782,7 @@ input,select,textarea{min-height:48px;border-color:var(--line-strong);border-rad
   .owner-actions{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 <style id="v52-registration-control-css">.registration-admin-item .admin-actions{display:flex;gap:8px}.registration-admin-item .admin-actions .btn{flex:1}.pending-person .manager-person-actions{min-width:145px}</style></style><style id="v84-25-registration-settings-ui">
-/* V84.26 — registration settings mobile UI polish. UI only; no business logic changes. */
+/* V84.27 — registration settings mobile UI polish. */
 .registration-settings-form{display:grid;gap:11px}
 .registration-time-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
 .registration-time-grid .field{gap:5px}
@@ -3721,7 +3721,7 @@ function initProfileFieldEvents(){
 }
 
 function initModalEvents(){document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal.open').forEach(m=>m.classList.remove('open'))})}
-window.addEventListener('pagehide',()=>saveUiState());window.addEventListener('beforeunload',()=>saveUiState());document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveUiState();});window.addEventListener('pageshow',()=>{if(session&&profile)saveUiState()});document.addEventListener('DOMContentLoaded',()=>{initModalEvents();setupDateConstraints();init();updateGreetingAndClock();setInterval(updateGreetingAndClock,1000);startRegistrationAutomationHeartbeat()});
+window.addEventListener('pagehide',()=>saveUiState());window.addEventListener('beforeunload',()=>saveUiState());document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveUiState();});window.addEventListener('pageshow',()=>{if(session&&profile)saveUiState()});document.addEventListener('DOMContentLoaded',()=>{initModalEvents();setupDateConstraints();init();updateGreetingAndClock();setInterval(updateGreetingAndClock,1000)});
 
 async function loadEmployees(){
  const target=document.getElementById('employeeTable');if(!sb||!profile)return;
@@ -3829,26 +3829,9 @@ let weeklyPlanItems=[];let currentAdminTab='employees';
 function registrationWeekValue(){return mondayOfWeek(dateAdd(localToday(),7))}
 function registrationDayName(day){return ['Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy','Chủ Nhật'][Number(day)-1]||'—'}
 function registrationWindowLabel(status,openAt,closeAt){const now=Date.now(),o=openAt?new Date(openAt).getTime():0,c=closeAt?new Date(closeAt).getTime():0;if(status==='finalized')return ['Đã tự chốt','ok'];if(!openAt||!closeAt)return ['Chưa cài','wait'];if(now<o)return ['Chưa mở','info'];if(now<=c)return ['Đang mở','ok'];if(status==='closed')return ['Đã đóng · đang tự chốt','info'];return ['Đang tự chốt','wait']}
-let registrationAutomationHeartbeatTimer=null;
-let registrationAutomationHeartbeatBusy=false;
-async function runRegistrationAutomationHeartbeat(){
-  if(!sb||!session||!profile||registrationAutomationHeartbeatBusy)return;
-  registrationAutomationHeartbeatBusy=true;
-  try{
-    await sb.rpc('sync_shift_registration_automation');
-  }catch(e){
-    // Backend pg_cron is the primary automation path. This heartbeat is only
-    // a client-side fallback while an authenticated app session is open.
-    console.warn('[HongCha Registration Automation]',e);
-  }finally{
-    registrationAutomationHeartbeatBusy=false;
-  }
-}
-function startRegistrationAutomationHeartbeat(){
-  if(registrationAutomationHeartbeatTimer)clearInterval(registrationAutomationHeartbeatTimer);
-  registrationAutomationHeartbeatTimer=setInterval(runRegistrationAutomationHeartbeat,60000);
-  setTimeout(runRegistrationAutomationHeartbeat,1500);
-}
+// V84.27: registration automation is backend-owned (pg_cron).
+// Do NOT poll sync_shift_registration_automation from every open browser.
+// Realtime remains the live-update mechanism; the backend scheduler owns timing.
 
 async function loadRegistrationWindow(targetWeekStart=null){
  if(profile?.role!=='owner')return;const msg=el('registrationWindowMsg');if(!msg)return;msg.innerHTML='<div class="notice info">Đang tải mẫu đăng ký…</div>';
@@ -4530,7 +4513,7 @@ function scheduleRealtimeRefresh(reason='realtime'){
       }
       if(currentAdminTab==='registrations'&&['owner','manager'].includes(profile.role))tasks.push(loadRegistrations(),loadScheduleRequests());
       if(currentAdminTab==='templates'&&['owner','manager'].includes(profile.role))tasks.push(loadTemplates());
-      if(currentAdminTab==='schedules'&&['owner','manager'].includes(profile.role))tasks.push(loadWeeklyPlan());if(currentAdminTab==='registrationSettings'&&profile.role==='owner')tasks.push(loadRegistrationWindow());
+      if(currentAdminTab==='schedules'&&['owner','manager'].includes(profile.role))tasks.push(loadWeeklyPlan());if(currentAdminTab==='registrationSettings'&&profile.role==='owner'&&reason==='shift_registration_recurring_rules')tasks.push(loadRegistrationWindow());
       // Background realtime refresh must not animate the global loader.
       await runWithoutGlobalDataLoading(()=>Promise.allSettled(tasks));
     }catch(e){console.error('[HongCha Realtime]',reason,e)}
