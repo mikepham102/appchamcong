@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.28 · Manager Permissions</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.1 · Employee Registration Visibility</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -781,40 +781,7 @@ input,select,textarea{min-height:48px;border-color:var(--line-strong);border-rad
   .quick-actions{grid-template-columns:repeat(4,minmax(0,1fr))}
   .owner-actions{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
-<style id="v52-registration-control-css">.registration-admin-item .admin-actions{display:flex;gap:8px}.registration-admin-item .admin-actions .btn{flex:1}.pending-person .manager-person-actions{min-width:145px}</style></style><style id="v84-25-registration-settings-ui">
-/* V84.27 — registration settings mobile UI polish. */
-.registration-settings-form{display:grid;gap:11px}
-.registration-time-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
-.registration-time-grid .field{gap:5px}
-.registration-time-grid .field label{font-size:11px;color:var(--muted);font-weight:750}
-.registration-time-grid select,.registration-time-grid input{min-height:46px;font-size:14px}
-.registration-toggle-list{display:grid;gap:7px}
-.registration-toggle-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:#fff;cursor:pointer;min-width:0}
-.registration-toggle-row span{min-width:0;display:grid;gap:3px}
-.registration-toggle-row b{font-size:13px;line-height:1.25}
-.registration-toggle-row small{font-size:10px;line-height:1.35;color:var(--muted);overflow-wrap:anywhere}
-.registration-toggle-row input{appearance:none;-webkit-appearance:none;width:42px;height:24px;flex:0 0 42px;border:0;border-radius:999px;background:#D8D4CF;position:relative;cursor:pointer;transition:background .16s ease}
-.registration-toggle-row input:before{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.18);transition:transform .16s ease}
-.registration-toggle-row input:checked{background:#16824C}
-.registration-toggle-row input:checked:before{transform:translateX(18px)}
-.registration-help{display:grid;gap:3px;padding:10px 11px;border:1px solid #DCE7EE;border-radius:12px;background:var(--info-soft);color:#526B7E;font-size:10px;line-height:1.4}
-.registration-help b{font-size:11px;color:#40596B}
-.registration-live-info{padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:#FCF8F5}
-.registration-live-title{font-size:9px;letter-spacing:.08em;font-weight:800;color:var(--muted-2)}
-.registration-live-main{margin-top:4px;font-size:12px;font-weight:760;line-height:1.35;color:var(--ink);overflow-wrap:anywhere}
-.registration-live-sub{margin-top:2px;font-size:10px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere}
-@media(max-width:600px){
- .registration-time-grid{gap:8px}
- .registration-time-grid select,.registration-time-grid input{min-height:44px;padding:8px 10px}
- .registration-toggle-row{padding:10px 11px}
- .registration-toggle-row b{font-size:12px}
- .registration-toggle-row small{font-size:9.5px}
- .registration-window-actions{display:grid;grid-template-columns:1fr 1fr}
- .registration-window-actions .btn{min-width:0;width:100%}
- .registration-window-actions .btn:last-child{grid-column:1/-1}
-}
-</style>
-<style id="v45-registration-window-css">
+<style id="v52-registration-control-css">.registration-admin-item .admin-actions{display:flex;gap:8px}.registration-admin-item .admin-actions .btn{flex:1}.pending-person .manager-person-actions{min-width:145px}</style></style><style id="v45-registration-window-css">
 .registration-window-card{background:#FCF8F5;border-color:#E7D5CC}.registration-window-actions{display:flex;gap:8px;flex-wrap:wrap}.registration-window-actions .btn{flex:1;min-width:145px}.registration-window-actions .btn.danger{background:var(--danger-soft);border-color:#F0D1CD;color:var(--danger)}
 @media(max-width:600px){.registration-window-actions .btn{min-width:calc(50% - 4px)}.registration-window-card .formgrid{grid-template-columns:1fr}.registration-window-card .field.full{grid-column:auto}}
 </style>
@@ -1780,7 +1747,7 @@ input:focus,select:focus,textarea:focus{
 </style>
 
 <meta name="hongcha-release" content="V71 Employee Home Shift Summary"/>
-<meta name="hongcha-release" content="V84.19 Attendance and Payroll UX">
+<meta name="hongcha-release" content="V84.2 Employee Schedule UI Fix">
 <style id="v84-2-employee-schedule-ui-fix">
 /* V84.2 — Employee schedule only. No Owner/Manager selectors. */
 #employeeScheduleList .shift-card{
@@ -2519,162 +2486,7 @@ input:focus,select:focus,textarea:focus{
  #staffAttendanceContent .attendance-person-line{font-size:9px;}
 }
 </style>
-
-<style id="hongcha-v84-20-attendance-compact-ui">
-/* V84.20 — Attendance: remove selected-date text block and compact status summary. UI-only. */
-#staffAttendanceContent .attendance-day-nav-only{justify-content:flex-end;align-items:center;margin-bottom:8px;min-height:38px}
-#staffAttendanceContent .attendance-day-nav-only .date-nav{margin-left:auto}
-#staffAttendanceContent .attendance-status-summary{margin:0 0 12px;display:block}
-#staffAttendanceContent .attendance-compact-summary{display:grid;gap:0;background:#fff;border:1px solid var(--line);border-radius:13px;overflow:hidden}
-#staffAttendanceContent .attendance-compact-row{display:grid;grid-template-columns:34px minmax(0,1fr);align-items:center;min-height:30px;padding:0 11px;border-bottom:1px solid var(--line);gap:6px}
-#staffAttendanceContent .attendance-compact-row:last-child{border-bottom:0}
-#staffAttendanceContent .attendance-compact-row b{font-size:14px;line-height:1;font-weight:800;font-variant-numeric:tabular-nums}
-#staffAttendanceContent .attendance-compact-row span{font-size:10px;line-height:1.2;color:var(--muted);font-weight:700}
-@media(max-width:699px){
-  #staffAttendanceContent .attendance-day-nav-only{margin-bottom:7px}
-  #staffAttendanceContent .attendance-compact-row{min-height:29px;padding:0 10px}
-  #staffAttendanceContent .attendance-compact-row b{font-size:13px}
-  #staffAttendanceContent .attendance-compact-row span{font-size:9.5px}
-}
-</style>
-<style id="hongcha-v84-22-attendance-header-layout">
-/* V84.26 — Unassign shift backend compatibility + attendance placeholder cleanup. */
-#staffAttendanceContent .attendance-browser{
-  padding:12px 13px 13px;
-}
-#staffAttendanceContent .attendance-control-row{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 154px;
-  align-items:center;
-  gap:8px;
-  margin:0 0 10px;
-  min-width:0;
-}
-#staffAttendanceContent .attendance-status-summary-wrap{
-  min-width:0;
-  display:grid;
-  grid-template-columns:auto minmax(0,1fr);
-  align-items:center;
-  gap:7px;
-}
-#staffAttendanceContent .attendance-status-summary-label{
-  flex:0 0 auto;
-  font-size:10px;
-  line-height:1.1;
-  font-weight:820;
-  color:var(--ink);
-  white-space:nowrap;
-}
-#staffAttendanceContent #adminAttendanceSummary{
-  display:grid!important;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:4px!important;
-  min-width:0;
-  width:100%;
-  margin:0!important;
-}
-#staffAttendanceContent #adminAttendanceSummary .attendance-compact-summary{
-  display:contents;
-}
-#staffAttendanceContent #adminAttendanceSummary .attendance-compact-row{
-  min-width:0;
-  height:32px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:3px;
-  padding:0 5px;
-  background:#fff;
-  border:1px solid #E0E5E9;
-  border-radius:8px;
-  line-height:1;
-  overflow:hidden;
-}
-#staffAttendanceContent #adminAttendanceSummary .attendance-compact-row b{
-  flex:0 0 auto;
-  font-size:13px;
-  line-height:1;
-  font-weight:820;
-  font-variant-numeric:tabular-nums;
-}
-#staffAttendanceContent #adminAttendanceSummary .attendance-compact-row span{
-  min-width:0;
-  font-size:7.5px;
-  line-height:1.05;
-  font-weight:760;
-  color:var(--muted);
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-#staffAttendanceContent .attendance-date-nav{
-  width:154px;
-  min-width:154px;
-  display:grid!important;
-  grid-template-columns:32px minmax(0,1fr) 32px;
-  align-items:center;
-  gap:5px;
-  flex:0 0 154px;
-  white-space:nowrap;
-}
-#staffAttendanceContent .attendance-date-nav .icon-button{
-  width:32px!important;
-  min-width:32px!important;
-  height:32px!important;
-  padding:0!important;
-}
-#staffAttendanceContent .attendance-date-nav .today-btn{
-  width:100%;
-  min-width:0!important;
-  height:32px!important;
-  padding:0 6px!important;
-  font-size:9.5px!important;
-  overflow:hidden;
-}
-#staffAttendanceContent .schedule-days{
-  margin-top:0;
-}
-@media(max-width:430px){
-  #staffAttendanceContent .attendance-browser{padding:11px 12px 12px}
-  #staffAttendanceContent .attendance-control-row{
-    grid-template-columns:minmax(0,1fr) 148px;
-    gap:6px;
-  }
-  #staffAttendanceContent .attendance-date-nav{
-    width:148px;
-    min-width:148px;
-    flex-basis:148px;
-    grid-template-columns:30px minmax(0,1fr) 30px;
-    gap:4px;
-  }
-  #staffAttendanceContent .attendance-date-nav .icon-button{
-    width:30px!important;
-    min-width:30px!important;
-    height:30px!important;
-  }
-  #staffAttendanceContent .attendance-date-nav .today-btn{
-    height:30px!important;
-    font-size:9px!important;
-  }
-  #staffAttendanceContent .attendance-status-summary-wrap{gap:5px}
-  #staffAttendanceContent .attendance-status-summary-label{font-size:9px}
-  #staffAttendanceContent #adminAttendanceSummary{gap:3px!important}
-  #staffAttendanceContent #adminAttendanceSummary .attendance-compact-row{height:30px;padding:0 3px;gap:2px}
-  #staffAttendanceContent #adminAttendanceSummary .attendance-compact-row b{font-size:12px}
-  #staffAttendanceContent #adminAttendanceSummary .attendance-compact-row span{font-size:7px}
-}
-@media(max-width:375px){
-  #staffAttendanceContent .attendance-control-row{grid-template-columns:minmax(0,1fr) 142px}
-  #staffAttendanceContent .attendance-date-nav{width:142px;min-width:142px;flex-basis:142px;grid-template-columns:28px minmax(0,1fr) 28px}
-  #staffAttendanceContent .attendance-date-nav .icon-button{width:28px!important;min-width:28px!important;height:28px!important}
-  #staffAttendanceContent .attendance-date-nav .today-btn{height:28px!important;font-size:8.5px!important}
-  #staffAttendanceContent .attendance-status-summary-label{font-size:8px}
-  #staffAttendanceContent #adminAttendanceSummary .attendance-compact-row{height:28px;padding:0 2px}
-  #staffAttendanceContent #adminAttendanceSummary .attendance-compact-row b{font-size:11px}
-  #staffAttendanceContent #adminAttendanceSummary .attendance-compact-row span{font-size:6.5px}
-}
-</style>
-</head><body><div id="bootScreen"><div class="auth-card ui-center"><div class="auth-logo ui-auto">H</div><div class="ui-boot-title">HongCha HRM</div><div class="muted ui-boot-sub">Đang mở ứng dụng…</div></div></div><div class="hidden" id="loginScreen"><div class="auth-card v33-auth"><div class="auth-brand"><div class="auth-logo">H</div><div><div class="ui-brand-title">HongCha HRM</div><div class="muted ui-brand-foot">Quản lý nhân sự &amp; chấm công</div></div></div><h1>Chào mừng trở lại</h1><div class="desc">Đăng nhập để chấm công, xem lịch làm việc và theo dõi giờ công.</div><div class="login-toggle"><button class="active" id="loginModePassword" onclick="setLoginMode('password')">Mật khẩu</button><button id="loginModeOtp" onclick="setLoginMode('otp')">Email</button></div><div class="stack" id="passwordLoginFields"><div class="field"><label>Email</label><input autocomplete="username" id="loginEmail" placeholder="email của bạn" type="email"/></div><div class="field"><label>Mật khẩu</label><input autocomplete="current-password" id="loginPassword" placeholder="Mật khẩu" type="password"/></div><label class="remember-login"><input checked="" id="rememberLogin" type="checkbox"/><span><b>Lưu đăng nhập</b><small>Giữ phiên đăng nhập trên thiết bị này</small></span></label><button class="btn primary ui-w-full" onclick="signIn()">Đăng nhập</button><button class="btn light ui-w-full" onclick="sendResetPassword()">Quên mật khẩu</button></div><div class="stack ui-hidden" id="otpLoginFields"><div class="field"><label>Email</label><input autocomplete="email" id="loginEmailOtp" placeholder="email của bạn" type="email"/></div><button class="btn primary ui-w-full" onclick="sendMagicLink()">Gửi link đăng nhập</button><div class="notice info">Mở email và bấm link để đăng nhập nhanh. Không cần nhập mật khẩu.</div></div><div class="auth-msg" id="loginMsg"></div><div class="auth-foot">Tài khoản nhân viên chỉ sử dụng được trên thiết bị đã được cửa hàng phê duyệt.</div></div></div>
+<style id="hongcha-manager-permissions-css">.permission-list{display:grid;gap:8px}.permission-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 14px;border:1px solid var(--line);border-radius:13px;background:var(--surface-soft,#F7FAFD);cursor:pointer}.permission-row span{display:grid;gap:3px;min-width:0}.permission-row b{font-size:13px}.permission-row small{font-size:10px;color:var(--muted);line-height:1.35}.permission-row input{width:20px;height:20px;accent-color:var(--brand);flex:0 0 auto}</style></head><body><div id="bootScreen"><div class="auth-card ui-center"><div class="auth-logo ui-auto">H</div><div class="ui-boot-title">HongCha HRM</div><div class="muted ui-boot-sub">Đang mở ứng dụng…</div></div></div><div class="hidden" id="loginScreen"><div class="auth-card v33-auth"><div class="auth-brand"><div class="auth-logo">H</div><div><div class="ui-brand-title">HongCha HRM</div><div class="muted ui-brand-foot">Quản lý nhân sự &amp; chấm công</div></div></div><h1>Chào mừng trở lại</h1><div class="desc">Đăng nhập để chấm công, xem lịch làm việc và theo dõi giờ công.</div><div class="login-toggle"><button class="active" id="loginModePassword" onclick="setLoginMode('password')">Mật khẩu</button><button id="loginModeOtp" onclick="setLoginMode('otp')">Email</button></div><div class="stack" id="passwordLoginFields"><div class="field"><label>Email</label><input autocomplete="username" id="loginEmail" placeholder="email của bạn" type="email"/></div><div class="field"><label>Mật khẩu</label><input autocomplete="current-password" id="loginPassword" placeholder="Mật khẩu" type="password"/></div><label class="remember-login"><input checked="" id="rememberLogin" type="checkbox"/><span><b>Lưu đăng nhập</b><small>Giữ phiên đăng nhập trên thiết bị này</small></span></label><button class="btn primary ui-w-full" onclick="signIn()">Đăng nhập</button><button class="btn light ui-w-full" onclick="sendResetPassword()">Quên mật khẩu</button></div><div class="stack ui-hidden" id="otpLoginFields"><div class="field"><label>Email</label><input autocomplete="email" id="loginEmailOtp" placeholder="email của bạn" type="email"/></div><button class="btn primary ui-w-full" onclick="sendMagicLink()">Gửi link đăng nhập</button><div class="notice info">Mở email và bấm link để đăng nhập nhanh. Không cần nhập mật khẩu.</div></div><div class="auth-msg" id="loginMsg"></div><div class="auth-foot">Tài khoản nhân viên chỉ sử dụng được trên thiết bị đã được cửa hàng phê duyệt.</div></div></div>
 <div class="app" id="app">
 <header class="app-topbar"><div class="app-topbar-inner"><div class="app-brand-center"><div class="brand-mark">H</div><div class="app-brand-copy"><div class="brand">HongCha HRM</div><button class="topbar-branch-action hidden" id="branchTopAction" onclick="openBranchSwitcher()" type="button"><span class="branch-top-dot">●</span><span class="branch-top-name" id="branchTopName">Chi nhánh</span><span class="branch-top-chevron">⌄</span></button><div class="sub" id="roleLabel" aria-hidden="true">—</div></div></div><div class="topbar-actions"><button class="topbar-admin-action" id="adminTopAction" onclick="openAdminHome()" type="button"><span>Quản trị</span></button></div></div></header>
 <main>
@@ -2772,11 +2584,8 @@ input:focus,select:focus,textarea:focus{
 <section class="attendance-help"><div class="help-icon">i</div><div><b>Cần hỗ trợ?</b><p>Nếu ca đã hết, quên checkout hoặc dữ liệu không đúng, hãy liên hệ Owner/Manager.</p></div></section></div>
 <div class="role-content role-staff" id="staffAttendanceContent">
   <section class="schedule-browser attendance-browser">
-    <div class="attendance-control-row">
-      <div class="attendance-status-summary-wrap">
-        <div class="attendance-status-summary-label">Trạng thái chấm công</div>
-        <div class="schedule-summary attendance-status-summary" id="adminAttendanceSummary"></div>
-      </div>
+    <div class="schedule-browser-top">
+      <div><div class="eyebrow">NGÀY ĐANG CHỌN</div><div class="selected-date" id="adminAttendanceDateTitle">—</div><div class="selected-date-sub" id="adminAttendanceDateSub">Trạng thái chấm công của toàn bộ nhân viên trong ngày.</div></div>
       <div class="date-nav attendance-date-nav">
         <button aria-label="Tuần trước" class="icon-button" onclick="prevAdminAttendanceDays()" type="button">‹</button>
         <button class="today-btn" onclick="goAdminAttendanceToday()" type="button">Hôm nay</button>
@@ -2786,6 +2595,8 @@ input:focus,select:focus,textarea:focus{
     <div class="schedule-days" id="adminAttendanceDayStrip"></div>
   </section>
   <section class="schedule-results attendance-results">
+    <div class="attendance-results-head"><div><div class="section-title">Trạng thái chấm công</div><div class="muted">Xem theo từng ca và từng nhân viên của ngày đã chọn.</div></div><button class="btn light" onclick="loadAdminAttendance()" type="button">Làm mới</button></div>
+    <div class="schedule-summary attendance-status-summary" id="adminAttendanceSummary"></div>
     <div id="adminAttendanceList"><div class="empty">Đang tải dữ liệu chấm công…</div></div>
     <div class="attendance-legend"><span><i class="legend-dot green"></i>Đã check in / check out</span><span><i class="legend-dot orange"></i>Đi trễ / về sớm</span><span><i class="legend-dot red"></i>Quên checkout / chưa chấm</span><span><i class="legend-dot gray"></i>Chưa tới ca</span></div>
   </section>
@@ -2793,12 +2604,12 @@ input:focus,select:focus,textarea:focus{
 <section class="view" id="salary">
 <header class="screen-header page-screen-header"><div><div class="eyebrow">THU NHẬP</div><h1 class="page-title" id="salaryPageTitle">Lương</h1><p class="page-sub" id="salaryPageSub">Tổng hợp theo giờ công đã được ghi nhận.</p></div></header>
 <div class="role-content role-employee" id="employeeSalaryContent"><section class="salary-summary-card"><div class="card-kicker">LƯƠNG TẠM TÍNH THÁNG NÀY</div><div class="salary-value" id="salaryHero">0đ</div><div class="salary-note">Chưa bao gồm các khoản điều chỉnh chưa chốt.</div></section><section class="salary-metrics"><div><b id="salaryHoursBig">0h</b><span>Giờ công</span></div><div><b id="salaryRateBig">—</b><span>Đơn giá/giờ</span></div></section><section class="detail-card"><div class="detail-row"><span>Đơn giá giờ</span><b id="hourly">—</b></div><div class="detail-row"><span>Giờ công kỳ này</span><b id="salaryHours">0 giờ</b></div><div class="detail-row"><span>Thưởng / phạt / ứng</span><b>Đang cập nhật</b></div><div class="detail-row total"><b>Lương tạm tính</b><b id="salaryNet">—</b></div></section></div>
-<div class="role-content role-staff" id="staffPayrollContent"><div class="payroll-shell"><div class="card"><div class="row"><div><b>Kỳ lương</b><div class="muted">Tạo báo cáo từ giờ công đã ghi nhận và các khoản điều chỉnh được duyệt.</div></div><button class="btn light" onclick="loadPayroll()" type="button">Làm mới</button></div><div class="formgrid ui-mt-13"><div class="field full"><label>Tên kỳ lương</label><input id="payrollPeriodName" placeholder="Lương tháng 09/2026"/></div><div class="field"><label>Từ ngày</label><input id="payrollStart" type="date"/></div><div class="field"><label>Đến ngày</label><input id="payrollEnd" type="date"/></div><div class="field full"><label>Ghi chú</label><input id="payrollNote" placeholder="Ví dụ: kỳ lương tháng 9"/></div></div><button class="btn primary ui-mt-10" onclick="createPayrollPeriod()" type="button">＋ Tạo báo cáo kỳ lương</button><div class="ui-mt-9" id="payrollMsg"></div></div><div class="payroll-report-primary-note"><b>Báo cáo kỳ lương</b><span>Sau khi tạo, báo cáo sẽ mở ngay. Bạn không cần quản lý danh sách kỳ lương ở màn hình này.</span></div><div class="stack ui-hidden" id="payrollPeriods"></div><div class="card ui-hidden" id="payrollSelected"><div id="payrollSelectedHead"></div><div class="payroll-kpis ui-mt-12" id="payrollKpis"></div><div class="stack ui-mt-12" id="payrollRuns"></div><hr/><b>Khoản điều chỉnh</b><div class="formgrid ui-mt-10"><div class="field"><label>Nhân viên</label><select id="payrollAdjEmployee"></select></div><div class="field"><label>Loại</label><select id="payrollAdjType"><option value="bonus">Thưởng</option><option value="penalty">Phạt</option><option value="advance">Tạm ứng</option></select></div><div class="field"><label>Số tiền</label><input id="payrollAdjAmount" min="1" step="1000" type="number"/></div><div class="field full"><label>Lý do</label><input id="payrollAdjReason" placeholder="Lý do điều chỉnh"/></div></div><button class="btn light ui-mt-9" onclick="addPayrollAdjustment()" type="button">Thêm khoản điều chỉnh</button><div class="ui-mt-10" id="payrollAdjustments"></div></div></div></div></section>
+<div class="role-content role-staff" id="staffPayrollContent"><div class="payroll-shell"><div class="card"><div class="row"><div><b>Kỳ lương</b><div class="muted">Tính từ giờ công đã chốt và các khoản điều chỉnh được duyệt.</div></div><button class="btn light" onclick="loadPayroll()" type="button">Làm mới</button></div><div class="formgrid ui-mt-13"><div class="field full"><label>Tên kỳ lương</label><input id="payrollPeriodName" placeholder="Lương tháng 09/2026"/></div><div class="field"><label>Từ ngày</label><input id="payrollStart" type="date"/></div><div class="field"><label>Đến ngày</label><input id="payrollEnd" type="date"/></div><div class="field full"><label>Ghi chú</label><input id="payrollNote" placeholder="Ví dụ: kỳ lương tháng 9"/></div></div><button class="btn primary ui-mt-10" onclick="createPayrollPeriod()" type="button">＋ Tạo kỳ lương</button><div class="ui-mt-9" id="payrollMsg"></div></div><div class="stack" id="payrollPeriods"></div><div class="card ui-hidden" id="payrollSelected"><div id="payrollSelectedHead"></div><div class="payroll-kpis ui-mt-12" id="payrollKpis"></div><div class="stack ui-mt-12" id="payrollRuns"></div><hr/><b>Khoản điều chỉnh</b><div class="formgrid ui-mt-10"><div class="field"><label>Nhân viên</label><select id="payrollAdjEmployee"></select></div><div class="field"><label>Loại</label><select id="payrollAdjType"><option value="bonus">Thưởng</option><option value="penalty">Phạt</option><option value="advance">Tạm ứng</option></select></div><div class="field"><label>Số tiền</label><input id="payrollAdjAmount" min="1" step="1000" type="number"/></div><div class="field full"><label>Lý do</label><input id="payrollAdjReason" placeholder="Lý do điều chỉnh"/></div></div><button class="btn light ui-mt-9" onclick="addPayrollAdjustment()" type="button">Thêm khoản điều chỉnh</button><div class="ui-mt-10" id="payrollAdjustments"></div></div></div></div></section>
 <div class="modal" id="payrollDailyDetailModal"><div class="modalbox"><div class="modal-head"><div><h2 id="payrollDailyDetailTitle">Chi tiết theo ngày</h2><div class="muted ui-small-sub" id="payrollDailyDetailSub">—</div></div><button class="modal-close" onclick="closePayrollDailyDetail()" type="button">×</button></div><div class="stack ui-mt-14"><div class="payroll-detail-note" id="payrollDailyDetailNote">—</div><div id="payrollDailyDetailList"></div></div></div></div><div class="modal payroll-report-modal" id="payrollReportModal"><div class="modalbox"><div class="modal-head"><div><h2>Báo cáo kỳ lương</h2><div class="muted ui-small-sub">Tổng hợp tự động sau khi tạo kỳ lương.</div></div><button class="modal-close" onclick="closePayrollReport()" type="button">×</button></div><div class="stack ui-mt-14"><div class="payroll-report-headline"><b id="payrollReportTitle">Báo cáo kỳ lương</b><span id="payrollReportPeriod">—</span></div><div class="payroll-report-kpis"><button type="button" class="payroll-report-kpi" onclick="togglePayrollReportDetail('money')"><b id="payrollReportMoney">—</b><span>Tổng lương trong kỳ</span><small>Xem chi tiết từng ngày →</small></button><button type="button" class="payroll-report-kpi" onclick="togglePayrollReportDetail('hours')"><b id="payrollReportHours">—</b><span>Tổng giờ công trong kỳ</span><small>Xem chi tiết từng ngày →</small></button><button type="button" class="payroll-report-kpi" onclick="togglePayrollReportDetail('shifts')"><b id="payrollReportShifts">—</b><span>Tổng số ca trong kỳ</span><small>Xem chi tiết từng ngày →</small></button></div><div class="payroll-report-detail" id="payrollReportDetailMoney"><div class="payroll-report-detail-head"><b>Lương chi tiết theo ngày</b><button class="payroll-report-detail-close" onclick="togglePayrollReportDetail('money')" type="button">×</button></div><div class="payroll-report-day-list" id="payrollReportMoneyList"></div></div><div class="payroll-report-detail" id="payrollReportDetailHours"><div class="payroll-report-detail-head"><b>Giờ công chi tiết theo ngày</b><button class="payroll-report-detail-close" onclick="togglePayrollReportDetail('hours')" type="button">×</button></div><div class="payroll-report-day-list" id="payrollReportHoursList"></div></div><div class="payroll-report-detail" id="payrollReportDetailShifts"><div class="payroll-report-detail-head"><b>Ca chi tiết theo ngày</b><button class="payroll-report-detail-close" onclick="togglePayrollReportDetail('shifts')" type="button">×</button></div><div class="payroll-report-day-list" id="payrollReportShiftsList"></div></div><div class="payroll-report-footer"><div class="payroll-report-excel-note">File Excel gồm tổng quan, chi tiết theo ngày, chi tiết từng nhân viên và các khoản điều chỉnh.</div><button class="btn primary" id="payrollReportExcel" onclick="exportPayrollReportExcel()" type="button">↧ Xuất Excel</button></div></div></div></div><section class="view" id="admin">
 <header class="screen-header admin-header"><div><div class="eyebrow">ĐIỀU HÀNH</div><h1 class="page-title">Quản trị</h1><p class="page-sub">Các khu vực quản lý và vận hành.</p></div></header>
 <div class="admin-groups"><details class="admin-group" open="True"><summary><span class="admin-group-chevron">⌄</span><span class="admin-group-summary"><b>Nhân sự</b><small>Quản lý con người và các yêu cầu của nhân viên.</small></span></summary><div class="admin-group-items"><button class="admin-group-item" data-admin-tab="employees" onclick="adminTab('employees',this)" type="button"><span class="admin-group-item-copy"><b>Nhân viên</b><small>Hồ sơ, trạng thái, đơn giá giờ</small></span><span class="admin-group-arrow">›</span></button><button class="admin-group-item" data-admin-tab="leaves" onclick="adminTab('leaves',this)" type="button"><span class="admin-group-item-copy"><b>Nghỉ phép</b><small>Xem và duyệt yêu cầu nghỉ</small></span><span class="admin-group-arrow">›</span></button><button class="admin-group-item" data-admin-tab="registrations" onclick="adminTab('registrations',this)" type="button"><span class="admin-group-item-copy"><b>Yêu cầu nhân viên</b><small>Yêu cầu đổi ca / đi trễ</small></span><span class="admin-group-arrow">›</span></button></div></details><details class="admin-group"><summary><span class="admin-group-chevron">⌄</span><span class="admin-group-summary"><b>Lịch &amp; ca</b><small>Thiết lập ca mẫu và lịch làm việc cố định.</small></span></summary><div class="admin-group-items"><button class="admin-group-item" data-admin-tab="templates" onclick="adminTab('templates',this)" type="button"><span class="admin-group-item-copy"><b>Mẫu ca</b><small>Khung giờ chuẩn</small></span><span class="admin-group-arrow">›</span></button><button class="admin-group-item" data-admin-tab="schedules" onclick="adminTab('schedules',this)" type="button"><span class="admin-group-item-copy"><b>Mẫu lịch tuần</b><small>Các ca cố định T2–CN</small></span><span class="admin-group-arrow">›</span></button><button class="admin-group-item" data-admin-tab="registrationSettings" onclick="adminTab('registrationSettings',this)" type="button"><span class="admin-group-item-copy"><b>Đăng ký ca</b><small>Thời gian mở/đóng và tự động</small></span><span class="admin-group-arrow">›</span></button></div></details><details class="admin-group owner-only-branch-group"><summary><span class="admin-group-chevron">⌄</span><span class="admin-group-summary"><b>Chi nhánh</b><small>Quản lý nhiều cửa hàng trong cùng một hệ thống.</small></span></summary><div class="admin-group-items"><button class="admin-group-item" data-admin-tab="branches" onclick="adminTab('branches',this)" type="button"><span class="admin-group-item-copy"><b>Chi nhánh</b><small>Chọn, tạo và quản lý chi nhánh</small></span><span class="admin-group-arrow">›</span></button></div></details>
-<details class="admin-group"><summary><span class="admin-group-chevron">⌄</span><span class="admin-group-summary"><b>Cửa hàng &amp; hệ thống</b><small>Thiết lập vận hành và theo dõi thay đổi.</small></span></summary><div class="admin-group-items"><button class="admin-group-item" data-admin-tab="store" onclick="adminTab('store',this)" type="button"><span class="admin-group-item-copy"><b>Cửa hàng</b><small>Vị trí và quy tắc chấm công</small></span><span class="admin-group-arrow">›</span></button><button class="admin-group-item" data-admin-tab="audit" onclick="adminTab('audit',this)" type="button"><span class="admin-group-item-copy"><b>Nhật ký</b><small>Lịch sử thao tác</small></span><span class="admin-group-arrow">›</span></button></div></details></div>
-<details class="admin-group"><summary><span class="admin-group-chevron">⌄</span><span class="admin-group-summary"><b>Thiết bị</b><small>Quản lý thiết bị chấm công và quyền truy cập.</small></span></summary><div class="admin-group-items"><button class="admin-group-item" data-admin-tab="devices" onclick="adminTab('devices',this)" type="button"><span class="admin-group-item-copy"><b>Thiết bị</b><small>Duyệt, khóa và thu hồi thiết bị</small></span><span class="admin-group-arrow">›</span></button></div></details><div class="admin-sheet-backdrop" id="adminSheetBackdrop" onclick="closeAdminPane()" aria-hidden="true"></div><section class="admin-content" id="adminContent"><div class="admin-sheet-head"><div><div class="eyebrow">QUẢN TRỊ</div><h2 id="adminSheetTitle">Nhân viên</h2><p id="adminSheetSub">Quản lý dữ liệu và vận hành.</p></div><button class="admin-pane-close" id="adminPaneClose" onclick="closeAdminPane()" type="button" aria-label="Đóng">×</button></div><div class="admin-pane active" id="adminEmployees"><div class="card"><div class="row"><div><b>Nhân viên</b><div class="muted">Hồ sơ, trạng thái và đơn giá giờ.</div></div><button class="btn primary" onclick="openCreateEmployee()">+ Thêm</button></div><hr/><div class="scroll" id="employeeTable"><div class="empty">Đang tải…</div></div></div></div><div class="admin-pane" id="adminTemplates"><div class="card"><div class="weekly-plan-head"><div><b>Mẫu ca</b><div class="muted">Khung giờ chuẩn dùng để tạo lịch. Khi đổi mẫu, các ca tương lai liên kết với mẫu sẽ tự cập nhật từ ngày áp dụng; ca đã bắt đầu hoặc đã có chấm công được giữ nguyên.</div></div><button class="btn primary" onclick="openCreateTemplate()" type="button">＋ Thêm mẫu</button></div><div class="ui-mt-12" id="templateList"></div><div class="ui-mt-10" id="tplMsg"></div></div></div><div class="admin-pane" id="adminSchedules"><div class="card"><div class="weekly-plan-head"><div><b>Mẫu lịch tuần</b><div class="muted">Chỉ cài cấu trúc ca làm việc cố định từ Thứ Hai đến Chủ Nhật. Phần đăng ký ca nằm riêng.</div></div><span class="badge info">T2–CN</span></div><div class="continuity-notice ui-mt-10">Mỗi ngày chọn các <b>mẫu ca</b> và số vị trí cần có. Lưu xong, mẫu này là nguồn để tạo các tuần làm việc.</div><div class="weekly-plan-grid ui-mt-12" id="weeklyPlanGrid"></div><div class="weekly-plan-actions ui-mt-10"><button class="btn primary" onclick="saveWeeklyPlan()" type="button">Lưu mẫu tuần</button><button class="btn light" onclick="loadWeeklyPlan()" type="button">Tải lại</button></div><div class="ui-mt-9" id="weeklyPlanMsg"></div></div><div class="card weekly-generate ui-mt-10"><div><b>Tạo tuần lịch</b><div class="muted">Chọn Thứ Hai của tuần cần tạo các vị trí từ mẫu lịch tuần.</div></div><div class="generate-week-row ui-mt-10"><div class="field"><label>Tuần bắt đầu (Thứ Hai)</label><input id="weeklyGenerateStart" type="date"/></div><button class="btn primary" onclick="generateWeeklySchedule()" type="button">Tạo lịch tuần</button></div><div class="ui-mt-9" id="weeklyGenerateMsg"></div></div></div><div class="admin-pane" id="adminRegistrationSettings"><div class="card"><div class="weekly-plan-head"><div><b>Cài đặt đăng ký ca</b><div class="muted">Một mẫu thời gian duy nhất, lặp hàng tuần theo tuần làm việc.</div></div><span class="badge info" id="registrationWindowStatus">Chưa cài</span></div><div class="registration-settings-form ui-mt-12"><div class="registration-time-grid"><div class="field"><label>Mở đăng ký</label><select id="registrationWindowOpenDay"><option value="1">Thứ Hai</option><option value="2">Thứ Ba</option><option value="3">Thứ Tư</option><option value="4">Thứ Năm</option><option value="5">Thứ Sáu</option><option value="6">Thứ Bảy</option><option value="7">Chủ Nhật</option></select></div><div class="field"><label>Giờ mở</label><input id="registrationWindowOpenTime" type="time"/></div><div class="field"><label>Đóng đăng ký</label><select id="registrationWindowCloseDay"><option value="1">Thứ Hai</option><option value="2">Thứ Ba</option><option value="3">Thứ Tư</option><option value="4">Thứ Năm</option><option value="5">Thứ Sáu</option><option value="6">Thứ Bảy</option><option value="7">Chủ Nhật</option></select></div><div class="field"><label>Giờ đóng</label><input id="registrationWindowCloseTime" type="time"/></div></div><div class="registration-toggle-list"><label class="registration-toggle-row"><span><b>Tự động mở đăng ký</b><small>Đến giờ mở, nhân viên được đăng ký tự động.</small></span><input id="registrationAutoOpen" type="checkbox" checked/></label><label class="registration-toggle-row"><span><b>Tự động duyệt đăng ký</b><small>Đến giờ đóng, đăng ký hợp lệ được tự chốt.</small></span><input id="registrationAutoApprove" type="checkbox" checked/></label></div><div class="registration-help"><b>Cách tính tuần</b><span>Nếu ngày đóng nằm trước ngày mở, ngày mở thuộc tuần trước và ngày đóng thuộc tuần đang đăng ký.</span><span>Ví dụ T7 00:00 → T4 00:00 cho tuần 14/09 nghĩa là mở 12/09 00:00 và đóng 16/09 00:00.</span></div></div><div class="registration-window-actions ui-mt-10"><button class="btn primary" onclick="saveRegistrationWindow()" type="button">Lưu cài đặt</button><button class="btn light" onclick="loadRegistrationWindow()" type="button">Tải lại</button><button class="btn light" id="openRegistrationNowBtn" onclick="openRegistrationWindowNow()" type="button">Mở tuần này</button></div><div class="registration-live-info ui-mt-10"><div class="registration-live-title">CẤU HÌNH ĐANG ÁP DỤNG</div><div id="registrationAppliedSummary" class="registration-live-main">—</div><div id="registrationAppliedWeek" class="registration-live-sub">—</div><div class="registration-live-title ui-mt-8">CỬA SỔ HIỆN TẠI</div><div id="registrationCurrentWindow" class="registration-live-main">—</div><div id="registrationCurrentWindowNote" class="registration-live-sub">—</div></div><div class="ui-mt-9" id="registrationWindowMsg"></div></div></div><div class="admin-pane" id="adminRegistrations"><div class="card"><div class="row"><div><b>Yêu cầu nhân viên</b><div class="muted">Đi trễ và đổi ca cần quản lý xem xét trước khi xử lý.</div></div><button class="btn light" onclick="loadScheduleRequests()">Làm mới</button></div><div class="ui-mt-10" id="scheduleRequestAdminList"></div></div></div><div class="admin-pane" id="adminLeaves"><div class="card"><div class="row"><div><b>Duyệt nghỉ phép</b><div class="muted">Yêu cầu nghỉ của nhân viên trong cửa hàng.</div></div><button class="btn light" onclick="loadLeaves()">Làm mới</button></div><div class="ui-mt-10" id="leaveList"></div></div></div><div class="admin-pane" id="adminDevices"><section class="device-admin-shell"><header class="device-admin-header"><div><div class="eyebrow">CỬA HÀNG &amp; TRUY CẬP</div><h2>Thiết bị chấm công</h2><p>Chỉ thiết bị được Owner phê duyệt mới có thể dùng để chấm công.</p></div><button class="btn light" onclick="loadDevices()" type="button">Làm mới</button></header><div class="device-admin-summary" id="deviceSummary"><div class="device-summary-card"><span>Chờ xử lý</span><b id="deviceCountPending">—</b></div><div class="device-summary-card"><span>Đã duyệt</span><b id="deviceCountApproved">—</b></div><div class="device-summary-card"><span>Hạn chế</span><b id="deviceCountRestricted">—</b></div></div><div aria-label="Lọc thiết bị" class="device-admin-filter" role="tablist"><button class="device-filter active" data-device-filter="all" onclick="filterAdminDevices('all')" type="button">Tất cả</button><button class="device-filter" data-device-filter="pending" onclick="filterAdminDevices('pending')" type="button">Chờ duyệt</button><button class="device-filter" data-device-filter="approved" onclick="filterAdminDevices('approved')" type="button">Đã duyệt</button><button class="device-filter" data-device-filter="restricted" onclick="filterAdminDevices('restricted')" type="button">Hạn chế</button></div><div class="device-admin-list card" id="deviceList"><div class="empty">Đang tải thiết bị…</div></div></section></div><div class="admin-pane" id="adminAudit"><div class="card"><div class="row"><div><b>Nhật ký thao tác</b><div class="muted">Ai đã làm gì, với dữ liệu nào và vào thời điểm nào.</div></div><button class="btn light" onclick="loadAudit()" type="button">Làm mới</button></div><div class="ui-mt-10" id="auditList"></div></div></div><div class="admin-pane" id="adminBranches"><section class="branch-admin-shell"><div class="branch-admin-head"><div><div class="eyebrow">MULTI-BRANCH</div><h2>Chi nhánh</h2><p>Quản lý tất cả cửa hàng thuộc Owner trong cùng một hệ thống.</p></div><button class="btn primary" onclick="openCreateBranch()" type="button">＋ Tạo chi nhánh</button></div><div class="continuity-notice branch-security-note">Mỗi chi nhánh có dữ liệu vận hành riêng. Khi đổi chi nhánh, Lịch, Chấm công, Lương, Ca mẫu và Đăng ký ca đều chuyển theo cùng một branch context.</div><div class="ui-mt-12" id="branchList"><div class="empty">Đang tải chi nhánh…</div></div></section></div><div class="admin-pane" id="adminStore"><div class="card"><b>Cửa hàng &amp; chấm công</b><div class="muted ui-mt-4">Cấu hình vị trí quán và quy tắc chấm công.</div><div class="stack ui-mt-13"><div class="formgrid"><div class="field full"><label>Tên quán</label><input id="storeName"/></div><div class="field full"><label>Địa chỉ</label><input id="storeAddress"/></div><div class="field"><label>Vĩ độ</label><input id="storeLat" step="any" type="number"/></div><div class="field"><label>Kinh độ</label><input id="storeLng" step="any" type="number"/></div><div class="field"><label>Bán kính GPS (m)</label><input id="storeRadius" max="1000" min="20" type="number"/></div><div class="field"><label>Cho phép trễ (phút)</label><input id="storeGrace" max="60" min="0" type="number"/></div><div class="field"><label>Check-in sớm (phút)</label><input id="storeEarly" max="360" min="0" type="number"/></div><div class="field"><label>Đơn giá giờ mặc định</label><input id="storeRate" min="0" type="number"/></div></div><button class="btn primary" onclick="saveStore()">Lưu cài đặt</button><div id="storeMsg"></div></div></div></div></section>
+<details class="admin-group"><summary><span class="admin-group-chevron">⌄</span><span class="admin-group-summary"><b>Cửa hàng &amp; hệ thống</b><small>Thiết lập vận hành và theo dõi thay đổi.</small></span></summary><div class="admin-group-items"><button class="admin-group-item" data-admin-tab="store" onclick="adminTab('store',this)" type="button"><span class="admin-group-item-copy"><b>Cửa hàng</b><small>Vị trí và quy tắc chấm công</small></span><span class="admin-group-arrow">›</span></button><button class="admin-group-item" data-admin-tab="audit" onclick="adminTab('audit',this)" type="button"><span class="admin-group-item-copy"><b>Nhật ký</b><small>Lịch sử thao tác</small></span><span class="admin-group-arrow">›</span></button><button class="admin-group-item owner-only-permission-tab" data-admin-tab="permissions" onclick="adminTab('permissions',this)" type="button"><span class="admin-group-item-copy"><b>Phân quyền</b><small>Quyền thao tác của Quản lý</small></span><span class="admin-group-arrow">›</span></button></div></details></div>
+<details class="admin-group"><summary><span class="admin-group-chevron">⌄</span><span class="admin-group-summary"><b>Thiết bị</b><small>Quản lý thiết bị chấm công và quyền truy cập.</small></span></summary><div class="admin-group-items"><button class="admin-group-item" data-admin-tab="devices" onclick="adminTab('devices',this)" type="button"><span class="admin-group-item-copy"><b>Thiết bị</b><small>Duyệt, khóa và thu hồi thiết bị</small></span><span class="admin-group-arrow">›</span></button></div></details><div class="admin-pane" id="adminPermissions"><div class="card"><div class="weekly-plan-head"><div><b>Phân quyền Quản lý</b><div class="muted">Thiết lập những nghiệp vụ tài khoản Manager được phép thao tác. Chỉ Owner nhìn thấy mục này.</div></div></div><div class="notice info ui-mt-10">Các quyền mặc định được giữ theo chính sách Manager hiện tại. Tắt một quyền sẽ ẩn/khóa nghiệp vụ tương ứng trên giao diện.</div><div class="permission-list ui-mt-12" id="managerPermissionList"><div class="loading-slot"><div class="notice info">Đang tải phân quyền…</div></div></div><div class="row ui-mt-12"><div id="managerPermissionMsg"></div><button class="btn primary" type="button" onclick="saveManagerPermissions()">Lưu phân quyền</button></div></div></div><div class="admin-sheet-backdrop" id="adminSheetBackdrop" onclick="closeAdminPane()" aria-hidden="true"></div><section class="admin-content" id="adminContent"><div class="admin-sheet-head"><div><div class="eyebrow">QUẢN TRỊ</div><h2 id="adminSheetTitle">Nhân viên</h2><p id="adminSheetSub">Quản lý dữ liệu và vận hành.</p></div><button class="admin-pane-close" id="adminPaneClose" onclick="closeAdminPane()" type="button" aria-label="Đóng">×</button></div><div class="admin-pane active" id="adminEmployees"><div class="card"><div class="row"><div><b>Nhân viên</b><div class="muted">Hồ sơ, trạng thái và đơn giá giờ.</div></div><button class="btn primary" onclick="openCreateEmployee()">+ Thêm</button></div><hr/><div class="scroll" id="employeeTable"><div class="empty">Đang tải…</div></div></div></div><div class="admin-pane" id="adminTemplates"><div class="card"><div class="weekly-plan-head"><div><b>Mẫu ca</b><div class="muted">Khung giờ chuẩn dùng để tạo lịch. Khi đổi mẫu, các ca tương lai liên kết với mẫu sẽ tự cập nhật từ ngày áp dụng; ca đã bắt đầu hoặc đã có chấm công được giữ nguyên.</div></div><button class="btn primary" onclick="openCreateTemplate()" type="button">＋ Thêm mẫu</button></div><div class="ui-mt-12" id="templateList"></div><div class="ui-mt-10" id="tplMsg"></div></div></div><div class="admin-pane" id="adminSchedules"><div class="card"><div class="weekly-plan-head"><div><b>Mẫu lịch tuần</b><div class="muted">Chỉ cài cấu trúc ca làm việc cố định từ Thứ Hai đến Chủ Nhật. Phần đăng ký ca nằm riêng.</div></div><span class="badge info">T2–CN</span></div><div class="continuity-notice ui-mt-10">Mỗi ngày chọn các <b>mẫu ca</b> và số vị trí cần có. Lưu xong, mẫu này là nguồn để tạo các tuần làm việc.</div><div class="weekly-plan-grid ui-mt-12" id="weeklyPlanGrid"></div><div class="weekly-plan-actions ui-mt-10"><button class="btn primary" onclick="saveWeeklyPlan()" type="button">Lưu mẫu tuần</button><button class="btn light" onclick="loadWeeklyPlan()" type="button">Tải lại</button></div><div class="ui-mt-9" id="weeklyPlanMsg"></div></div><div class="card weekly-generate ui-mt-10"><div><b>Tạo tuần lịch</b><div class="muted">Chọn Thứ Hai của tuần cần tạo các vị trí từ mẫu lịch tuần.</div></div><div class="generate-week-row ui-mt-10"><div class="field"><label>Tuần bắt đầu (Thứ Hai)</label><input id="weeklyGenerateStart" type="date"/></div><button class="btn primary" onclick="generateWeeklySchedule()" type="button">Tạo lịch tuần</button></div><div class="ui-mt-9" id="weeklyGenerateMsg"></div></div></div><div class="admin-pane" id="adminRegistrationSettings"><div class="card"><div class="weekly-plan-head"><div><b>Cài đặt đăng ký ca</b><div class="muted">Một mẫu thời gian duy nhất, lặp hàng tuần theo tuần làm việc.</div></div><span class="badge info" id="registrationWindowStatus">Chưa cài</span></div><div class="formgrid ui-mt-12"><div class="field"><label>Mở đăng ký</label><select id="registrationWindowOpenDay"><option value="1">Thứ Hai</option><option value="2">Thứ Ba</option><option value="3">Thứ Tư</option><option value="4">Thứ Năm</option><option value="5">Thứ Sáu</option><option value="6">Thứ Bảy</option><option value="7">Chủ Nhật</option></select></div><div class="field"><label>Giờ mở</label><input id="registrationWindowOpenTime" type="time"/></div><div class="field"><label>Đóng đăng ký</label><select id="registrationWindowCloseDay"><option value="1">Thứ Hai</option><option value="2">Thứ Ba</option><option value="3">Thứ Tư</option><option value="4">Thứ Năm</option><option value="5">Thứ Sáu</option><option value="6">Thứ Bảy</option><option value="7">Chủ Nhật</option></select></div><div class="field"><label>Giờ đóng</label><input id="registrationWindowCloseTime" type="time"/></div></div><div class="settings-toggle-grid ui-mt-10"><label class="settings-toggle-card"><input id="registrationAutoOpen" type="checkbox" checked/><span><b>Tự động mở đăng ký</b><small>Đến giờ mở, nhân viên được đăng ký tự động.</small></span></label><label class="settings-toggle-card"><input id="registrationAutoApprove" type="checkbox" checked/><span><b>Tự động duyệt đăng ký</b><small>Đến giờ đóng, đăng ký hợp lệ được tự chốt.</small></span></label></div><div class="muted ui-mt-8">Nếu ngày đóng đứng trước ngày mở, ngày mở thuộc tuần trước và ngày đóng thuộc tuần đang đăng ký. Ví dụ T7 00:00 → T4 00:00 cho tuần 14/09 nghĩa là mở 12/09 00:00 và đóng 16/09 00:00.</div><div class="registration-window-actions ui-mt-10"><button class="btn primary" onclick="saveRegistrationWindow()" type="button">Lưu cài đặt</button><button class="btn light" onclick="loadRegistrationWindow()" type="button">Tải lại</button><button class="btn light" id="openRegistrationNowBtn" onclick="openRegistrationWindowNow()" type="button">Mở tuần này</button></div><div class="ui-mt-9" id="registrationWindowMsg"></div></div></div><div class="admin-pane" id="adminRegistrations"><div class="card"><div class="row"><div><b>Yêu cầu nhân viên</b><div class="muted">Đi trễ và đổi ca cần quản lý xem xét trước khi xử lý.</div></div><button class="btn light" onclick="loadScheduleRequests()">Làm mới</button></div><div class="ui-mt-10" id="scheduleRequestAdminList"></div></div></div><div class="admin-pane" id="adminLeaves"><div class="card"><div class="row"><div><b>Duyệt nghỉ phép</b><div class="muted">Yêu cầu nghỉ của nhân viên trong cửa hàng.</div></div><button class="btn light" onclick="loadLeaves()">Làm mới</button></div><div class="ui-mt-10" id="leaveList"></div></div></div><div class="admin-pane" id="adminDevices"><section class="device-admin-shell"><header class="device-admin-header"><div><div class="eyebrow">CỬA HÀNG &amp; TRUY CẬP</div><h2>Thiết bị chấm công</h2><p>Chỉ thiết bị được Owner phê duyệt mới có thể dùng để chấm công.</p></div><button class="btn light" onclick="loadDevices()" type="button">Làm mới</button></header><div class="device-admin-summary" id="deviceSummary"><div class="device-summary-card"><span>Chờ xử lý</span><b id="deviceCountPending">—</b></div><div class="device-summary-card"><span>Đã duyệt</span><b id="deviceCountApproved">—</b></div><div class="device-summary-card"><span>Hạn chế</span><b id="deviceCountRestricted">—</b></div></div><div aria-label="Lọc thiết bị" class="device-admin-filter" role="tablist"><button class="device-filter active" data-device-filter="all" onclick="filterAdminDevices('all')" type="button">Tất cả</button><button class="device-filter" data-device-filter="pending" onclick="filterAdminDevices('pending')" type="button">Chờ duyệt</button><button class="device-filter" data-device-filter="approved" onclick="filterAdminDevices('approved')" type="button">Đã duyệt</button><button class="device-filter" data-device-filter="restricted" onclick="filterAdminDevices('restricted')" type="button">Hạn chế</button></div><div class="device-admin-list card" id="deviceList"><div class="empty">Đang tải thiết bị…</div></div></section></div><div class="admin-pane" id="adminAudit"><div class="card"><div class="row"><div><b>Nhật ký thao tác</b><div class="muted">Ai đã làm gì, với dữ liệu nào và vào thời điểm nào.</div></div><button class="btn light" onclick="loadAudit()" type="button">Làm mới</button></div><div class="ui-mt-10" id="auditList"></div></div></div><div class="admin-pane" id="adminBranches"><section class="branch-admin-shell"><div class="branch-admin-head"><div><div class="eyebrow">MULTI-BRANCH</div><h2>Chi nhánh</h2><p>Quản lý tất cả cửa hàng thuộc Owner trong cùng một hệ thống.</p></div><button class="btn primary" onclick="openCreateBranch()" type="button">＋ Tạo chi nhánh</button></div><div class="continuity-notice branch-security-note">Mỗi chi nhánh có dữ liệu vận hành riêng. Khi đổi chi nhánh, Lịch, Chấm công, Lương, Ca mẫu và Đăng ký ca đều chuyển theo cùng một branch context.</div><div class="ui-mt-12" id="branchList"><div class="empty">Đang tải chi nhánh…</div></div></section></div><div class="admin-pane" id="adminStore"><div class="card"><b>Cửa hàng &amp; chấm công</b><div class="muted ui-mt-4">Cấu hình vị trí quán và quy tắc chấm công.</div><div class="stack ui-mt-13"><div class="formgrid"><div class="field full"><label>Tên quán</label><input id="storeName"/></div><div class="field full"><label>Địa chỉ</label><input id="storeAddress"/></div><div class="field"><label>Vĩ độ</label><input id="storeLat" step="any" type="number"/></div><div class="field"><label>Kinh độ</label><input id="storeLng" step="any" type="number"/></div><div class="field"><label>Bán kính GPS (m)</label><input id="storeRadius" max="1000" min="20" type="number"/></div><div class="field"><label>Cho phép trễ (phút)</label><input id="storeGrace" max="60" min="0" type="number"/></div><div class="field"><label>Check-in sớm (phút)</label><input id="storeEarly" max="360" min="0" type="number"/></div><div class="field"><label>Đơn giá giờ mặc định</label><input id="storeRate" min="0" type="number"/></div></div><button class="btn primary" onclick="saveStore()">Lưu cài đặt</button><div id="storeMsg"></div></div></div></div></section>
 </section>
 <section class="view" id="profile">
 <header class="screen-header page-screen-header"><div><div class="eyebrow">CÁ NHÂN</div><h1 class="page-title">Tài khoản</h1><p class="page-sub">Thông tin cá nhân và thiết lập tài khoản.</p></div></header>
@@ -2817,7 +2628,7 @@ input:focus,select:focus,textarea:focus{
 <button class="nav" data-nav="profile" onclick="navigate('profile')"><span class="nav-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.4 3.2-5.2 7-5.2s6.2 1.8 7 5.2"/></svg></span><span>Tài khoản</span></button>
 </nav>
 </div>
-<div class="view" id="deviceGate"><div class="device-gate-card"><div class="gate-icon" id="gateIcon">📱</div><h1 id="gateTitle">Liên kết thiết bị</h1><p id="gateDesc">Thiết bị này chưa được phê duyệt.</p><div class="device-name" id="gateDeviceName">Thiết bị</div><div class="device-id" id="gateDeviceId">—</div><button class="gate-button" id="gateAction" onclick="registerDeviceAndRefresh()">Đăng ký thiết bị</button><button class="gate-secondary" onclick="signOut()">Đăng xuất</button><div class="gate-note">Chỉ thiết bị được Owner phê duyệt mới được sử dụng tài khoản nhân viên.</div></div></div><div class="modal" id="employeeModal"><div class="modalbox"><div class="modal-head"><div><h2>Sửa nhân viên</h2><div class="muted ui-small-sub">Quản lý hồ sơ và quyền tài khoản.</div></div><button class="modal-close" onclick="closeEmployeeModal()">×</button></div><div class="stack ui-mt-16"><input id="editEmployeeId" type="hidden"/><input id="editEmployeeCurrentRate" type="hidden"/><div class="field"><label>Họ và tên</label><input id="editEmployeeName"/></div><div class="field"><label>Số điện thoại</label><input id="editEmployeePhone"/></div><div class="formgrid"><div class="field"><label>Vai trò</label><select id="editEmployeeRole"><option value="employee">Nhân viên</option><option value="manager">Quản lý</option><option value="owner">Chủ quán</option></select></div><div class="field"><label>Trạng thái</label><select id="editEmployeeStatus"><option value="active">Đang làm</option><option value="inactive">Tạm nghỉ</option><option value="invited">Chưa kích hoạt</option><option value="terminated">Đã nghỉ</option></select></div></div><div class="formgrid"><div class="field"><label>Lương/giờ (đ)</label><input id="editEmployeeRate" min="0" step="1000" type="number"/></div><div class="field"><label>Ngày áp dụng mức lương</label><input id="editEmployeeRateEffective" type="date"/></div></div><div class="muted ui-small-sub">Nếu chọn ngày trong tương lai, mức lương hiện tại vẫn giữ nguyên cho đến đúng ngày áp dụng.</div><button class="btn primary" onclick="saveEmployee()">Lưu thay đổi</button><div class="password-box"><b class="ui-modal-sub">Đổi mật khẩu tài khoản</b><div class="muted ui-spaced">Mật khẩu mới không được hiển thị lại.</div><div class="stack"><div class="field"><label>Mật khẩu mới</label><input autocomplete="new-password" id="editEmployeePassword" type="password"/></div><div class="field"><label>Nhập lại mật khẩu</label><input autocomplete="new-password" id="editEmployeePassword2" type="password"/></div><button class="btn light" onclick="changeEmployeePassword()">Đổi mật khẩu</button><div id="employeePasswordMsg"></div></div></div><div id="employeeMsg"></div></div></div></div><div class="modal" id="createEmployeeModal"><div class="modalbox"><div class="modal-head"><div><h2>Thêm nhân viên</h2><div class="muted ui-small-sub">Tạo tài khoản và gửi lời mời.</div></div><button class="modal-close" onclick="closeCreateEmployee()">×</button></div><div class="stack ui-mt-16"><div class="field"><label>Họ và tên *</label><input id="newEmployeeName" placeholder="Nguyễn Văn A"/></div><div class="field"><label>Email đăng nhập *</label><input id="newEmployeeEmail" placeholder="nhanvien@email.com" type="email"/></div><div class="field"><label>Số điện thoại</label><input id="newEmployeePhone" inputmode="tel"/></div><div class="field"><label>Lương/giờ (đ)</label><input id="newEmployeeRate" min="0" step="1000" type="number" value="30000"/></div><button class="btn primary" onclick="createEmployee()">Tạo tài khoản &amp; gửi email mời</button><div id="createEmployeeMsg"></div></div></div></div><div class="modal" id="templateModal"><div class="modalbox"><div class="modal-head"><div><h2 id="templateModalTitle">Thêm mẫu ca</h2><div class="muted ui-small-sub">Khung giờ chuẩn cho các lịch được tạo về sau.</div></div><button class="modal-close" onclick="closeTemplateModal()" type="button">×</button></div><div class="stack ui-mt-16"><input id="editTemplateId" type="hidden"/><div class="field"><label>Tên ca</label><input id="tplName" placeholder="Ca sáng"/></div><div class="formgrid"><div class="field"><label>Bắt đầu</label><input id="tplStart" type="time" value="08:00"/></div><div class="field"><label>Kết thúc</label><input id="tplEnd" type="time" value="14:00"/></div><div class="field"><label>Nghỉ giữa ca (phút)</label><input id="tplBreak" min="0" type="number" value="0"/></div><div class="field"><label>Số vị trí mặc định</label><input id="tplCapacity" max="10" min="1" type="number" value="1"/></div></div><div class="field"><label>Ngày áp dụng</label><input id="tplEffectiveDate" type="date"/></div><div class="field"><label>Trạng thái</label><select id="tplActive"><option value="true">Đang dùng</option><option value="false">Tạm tắt</option></select></div><div id="tplModalMsg"></div><div class="modal-actions"><button class="btn light" onclick="closeTemplateModal()" type="button">Hủy</button><button class="btn primary" onclick="saveTemplate()" type="button">Lưu mẫu ca</button></div></div></div></div><div class="modal" id="directScheduleModal"><div class="modalbox schedule-add-modal"><div class="modal-head"><div><h2>Thêm ca vào lịch</h2><div class="muted ui-small-sub">Chọn ngày trước, sau đó chọn loại ca cần thêm.</div></div><button class="modal-close" onclick="closeDirectScheduleModal()" type="button">×</button></div><div class="stack ui-mt-16"><div class="field"><label>Ngày làm việc *</label><input id="directScheduleDate" type="date"/></div><div class="schedule-add-tabs" role="tablist" aria-label="Loại ca"><button type="button" class="schedule-add-tab active" id="scheduleAddTabTemplate" onclick="switchScheduleAddTab('template')">Ca mẫu</button><button type="button" class="schedule-add-tab" id="scheduleAddTabSupplemental" onclick="switchScheduleAddTab('supplemental')">Ca bổ sung</button></div><section id="scheduleAddTemplatePanel" class="schedule-add-panel"><div class="schedule-add-panel-head"><div><b>Thêm ca mẫu</b><div class="muted">Chỉ hiển thị ca mẫu chưa có trong ngày đã chọn.</div></div><span class="badge info" id="directScheduleAvailableCount">—</span></div><div id="directScheduleTemplateList" class="schedule-template-choice-list ui-mt-10"><div class="empty">Đang tải mẫu ca…</div></div><div class="field ui-mt-10"><label>Ghi chú chung <span class="muted">(không bắt buộc)</span></label><input id="directScheduleNote" placeholder="Ví dụ: Tăng cường cuối tuần"/></div><div id="directScheduleTemplateMsg" class="ui-mt-9"></div></section><section id="scheduleAddSupplementalPanel" class="schedule-add-panel" style="display:none"><div class="schedule-add-panel-head"><div><b>Ca bổ sung đột xuất</b><div class="muted">Dùng khi phát sinh ca ngoài các ca mẫu.</div></div><span class="badge info">Phát sinh</span></div><div class="stack ui-mt-10"><div class="field"><label>Tên ca *</label><input id="supplementalScheduleName" placeholder="Ví dụ: Ca tăng cường tối" maxlength="100"/></div><div class="formgrid"><div class="field"><label>Giờ bắt đầu *</label><input id="supplementalScheduleStart" type="time" value="18:00"/></div><div class="field"><label>Giờ kết thúc *</label><input id="supplementalScheduleEnd" type="time" value="22:00"/></div></div><div class="field"><label>Nhân viên *</label><div id="supplementalEmployeeList" class="schedule-person-choice-list"><div class="empty">Đang tải nhân viên…</div></div></div><div class="field"><label>Ghi chú <span class="muted">(không bắt buộc)</span></label><input id="supplementalScheduleNote" placeholder="Lý do/phạm vi ca bổ sung"/></div></div><div id="directScheduleSupplementalMsg" class="ui-mt-9"></div></section><div class="modal-actions"><button class="btn light" onclick="closeDirectScheduleModal()" type="button">Hủy</button><button class="btn primary" id="directScheduleSaveBtn" onclick="saveDirectSchedule()" type="button">Thêm ca</button></div></div></div></div><div class="modal" id="assignShiftModal"><div class="modal-card"><div class="modal-head"><div><b id="assignShiftTitle">Điều chỉnh nhân viên trong ca</b><div class="muted" id="assignShiftSub">—</div></div><button class="modal-close" onclick="closeAssignShiftModal()">×</button></div><div class="notice info ui-spaced" id="assignShiftCapacity">—</div><div class="stack ui-scroll-panel" id="assignShiftPeople"></div><div class="ui-mt-10" id="assignShiftMsg"></div><div class="modal-actions"><button class="btn light" onclick="closeAssignShiftModal()">Hủy</button><button class="btn primary" id="assignShiftSave" onclick="saveAssignShift()">Lưu</button></div></div></div><div class="modal" id="supplementAttendanceModal"><div class="modalbox"><div class="modal-head"><div><h2 id="supplementAttendanceTitle">Bổ sung chấm công</h2><div class="muted" id="supplementAttendanceSub">—</div></div><button class="modal-close" onclick="closeSupplementAttendance()" type="button">×</button></div><div class="stack ui-mt-16"><div class="notice info">Owner nhập <b>giờ bắt đầu</b> và <b>giờ kết thúc thực tế</b>. Hệ thống sẽ tính lại giờ công và lưu vào bảng chấm công của nhân viên.</div><div class="supplement-grid"><div class="field"><label>Giờ bắt đầu thực tế *</label><input id="supplementCheckIn" type="datetime-local"/></div><div class="field"><label>Giờ kết thúc thực tế *</label><input id="supplementCheckOut" type="datetime-local"/></div></div><div class="supplement-note">Thời gian phải nằm trong ca và không được ở tương lai. Nếu đang chỉnh một bản ghi đã có, dữ liệu cũ sẽ được cập nhật và ghi nhật ký thao tác.</div><div class="field"><label>Ghi chú</label><input id="supplementNote" placeholder="Ví dụ: Điện thoại lỗi, Owner bổ sung công"/></div><div id="supplementAttendanceMsg"></div><div class="modal-actions"><button class="btn light" onclick="closeSupplementAttendance()" type="button">Hủy</button><button class="btn primary" id="supplementAttendanceSave" onclick="saveSupplementAttendance()" type="button">Lưu chấm công</button></div></div></div></div><div class="modal" id="leaveModal"><div class="modalbox"><div class="modal-head"><div><h2>Xin nghỉ</h2><div class="muted ui-small-sub">Gửi yêu cầu để Owner/Manager duyệt.</div></div><button class="modal-close" onclick="closeLeaveModal()">×</button></div><div class="stack ui-mt-16"><div class="formgrid"><div class="field"><label>Từ ngày</label><input id="leaveStart" type="date"/></div><div class="field"><label>Đến ngày</label><input id="leaveEnd" type="date"/></div></div><div class="field"><label>Lý do *</label><input id="leaveReason" placeholder="Ví dụ: việc gia đình"/></div><button class="btn primary" onclick="submitLeave()">Gửi yêu cầu nghỉ</button><div id="leaveMsg"></div></div></div></div><div class="modal" id="registrationOptionsModal"><div class="modalbox"><div class="modal-head"><div><h2>Đăng ký ca</h2><div class="muted ui-modal-sub">Hiển thị các ca thuộc tuần đang mở đăng ký.</div></div><button class="modal-close" onclick="closeRegistrationOptions()" type="button">×</button></div><div class="registration-options-list ui-mt-14" id="registrationOptionsList"><div class="loading-slot"><div class="notice info">Đang tìm ca còn trống…</div></div></div></div></div><div class="modal" id="scheduleRequestModal"><div class="modalbox"><div class="modal-head"><div><h2 id="scheduleRequestTitle">Yêu cầu</h2><div class="muted ui-modal-sub" id="scheduleRequestSub">Gửi yêu cầu để quản lý xử lý.</div></div><button class="modal-close" onclick="closeScheduleRequestModal()" type="button">×</button></div><div class="stack ui-mt-16" id="scheduleRequestFields"></div><div class="ui-mt-10" id="scheduleRequestMsg"></div><div class="modal-actions"><button class="btn light" onclick="closeScheduleRequestModal()" type="button">Hủy</button><button class="btn primary" id="scheduleRequestSave" onclick="submitScheduleRequest()" type="button">Gửi yêu cầu</button></div></div></div><div class="modal" id="passwordModal"><div class="modalbox"><div class="modal-head"><div><h2>Đổi mật khẩu</h2><div class="muted ui-small-sub">Mật khẩu tối thiểu 8 ký tự.</div></div><button class="modal-close" onclick="closePasswordModal()">×</button></div><div class="stack ui-mt-16"><div class="field" id="currentPasswordField"><label>Mật khẩu hiện tại</label><input autocomplete="current-password" id="currentPassword" placeholder="Nhập mật khẩu hiện tại" type="password"/></div><div class="field"><label>Mật khẩu mới</label><input autocomplete="new-password" id="newPassword" type="password"/></div><div class="field"><label>Nhập lại mật khẩu mới</label><input autocomplete="new-password" id="newPassword2" type="password"/></div><div class="notice info" id="passwordRecoveryNote" style="display:none">Bạn đang đặt lại mật khẩu từ email khôi phục, không cần nhập mật khẩu cũ.</div><button class="btn primary" onclick="setNewPassword()">Cập nhật mật khẩu</button><div id="passwordMsg"></div></div></div></div><div class="modal" id="unassignConfirmModal">
+<div class="view" id="deviceGate"><div class="device-gate-card"><div class="gate-icon" id="gateIcon">📱</div><h1 id="gateTitle">Liên kết thiết bị</h1><p id="gateDesc">Thiết bị này chưa được phê duyệt.</p><div class="device-name" id="gateDeviceName">Thiết bị</div><div class="device-id" id="gateDeviceId">—</div><button class="gate-button" id="gateAction" onclick="registerDeviceAndRefresh()">Đăng ký thiết bị</button><button class="gate-secondary" onclick="signOut()">Đăng xuất</button><div class="gate-note">Chỉ thiết bị được Owner phê duyệt mới được sử dụng tài khoản nhân viên.</div></div></div><div class="modal" id="employeeModal"><div class="modalbox"><div class="modal-head"><div><h2>Sửa nhân viên</h2><div class="muted ui-small-sub">Quản lý hồ sơ và quyền tài khoản.</div></div><button class="modal-close" onclick="closeEmployeeModal()">×</button></div><div class="stack ui-mt-16"><input id="editEmployeeId" type="hidden"/><input id="editEmployeeCurrentRate" type="hidden"/><div class="field"><label>Họ và tên</label><input id="editEmployeeName"/></div><div class="field"><label>Số điện thoại</label><input id="editEmployeePhone"/></div><div class="formgrid"><div class="field"><label>Vai trò</label><select id="editEmployeeRole"><option value="employee">Nhân viên</option><option value="manager">Quản lý</option><option value="owner">Chủ quán</option></select></div><div class="field"><label>Trạng thái</label><select id="editEmployeeStatus"><option value="active">Đang làm</option><option value="inactive">Tạm nghỉ</option><option value="invited">Chưa kích hoạt</option><option value="terminated">Đã nghỉ</option></select></div></div><div class="formgrid"><div class="field"><label>Lương/giờ (đ)</label><input id="editEmployeeRate" min="0" step="1000" type="number"/></div><div class="field"><label>Ngày áp dụng mức lương</label><input id="editEmployeeRateEffective" type="date"/></div></div><div class="muted ui-small-sub">Nếu chọn ngày trong tương lai, mức lương hiện tại vẫn giữ nguyên cho đến đúng ngày áp dụng.</div><button class="btn primary" onclick="saveEmployee()">Lưu thay đổi</button><div class="password-box"><b class="ui-modal-sub">Đổi mật khẩu tài khoản</b><div class="muted ui-spaced">Mật khẩu mới không được hiển thị lại.</div><div class="stack"><div class="field"><label>Mật khẩu mới</label><input autocomplete="new-password" id="editEmployeePassword" type="password"/></div><div class="field"><label>Nhập lại mật khẩu</label><input autocomplete="new-password" id="editEmployeePassword2" type="password"/></div><button class="btn light" onclick="changeEmployeePassword()">Đổi mật khẩu</button><div id="employeePasswordMsg"></div></div></div><div id="employeeMsg"></div></div></div></div><div class="modal" id="createEmployeeModal"><div class="modalbox"><div class="modal-head"><div><h2>Thêm nhân viên</h2><div class="muted ui-small-sub">Tạo tài khoản và gửi lời mời.</div></div><button class="modal-close" onclick="closeCreateEmployee()">×</button></div><div class="stack ui-mt-16"><div class="field"><label>Họ và tên *</label><input id="newEmployeeName" placeholder="Nguyễn Văn A"/></div><div class="field"><label>Email đăng nhập *</label><input id="newEmployeeEmail" placeholder="nhanvien@email.com" type="email"/></div><div class="field"><label>Số điện thoại</label><input id="newEmployeePhone" inputmode="tel"/></div><div class="field"><label>Lương/giờ (đ)</label><input id="newEmployeeRate" min="0" step="1000" type="number" value="30000"/></div><button class="btn primary" onclick="createEmployee()">Tạo tài khoản &amp; gửi email mời</button><div id="createEmployeeMsg"></div></div></div></div><div class="modal" id="templateModal"><div class="modalbox"><div class="modal-head"><div><h2 id="templateModalTitle">Thêm mẫu ca</h2><div class="muted ui-small-sub">Khung giờ chuẩn cho các lịch được tạo về sau.</div></div><button class="modal-close" onclick="closeTemplateModal()" type="button">×</button></div><div class="stack ui-mt-16"><input id="editTemplateId" type="hidden"/><div class="field"><label>Tên ca</label><input id="tplName" placeholder="Ca sáng"/></div><div class="formgrid"><div class="field"><label>Bắt đầu</label><input id="tplStart" type="time" value="08:00"/></div><div class="field"><label>Kết thúc</label><input id="tplEnd" type="time" value="14:00"/></div><div class="field"><label>Nghỉ giữa ca (phút)</label><input id="tplBreak" min="0" type="number" value="0"/></div><div class="field"><label>Số vị trí mặc định</label><input id="tplCapacity" max="10" min="1" type="number" value="1"/></div></div><div class="field"><label>Ngày áp dụng</label><input id="tplEffectiveDate" type="date"/></div><div class="field"><label>Trạng thái</label><select id="tplActive"><option value="true">Đang dùng</option><option value="false">Tạm tắt</option></select></div><div id="tplModalMsg"></div><div class="modal-actions"><button class="btn light" onclick="closeTemplateModal()" type="button">Hủy</button><button class="btn primary" onclick="saveTemplate()" type="button">Lưu mẫu ca</button></div></div></div></div><div class="modal" id="directScheduleModal"><div class="modalbox schedule-add-modal"><div class="modal-head"><div><h2>Thêm ca vào lịch</h2><div class="muted ui-small-sub">Chọn ngày trước, sau đó chọn loại ca cần thêm.</div></div><button class="modal-close" onclick="closeDirectScheduleModal()" type="button">×</button></div><div class="stack ui-mt-16"><div class="field"><label>Ngày làm việc *</label><input id="directScheduleDate" type="date"/></div><div class="schedule-add-tabs" role="tablist" aria-label="Loại ca"><button type="button" class="schedule-add-tab active" id="scheduleAddTabTemplate" onclick="switchScheduleAddTab('template')">Ca mẫu</button><button type="button" class="schedule-add-tab" id="scheduleAddTabSupplemental" onclick="switchScheduleAddTab('supplemental')">Ca bổ sung</button></div><section id="scheduleAddTemplatePanel" class="schedule-add-panel"><div class="schedule-add-panel-head"><div><b>Thêm ca mẫu</b><div class="muted">Chỉ hiển thị ca mẫu chưa có trong ngày đã chọn.</div></div><span class="badge info" id="directScheduleAvailableCount">—</span></div><div id="directScheduleTemplateList" class="schedule-template-choice-list ui-mt-10"><div class="empty">Đang tải mẫu ca…</div></div><div class="field ui-mt-10"><label>Ghi chú chung <span class="muted">(không bắt buộc)</span></label><input id="directScheduleNote" placeholder="Ví dụ: Tăng cường cuối tuần"/></div><div id="directScheduleTemplateMsg" class="ui-mt-9"></div></section><section id="scheduleAddSupplementalPanel" class="schedule-add-panel" style="display:none"><div class="schedule-add-panel-head"><div><b>Ca bổ sung đột xuất</b><div class="muted">Dùng khi phát sinh ca ngoài các ca mẫu.</div></div><span class="badge info">Phát sinh</span></div><div class="stack ui-mt-10"><div class="field"><label>Tên ca *</label><input id="supplementalScheduleName" placeholder="Ví dụ: Ca tăng cường tối" maxlength="100"/></div><div class="formgrid"><div class="field"><label>Giờ bắt đầu *</label><input id="supplementalScheduleStart" type="time" value="18:00"/></div><div class="field"><label>Giờ kết thúc *</label><input id="supplementalScheduleEnd" type="time" value="22:00"/></div></div><div class="field"><label>Nhân viên *</label><div id="supplementalEmployeeList" class="schedule-person-choice-list"><div class="empty">Đang tải nhân viên…</div></div></div><div class="field"><label>Ghi chú <span class="muted">(không bắt buộc)</span></label><input id="supplementalScheduleNote" placeholder="Lý do/phạm vi ca bổ sung"/></div></div><div id="directScheduleSupplementalMsg" class="ui-mt-9"></div></section><div class="modal-actions"><button class="btn light" onclick="closeDirectScheduleModal()" type="button">Hủy</button><button class="btn primary" id="directScheduleSaveBtn" onclick="saveDirectSchedule()" type="button">Thêm ca</button></div></div></div></div><div class="modal" id="assignShiftModal"><div class="modal-card"><div class="modal-head"><div><b id="assignShiftTitle">Thêm nhân viên vào ca</b><div class="muted" id="assignShiftSub">—</div></div><button class="modal-close" onclick="closeAssignShiftModal()">×</button></div><div class="notice info ui-spaced" id="assignShiftCapacity">—</div><div class="stack ui-scroll-panel" id="assignShiftPeople"></div><div class="ui-mt-10" id="assignShiftMsg"></div><div class="modal-actions"><button class="btn light" onclick="closeAssignShiftModal()">Hủy</button><button class="btn primary" id="assignShiftSave" onclick="saveAssignShift()">Lưu</button></div></div></div><div class="modal" id="supplementAttendanceModal"><div class="modalbox"><div class="modal-head"><div><h2 id="supplementAttendanceTitle">Bổ sung chấm công</h2><div class="muted" id="supplementAttendanceSub">—</div></div><button class="modal-close" onclick="closeSupplementAttendance()" type="button">×</button></div><div class="stack ui-mt-16"><div class="notice info">Owner nhập <b>giờ bắt đầu</b> và <b>giờ kết thúc thực tế</b>. Hệ thống sẽ tính lại giờ công và lưu vào bảng chấm công của nhân viên.</div><div class="supplement-grid"><div class="field"><label>Giờ bắt đầu thực tế *</label><input id="supplementCheckIn" type="datetime-local"/></div><div class="field"><label>Giờ kết thúc thực tế *</label><input id="supplementCheckOut" type="datetime-local"/></div></div><div class="supplement-note">Thời gian phải nằm trong ca và không được ở tương lai. Nếu đang chỉnh một bản ghi đã có, dữ liệu cũ sẽ được cập nhật và ghi nhật ký thao tác.</div><div class="field"><label>Ghi chú</label><input id="supplementNote" placeholder="Ví dụ: Điện thoại lỗi, Owner bổ sung công"/></div><div id="supplementAttendanceMsg"></div><div class="modal-actions"><button class="btn light" onclick="closeSupplementAttendance()" type="button">Hủy</button><button class="btn primary" id="supplementAttendanceSave" onclick="saveSupplementAttendance()" type="button">Lưu chấm công</button></div></div></div></div><div class="modal" id="leaveModal"><div class="modalbox"><div class="modal-head"><div><h2>Xin nghỉ</h2><div class="muted ui-small-sub">Gửi yêu cầu để Owner/Manager duyệt.</div></div><button class="modal-close" onclick="closeLeaveModal()">×</button></div><div class="stack ui-mt-16"><div class="formgrid"><div class="field"><label>Từ ngày</label><input id="leaveStart" type="date"/></div><div class="field"><label>Đến ngày</label><input id="leaveEnd" type="date"/></div></div><div class="field"><label>Lý do *</label><input id="leaveReason" placeholder="Ví dụ: việc gia đình"/></div><button class="btn primary" onclick="submitLeave()">Gửi yêu cầu nghỉ</button><div id="leaveMsg"></div></div></div></div><div class="modal" id="registrationOptionsModal"><div class="modalbox"><div class="modal-head"><div><h2>Đăng ký ca</h2><div class="muted ui-modal-sub">Hiển thị các ca thuộc tuần đang mở đăng ký.</div></div><button class="modal-close" onclick="closeRegistrationOptions()" type="button">×</button></div><div class="registration-options-list ui-mt-14" id="registrationOptionsList"><div class="loading-slot"><div class="notice info">Đang tìm ca còn trống…</div></div></div></div></div><div class="modal" id="scheduleRequestModal"><div class="modalbox"><div class="modal-head"><div><h2 id="scheduleRequestTitle">Yêu cầu</h2><div class="muted ui-modal-sub" id="scheduleRequestSub">Gửi yêu cầu để quản lý xử lý.</div></div><button class="modal-close" onclick="closeScheduleRequestModal()" type="button">×</button></div><div class="stack ui-mt-16" id="scheduleRequestFields"></div><div class="ui-mt-10" id="scheduleRequestMsg"></div><div class="modal-actions"><button class="btn light" onclick="closeScheduleRequestModal()" type="button">Hủy</button><button class="btn primary" id="scheduleRequestSave" onclick="submitScheduleRequest()" type="button">Gửi yêu cầu</button></div></div></div><div class="modal" id="passwordModal"><div class="modalbox"><div class="modal-head"><div><h2>Đổi mật khẩu</h2><div class="muted ui-small-sub">Mật khẩu tối thiểu 8 ký tự.</div></div><button class="modal-close" onclick="closePasswordModal()">×</button></div><div class="stack ui-mt-16"><div class="field" id="currentPasswordField"><label>Mật khẩu hiện tại</label><input autocomplete="current-password" id="currentPassword" placeholder="Nhập mật khẩu hiện tại" type="password"/></div><div class="field"><label>Mật khẩu mới</label><input autocomplete="new-password" id="newPassword" type="password"/></div><div class="field"><label>Nhập lại mật khẩu mới</label><input autocomplete="new-password" id="newPassword2" type="password"/></div><div class="notice info" id="passwordRecoveryNote" style="display:none">Bạn đang đặt lại mật khẩu từ email khôi phục, không cần nhập mật khẩu cũ.</div><button class="btn primary" onclick="setNewPassword()">Cập nhật mật khẩu</button><div id="passwordMsg"></div></div></div></div><div class="modal" id="unassignConfirmModal">
 <div class="modal-card unassign-confirm-card">
 <div class="modal-head">
 <div>
@@ -3280,15 +3091,10 @@ async function saveProfile(){
 
 function syncHeader(){if(!profile)return;el('roleLabel').textContent=ROLE_LABEL[profile.role]||'Tài khoản';updateGreetingAndClock();syncBranchUI();}
 function updateNavForRole(){
- const isStaff=['owner','manager'].includes(profile?.role),isOwner=profile?.role==='owner',isManager=profile?.role==='manager';
+ const isStaff=['owner','manager'].includes(profile?.role),isOwner=profile?.role==='owner';
  const create=document.querySelector('#adminEmployees .btn.primary');
- if(create)create.classList.toggle('hidden',!isOwner);
- document.querySelectorAll('#admin .admin-group-item[data-admin-tab="devices"],#admin .admin-group-item[data-admin-tab="store"],#admin .admin-group-item[data-admin-tab="registrationSettings"]').forEach(x=>x.classList.toggle('hidden',!isOwner));
- document.querySelectorAll('#admin .owner-only-branch-group').forEach(x=>x.style.display=isOwner?'':'none');
- const salaryNav=el('salaryNav');
- if(salaryNav)salaryNav.classList.toggle('hidden',isManager);
- const passwordBox=document.querySelector('#employeeModal .password-box');
- if(passwordBox)passwordBox.classList.toggle('hidden',isManager);
+ if(create)create.classList.toggle('hidden',!isStaff);
+ document.querySelectorAll('#admin .admin-group-item[data-admin-tab="devices"],#admin .admin-group-item[data-admin-tab="store"]').forEach(x=>x.classList.toggle('hidden',!isOwner));
  syncRoleContent();
  document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
 }
@@ -3297,7 +3103,7 @@ function saveUiState(){if(!session?.user?.id)return;try{localStorage.setItem(uiS
 function readUiState(){try{const raw=localStorage.getItem(uiStateKey());return raw?JSON.parse(raw):null}catch(e){return null}}
 function restoreUiState(opts={}){const st=readUiState();if(!st){navigate('dashboard',{restore:true,deferLoad:!!opts.deferData});return}if(profile?.role==='employee'&&st.currentView==='admin')st.currentView='dashboard';if(st.employeeSelectedDate)employeeSelectedDate=st.employeeSelectedDate;if(st.employeeDayWindowStart)employeeDayWindowStart=st.employeeDayWindowStart;if(['owner','manager'].includes(profile?.role)){mainScheduleDate=localToday();mainScheduleWindowStart=mondayOfWeek(mainScheduleDate)}else{if(st.mainScheduleDate)mainScheduleDate=st.mainScheduleDate;if(st.mainScheduleWindowStart)mainScheduleWindowStart=st.mainScheduleWindowStart}if(st.adminSelectedDate)adminSelectedDate=st.adminSelectedDate;if(st.adminDayWindowStart)adminDayWindowStart=st.adminDayWindowStart;if(st.adminAttendanceDate)adminAttendanceDate=st.adminAttendanceDate;if(st.adminAttendanceWindowStart)adminAttendanceWindowStart=st.adminAttendanceWindowStart;currentAdminTab=st.currentAdminTab||'employees';navigate(st.currentView||'dashboard',{restore:true,deferLoad:!!opts.deferData,scrollY:Number(st.scrollY||0)})}
 function openAttendanceNav(){navigate('attendance')}
-function syncRoleContent(){const staff=['owner','manager'].includes(profile?.role);document.querySelectorAll('.role-employee').forEach(x=>x.classList.toggle('ui-hidden',staff));document.querySelectorAll('.role-staff').forEach(x=>x.classList.toggle('ui-hidden',!staff));const aTitle=el('attendancePageTitle'),aSub=el('attendancePageSub'),sTitle=el('salaryPageTitle'),sSub=el('salaryPageSub');if(aTitle)aTitle.textContent=staff?'Chấm công nhân sự':'Chấm công';if(aSub)aSub.textContent=staff?'Xem lại chấm công theo ngày, ca và nhân viên.':'Trạng thái ca và thao tác chấm công của bạn.';if(sTitle)sTitle.textContent=staff?'Lương':'Lương';if(sSub)sSub.textContent=staff?'Quản lý kỳ lương, bảng lương và các khoản điều chỉnh.':'Tổng hợp theo giờ công đã được ghi nhận.';const top=el('adminTopAction');if(top)top.classList.toggle('hidden',!staff);syncBranchUI();}
+function syncRoleContent(){const staff=['owner','manager'].includes(profile?.role);document.querySelectorAll('.role-employee').forEach(x=>x.classList.toggle('ui-hidden',staff));document.querySelectorAll('.role-staff').forEach(x=>x.classList.toggle('ui-hidden',!staff));const aTitle=el('attendancePageTitle'),aSub=el('attendancePageSub'),sTitle=el('salaryPageTitle'),sSub=el('salaryPageSub');if(aTitle)aTitle.textContent=staff?'Chấm công nhân sự':'Chấm công';if(aSub)aSub.textContent=staff?'Theo dõi ca, trạng thái chấm công và xử lý thiếu công.':'Trạng thái ca và thao tác chấm công của bạn.';if(sTitle)sTitle.textContent=staff?'Lương':'Lương';if(sSub)sSub.textContent=staff?'Quản lý kỳ lương, bảng lương và các khoản điều chỉnh.':'Tổng hợp theo giờ công đã được ghi nhận.';const top=el('adminTopAction');if(top)top.classList.toggle('hidden',!staff);syncBranchUI();}
 function openAdminHome(){
  const role=profile?.role;
  if(!['owner','manager'].includes(role))return;
@@ -3308,7 +3114,6 @@ function openAdminHome(){
 function navigate(id,opts={}){
  const s=session,p=profile;if(!s||!p){showLogin('Vui lòng đăng nhập để tiếp tục.');return}
  if(p.role==='employee'&&id==='admin')return;
- if(p.role==='manager'&&id==='salary'){toast('Kỳ lương chỉ do Owner quản lý.');return;}
  const previousView=currentView;
  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
  const v=el(id);if(!v)return;
@@ -3694,17 +3499,43 @@ function ownerAttendanceSummary(rows,attendanceBySchedule,now=Date.now()){
  return {working,done,needsAction,late,missingCheckout,noCheckin};
 }
 const adminTabLoaded={};
-const adminTabMeta={employees:['Nhân viên','Hồ sơ, trạng thái và đơn giá giờ'],leaves:['Nghỉ phép','Xem và duyệt yêu cầu nghỉ'],registrations:['Yêu cầu nhân viên','Yêu cầu đổi ca / đi trễ'],templates:['Mẫu ca','Khung giờ chuẩn dùng để tạo lịch'],schedules:['Mẫu lịch tuần','Thiết lập cấu trúc ca T2–CN'],registrationSettings:['Đăng ký ca','Thời gian mở/đóng và tự động duyệt'],store:['Cửa hàng','Vị trí và quy tắc chấm công'],audit:['Nhật ký','Lịch sử thao tác'],devices:['Thiết bị','Duyệt, khóa và thu hồi thiết bị']};
+const adminTabMeta={employees:['Nhân viên','Hồ sơ, trạng thái và đơn giá giờ'],leaves:['Nghỉ phép','Xem và duyệt yêu cầu nghỉ'],registrations:['Yêu cầu nhân viên','Yêu cầu đổi ca / đi trễ'],templates:['Mẫu ca','Khung giờ chuẩn dùng để tạo lịch'],schedules:['Mẫu lịch tuần','Thiết lập cấu trúc ca T2–CN'],registrationSettings:['Đăng ký ca','Thời gian mở/đóng và tự động duyệt'],store:['Cửa hàng','Vị trí và quy tắc chấm công'],audit:['Nhật ký','Lịch sử thao tác'],devices:['Thiết bị','Duyệt, khóa và thu hồi thiết bị'],permissions:['Phân quyền','Thiết lập quyền thao tác của tài khoản Quản lý']};
 function closeAdminPane(){const c=el('adminContent'),back=el('adminSheetBackdrop');if(c){c.classList.remove('open');c.classList.remove('is-loading')}if(back)back.classList.remove('open');document.body.classList.remove('admin-sheet-open');document.querySelectorAll('#admin .admin-group-item').forEach(x=>x.classList.remove('active'));}
-function adminTab(tab,btn,opts={}){if(tab==='attendance'){closeAdminPane();navigate('attendance');return}if(tab==='payroll'){closeAdminPane();navigate('salary');return}if(tab==='registrationSettings'&&profile?.role!=='owner'){toast('Chỉ Owner được cài đặt đăng ký ca.');return}currentAdminTab=tab;document.querySelectorAll('.admin-pane').forEach(x=>x.classList.remove('active'));document.querySelectorAll('#admin .admin-group-item').forEach(x=>x.classList.remove('active'));const pane=el('admin'+tab.charAt(0).toUpperCase()+tab.slice(1));if(pane)pane.classList.add('active');const adminContent=el('adminContent'),back=el('adminSheetBackdrop');const meta=adminTabMeta[tab]||[tab,''];const title=el('adminSheetTitle'),sub=el('adminSheetSub');if(title)title.textContent=meta[0];if(sub)sub.textContent=meta[1];if(adminContent){adminContent.classList.add('open');document.body.classList.add('admin-sheet-open');if(back)back.classList.add('open')}if(btn){btn.classList.add('active');const group=btn.closest('details');if(group)group.open=true}
- if(!adminTabLoaded[tab]||opts.forceLoad){adminTabLoaded[tab]=true;adminContent?.classList.add('is-loading');const done=()=>setTimeout(()=>el('adminContent')?.classList.remove('is-loading'),120);if(tab==='branches')Promise.resolve(loadBranches()).finally(done);if(tab==='employees')Promise.resolve(loadEmployees()).finally(done);if(tab==='templates')Promise.resolve(loadTemplates()).finally(done);if(tab==='schedules')Promise.resolve(loadWeeklyPlan()).finally(done);if(tab==='registrationSettings')Promise.resolve(loadRegistrationWindow()).finally(done);if(tab==='registrations')Promise.all([loadRegistrations(),loadScheduleRequests()]).finally(done);if(tab==='leaves')Promise.resolve(loadLeaves()).finally(done);if(tab==='devices')Promise.resolve(loadDevices()).finally(done);if(tab==='store')Promise.resolve(loadStore()).finally(done);if(tab==='audit')Promise.resolve(loadAudit()).finally(done)}
+const MANAGER_PERMISSION_DEFS=[
+ {key:'attendance_process',label:'Xử lý chấm công',desc:'Xác nhận, bổ sung và điều chỉnh chấm công'},
+ {key:'schedule_manage',label:'Quản lý lịch & ca',desc:'Tạo ca, phân người và điều chỉnh lịch'},
+ {key:'shift_registration',label:'Xử lý đăng ký ca',desc:'Duyệt và xử lý yêu cầu đăng ký ca'},
+ {key:'leave_manage',label:'Xử lý nghỉ phép',desc:'Xem và duyệt yêu cầu nghỉ'},
+ {key:'employee_basic',label:'Hồ sơ nhân viên cơ bản',desc:'Sửa họ tên và số điện thoại'},
+ {key:'employee_create',label:'Tạo tài khoản nhân viên',desc:'Cho phép tạo tài khoản nhân viên mới'},
+ {key:'audit_view',label:'Xem nhật ký',desc:'Xem lịch sử thao tác trong cửa hàng'}
+];
+let managerPermissionState={};
+async function loadManagerPermissions(){
+ if(profile?.role!=='owner')return;
+ const root=el('managerPermissionList');if(!root)return;
+ root.innerHTML='<div class="notice info">Đang tải phân quyền…</div>';
+ const {data,error}=await sb.rpc('owner_get_manager_permissions');
+ if(error){root.innerHTML='<div class="notice warn">Không tải được phân quyền: '+escapeHtml(error.message||'Lỗi')+'</div>';return}
+ managerPermissionState={};(data||[]).forEach(x=>managerPermissionState[x.permission_key]=!!x.enabled);
+ root.innerHTML=MANAGER_PERMISSION_DEFS.map(d=>`<label class="permission-row"><span><b>${escapeHtml(d.label)}</b><small>${escapeHtml(d.desc)}</small></span><input type="checkbox" data-manager-permission="${d.key}" ${managerPermissionState[d.key]?'checked':''}></label>`).join('');
+}
+async function saveManagerPermissions(){
+ if(profile?.role!=='owner'){toast('Chỉ Owner được thay đổi phân quyền.');return}
+ const rows=MANAGER_PERMISSION_DEFS.map(d=>({permission_key:d.key,enabled:!!document.querySelector(`[data-manager-permission="${d.key}"]`)?.checked}));
+ const {error}=await sb.rpc('owner_save_manager_permissions',{p_permissions:rows});
+ if(error){el('managerPermissionMsg').innerHTML='<div class="notice warn">'+escapeHtml(error.message||'Không thể lưu')+'</div>';return}
+ el('managerPermissionMsg').innerHTML='<div class="notice ok">Đã lưu phân quyền Manager.</div>';managerPermissionState=Object.fromEntries(rows.map(x=>[x.permission_key,x.enabled]));
+}
+function adminTab(tab,btn,opts={}){const permMap={employees:'employee_basic',templates:'schedule_manage',schedules:'schedule_manage',registrationSettings:'schedule_manage',registrations:'shift_registration',leaves:'leave_manage',audit:'audit_view'};if(profile?.role==='manager'&&permMap[tab]&&!managerCan(permMap[tab])){toast('Owner đã tắt quyền này cho tài khoản Quản lý.');return}if(tab==='attendance'){closeAdminPane();navigate('attendance');return}if(tab==='payroll'){closeAdminPane();navigate('salary');return}currentAdminTab=tab;document.querySelectorAll('.admin-pane').forEach(x=>x.classList.remove('active'));document.querySelectorAll('#admin .admin-group-item').forEach(x=>x.classList.remove('active'));const pane=el('admin'+tab.charAt(0).toUpperCase()+tab.slice(1));if(pane)pane.classList.add('active');const adminContent=el('adminContent'),back=el('adminSheetBackdrop');const meta=adminTabMeta[tab]||[tab,''];const title=el('adminSheetTitle'),sub=el('adminSheetSub');if(title)title.textContent=meta[0];if(sub)sub.textContent=meta[1];if(adminContent){adminContent.classList.add('open');document.body.classList.add('admin-sheet-open');if(back)back.classList.add('open')}if(btn){btn.classList.add('active');const group=btn.closest('details');if(group)group.open=true}
+ if(!adminTabLoaded[tab]||opts.forceLoad){adminTabLoaded[tab]=true;adminContent?.classList.add('is-loading');const done=()=>setTimeout(()=>el('adminContent')?.classList.remove('is-loading'),120);if(tab==='branches')Promise.resolve(loadBranches()).finally(done);if(tab==='employees')Promise.resolve(loadEmployees()).finally(done);if(tab==='templates')Promise.resolve(loadTemplates()).finally(done);if(tab==='schedules')Promise.resolve(loadWeeklyPlan()).finally(done);if(tab==='registrationSettings')Promise.resolve(loadRegistrationWindow()).finally(done);if(tab==='registrations')Promise.all([loadRegistrations(),loadScheduleRequests()]).finally(done);if(tab==='leaves')Promise.resolve(loadLeaves()).finally(done);if(tab==='devices')Promise.resolve(loadDevices()).finally(done);if(tab==='store')Promise.resolve(loadStore()).finally(done);if(tab==='audit')Promise.resolve(loadAudit()).finally(done);if(tab==='permissions')Promise.resolve(loadManagerPermissions()).finally(done)}
  if(!opts.skipPersist)saveUiState()}
-function openEmployeeModal(x){if(profile?.role==='manager'&&x.role==='owner'){toast('Quản lý không được chỉnh sửa tài khoản Owner.');return}el('editEmployeeId').value=x.id;el('editEmployeeCurrentRate').value=Number(x.hourly_rate||0);el('editEmployeeName').value=x.full_name||'';el('editEmployeePhone').value=x.phone||'';el('editEmployeeRole').value=x.role||'employee';el('editEmployeeStatus').value=x.employment_status||'active';el('editEmployeeRate').value=x.hourly_rate||0;el('editEmployeeRateEffective').value=localToday();const manager=profile?.role==='manager';el('editEmployeeRole').disabled=manager;el('editEmployeeStatus').disabled=manager;el('editEmployeeRate').disabled=manager;el('employeePasswordMsg').innerHTML='';el('employeeMsg').innerHTML='';el('employeeModal').classList.add('open')}
+function openEmployeeModal(x){el('editEmployeeId').value=x.id;el('editEmployeeCurrentRate').value=Number(x.hourly_rate||0);el('editEmployeeName').value=x.full_name||'';el('editEmployeePhone').value=x.phone||'';el('editEmployeeRole').value=x.role||'employee';el('editEmployeeStatus').value=x.employment_status||'active';el('editEmployeeRate').value=x.hourly_rate||0;el('editEmployeeRateEffective').value=localToday();const manager=profile?.role==='manager';el('editEmployeeRole').disabled=manager;el('editEmployeeStatus').disabled=manager;el('editEmployeeRate').disabled=manager;el('employeePasswordMsg').innerHTML='';el('employeeMsg').innerHTML='';el('employeeModal').classList.add('open')}
 function closeEmployeeModal(){el('employeeModal').classList.remove('open')}
-function openCreateEmployee(){if(!profile||profile.role!=='owner'){toast('Chỉ Owner được tạo tài khoản nhân viên.');return}el('newEmployeeName').value='';el('newEmployeeEmail').value='';el('newEmployeePhone').value='';el('newEmployeeRate').value=30000;el('createEmployeeMsg').innerHTML='';el('createEmployeeModal').classList.add('open')}
+function openCreateEmployee(){if(!profile||!['owner','manager'].includes(profile.role)||!managerCan('employee_create')){toast('Bạn không có quyền tạo tài khoản nhân viên.');return}el('newEmployeeName').value='';el('newEmployeeEmail').value='';el('newEmployeePhone').value='';el('newEmployeeRate').value=30000;el('createEmployeeMsg').innerHTML='';el('createEmployeeModal').classList.add('open')}
 function closeCreateEmployee(){el('createEmployeeModal').classList.remove('open')}
 async function createEmployee(){
-  if(!sb||!session||!profile||profile.role!=='owner'){toast('Chỉ Owner được tạo tài khoản nhân viên.');return}
+  if(!sb||!session||!profile||!['owner','manager'].includes(profile.role)||!managerCan('employee_create')){toast('Bạn không có quyền tạo tài khoản nhân viên.');return}
   const name=el('newEmployeeName').value.trim();
   const email=el('newEmployeeEmail').value.trim().toLowerCase();
   const phone=el('newEmployeePhone').value.trim();
@@ -3835,15 +3666,11 @@ let weeklyPlanItems=[];let currentAdminTab='employees';
 function registrationWeekValue(){return mondayOfWeek(dateAdd(localToday(),7))}
 function registrationDayName(day){return ['Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy','Chủ Nhật'][Number(day)-1]||'—'}
 function registrationWindowLabel(status,openAt,closeAt){const now=Date.now(),o=openAt?new Date(openAt).getTime():0,c=closeAt?new Date(closeAt).getTime():0;if(status==='finalized')return ['Đã tự chốt','ok'];if(!openAt||!closeAt)return ['Chưa cài','wait'];if(now<o)return ['Chưa mở','info'];if(now<=c)return ['Đang mở','ok'];if(status==='closed')return ['Đã đóng · đang tự chốt','info'];return ['Đang tự chốt','wait']}
-// V84.27: registration automation is backend-owned (pg_cron).
-// Do NOT poll sync_shift_registration_automation from every open browser.
-// Realtime remains the live-update mechanism; the backend scheduler owns timing.
-
 async function loadRegistrationWindow(targetWeekStart=null){
  if(profile?.role!=='owner')return;const msg=el('registrationWindowMsg');if(!msg)return;msg.innerHTML='<div class="notice info">Đang tải mẫu đăng ký…</div>';
  const {data,error}=await sb.rpc('get_shift_registration_recurring_rule');
  if(error){msg.innerHTML='<div class="notice warn">Chưa thể tải mẫu đăng ký. '+escapeHtml(error.message||'')+'</div>';return}
- if(!data){el('registrationWindowOpenDay').value='1';el('registrationWindowOpenTime').value='09:00';el('registrationWindowCloseDay').value='2';el('registrationWindowCloseTime').value='18:00';el('registrationAutoOpen').checked=true;el('registrationAutoApprove').checked=true;el('registrationWindowStatus').textContent='Chưa cài';el('registrationWindowStatus').className='badge wait';el('registrationAppliedSummary').textContent='Chưa cài';el('registrationAppliedWeek').textContent='—';el('registrationCurrentWindow').textContent='Chưa có cửa sổ';el('registrationCurrentWindowNote').textContent='Hãy lưu mẫu để tạo cửa sổ đăng ký.';msg.innerHTML='<div class="notice info">Chưa cài mẫu. Hãy chọn ngày và giờ mở/đóng một lần.</div>';return}
+ if(!data){el('registrationWindowOpenDay').value='1';el('registrationWindowOpenTime').value='09:00';el('registrationWindowCloseDay').value='2';el('registrationWindowCloseTime').value='18:00';el('registrationAutoOpen').checked=true;el('registrationAutoApprove').checked=true;el('registrationWindowStatus').textContent='Chưa cài';el('registrationWindowStatus').className='badge wait';msg.innerHTML='<div class="notice info">Chưa cài mẫu. Hãy chọn ngày và giờ mở/đóng một lần.</div>';return}
  el('registrationWindowOpenDay').value=String(data.open_weekday);el('registrationWindowOpenTime').value=String(data.open_time).slice(0,5);el('registrationWindowCloseDay').value=String(data.close_weekday);el('registrationWindowCloseTime').value=String(data.close_time).slice(0,5);el('registrationAutoOpen').checked=data.auto_open!==false;el('registrationAutoApprove').checked=data.auto_approve!==false;
  const targetInput=el('weeklyGenerateStart');const targetWeek=normalizeMondayInput(targetWeekStart||targetInput?.value||dateAdd(mondayOfWeek(localToday()),7));if(targetInput)targetInput.value=targetWeek;
  let w=null;
@@ -3852,7 +3679,7 @@ async function loadRegistrationWindow(targetWeekStart=null){
  else {const r=await sb.rpc('get_shift_registration_window',{p_week_start:targetWeek});if(!r.error)w=r.data||null}
  const [label,tone]=registrationWindowLabel(w?.status,w?.open_at,w?.close_at);const st=el('registrationWindowStatus');st.textContent=label;st.className='badge '+tone;
  const targetLabel=targetWeek?prettyDate(targetWeek):'—';
- const applied=el('registrationAppliedSummary'),appliedWeek=el('registrationAppliedWeek'),currentWin=el('registrationCurrentWindow'),currentNote=el('registrationCurrentWindowNote');if(applied)applied.innerHTML=`${escapeHtml(registrationDayName(data.open_weekday))} ${escapeHtml(String(data.open_time).slice(0,5))} → ${escapeHtml(registrationDayName(data.close_weekday))} ${escapeHtml(String(data.close_time).slice(0,5))}`;if(appliedWeek)appliedWeek.textContent=`Tuần áp dụng: ${targetLabel}`;if(currentWin)currentWin.textContent=w?.open_at&&w?.close_at?`${new Date(w.open_at).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'})} → ${new Date(w.close_at).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'})}`:'Chưa có cửa sổ cho tuần đã chọn.';if(currentNote)currentNote.textContent=w?.open_at&&w?.close_at?'Cửa sổ được tính theo mẫu đang áp dụng.':'Hãy lưu mẫu hoặc mở tuần này để tạo cửa sổ.';msg.innerHTML=`<div class="notice info">${escapeHtml(registrationDayName(data.open_weekday))} ${escapeHtml(String(data.open_time).slice(0,5))} → ${escapeHtml(registrationDayName(data.close_weekday))} ${escapeHtml(String(data.close_time).slice(0,5))}. Nếu ngày đóng nằm trước ngày mở, ngày mở thuộc tuần trước và ngày đóng thuộc tuần đang đăng ký.</div>`;
+ msg.innerHTML=`<div class="muted"><b>${escapeHtml(registrationDayName(data.open_weekday))} ${escapeHtml(String(data.open_time).slice(0,5))}</b> → <b>${escapeHtml(registrationDayName(data.close_weekday))} ${escapeHtml(String(data.close_time).slice(0,5))}</b> · <b>Tuần áp dụng: ${escapeHtml(targetLabel)}</b></div><div class="muted ui-mt-4">${w?.open_at&&w?.close_at?'Cửa sổ của tuần này: '+new Date(w.open_at).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'})+' → '+new Date(w.close_at).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}):'Chưa có cửa sổ cho tuần đã chọn.'}</div><div class="muted ui-mt-4">Nếu ngày đóng nằm trước ngày mở (ví dụ T6 → T4), hệ thống hiểu ngày mở là T6 của tuần trước và ngày đóng là T4 của tuần mục tiêu. Khi tạo tuần, hệ thống dùng chính cửa sổ này; nếu hiện tại đang nằm trong cửa sổ thì nhân viên được đăng ký ngay.</div>`;
 }
 async function saveRegistrationWindow(){
  if(profile?.role!=='owner')return;const msg=el('registrationWindowMsg');const od=Number(el('registrationWindowOpenDay')?.value),cd=Number(el('registrationWindowCloseDay')?.value),ot=el('registrationWindowOpenTime')?.value,ct=el('registrationWindowCloseTime')?.value;if(!od||!cd||!ot||!ct){msg.innerHTML='<div class="notice warn">Vui lòng chọn đủ ngày và giờ mở/đóng.</div>';return}if(od===cd&&ot>=ct){msg.innerHTML='<div class="notice warn">Nếu cùng ngày, giờ đóng phải sau giờ mở.</div>';return}msg.innerHTML='<div class="notice info">Đang lưu mẫu tự động lên hệ thống…</div>';const {data,error}=await sb.rpc('save_shift_registration_settings',{p_open_weekday:od,p_open_time:ot,p_close_weekday:cd,p_close_time:ct,p_auto_open:!!el('registrationAutoOpen')?.checked,p_auto_approve:!!el('registrationAutoApprove')?.checked});if(error){msg.innerHTML='<div class="notice warn">Không thể lưu: '+escapeHtml(error.message||'')+'</div>';return}toast('Đã lưu mẫu đăng ký lặp hàng tuần.');employeeScheduleCache={};const target=normalizeMondayInput(el('weeklyGenerateStart')?.value||dateAdd(mondayOfWeek(localToday()),7));await loadRegistrationWindow(target);if(data){msg.innerHTML+=`<div class="notice ok ui-mt-8">Đã ghi database: ${escapeHtml(registrationDayName(data.open_weekday))} ${escapeHtml(String(data.open_time).slice(0,5))} → ${escapeHtml(registrationDayName(data.close_weekday))} ${escapeHtml(String(data.close_time).slice(0,5))}.</div>`;}
@@ -3906,28 +3733,27 @@ let assignShiftContext=null;
 function focusAssign(id){openAssignShiftModal(id)}
 async function openAssignShiftModal(scheduleId){
  const modal=el('assignShiftModal');if(!modal||!sb||!profile)return;
- const storeId=getActiveStoreId();
- let slot=null,slots=null,emps=null;
- const cacheRows=Object.values(mainScheduleWeekDataCache||{}).flatMap(x=>x?.rows||[]);
- slot=cacheRows.find(x=>x.id===scheduleId)||null;
- if(slot){const groupId=slot.shift_group_id||slot.id;slots=cacheRows.filter(x=>(x.shift_group_id||x.id)===groupId&&x.status!=='cancelled').map(x=>({id:x.id,employee_id:x.employee_id,status:x.status,work_date:x.work_date,start_time:x.start_time,end_time:x.end_time,start_at:x.start_at,end_at:x.end_at}));}
- if(!slot){
-   const {data,error}=await sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at,status,note,employee_id,shift_group_id').eq('id',scheduleId).single();
-   if(error||!data){toast('Không tìm thấy ca.');return} slot=data;
-   const groupId=slot.shift_group_id||slot.id;
-   const {data:groupRows,error:groupErr}=await sb.from('work_schedules').select('id,employee_id,status,work_date,start_time,end_time,start_at,end_at').eq('store_id',storeId).eq('shift_group_id',groupId).order('id');
-   if(groupErr){toast('Không tải được dữ liệu ca.');return} slots=groupRows||[];
- }
- if(Array.isArray(window.__scheduleEmployeeDirectory)&&window.__scheduleEmployeeDirectoryStore===storeId)emps=window.__scheduleEmployeeDirectory;
- else{const {data,error}=await sb.from('profiles').select('id,full_name,phone').eq('store_id',storeId).eq('role','employee').eq('employment_status','active').order('full_name');if(error){toast('Không tải được danh sách nhân viên.');return}emps=data||[];window.__scheduleEmployeeDirectory=emps;window.__scheduleEmployeeDirectoryStore=storeId;}
- const groupId=slot.shift_group_id||slot.id,assigned=(slots||[]).filter(x=>x.employee_id),open=(slots||[]).filter(x=>x.status==='open'&&!x.employee_id);
- const startTs=slot.start_at?new Date(slot.start_at).getTime():new Date(slot.work_date+'T'+slot.start_time).getTime(),endTs=slot.end_at?new Date(slot.end_at).getTime():new Date(slot.work_date+'T'+slot.end_time).getTime();
+ const {data:slot,error}=await sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at,status,note,employee_id,shift_group_id').eq('id',scheduleId).single();
+ if(error||!slot){toast('Không tìm thấy ca.');return}
+ const groupId=slot.shift_group_id||slot.id;
+ const [{data:slots},{data:emps,error:empErr}]=await Promise.all([
+   sb.from('work_schedules').select('id,employee_id,status').eq('store_id',getActiveStoreId()).eq('shift_group_id',groupId).order('id'),
+   sb.from('profiles').select('id,full_name,phone').eq('store_id',getActiveStoreId()).eq('role','employee').eq('employment_status','active').order('full_name')
+ ]);
+ if(empErr){toast('Không tải được danh sách nhân viên.');return}
+ const assigned=(slots||[]).filter(x=>x.employee_id);
+ const open=(slots||[]).filter(x=>x.status==='open'&&!x.employee_id);
+ const startTs=slot.start_at?new Date(slot.start_at).getTime():new Date(slot.work_date+'T'+slot.start_time).getTime();
+ const endTs=slot.end_at?new Date(slot.end_at).getTime():new Date(slot.work_date+'T'+slot.end_time).getTime();
  assignShiftContext={groupId,slots:slots||[],assignedIds:new Set(assigned.map(x=>x.employee_id)),openSlots:open.map(x=>x.id),scheduleId:slot.id,startedAt:Date.now()>=startTs&&Date.now()<=endTs};
- el('assignShiftTitle').textContent='Điều chỉnh nhân viên trong ca';el('assignShiftSub').textContent=`${prettyDate(slot.work_date)} · ${time5(slot.start_time)} – ${time5(slot.end_time)}`;
- el('assignShiftCapacity').innerHTML=`Ca này có <b>${(slots||[]).length} vị trí</b> · đang xếp <b>${assigned.length}</b> · còn <b>${open.length}</b> vị trí. Tick/bỏ tick rồi bấm Lưu.`;
- el('assignShiftPeople').innerHTML=(emps||[]).map(e=>{const checked=assignShiftContext.assignedIds.has(e.id);return `<label class="assign-person-option ${checked?'assigned':''}"><input type="checkbox" value="${e.id}" ${checked?'checked':''}><span class="person-main"><span class="person-name">${escapeHtml(e.full_name||'Nhân viên')}</span><span class="person-meta">${escapeHtml(e.phone||'')}</span></span><span class="person-status ${checked?'ok':''}">${checked?'Đang trong ca':'Chọn'}</span></label>`}).join('')||'<div class="empty">Chưa có nhân viên đang hoạt động.</div>';
- el('assignShiftMsg').innerHTML=assignShiftContext.startedAt&&profile?.role==='owner'?'<div class="notice warn"><b>Ca đang diễn ra.</b> Chỉ thay đổi người khi chưa có dữ liệu chấm công thực tế của người bị thay.</div>':'';
- const save=el('assignShiftSave');save.disabled=false;save.textContent='Lưu';modal.classList.add('open');
+ el('assignShiftTitle').textContent='Thêm nhân viên vào ca';
+ el('assignShiftSub').textContent=`${prettyDate(slot.work_date)} · ${time5(slot.start_time)} – ${time5(slot.end_time)}`;
+ el('assignShiftCapacity').innerHTML=`Ca này có <b>${(slots||[]).length} vị trí</b> · đã xếp <b>${assigned.length}</b> · còn <b>${open.length}</b> vị trí.`;
+ const people=(emps||[]).map(e=>{const checked=assignShiftContext.assignedIds.has(e.id);if(checked){const assignedSlot=(slots||[]).find(s=>s.employee_id===e.id);const canRemove=['owner','manager'].includes(profile?.role);return `<div class="assign-person-option assigned"><input type="checkbox" value="${e.id}" checked disabled><span class="person-main"><span class="person-name">${escapeHtml(e.full_name||'Nhân viên')}</span><span class="person-meta">${escapeHtml(e.phone||'')}</span></span>${canRemove?`<button type="button" class="btn light assign-person-remove" onclick="unassignFromAssignModal('${assignedSlot?.id||''}',event)">Bỏ khỏi ca</button>`:`<span class="person-status ok">Đã trong ca</span>`}</div>`}return `<label class="assign-person-option"><input type="checkbox" value="${e.id}"><span class="person-main"><span class="person-name">${escapeHtml(e.full_name||'Nhân viên')}</span><span class="person-meta">${escapeHtml(e.phone||'')}</span></span><span class="person-status">Chọn</span></label>`}).join('');
+ el('assignShiftPeople').innerHTML=people||'<div class="empty">Chưa có nhân viên đang hoạt động.</div>';
+ el('assignShiftMsg').innerHTML=open.length?(assignShiftContext.startedAt&&profile?.role==='owner'?'<div class="notice warn"><b>Ca đang diễn ra.</b> Owner có thể bổ sung nhân viên để xử lý trường hợp sự cố chấm công.</div>':''):'<div class="notice warn">Ca đã đủ vị trí. Không thể thêm nhân viên.</div>';
+ const save=el('assignShiftSave');save.disabled=open.length===0;save.textContent=open.length?'Lưu':'Đã đủ người';
+ modal.classList.add('open');
 }
 function closeAssignShiftModal(){el('assignShiftModal')?.classList.remove('open');assignShiftContext=null}
 let unassignConfirmResolver=null;
@@ -3976,18 +3802,19 @@ async function unassignFromAssignModal(scheduleId,event){
   await loadMainSchedule();await loadAdminSchedules();
 }
 async function saveAssignShift(){
- if(!assignShiftContext)return;
- const selected=[...document.querySelectorAll('#assignShiftPeople input[type=checkbox]:checked')].map(x=>x.value);
- if(selected.length>assignShiftContext.slots.length){el('assignShiftMsg').innerHTML=`<div class="notice warn">Chỉ có ${assignShiftContext.slots.length} vị trí. Hãy bỏ bớt ${selected.length-assignShiftContext.slots.length} người.</div>`;return}
+ if(!assignShiftContext||!assignShiftContext.openSlots.length)return;
+ const selected=[...document.querySelectorAll('#assignShiftPeople input[type=checkbox]:checked:not(:disabled)')].map(x=>x.value);
+ if(!selected.length){toast('Chưa chọn nhân viên mới.');return}
+ if(selected.length>assignShiftContext.openSlots.length){el('assignShiftMsg').innerHTML=`<div class="notice warn">Chỉ còn ${assignShiftContext.openSlots.length} vị trí trống. Hãy bỏ bớt ${selected.length-assignShiftContext.openSlots.length} người.</div>`;return}
  const btn=el('assignShiftSave');setBusyButton(btn,true,'Đang lưu…');
  try{
-  const {data,error}=await sb.rpc('replace_employees_to_schedule_group',{p_schedule_id:assignShiftContext.scheduleId,p_employee_ids:selected,p_note:(assignShiftContext.startedAt?'Owner điều chỉnh nhân sự trong ca đang diễn ra':'Điều chỉnh nhân sự trong ca')});
-  if(error){const msg=String(error.message||'');throw new Error(msg==='TRUNG_CA'?'Nhân viên đã có ca trùng giờ.':msg==='CA_DA_KET_THUC'?'Ca đã kết thúc.':msg==='DA_CO_CHAM_CONG'?'Nhân viên đã có dữ liệu chấm công nên không thể thay khỏi ca.':msg==='KHONG_DU_CHO'?'Không đủ vị trí cho số người đã chọn.':msg==='NHAN_VIEN_KHONG_HOP_LE'?'Có nhân viên không còn hoạt động.':msg)}
-  const resultRows=Array.isArray(data?.slots)?data.slots:[];
-  Object.values(mainScheduleWeekDataCache||{}).forEach(entry=>resultRows.forEach(r=>{const row=(entry?.rows||[]).find(x=>x.id===r.id);if(row){row.employee_id=r.employee_id||null;row.status=r.status||row.status;row.assigned_at=r.assigned_at||row.assigned_at||null;}}));
-  closeAssignShiftModal();toast('Đã cập nhật nhân viên trong ca.');await loadMainSchedule();
- }catch(e){el('assignShiftMsg').innerHTML=`<div class="notice warn">${escapeHtml(e.message||'Không thể cập nhật nhân viên trong ca.')}</div>`;setBusyButton(btn,false,'Lưu');}
+   const {error}=await sb.rpc('assign_employees_to_schedule_group',{p_schedule_id:assignShiftContext.scheduleId,p_employee_ids:selected,p_note:(assignShiftContext.startedAt?'Owner bổ sung nhân sự vào ca đang diễn ra do sự cố chấm công':'')});
+   if(error){const msg=String(error.message||'');throw new Error(msg==='TRUNG_CA'?'Nhân viên đã có ca trùng giờ.':msg==='CA_DA_BAT_DAU'?'Ca đã bắt đầu và không thể bổ sung nhân sự.':msg==='CA_DA_KET_THUC'?'Ca đã kết thúc. Không thể bổ sung nhân viên.':msg==='KHONG_DU_CHO'?'Không đủ vị trí trống cho số người đã chọn.':msg)}
+   toast(assignShiftContext.startedAt?'Đã bổ sung nhân viên vào ca đang diễn ra. Nhân viên sẽ thấy trạng thái chấm công theo đúng thời điểm hiện tại.':`Đã thêm ${selected.length} nhân viên vào ca.`);
+   closeAssignShiftModal();mainScheduleWeekCountCache={};mainScheduleWeekDataCache={};mainScheduleWeekAuxCache={};adminAttendanceWeekCache={};await loadAdminSchedules();await loadMainSchedule();await loadRegistrations();await loadOwnerOverview();
+ }catch(e){el('assignShiftMsg').innerHTML=`<div class="notice warn">${escapeHtml(e.message||'Không thể thêm nhân viên.')}</div>`;setBusyButton(btn,false,'Lưu');}
 }
+
 async function unassignSchedule(id){
  if(!['owner','manager'].includes(profile?.role)){toast('Bạn không có quyền bỏ người khỏi ca.');return}
  const result=await requestUnassignConfirmation(id);
@@ -4112,18 +3939,25 @@ async function loadMainSchedule(){
       startTs=new Date(first.start_at||(`${first.work_date}T${first.start_time}`)).getTime(),
       endTs=new Date(first.end_at||(`${first.work_date}T${first.end_time}`)).getTime(),
       started=Date.now()>=startTs,
-      ended=Date.now()>endTs;
-    const adjustBtn=`<button type="button" class="btn light schedule-add-btn" onclick="openAssignShiftModal('${first.id}')" title="Điều chỉnh nhân viên trong ca">Điều chỉnh</button>`;
+      ended=Date.now()>endTs,
+      canAdd=openSlots.length>0&&!ended;
+    let addLabel='＋ Thêm nhân viên';
+    if(!openSlots.length)addLabel='Đã đủ vị trí';
+    else if(ended)addLabel='Ca đã kết thúc';
+    
+    const addBtn=`<button type="button" class="btn light schedule-add-btn" ${canAdd?`onclick="openAssignShiftModal('${openSlots[0].id}')"`:'disabled'}>${addLabel}</button>`;
     const cancel=!started&&!ended&&!assignedPeople.length?`<button type="button" class="icon-action danger" title="Hủy ca" aria-label="Hủy ca" onclick="cancelSchedule('${first.id}')">×</button>`:'';
     const pendingPeople=pendingBySchedule.get(first.id)||[];
     const pendingRows=pendingPeople.length?pendingPeople.map(r=>`<div class="manager-shift-person pending-person"><div class="person-avatar">${escapeHtml((r.profiles?.full_name||'N').slice(0,1).toUpperCase())}</div><div class="person-main"><div class="person-name">${escapeHtml(r.profiles?.full_name||'Nhân viên')}</div><div class="person-meta">${escapeHtml(r.profiles?.phone||'')} · Đang chờ xử lý đăng ký</div></div><div class="manager-person-status"><span class="manager-status-chip warn">Chờ xử lý</span></div><div class="manager-person-actions"><button type="button" class="btn green" onclick="reviewRegistration('${r.id}','approve')">Duyệt</button><button type="button" class="btn danger" onclick="reviewRegistration('${r.id}','reject')">Từ chối</button></div></div>`).join(''):'';
     const personRows=assignedPeople.length?assignedPeople.map(x=>{
       const st=scheduleTimeStatus(x),
+        canUnassign=['owner','manager'].includes(profile?.role)&&x.status!=='cancelled'&&new Date(x.end_at||x.start_at).getTime()>Date.now(),
+        unassignBtn=canUnassign?`<button type="button" class="btn light schedule-registered-action" onclick="unassignSchedule('${x.id}')">Bỏ khỏi ca</button>`:'',
         checkoutBtn=x.attendance?.check_in&&!x.attendance?.check_out&&x.work_date<localToday()?`<button type="button" class="icon-action" title="Xác nhận checkout" onclick="resolveMissingCheckout('${x.attendance.id}')">✓</button>`:'';
-      return `<div class="manager-shift-person"><div class="person-avatar">${escapeHtml((x.profiles?.full_name||'N').slice(0,1).toUpperCase())}</div><div class="person-main"><div class="person-name">${escapeHtml(x.profiles?.full_name||'Nhân viên')}</div><div class="person-meta">${escapeHtml(x.profiles?.phone||'')}</div></div><div class="manager-person-status"><span class="manager-status-chip ${st.cls}">${escapeHtml(st.label)}</span></div><div class="manager-person-actions">${checkoutBtn}</div></div>`;
+      return `<div class="manager-shift-person"><div class="person-avatar">${escapeHtml((x.profiles?.full_name||'N').slice(0,1).toUpperCase())}</div><div class="person-main"><div class="person-name">${escapeHtml(x.profiles?.full_name||'Nhân viên')}</div><div class="person-meta">${escapeHtml(x.profiles?.phone||'')} · ${escapeHtml(st.meta)}</div></div><div class="manager-person-status"><span class="manager-status-chip ${st.cls}">${escapeHtml(st.label)}</span></div><div class="manager-person-actions">${checkoutBtn}${unassignBtn}</div></div>`;
     }).join(''):'<div class="empty" style="padding:12px 14px">Chưa có nhân viên trong ca.</div>';
     const templateName=first.template_name||'Ca làm việc';
-    return `<div class="manager-shift-row"><div class="manager-shift-head"><div class="manager-shift-title-line"><div class="manager-shift-name">${escapeHtml(templateName)}</div><div class="manager-shift-time">${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</div></div><div class="manager-shift-capacity">${assignedPeople.length}/${active.length} vị trí · ${assignedPeople.length} nhân viên${pendingPeople.length?` · ${pendingPeople.length} chờ duyệt`:''}</div><div class="manager-shift-actions">${adjustBtn}${cancel}</div></div>${personRows}${pendingRows}</div>`;
+    return `<div class="manager-shift-row"><div class="manager-shift-head"><div><div class="manager-shift-name">${escapeHtml(templateName)}</div><div class="manager-shift-time">${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</div><div class="manager-shift-meta">${first.note?escapeHtml(first.note):'Lịch ca trong ngày'}</div></div><div class="manager-shift-capacity">${assignedPeople.length}/${active.length} vị trí · ${assignedPeople.length} nhân viên${pendingPeople.length?` · ${pendingPeople.length} chờ duyệt`:''}</div><div class="manager-shift-actions">${addBtn}${cancel}</div></div>${personRows}${pendingRows}</div>`;
   }).join(''):'<div class="empty-day"><b>Ngày này chưa có ca.</b><span>Bạn vẫn có thể chọn ngày khác hoặc tạo ca mới trong Quản trị.</span></div>';
 
   resultsEl.classList.remove('is-loading');
@@ -4157,7 +3991,7 @@ async function loadAdminSchedules(){
  if(error){target.innerHTML='<div class="notice warn">Không tải được lịch. Vui lòng thử lại.</div>';return}
  const ids2=(data||[]).filter(x=>x.employee_id).map(x=>x.id); const {data:attRows2}=ids2.length?await sb.from('attendance').select('id,schedule_id,employee_id,check_in,check_out,late_minutes,early_leave_minutes,worked_minutes').in('schedule_id',ids2):{data:[]}; const amap2=new Map((attRows2||[]).map(a=>[a.schedule_id,a])); (data||[]).forEach(x=>x.attendance=amap2.get(x.id)||null);
  if(el('adminSelectedDateTitle'))el('adminSelectedDateTitle').textContent=selected===localToday()?'Hôm nay':prettyDate(selected);
- if(el('adminSelectedDateSub'))el('adminSelectedDateSub').textContent='Các ca trong ngày · '+(data||[]).length+' ca';
+ if(el('adminSelectedDateSub'))el('adminSelectedDateSub').textContent='Lịch ca trong ngày · '+(data||[]).length+' ca';
  updateDayStripSelection('adminDayStrip',selected);
  const week=sevenDayWindow(selected,adminDayWindowStart);const counts=new Map(week.map(d=>[d,new Set()]));
  const {data:weekRows}=await sb.from('work_schedules').select('work_date,shift_group_id,id').eq('store_id',storeId).gte('work_date',week[0]).lte('work_date',week[6]).neq('status','cancelled');
@@ -4174,10 +4008,11 @@ async function loadAdminSchedules(){
    const active=items.filter(x=>x.status!=='cancelled');
    const assignedPeople=active.filter(x=>x.employee_id);
    const openSlots=active.filter(x=>x.status==='open'&&!x.employee_id);
-   const adjustBtn=`<button type="button" class="btn light schedule-add-btn" onclick="openAssignShiftModal('${first.id}')" title="Điều chỉnh nhân viên trong ca">Điều chỉnh</button>`;
+   const hasCapacity=openSlots.length>0;
+   const addBtn=`<button type="button" class="btn ${hasCapacity?'light':'light'} schedule-add-btn" ${hasCapacity?`onclick="openAssignShiftModal('${openSlots[0].id}')"`:'disabled'} title="${hasCapacity?'Thêm nhân viên vào ca':'Ca đã đủ vị trí'}">＋ ${hasCapacity?'Thêm nhân viên':'Đã đủ vị trí'}</button>`;
    const cancel=active.some(x=>x.status==='open'||x.status==='assigned')?`<button type="button" class="icon-action danger" title="Hủy ca" aria-label="Hủy ca" onclick="cancelSchedule('${first.id}')">×</button>`:'';
    const personRows=assignedPeople.length?assignedPeople.map(x=>{const st=attendanceDisplayStatus(x,x.attendance);return `<div class="manager-shift-person"><div class="person-avatar">${escapeHtml((x.profiles?.full_name||'N').slice(0,1).toUpperCase())}</div><div class="person-main"><div class="person-name">${escapeHtml(x.profiles?.full_name||'Nhân viên')}</div><div class="person-meta">${escapeHtml(x.profiles?.phone||'')} · ${escapeHtml(st.meta)}</div></div><div class="manager-person-status"><span class="manager-status-chip ${st.tone}">${escapeHtml(st.label)}</span></div>${x.attendance?.check_in&&!x.attendance?.check_out&&x.work_date<localToday()&&['owner','manager'].includes(profile.role)?`<button type="button" class="icon-action" title="Xác nhận checkout" onclick="resolveMissingCheckout('${x.attendance.id}')">✓</button>`:''}</div>`}).join(''):'<div class="empty" style="padding:12px 14px">Chưa có nhân viên trong ca.</div>';
-   return `<div class="manager-shift-row"><div class="manager-shift-head"><div class="manager-shift-title-line"><div class="manager-shift-name">Ca</div><div class="manager-shift-time">${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</div></div><div class="manager-shift-capacity">${active.length} vị trí · ${assignedPeople.length} nhân viên</div><div class="manager-shift-actions">${adjustBtn}${cancel}</div></div>${personRows}</div>`;
+   return `<div class="manager-shift-row"><div class="manager-shift-head"><div><div class="manager-shift-time">Ca ${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</div><div class="manager-shift-meta">${first.note?escapeHtml(first.note):'Lịch ca trong ngày'}</div></div><div class="manager-shift-capacity">${active.length} vị trí · ${assignedPeople.length} nhân viên</div><div class="manager-shift-actions">${addBtn}${cancel}</div></div>${personRows}</div>`;
  }).join(''):'<div class="empty-day"><b>Ngày này chưa có ca.</b><span>Bạn vẫn có thể chọn ngày khác hoặc tạo ca mới cho ngày này.</span></div>';
 }
 let scheduleAddTab='template';
@@ -4519,7 +4354,7 @@ function scheduleRealtimeRefresh(reason='realtime'){
       }
       if(currentAdminTab==='registrations'&&['owner','manager'].includes(profile.role))tasks.push(loadRegistrations(),loadScheduleRequests());
       if(currentAdminTab==='templates'&&['owner','manager'].includes(profile.role))tasks.push(loadTemplates());
-      if(currentAdminTab==='schedules'&&['owner','manager'].includes(profile.role))tasks.push(loadWeeklyPlan());if(currentAdminTab==='registrationSettings'&&profile.role==='owner'&&reason==='shift_registration_recurring_rules')tasks.push(loadRegistrationWindow());
+      if(currentAdminTab==='schedules'&&['owner','manager'].includes(profile.role))tasks.push(loadWeeklyPlan());if(currentAdminTab==='registrationSettings'&&profile.role==='owner')tasks.push(loadRegistrationWindow());
       // Background realtime refresh must not animate the global loader.
       await runWithoutGlobalDataLoading(()=>Promise.allSettled(tasks));
     }catch(e){console.error('[HongCha Realtime]',reason,e)}
@@ -4558,6 +4393,23 @@ async function stopRealtime(){
   if(realtimeChannel&&sb){try{await sb.removeChannel(realtimeChannel)}catch(e){}}
   realtimeChannel=null;realtimeStartedStoreId=null;
 }
+let managerPermissions={};
+function managerCan(key){ if(profile?.role!=='manager') return true; return managerPermissions[key]!==false; }
+async function loadManagerPermissionsForSession(){
+ if(profile?.role!=='manager'||!sb)return;
+ try{const {data,error}=await sb.rpc('get_my_manager_permissions');if(!error){managerPermissions=Object.fromEntries((data||[]).map(x=>[x.permission_key,!!x.enabled]));applyManagerPermissions();}}catch(e){console.warn('[Permissions] load failed',e)}
+}
+function applyManagerPermissions(){
+ if(profile?.role!=='manager')return;
+ const map={
+  employee_create:'[onclick="openCreateEmployee()"]',
+  schedule_manage:'[data-admin-tab="templates"],[data-admin-tab="schedules"],[data-admin-tab="registrationSettings"]',
+  shift_registration:'[data-admin-tab="registrations"]',
+  leave_manage:'[data-admin-tab="leaves"]',
+  audit_view:'[data-admin-tab="audit"]'
+ };
+ Object.entries(map).forEach(([key,sel])=>document.querySelectorAll(sel).forEach(x=>x.style.display=managerCan(key)?'':'none'));
+}
 async function loadApp(){
   if(!session||!sb)return;
   if(appHydratedUserId===session.user.id && el('app')?.classList.contains('ready'))return;
@@ -4575,6 +4427,7 @@ async function loadApp(){
     }
     if(p.employment_status==='terminated'){await sb.auth.signOut();showLogin('Tài khoản đã kết thúc sử dụng.');return}
     profile=p;activeStoreId=p.store_id||null;branchContextReady=!!activeStoreId;appHydratedUserId=session.user.id;syncHeader();updateGreetingAndClock();syncBranchUI();
+    managerPermissions={};loadManagerPermissionsForSession().catch(()=>{});
     // Realtime is a background enhancement; it must never block app entry.
     startRealtime(activeStoreId).catch(e=>console.warn('[HongCha Realtime] startup',e));
     el('fullName').value=p.full_name||'';el('email').value=session.user.email||p.email||'';el('phone').value=p.phone||'';el('address').value=p.address||'';syncProfileSaveState();
@@ -4982,47 +4835,40 @@ async function reviewLeave(id,action){let reason='';if(action==='reject')reason=
 function adminAttendanceWeekKey(start){return `${start}_${dateAdd(start,6)}`}
 function renderAdminAttendanceFromWeekCache(cache,selected){
  const target=el('adminAttendanceList');if(!target)return;
- const allSch=cache?.schedules||[],attAll=cache?.attendance||[],templates=cache?.templates||[];
- const week=sevenDayWindow(selected,adminAttendanceWindowStart),selectedDay=selected||week[0];
+ const sch=(cache?.schedules||[]).filter(x=>x.work_date===selected),attAll=cache?.attendance||[],templates=cache?.templates||[];
  const templateByTime=new Map((templates||[]).filter(t=>t.is_active!==false).map(t=>[`${String(t.start_time||'').slice(0,5)}_${String(t.end_time||'').slice(0,5)}`,t.name]));
- allSch.forEach(x=>{const key=`${String(x.start_time||'').slice(0,5)}_${String(x.end_time||'').slice(0,5)}`;x.template_name=templateByTime.get(key)||'Ca'});
- const ids=new Set(allSch.map(x=>x.id));
- const att=attAll.filter(x=>ids.has(x.schedule_id));
- window.__adminAttendanceRows=allSch;window.__adminAttendanceData=att;
- const daySch=allSch.filter(x=>x.work_date===selectedDay);
- const dayIds=new Set(daySch.map(x=>x.id));
- const dayAtt=att.filter(x=>dayIds.has(x.schedule_id));
- const attendanceBySchedule=new Map(dayAtt.map(x=>[x.schedule_id,x]));
- const dt=new Date(selectedDay+'T12:00:00');
- const dayNames=['CN','T2','T3','T4','T5','T6','T7'];
- const dayLabel=selectedDay===localToday()?'Hôm nay':`${dayNames[dt.getDay()]} · ${prettyDate(selectedDay)}`;
- if(el('adminAttendanceDateTitle'))el('adminAttendanceDateTitle').textContent=dayLabel;
- if(el('adminAttendanceDateSub'))el('adminAttendanceDateSub').textContent=`Hiển thị đầy đủ chấm công của ngày này · ${daySch.length} ca · ${daySch.filter(x=>x.employee_id).length} vị trí`;
- week.forEach(d=>{const c=el('count_adminAttendanceDayStrip_'+d);if(c)c.textContent=cache.dayCounts?.[d]?(cache.dayCounts[d]+' vị trí'):''});
- const summary=ownerAttendanceSummary(daySch,attendanceBySchedule);
- if(el('adminAttendanceSummary'))el('adminAttendanceSummary').innerHTML=`<div class="attendance-compact-summary"><div class="attendance-compact-row"><b>${summary.working}</b><span>Đang làm</span></div><div class="attendance-compact-row"><b>${summary.done}</b><span>Đã ra ca</span></div><div class="attendance-compact-row"><b>${summary.needsAction}</b><span>Cần xử lý</span></div></div>`;
- const groups=new Map();daySch.forEach(x=>{const key=x.shift_group_id||x.id;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(x)});
- const shifts=[...groups.values()].map(items=>{
+ sch.forEach(x=>{const key=`${String(x.start_time||'').slice(0,5)}_${String(x.end_time||'').slice(0,5)}`;x.template_name=templateByTime.get(key)||'Ca'});
+ const ids=new Set(sch.map(x=>x.id));const att=attAll.filter(x=>ids.has(x.schedule_id));
+ window.__adminAttendanceRows=sch;window.__adminAttendanceData=att;
+ if(el('adminAttendanceDateTitle'))el('adminAttendanceDateTitle').textContent=selected===localToday()?'Hôm nay':prettyDate(selected);
+ if(el('adminAttendanceDateSub'))el('adminAttendanceDateSub').textContent=`${sch.length} vị trí · ${new Set(sch.map(x=>x.employee_id).filter(Boolean)).size} nhân viên`;
+ const days=sevenDayWindow(adminAttendanceDate,adminAttendanceWindowStart);
+ days.forEach(d=>{const c=el('count_adminAttendanceDayStrip_'+d);if(c)c.textContent=cache.dayCounts?.[d]?(cache.dayCounts[d]+' vị trí'):''});
+ const attendanceBySchedule=new Map(att.map(x=>[x.schedule_id,x]));
+ const groups=new Map();sch.forEach(x=>{const key=x.shift_group_id||x.id;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(x)});
+ const summary=ownerAttendanceSummary(sch,attendanceBySchedule);
+ if(el('adminAttendanceSummary'))el('adminAttendanceSummary').innerHTML=`<div class="mini-stat"><b>${summary.working}</b><span>ĐANG LÀM</span></div><div class="mini-stat"><b>${summary.done}</b><span>ĐÃ RA CA</span></div><div class="mini-stat"><b>${summary.needsAction}</b><span>CHƯA HOÀN TẤT</span></div>`;
+ const html=[...groups.values()].map(items=>{
    const first=items[0];
-   const timeLabel=`${time5(first.start_time)} – ${time5(first.end_time)}`;
-   const slotLabel=`${items.filter(x=>x.employee_id).length}/${items.length} vị trí`;
-   const adjustmentTarget=items.length===1&&items[0].employee_id&&attendanceBySchedule.get(items[0].id);
-   const headAction=profile?.role==='owner'&&adjustmentTarget?`<button type="button" class="attendance-shift-adjust btn light" onclick="openSupplementAttendance('${first.id}','${adjustmentTarget.id}')">Điều chỉnh</button>`:'';
-   const people=items.map(x=>{
-     const a=attendanceBySchedule.get(x.id),assigned=!!x.employee_id;
+   return items.map(x=>{
+     const a=attendanceBySchedule.get(x.id);
+     const assigned=!!x.employee_id;
      const st=assigned?ownerAttendanceState(x,a):{key:'EMPTY_SLOT',label:'Chưa có nhân viên',meta:'',tone:'warn',needsAction:false};
-     const cls=st.tone==='danger'?'missing':st.tone==='warn'?'late':st.tone==='ok'?'working':'pending';
+     let cls=st.tone==='danger'?'missing':st.tone==='warn'?'late':st.tone==='ok'?'working':'pending';
+     if(st.key==='EMPTY_SLOT')cls='empty-slot';
      let action='';
-     if(assigned&&st.key==='MISSING_CHECKOUT'&&['owner','manager'].includes(profile?.role))action=`<button class="attendance-inline-action btn danger" type="button" onclick="resolveMissingCheckout('${a.id}')">Xác nhận checkout</button>`;
-     else if(assigned&&st.key==='NO_CHECKIN'&&profile?.role==='owner')action=`<button type="button" class="attendance-inline-action btn green" onclick="openSupplementAttendance('${x.id}','${a?.id||''}')">Bổ sung chấm công</button>`;
+     if(assigned&&st.key==='MISSING_CHECKOUT'&&['owner','manager'].includes(profile?.role))action=`<button class="attendance-inline-action btn danger" type="button" onclick="resolveMissingCheckout('${a.id}')"><span class="attendance-action-icon">✓</span>Xử lý quên checkout</button>`;
+     else if(assigned&&profile?.role==='owner'&&a?.check_in)action=`<button class="attendance-inline-action btn light" type="button" onclick="openSupplementAttendance('${x.id}','${a.id}')"><span class="attendance-action-icon">✎</span>Điều chỉnh</button>`;
+     else if(!assigned&&profile?.role==='owner'&&new Date(x.start_at).getTime()<=Date.now())action=`<button type="button" class="attendance-inline-action btn green" onclick="openSupplementAttendance('${x.id}','')"><span class="attendance-action-icon">✎</span>Bổ sung chấm công</button>`;
      const personName=assigned?(x.profiles?.full_name||'Nhân viên'):'Trống';
-     const phone=assigned?(x.profiles?.phone||''):'Vị trí trống';
-     return `<div class="attendance-day-person"><div class="person-avatar">${escapeHtml((personName||'N').slice(0,1).toUpperCase())}</div><div class="attendance-day-person-main"><div class="attendance-day-person-name">${escapeHtml(personName)}</div><div class="attendance-day-person-meta">${escapeHtml(phone)}</div></div><div class="attendance-day-status"><span class="att-state ${cls}">${escapeHtml(st.label)}</span>${st.meta?`<span class="attendance-status-meta">${escapeHtml(st.meta)}</span>`:''}</div><div class="attendance-day-actions">${action}</div></div>`;
+     const positionLabel=items.length>1?`Vị trí ${items.indexOf(x)+1}/${items.length}`:'1 vị trí';
+     const timeLabel=`${time5(first.start_time)} – ${time5(first.end_time)}`;
+     return `<div class="attendance-2col-row"><div class="attendance-2col-left"><div class="attendance-shift-line"><b>${escapeHtml(first.template_name||'Ca')}</b><span>·</span><span>${escapeHtml(timeLabel)}</span></div><div class="attendance-person-line"><span>${escapeHtml(positionLabel)}</span><span>·</span><strong class="${assigned?'':'is-empty'}">${escapeHtml(personName)}</strong></div></div><div class="attendance-2col-right"><span class="att-state ${cls}">${escapeHtml(st.label)}</span>${st.meta?`<span class="attendance-status-meta">${escapeHtml(st.meta)}</span>`:''}${action}</div></div>`;
    }).join('');
-   return `<div class="attendance-day-shift"><div class="attendance-day-shift-head"><div class="attendance-day-shift-title"><b>${escapeHtml(first.template_name||'Ca')}</b><span>${escapeHtml(timeLabel)}</span></div><div class="attendance-day-shift-head-right"><span class="attendance-day-shift-meta">${escapeHtml(slotLabel)}</span>${headAction}</div></div><div class="attendance-day-people">${people||'<div class="empty">Chưa có vị trí trong ca.</div>'}</div></div>`;
  }).join('');
- target.innerHTML=shifts||'<div class="empty-day"><span>Ngày này chưa có ca.</span></div>';
+ target.innerHTML=html||'<div class="empty-day"><b>Ngày này chưa có ca.</b><span>Không có vị trí được xếp ca trong ngày đã chọn.</span></div>';
 }
+
 async function loadAdminAttendance(opts={}){updateAdminAttendanceWeekButton();
  const target=el('adminAttendanceList');if(!target||!sb||!profile)return;
  const selected=adminAttendanceDate,week=sevenDayWindow(selected,adminAttendanceWindowStart),weekStart=week[0],weekKey=adminAttendanceWeekKey(weekStart),force=!!opts.force;
@@ -5030,7 +4876,7 @@ async function loadAdminAttendance(opts={}){updateAdminAttendanceWeekButton();
  const token=++adminAttendanceLoadToken;
  if(!adminAttendanceWeekCache[weekKey])target.classList.add('data-loading');
  const [{data:sch,error:schError},{data:templates,error:templateError}]=await Promise.all([
-   sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at,status,employee_id,shift_group_id,profiles:employee_id(full_name)').eq('store_id',getActiveStoreId()).gte('work_date',week[0]).lte('work_date',week[6]).neq('status','cancelled').order('work_date').order('start_time'),
+   sb.from('work_schedules').select('id,work_date,start_time,end_time,start_at,end_at,status,employee_id,shift_group_id,profiles:employee_id(full_name)').eq('store_id',getActiveStoreId()).gte('work_date',week[0]).lte('work_date',week[6]).eq('status','assigned').order('work_date').order('start_time'),
    sb.from('shift_templates').select('id,name,start_time,end_time,is_active').eq('store_id',getActiveStoreId()).order('start_time').order('name')
  ]);
  if(token!==adminAttendanceLoadToken)return;
@@ -5147,7 +4993,7 @@ async function createPayrollPeriod(){
  const name=el('payrollPeriodName').value.trim(),a=el('payrollStart').value,b=el('payrollEnd').value;
  if(!name||!a||!b){el('payrollMsg').innerHTML='<div class="notice warn">Vui lòng nhập đủ tên kỳ và khoảng ngày.</div>';return}
  if(a>b){el('payrollMsg').innerHTML='<div class="notice warn">Ngày bắt đầu phải trước hoặc bằng ngày kết thúc.</div>';return}
- const btn=document.querySelector('[onclick="createPayrollPeriod()"]');setBusyButton(btn,true,'Đang tạo báo cáo…');
+ const btn=document.querySelector('[onclick="createPayrollPeriod()"]');setBusyButton(btn,true,'Đang tạo…');
  try{
    const {data,error}=await sb.rpc('owner_create_payroll_period',{p_period_name:name,p_start_date:a,p_end_date:b,p_note:el('payrollNote').value.trim()||null});
    if(error){
@@ -5171,7 +5017,7 @@ async function createPayrollPeriod(){
    await loadPayroll();
  }catch(e){
    el('payrollMsg').innerHTML=`<div class="notice warn">${escapeHtml(e?.message||'Không thể tạo kỳ lương.')}</div>`;
- }finally{setBusyButton(btn,false,'＋ Tạo báo cáo kỳ lương')}
+ }finally{setBusyButton(btn,false,'＋ Tạo kỳ lương')}
 }
 
 async function loadPayroll(){
@@ -5219,7 +5065,7 @@ async function openPayrollReport(id){
    if(adjErr)throw adjErr;
    const rateMap=new Map((runs||[]).map(x=>[x.employee_id,Number(x.hourly_rate||0)]));
    const byDay=new Map();
-   (atts||[]).forEach(x=>{const d=x.work_schedules?.work_date;if(!d)return;if(!byDay.has(d))byDay.set(d,{minutes:0,shifts:0,money:0,people:new Set(),rows:[]});const g=byDay.get(d),mins=Number(x.worked_minutes||0),rate=rateMap.get(x.employee_id)||0;g.minutes+=mins;g.shifts+=1;g.money+=Math.round(mins/60*rate);g.people.add(x.employee_id);g.rows.push(x)});
+   (atts||[]).forEach(x=>{const d=x.work_schedules?.work_date;if(!d)return;if(!byDay.has(d))byDay.set(d,{minutes:0,shifts:0,money:0,people:new Set(),rows:[]});const g=byDay.get(d),mins=Number(x.worked_minutes||0),rate=rateMap.get(x.employee_id)||0;g.minutes+=mins;g.shifts+=1;g.money+=mins/60*rate;g.people.add(x.employee_id);g.rows.push(x)});
    const days=[];for(let d=p.start_date;d<=p.end_date;d=dateAdd(d,1))days.push(d);
    const daily=days.map(d=>{const g=byDay.get(d)||{minutes:0,shifts:0,money:0,people:new Set(),rows:[]};return {date:d,minutes:g.minutes,shifts:g.shifts,money:g.money,people:g.people.size,rows:g.rows}});
    const totalNet=(runs||[]).reduce((s,x)=>s+Number(x.net_amount||0),0);
@@ -5273,17 +5119,17 @@ async function openPayrollDailyDetail(metric){
    const {data:atts,error:aErr}=await sb.from('attendance').select('id,employee_id,check_in,check_out,worked_minutes,work_schedules:schedule_id!inner(work_date,start_time,end_time,status,store_id)').eq('work_schedules.store_id',getActiveStoreId()).gte('work_schedules.work_date',p.start_date).lte('work_schedules.work_date',p.end_date).not('check_out','is',null);
    if(aErr)throw aErr;
    const rows=(atts||[]).filter(x=>x.work_schedules?.work_date&&x.work_schedules.work_date>=p.start_date&&x.work_schedules.work_date<=p.end_date);
-   const byDay=new Map();rows.forEach(x=>{const d=x.work_schedules.work_date;if(!byDay.has(d))byDay.set(d,{minutes:0,shifts:0,money:0,people:new Set()});const g=byDay.get(d),mins=Number(x.worked_minutes||0),rate=rateMap.get(x.employee_id)||0;g.minutes+=mins;g.shifts+=1;g.money+=Math.round(mins/60*rate);g.people.add(x.employee_id)});
+   const byDay=new Map();rows.forEach(x=>{const d=x.work_schedules.work_date;if(!byDay.has(d))byDay.set(d,{minutes:0,shifts:0,money:0,people:new Set()});const g=byDay.get(d),mins=Number(x.worked_minutes||0),rate=rateMap.get(x.employee_id)||0;g.minutes+=mins;g.shifts+=1;g.money+=mins/60*rate;g.people.add(x.employee_id)});
    const days=[];for(let d=p.start_date;d<=p.end_date;d=dateAdd(d,1))days.push(d);
    const activeDays=days.filter(d=>byDay.has(d));
    if(!activeDays.length){list.innerHTML='<div class="empty">Chưa có dữ liệu chấm công đã hoàn tất trong kỳ.</div>';return}
-   list.innerHTML=`<div class="payroll-daily-list">${activeDays.map(d=>{const g=byDay.get(d),hours=Math.floor(g.minutes/60),mins=g.minutes%60,dt=new Date(d+'T12:00:00'),label=dt.toLocaleDateString('vi-VN',{weekday:'short',day:'2-digit',month:'2-digit'});const value=metric==='money'?`${g.money.toLocaleString('vi-VN')}đ`:metric==='hours'?`${hours}h ${mins}p`:`${g.shifts} ca`;return `<div class="payroll-daily-row"><div class="payroll-daily-date"><b>${escapeHtml(label)}</b><span>${escapeHtml(d)}</span></div><div class="payroll-daily-main"><b>${g.people.size} nhân viên</b><span>${g.shifts} ca · ${hours}h ${mins}p công</span></div><div class="payroll-daily-hours"><b>${hours}h ${mins}p</b><span>Giờ công</span></div><div class="payroll-daily-money"><b>${g.money.toLocaleString('vi-VN')}đ</b><span>Tiền công</span></div></div>`}).join('')}</div>`;
+   list.innerHTML=`<div class="payroll-daily-list">${activeDays.map(d=>{const g=byDay.get(d),hours=Math.floor(g.minutes/60),mins=g.minutes%60,dt=new Date(d+'T12:00:00'),label=dt.toLocaleDateString('vi-VN',{weekday:'short',day:'2-digit',month:'2-digit'});const value=metric==='money'?`${g.money.toLocaleString('vi-VN')}đ`:metric==='hours'?`${hours}h ${mins}p`:`${g.shifts} ca`;return `<div class="payroll-daily-row"><div class="payroll-daily-date"><b>${escapeHtml(label)}</b><span>${escapeHtml(d)}</span></div><div class="payroll-daily-main"><b>${g.people.size} nhân viên</b><span>${g.shifts} ca · ${hours}h ${mins}p công</span></div><div class="payroll-daily-hours"><b>${hours}h ${mins}p</b><span>Giờ công</span></div><div class="payroll-daily-money"><b>${Math.round(g.money).toLocaleString('vi-VN')}đ</b><span>Tiền công</span></div></div>`}).join('')}</div>`;
  }catch(e){console.error('openPayrollDailyDetail',e);list.innerHTML='<div class="notice warn">Không tải được chi tiết theo ngày. Vui lòng thử lại.</div>'}
 }
 function closePayrollDailyDetail(){el('payrollDailyDetailModal')?.classList.remove('open')}
 async function setPayrollStatus(id,status){const {error}=await sb.rpc('owner_set_payroll_status',{p_payroll_period_id:id,p_status:status});if(error){toast(error.message);return}toast(status==='locked'?'Đã chốt kỳ lương.':status==='paid'?'Đã đánh dấu kỳ lương đã trả.':'Đã chuyển kỳ lương sang kiểm tra.');await loadPayroll();await selectPayrollPeriod(id)}
 async function addPayrollAdjustment(){if(!payrollSelectedId)return;const employee=el('payrollAdjEmployee').value,type=el('payrollAdjType').value,amount=Number(el('payrollAdjAmount').value||0),reason=el('payrollAdjReason').value.trim();if(!employee||amount<=0||!reason){toast('Nhập đủ nhân viên, số tiền và lý do.');return}const {error}=await sb.rpc('owner_add_payroll_adjustment',{p_employee_id:employee,p_payroll_period_id:payrollSelectedId,p_type:type,p_amount:amount,p_reason:reason});if(error){toast(error.message);return}el('payrollAdjAmount').value='';el('payrollAdjReason').value='';toast('Đã thêm khoản điều chỉnh ở trạng thái chờ duyệt.');await selectPayrollPeriod(payrollSelectedId)}
-async function reviewPayrollAdjustment(id,action){const {error}=await sb.rpc('owner_review_payroll_adjustment',{p_adjustment_id:id,p_action:action});if(error){toast(error.message);return}toast(action==='approve'?'Đã duyệt khoản điều chỉnh.':'Đã từ chối khoản điều chỉnh.');await selectPayrollPeriod(payrollSelectedId)}
+async function reviewPayrollAdjustment(id,action){const {error}=await sb.rpc('owner_review_payroll_adjustment',{p_adjustment_id:id,p_action:action});if(error){toast(error.message);return}toast(action==='approve'?'Đã duyệt và cập nhật lại bảng lương.':'Đã từ chối khoản điều chỉnh.');await loadPayroll();await selectPayrollPeriod(payrollSelectedId)}
 async function loadAudit(){const target=el('auditList');if(!target||!sb||!profile)return;const {data,error}=await sb.from('audit_logs').select('id,action,entity_type,entity_id,created_at,actor_id,profiles:actor_id(full_name)').eq('store_id',getActiveStoreId()).order('created_at',{ascending:false}).limit(100);if(error){target.innerHTML='<div class="notice warn">Không tải được nhật ký.</div>';return}target.innerHTML=data?.length?data.map(x=>`<div class="audit-row"><div class="audit-action">${escapeHtml(x.action)}</div><div class="audit-meta">${escapeHtml(x.profiles?.full_name||'Hệ thống')} · ${new Date(x.created_at).toLocaleString('vi-VN')} · ${escapeHtml(x.entity_type||'')} ${x.entity_id?'· '+escapeHtml(x.entity_id):''}</div></div>`).join(''):'<div class="empty">Chưa có nhật ký.</div>'}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&el('adminContent')?.classList.contains('open'))closeAdminPane()});
 window.addEventListener('error',e=>{console.error('HongCha HRM:',e.error||e.message)});
@@ -5528,108 +5374,3 @@ body.data-fetching .admin-content.open .admin-pane.active>.card,body.data-fetchi
 </style>
 <div id="globalDataLoader" aria-live="polite" aria-hidden="true"><span class="data-loader-spinner" aria-hidden="true"></span><span class="data-loader-text">Đang cập nhật</span></div>
 </body></html>
-
-<style id="hongcha-v84-16-ui">
-/* V84.19 — requested schedule/attendance/payroll presentation. Business logic untouched. */
-.manager-shift-title-line{display:flex;align-items:baseline;gap:8px;min-width:0;flex-wrap:wrap}
-.manager-shift-title-line .manager-shift-name{margin:0;white-space:nowrap}
-.manager-shift-title-line .manager-shift-time{margin:0!important;white-space:nowrap}
-.manager-shift-meta{display:none!important}
-.manager-shift-person{grid-template-columns:36px minmax(0,1fr) auto auto!important;gap:9px}
-.manager-person-actions:empty{display:none!important}
-.manager-person-actions .schedule-registered-action{display:none!important}
-@media(max-width:560px){
- .manager-shift-person{grid-template-columns:36px minmax(0,1fr) auto!important;align-items:center}
- .manager-person-status{grid-column:auto!important;justify-self:end!important}
- .manager-person-actions{grid-column:auto!important;justify-self:end!important;padding-top:0!important;max-width:none!important;overflow:visible!important}
- .manager-person-actions .btn{min-height:32px;padding:0 9px;font-size:10px}
- .pending-person{grid-template-columns:36px minmax(0,1fr) auto!important}
- .pending-person .manager-person-actions{min-width:0!important}
- .pending-person .manager-person-status{display:none}
-}
-/* Chấm công: mirror the Lịch card model, but attendance remains a read-first daily board. */
-#staffAttendanceContent .attendance-day-shift{border:1px solid #C7D7E5;border-radius:16px;background:#fff;overflow:hidden;box-shadow:0 2px 8px rgba(38,77,107,.05)}
-#staffAttendanceContent .attendance-day-shift + .attendance-day-shift{margin-top:10px}
-#staffAttendanceContent .attendance-day-shift-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 13px 12px 15px;background:#F3F8FC;border-bottom:1px solid #C9DAE8;border-left:5px solid #B3261E;min-width:0}
-#staffAttendanceContent .attendance-day-shift:nth-child(even) .attendance-day-shift-head{background:#EEF7FF;border-left-color:#1769AA}
-.attendance-day-shift-title{display:flex;align-items:baseline;gap:8px;min-width:0;flex-wrap:wrap}
-.attendance-day-shift-title b{font-size:15px;line-height:1.2;color:#14202B;white-space:nowrap}
-.attendance-day-shift-title span{font-size:13px;font-weight:800;color:#B3261E;white-space:nowrap}
-.attendance-day-shift:nth-child(even) .attendance-day-shift-title span{color:#1769AA}
-.attendance-day-shift-meta{font-size:11px;color:#62788A;white-space:nowrap}
-.attendance-day-people{background:#fff}
-.attendance-day-person{display:grid;grid-template-columns:36px minmax(0,1fr) auto auto;align-items:center;gap:9px;padding:10px 12px;border-top:1px solid #D9E5EE;min-width:0}
-.attendance-day-person:first-child{border-top:0}
-.attendance-day-person-main{min-width:0}
-.attendance-day-person-name{font-size:13px;font-weight:780;line-height:1.25;overflow-wrap:anywhere}
-.attendance-day-person-meta{margin-top:2px;font-size:10px;color:#71808D;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.attendance-day-status{min-width:0;display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right}
-.attendance-day-status .att-state{white-space:nowrap}
-.attendance-day-actions{display:flex;justify-content:flex-end;min-width:0}
-.attendance-inline-action{min-height:32px!important;padding:0 9px!important;font-size:10px!important;white-space:nowrap}
-@media(max-width:560px){
- .attendance-day-shift-head{padding-left:13px}
- .attendance-day-person{grid-template-columns:36px minmax(0,1fr) auto;gap:8px}
- .attendance-day-status{grid-column:3;grid-row:1;align-self:center}
- .attendance-day-actions{grid-column:2 / 4;grid-row:2;justify-content:flex-end;padding-top:2px}
- .attendance-day-actions:empty{display:none}
- .attendance-day-person:has(.attendance-day-actions:not(:empty)){padding-bottom:9px}
- .attendance-day-person-main{align-self:center}
-}
-/* V84.19 — Owner attendance selected-day data fix. */
-.attendance-week-day{display:grid;gap:8px;scroll-margin-top:12px}
-.attendance-week-day+.attendance-week-day{margin-top:14px}
-.attendance-week-day-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 3px 2px;color:#14202B}
-.attendance-week-day-head b{font-size:14px;font-weight:850}
-.attendance-week-day-head span{font-size:10px;color:#687786;font-weight:750}
-.attendance-day-shift-head-right{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
-.attendance-shift-adjust{min-height:32px!important;padding:0 10px!important;font-size:10px!important;white-space:nowrap}
-.attendance-day-shift-head{align-items:center!important}
-@media(max-width:560px){
- .attendance-day-shift-head{gap:7px;padding-right:9px!important}
- .attendance-day-shift-head-right{gap:5px}
- .attendance-day-shift-meta{font-size:9px}
- .attendance-shift-adjust{min-height:31px!important;padding:0 8px!important}
- .attendance-day-person{grid-template-columns:36px minmax(0,1fr) auto!important;grid-template-rows:auto!important}
- .attendance-day-status{grid-column:3!important;grid-row:1!important}
- .attendance-day-actions{grid-column:2 / 4!important;grid-row:2!important}
- .attendance-day-actions:empty{display:none}
-}
-/* Payroll: creation is a report action, not a second list to maintain. */
-.payroll-report-primary-note{display:flex;flex-direction:column;gap:2px;margin-top:10px;padding:10px 12px;border:1px dashed #C8D8E6;border-radius:12px;background:#F7FAFD}
-.payroll-report-primary-note b{font-size:12px}
-.payroll-report-primary-note span{font-size:11px;color:#687786;line-height:1.35}
-
-/* V84.22 — Attendance: compact status and week navigation share one row above day strip */
-.attendance-control-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;margin-bottom:10px;min-width:0}
-.attendance-status-summary-wrap{min-width:0;display:flex;align-items:center;gap:8px}
-.attendance-status-summary-label{flex:0 0 auto;font-size:11px;font-weight:800;color:var(--ink);white-space:nowrap}
-#adminAttendanceSummary{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px!important;min-height:0!important;margin:0!important;flex:1;min-width:0}
-#adminAttendanceSummary .attendance-compact-summary{display:contents}
-#adminAttendanceSummary .attendance-compact-row{min-width:0;display:flex;align-items:center;justify-content:center;gap:4px;padding:6px 7px;background:#fff;border:1px solid #E2E8ED;border-radius:8px;line-height:1.1}
-#adminAttendanceSummary .attendance-compact-row b{font-size:14px;line-height:1;font-weight:800;color:var(--ink)}
-#adminAttendanceSummary .attendance-compact-row span{font-size:8px;line-height:1.1;font-weight:750;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.attendance-date-nav{display:flex;align-items:center;gap:6px;flex:0 0 auto}
-.attendance-date-nav .icon-button{width:34px;height:34px;min-width:34px}
-.attendance-date-nav .today-btn{height:34px;min-width:78px;padding:0 10px;font-size:10px}
-@media(max-width:430px){
-  .attendance-control-row{grid-template-columns:minmax(0,1fr) auto;gap:7px}
-  .attendance-status-summary-wrap{gap:5px}
-  .attendance-status-summary-label{font-size:9px}
-  #adminAttendanceSummary{gap:3px!important}
-  #adminAttendanceSummary .attendance-compact-row{padding:6px 4px;gap:3px}
-  #adminAttendanceSummary .attendance-compact-row b{font-size:13px}
-  #adminAttendanceSummary .attendance-compact-row span{font-size:7.5px}
-  .attendance-date-nav{gap:4px}
-  .attendance-date-nav .icon-button{width:32px;height:32px;min-width:32px}
-  .attendance-date-nav .today-btn{min-width:70px;height:32px;padding:0 7px;font-size:9px}
-}
-@media(max-width:375px){
-  .attendance-status-summary-label{display:none}
-  #adminAttendanceSummary .attendance-compact-row{padding:6px 3px}
-  #adminAttendanceSummary .attendance-compact-row span{font-size:7px}
-  .attendance-date-nav .today-btn{min-width:64px}
-}
-</style>
-
-
