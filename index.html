@@ -3525,6 +3525,11 @@ function ownerAttendanceSummary(rows,attendanceBySchedule,now=Date.now()){
 }
 const adminTabLoaded={};
 const adminTabMeta={employees:['Nhân viên','Hồ sơ, trạng thái và đơn giá giờ'],leaves:['Nghỉ phép','Xem và duyệt yêu cầu nghỉ'],registrations:['Yêu cầu nhân viên','Yêu cầu đổi ca / đi trễ'],templates:['Mẫu ca','Khung giờ chuẩn dùng để tạo lịch'],schedules:['Mẫu lịch tuần','Thiết lập cấu trúc ca T2–CN'],registrationSettings:['Đăng ký ca','Thời gian mở/đóng và tự động duyệt'],store:['Cửa hàng','Vị trí và quy tắc chấm công'],audit:['Nhật ký','Lịch sử thao tác'],devices:['Thiết bị','Duyệt, khóa và thu hồi thiết bị'],permissions:['Phân quyền','Thiết lập quyền thao tác của tài khoản Quản lý']};
+function ensureManagerPermissionsPane(){
+ const pane=el('adminPermissions'),content=el('adminContent');
+ if(pane&&content&&pane.parentElement!==content)content.appendChild(pane);
+}
+ensureManagerPermissionsPane();
 function closeAdminPane(){const c=el('adminContent'),back=el('adminSheetBackdrop');if(c){c.classList.remove('open');c.classList.remove('is-loading')}if(back)back.classList.remove('open');document.body.classList.remove('admin-sheet-open');document.querySelectorAll('#admin .admin-group-item').forEach(x=>x.classList.remove('active'));}
 const MANAGER_PERMISSION_DEFS=[
  {key:'attendance_process',label:'Xử lý chấm công',desc:'Xác nhận, bổ sung và điều chỉnh chấm công'},
@@ -3538,9 +3543,10 @@ let managerPermissionState={};
 let managerPermissionsReady=false;
 function openManagerPermissions(){
  if(profile?.role!=='owner'){toast('Chỉ Owner được phân quyền Manager.');return}
- const button=document.querySelector('[data-admin-tab="permissions"]');
- if(!button){toast('Không tìm thấy màn hình phân quyền. Hãy tải lại trang.');return}
- adminTab('permissions',button,{forceLoad:true});
+ const pane=el('adminPermissions'),content=el('adminContent');
+ if(!pane||!content){toast('Không tìm thấy màn hình phân quyền. Hãy tải lại trang.');return}
+ ensureManagerPermissionsPane();
+ adminTab('permissions',document.querySelector('.owner-permissions-shortcut'),{forceLoad:true});
 }
 async function loadManagerPermissions(){
  if(profile?.role!=='owner')return;
