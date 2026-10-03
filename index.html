@@ -3261,7 +3261,7 @@ function saveUiState(){if(!session?.user?.id)return;try{localStorage.setItem(uiS
 function readUiState(){try{const raw=localStorage.getItem(uiStateKey());return raw?JSON.parse(raw):null}catch(e){return null}}
 function restoreUiState(opts={}){const st=readUiState();if(!st){navigate('dashboard',{restore:true,deferLoad:!!opts.deferData});return}if(profile?.role==='employee'&&st.currentView==='admin')st.currentView='dashboard';if(profile?.role==='manager'&&st.currentView==='salary')st.currentView='dashboard';if(st.employeeSelectedDate)employeeSelectedDate=st.employeeSelectedDate;if(st.employeeDayWindowStart)employeeDayWindowStart=st.employeeDayWindowStart;if(['owner','manager'].includes(profile?.role)){mainScheduleDate=localToday();mainScheduleWindowStart=mondayOfWeek(mainScheduleDate)}else{if(st.mainScheduleDate)mainScheduleDate=st.mainScheduleDate;if(st.mainScheduleWindowStart)mainScheduleWindowStart=st.mainScheduleWindowStart}if(st.adminSelectedDate)adminSelectedDate=st.adminSelectedDate;if(st.adminDayWindowStart)adminDayWindowStart=st.adminDayWindowStart;if(st.adminAttendanceDate)adminAttendanceDate=st.adminAttendanceDate;if(st.adminAttendanceWindowStart)adminAttendanceWindowStart=st.adminAttendanceWindowStart;currentAdminTab=st.currentAdminTab||'employees';navigate(st.currentView||'dashboard',{restore:true,deferLoad:!!opts.deferData,scrollY:Number(st.scrollY||0)})}
 function openAttendanceNav(){navigate('attendance')}
-function syncRoleContent(){const staff=['owner','manager'].includes(profile?.role),isOwner=profile?.role==='owner';document.querySelectorAll('.role-employee').forEach(x=>x.classList.toggle('ui-hidden',staff));document.querySelectorAll('.role-staff').forEach(x=>x.classList.toggle('ui-hidden',!staff));el('staffPayrollContent')?.classList.toggle('ui-hidden',!isOwner);const aTitle=el('attendancePageTitle'),aSub=el('attendancePageSub'),sTitle=el('salaryPageTitle'),sSub=el('salaryPageSub');if(aTitle)aTitle.textContent=staff?'Chấm công nhân sự':'Chấm công';if(aSub)aSub.textContent=staff?'Xem lại chấm công theo ngày, ca và nhân viên.':'Trạng thái ca và thao tác chấm công của bạn.';if(sTitle)sTitle.textContent='Lương';if(sSub)sSub.textContent=isOwner?'Quản lý kỳ lương, bảng lương và các khoản điều chỉnh.':staff?'Khu vực lương chỉ dành cho Owner.':'Xem lương theo tháng và chi tiết từng ngày của bạn.';const top=el('adminTopAction');if(top)top.classList.toggle('hidden',!staff);syncBranchUI();}
+function syncRoleContent(){const staff=['owner','manager'].includes(profile?.role),isOwner=profile?.role==='owner';document.querySelectorAll('.role-employee').forEach(x=>x.classList.toggle('ui-hidden',staff));document.querySelectorAll('.role-staff').forEach(x=>x.classList.toggle('ui-hidden',!staff));el('staffPayrollContent')?.classList.toggle('ui-hidden',!isOwner);const aTitle=el('attendancePageTitle'),aSub=el('attendancePageSub'),sTitle=el('salaryPageTitle'),sSub=el('salaryPageSub');if(aTitle)aTitle.textContent=staff?'Chấm công nhân sự':'Chấm công';if(aSub)aSub.textContent=staff?'Xem lại chấm công theo ngày, ca và nhân viên.':'Trạng thái ca và thao tác chấm công của bạn.';if(sTitle)sTitle.textContent='Lương';if(sSub)sSub.textContent=isOwner?'Quản lý kỳ lương, bảng lương và các khoản điều chỉnh.':staff?'Khu vực lương chỉ dành cho Owner.':'Xem lương theo tháng và chi tiết từng ngày của bạn.';const top=el('adminTopAction');if(top)top.classList.toggle('hidden',!staff);ensurePayrollWorkflowMarkup();syncBranchUI();}
 function openAdminHome(){
  const role=profile?.role;
  if(!['owner','manager'].includes(role))return;
@@ -4271,7 +4271,7 @@ async function reviewRegistration(id,action,scheduleId,employeeId){
  mainScheduleWeekCountCache={};mainScheduleWeekDataCache={};mainScheduleWeekAuxCache={};adminAttendanceWeekCache={};
  Promise.allSettled([loadRegistrations(),loadAdminSchedules(),loadMainSchedule(),loadOwnerOverview()]);
 }
-async function loadScheduleRequests(){const target=el('scheduleRequestAdminList');if(!target||!sb||!profile||!['owner','manager'].includes(profile.role))return;const {data,error}=await sb.from('schedule_requests').select('id,request_type,schedule_id,target_schedule_id,note,status,created_at,profiles:employee_id(full_name),work_schedules:schedule_id(work_date,start_time,end_time)').eq('store_id',getActiveStoreId()).eq('status','pending').order('created_at',{ascending:false});if(error){target.innerHTML='<div class="notice warn">Chưa thể tải yêu cầu nhân viên. Hãy chạy migration V21.4 trước.</div>';return}const label={late:'Xin đi trễ',swap:'Xin đổi ca'};target.innerHTML=data?.length?data.map(x=>`<div class="item"><div class="row"><div><b>${escapeHtml(x.profiles?.full_name||'Nhân viên')}</b><div class="muted">${label[x.request_type]||x.request_type} · ${escapeHtml(x.work_schedules?.work_date||'')} · ${escapeHtml(time5(x.work_schedules?.start_time))}–${escapeHtml(time5(x.work_schedules?.end_time))}</div><div class="mini">${escapeHtml(x.note||'')}</div></div><span class="badge wait">Chờ xử lý</span></div><div class="admin-actions" style="margin-top:9px"><button class="btn green" onclick="reviewScheduleRequest('${x.id}','approve')">Duyệt</button><button class="btn danger" onclick="reviewScheduleRequest('${x.id}','reject')">Từ chối</button></div></div>`).join(''):'<div class="empty">Không có yêu cầu nhân viên đang chờ.</div>'}
+async function loadScheduleRequests(){ensurePayrollWorkflowMarkup();const target=el('scheduleRequestAdminList');if(!target||!sb||!profile||!['owner','manager'].includes(profile.role))return;const {data,error}=await sb.from('schedule_requests').select('id,request_type,schedule_id,target_schedule_id,note,status,created_at,profiles:employee_id(full_name),work_schedules:schedule_id(work_date,start_time,end_time)').eq('store_id',getActiveStoreId()).eq('status','pending').order('created_at',{ascending:false});if(error){target.innerHTML='<div class="notice warn">Chưa thể tải yêu cầu nhân viên. Hãy chạy migration V21.4 trước.</div>'}else{const label={late:'Xin đi trễ',swap:'Xin đổi ca'};target.innerHTML=data?.length?data.map(x=>`<div class="item"><div class="row"><div><b>${escapeHtml(x.profiles?.full_name||'Nhân viên')}</b><div class="muted">${label[x.request_type]||x.request_type} · ${escapeHtml(x.work_schedules?.work_date||'')} · ${escapeHtml(time5(x.work_schedules?.start_time))}–${escapeHtml(time5(x.work_schedules?.end_time))}</div><div class="mini">${escapeHtml(x.note||'')}</div></div><span class="badge wait">Chờ xử lý</span></div><div class="admin-actions" style="margin-top:9px"><button class="btn green" onclick="reviewScheduleRequest('${x.id}','approve')">Duyệt</button><button class="btn danger" onclick="reviewScheduleRequest('${x.id}','reject')">Từ chối</button></div></div>`).join(''):'<div class="empty">Không có yêu cầu nhân viên đang chờ.</div>'}await loadManagerAdvanceRequests()}
 async function reviewScheduleRequest(id,action){const reason=action==='reject'?(prompt('Lý do từ chối (không bắt buộc):','')??''):'';const {error}=await sb.rpc('review_schedule_request',{p_request_id:id,p_action:action,p_reason:reason});if(error){toast(error.message==='CA_DOI_KHONG_CON_TRONG'?'Ca muốn đổi đã không còn chỗ.':'Không thể xử lý yêu cầu.');return}toast(action==='approve'?'Đã duyệt yêu cầu.':'Đã từ chối yêu cầu.');await loadScheduleRequests();await loadRegistrations();await loadAdminSchedules()}
 
 async function loadDevices(){
@@ -4892,6 +4892,7 @@ async function loadEmployeeSalaryMonth(month){
    const shifts=day.shifts.map(({shift,minutes})=>`${escapeHtml(String(shift.start_time||'').slice(0,5))}–${escapeHtml(String(shift.end_time||'').slice(0,5))} · ${(minutes/60).toLocaleString('vi-VN',{maximumFractionDigits:2})} giờ`).join('<br>');
    return `<div class="item"><div class="row"><div><b>${escapeHtml(dateLabel)}</b><div class="muted">${shifts}</div><div class="muted">${money(rate)}/giờ</div></div><div class="amount">${money(day.amount)}<small>LƯƠNG NGÀY</small></div></div></div>`;
  }).join(''):'<div class="empty">Tháng này chưa có giờ công được ghi nhận cho tài khoản của bạn.</div>';
+ await loadEmployeeAdvanceRequests();
 }
 
 async function getEmployeeWorkState(){
@@ -5172,6 +5173,94 @@ async function loadAttendanceHistory(){
 
 let adminDeviceFilter='all';
 async function filterAdminDevices(filter){adminDeviceFilter=filter||'all';document.querySelectorAll('[data-device-filter]').forEach(b=>b.classList.toggle('active',b.dataset.deviceFilter===adminDeviceFilter));await loadDevices();}
+function ensurePayrollWorkflowMarkup(){
+ if(profile?.role==='employee'){
+  const root=el('employeeSalaryContent');
+  if(root&&!el('employeeAdvancePanel'))root.insertAdjacentHTML('beforeend',`<section class="detail-card" id="employeeAdvancePanel"><div class="row"><div><b>Phiếu tạm ứng</b><div class="muted">Manager/Owner duyệt; khoản được duyệt sẽ cấn trừ vào kỳ lương mở gần nhất.</div></div></div><div class="formgrid ui-mt-10"><div class="field"><label for="employeeAdvanceAmount">Số tiền</label><input id="employeeAdvanceAmount" type="number" min="1" step="1000" inputmode="numeric"/></div><div class="field full"><label for="employeeAdvanceReason">Lý do</label><input id="employeeAdvanceReason" maxlength="500" placeholder="Lý do xin tạm ứng"/></div></div><button class="btn primary ui-mt-9" id="employeeAdvanceSubmit" onclick="submitEmployeeAdvanceRequest()" type="button">Gửi phiếu xin tạm ứng</button><div class="stack ui-mt-10" id="employeeAdvanceList"><div class="muted">Đang tải phiếu tạm ứng…</div></div></section>`);
+ }
+ if(['owner','manager'].includes(profile?.role)){
+  const requests=el('scheduleRequestAdminList');
+  if(requests&&!el('managerAdvanceRequestsPanel'))requests.insertAdjacentHTML('afterend',`<section class="card ui-mt-10" id="managerAdvanceRequestsPanel"><div class="row"><div><b>Phiếu xin tạm ứng cần xử lý</b><div class="muted">Owner/Manager duyệt trong phạm vi cửa hàng.</div></div><button class="btn light" onclick="loadManagerAdvanceRequests()" type="button">Làm mới</button></div><div class="stack ui-mt-10" id="managerAdvanceRequests"><div class="muted">Đang tải phiếu tạm ứng…</div></div></section>`);
+ }
+ if(profile?.role==='owner'){
+  const details=el('ownerPayrollManagement');
+  if(details&&!details.dataset.ruleToggleBound){details.addEventListener('toggle',()=>{if(details.open)loadPayrollPenaltyRules()});details.dataset.ruleToggleBound='1'}
+  if(details&&!el('payrollPenaltyRulePanel'))details.insertAdjacentHTML('beforeend',`<section class="card ui-mt-10" id="payrollPenaltyRulePanel"><b>Cài đặt phiếu phạt tự động</b><div class="muted ui-mt-4">Khi Owner bấm Tính lương, hệ thống tạo phiếu chờ Owner duyệt. Các điều kiện độc lập và được cộng dồn; lần đi trễ có yêu cầu đã duyệt không bị phạt và không tính vào ngưỡng số lần trong tháng. Không sửa dữ liệu chấm công hoặc ca.</div><div class="formgrid ui-mt-10"><div class="field"><label for="payrollRuleType">Điều kiện</label><select id="payrollRuleType" onchange="syncPayrollPenaltyRuleForm()"><option value="late">Đi trễ · mỗi lần</option><option value="late_monthly">Đi trễ · số lần/tháng</option><option value="early_leave">Về sớm · mỗi lần</option><option value="absence">Vắng ca</option></select></div><div class="field"><label id="payrollRuleThresholdLabel" for="payrollRuleThreshold">Ngưỡng miễn phạt (phút)</label><input id="payrollRuleThreshold" type="number" min="0" value="0"/></div><div class="field"><label for="payrollRuleAmountMode">Cách tính</label><select id="payrollRuleAmountMode"><option value="fixed">Cố định mỗi lần</option><option value="per_minute">Theo phút vượt ngưỡng</option></select></div><div class="field"><label for="payrollRuleAmount">Số tiền (đ)</label><input id="payrollRuleAmount" type="number" min="1" step="1000"/></div><div class="field full"><label for="payrollRuleLabel">Tên điều kiện</label><input id="payrollRuleLabel" maxlength="120" placeholder="Ví dụ: Trễ từ 10 phút"/></div></div><button class="btn light ui-mt-9" onclick="savePayrollPenaltyRule()" type="button">Thêm điều kiện</button><div class="stack ui-mt-10" id="payrollPenaltyRuleList"><div class="muted">Đang tải cài đặt…</div></div></section>`);
+ }
+}
+async function loadEmployeeAdvanceRequests(){
+ const target=el('employeeAdvanceList');
+ if(!target||profile?.role!=='employee'||!session?.user?.id)return;
+ const {data,error}=await sb.from('payroll_adjustments').select('id,amount,reason,status,created_at,payroll_period_id').eq('employee_id',session.user.id).eq('adjustment_type','advance').order('created_at',{ascending:false}).limit(30);
+ if(error){target.innerHTML='<div class="notice warn">Không tải được phiếu tạm ứng của bạn.</div>';return}
+ const labels={pending:'Chờ Manager/Owner duyệt',rejected:'Đã từ chối'};
+ target.innerHTML=data?.length?data.map(x=>`<div class="item"><div class="row"><div><b>${Number(x.amount||0).toLocaleString('vi-VN')}đ</b><div class="muted">${escapeHtml(x.reason||'')}</div><div class="mini">${new Date(x.created_at).toLocaleString('vi-VN')}</div></div><span class="badge ${x.status==='approved'?'ok':x.status==='pending'?'wait':'bad'}">${x.status==='approved'?(x.payroll_period_id?'Đã duyệt · đã xếp kỳ':'Đã duyệt · chờ kỳ lương mở'):labels[x.status]||escapeHtml(x.status)}</span></div></div>`).join(''):'<div class="empty">Bạn chưa gửi phiếu tạm ứng.</div>';
+}
+async function submitEmployeeAdvanceRequest(){
+ if(profile?.role!=='employee'||!session?.user?.id)return;
+ const amount=Number(el('employeeAdvanceAmount')?.value||0),reason=el('employeeAdvanceReason')?.value?.trim()||'',button=el('employeeAdvanceSubmit');
+ if(!Number.isFinite(amount)||amount<=0||!reason){toast('Nhập số tiền lớn hơn 0 và lý do xin tạm ứng.');return}
+ setBusyButton(button,true,'Đang gửi…');
+ try{
+  const {error}=await sb.rpc('employee_request_payroll_advance',{p_amount:amount,p_reason:reason});
+  if(error)throw error;
+  el('employeeAdvanceAmount').value='';el('employeeAdvanceReason').value='';
+  toast('Đã gửi phiếu xin tạm ứng.');
+  await loadEmployeeAdvanceRequests();
+ }catch(e){toast(e?.message||'Không thể gửi phiếu tạm ứng.')}
+ finally{setBusyButton(button,false,'Gửi phiếu xin tạm ứng')}
+}
+async function loadManagerAdvanceRequests(){
+ const target=el('managerAdvanceRequests');
+ if(!target||!['owner','manager'].includes(profile?.role))return;
+ const {data,error}=await sb.rpc('manager_list_payroll_advance_requests');
+ if(error){target.innerHTML='<div class="notice warn">Không tải được phiếu tạm ứng. Kiểm tra migration lương và quyền truy cập.</div>';return}
+ target.innerHTML=data?.length?data.map(x=>`<div class="item"><div class="row"><div><b>${escapeHtml(x.employee_name||'Nhân viên')} · ${Number(x.amount||0).toLocaleString('vi-VN')}đ</b><div class="mini">${escapeHtml(x.reason||'')} · ${new Date(x.created_at).toLocaleString('vi-VN')}</div></div><span class="badge ${x.advance_status==='pending'?'wait':'ok'}">${x.advance_status==='pending'?'Chờ duyệt':'Đã duyệt · đang chờ kỳ lương mở'}</span></div>${x.advance_status==='pending'?`<div class="admin-actions"><button class="btn green" onclick="reviewPayrollAdvance('${x.adjustment_id}','approve')">Duyệt</button><button class="btn danger" onclick="reviewPayrollAdvance('${x.adjustment_id}','reject')">Từ chối</button></div>`:''}</div>`).join(''):'<div class="empty">Không có phiếu tạm ứng đang chờ hoặc chờ kỳ lương mở.</div>';
+}
+async function reviewPayrollAdvance(id,action){
+ const {data,error}=await sb.rpc('manager_review_payroll_advance',{p_adjustment_id:id,p_action:action});
+ if(error){toast(error.message||'Không thể xử lý phiếu tạm ứng.');return}
+ toast(action==='approve'?(data?.queued_for_next_open_period?'Đã duyệt phiếu; khoản tạm ứng đang chờ kỳ lương mở kế tiếp.':'Đã duyệt phiếu và xếp vào kỳ lương gần nhất đang mở.'):'Đã từ chối phiếu tạm ứng.');
+ await loadManagerAdvanceRequests();
+ if(profile?.role==='owner'&&payrollSelectedId)await selectPayrollPeriod(payrollSelectedId);
+}
+function syncPayrollPenaltyRuleForm(){
+ const type=el('payrollRuleType')?.value,threshold=el('payrollRuleThresholdLabel'),mode=el('payrollRuleAmountMode');
+ if(threshold)threshold.textContent=type==='late_monthly'?'Số lần đi trễ trong tháng':type==='late'||type==='early_leave'?'Ngưỡng miễn phạt (phút)':'Không áp dụng ngưỡng';
+ if(mode){const fixedOnly=type==='late_monthly'||type==='absence';mode.disabled=fixedOnly;if(fixedOnly)mode.value='fixed'}
+}
+async function loadPayrollPenaltyRules(){
+ const target=el('payrollPenaltyRuleList');
+ if(!target||profile?.role!=='owner')return;
+ const {data,error}=await sb.from('payroll_penalty_rules').select('id,rule_type,label,threshold_minutes,threshold_occurrences,amount_mode,amount,enabled').eq('store_id',getActiveStoreId()).order('created_at');
+ if(error){target.innerHTML='<div class="notice warn">Không tải được quy tắc. Hãy chạy migration PAYROLL_ADVANCE_RULES_V84_25.sql.</div>';return}
+ const labels={late:'Trễ mỗi lần',late_monthly:'Trễ theo tháng',early_leave:'Về sớm',absence:'Vắng ca'};
+ target.innerHTML=data?.length?data.map(x=>`<div class="item"><div class="row"><div><b>${escapeHtml(x.label)}</b><div class="muted">${labels[x.rule_type]||x.rule_type}${x.rule_type==='late_monthly'?` · từ ${x.threshold_occurrences} lần/tháng`:['late','early_leave'].includes(x.rule_type)?` · trên ${x.threshold_minutes} phút`:''} · ${Number(x.amount).toLocaleString('vi-VN')}${x.amount_mode==='per_minute'?'đ/phút vượt':'đ'}</div></div><button class="btn ${x.enabled?'light':'green'}" onclick="togglePayrollPenaltyRule('${x.id}',${!x.enabled})">${x.enabled?'Tắt':'Bật'}</button></div></div>`).join(''):'<div class="empty">Chưa có điều kiện phạt tự động. Thêm từng điều kiện độc lập; có thể tạo một mức theo lần và một mức phụ thu theo số lần/tháng.</div>';
+}
+async function savePayrollPenaltyRule(){
+ if(profile?.role!=='owner')return;
+ const type=el('payrollRuleType').value,label=el('payrollRuleLabel').value.trim(),threshold=Number(el('payrollRuleThreshold').value||0),amount=Number(el('payrollRuleAmount').value||0),mode=el('payrollRuleAmountMode').value;
+ if(!label||!Number.isInteger(threshold)||threshold<0||!Number.isFinite(amount)||amount<=0){toast('Nhập tên, ngưỡng hợp lệ và số tiền lớn hơn 0.');return}
+ if(type==='late_monthly'&&threshold<1){toast('Ngưỡng số lần trong tháng phải từ 1 trở lên.');return}
+ const payload={store_id:getActiveStoreId(),rule_type:type,label,threshold_minutes:['late','early_leave'].includes(type)?threshold:0,threshold_occurrences:type==='late_monthly'?threshold:null,amount_mode:['late','early_leave'].includes(type)?mode:'fixed',amount,created_by:session.user.id};
+ const {error}=await sb.from('payroll_penalty_rules').insert(payload);
+ if(error){toast(error.message||'Không lưu được điều kiện phạt.');return}
+ el('payrollRuleLabel').value='';el('payrollRuleAmount').value='';
+ toast('Đã thêm điều kiện phạt tự động.');
+ await loadPayrollPenaltyRules();
+}
+async function togglePayrollPenaltyRule(id,enabled){
+ const {error}=await sb.from('payroll_penalty_rules').update({enabled,updated_at:new Date().toISOString()}).eq('id',id).eq('store_id',getActiveStoreId());
+ if(error){toast(error.message||'Không cập nhật được điều kiện phạt.');return}
+ await loadPayrollPenaltyRules();
+}
+async function preparePayrollCalculation(periodId){
+ const {error:assignError}=await sb.rpc('owner_assign_queued_payroll_advances',{p_payroll_period_id:periodId});
+ if(assignError)throw assignError;
+ const {data,error}=await sb.rpc('owner_generate_payroll_penalties',{p_payroll_period_id:periodId});
+ if(error)throw error;
+ return Number(data||0);
+}
 let payrollSelectedId=null;
 let ownerPayrollMonthLoadToken=0;
 function initPayrollDates(){
@@ -5200,7 +5289,13 @@ async function loadOwnerPayrollMonth(month){
  const storeId=getActiveStoreId(),money=n=>Number(n||0).toLocaleString('vi-VN')+'đ';
  const {data:periods,error:periodError}=await sb.from('payroll_periods').select('id,period_name,start_date,end_date,status').eq('store_id',storeId).lt('start_date',range.end).gte('end_date',range.start).order('start_date',{ascending:false});
  if(token!==ownerPayrollMonthLoadToken)return;
- if(periodError){target.innerHTML=`<div class="notice warn">Không tải được kỳ lương: ${escapeHtml(periodError.message||'Vui lòng thử lại.')}</div>`;return}
+ if(periodError){
+   const message=String(periodError.message||'');
+   target.innerHTML=/infinite recursion detected in policy/i.test(message)
+     ?'<div class="notice warn"><b>Supabase đang chặn đọc kỳ lương.</b> Policy quyền truy cập của bảng payroll_periods bị tham chiếu vòng lặp (RLS). Không tạo kỳ mới hoặc tính lại lương lúc này; cần sửa policy ở Supabase rồi tải lại tháng.</div>'
+     :`<div class="notice warn">Không tải được kỳ lương: ${escapeHtml(message||'Vui lòng thử lại.')}</div>`;
+   return;
+ }
  if(periods?.length){
    target.innerHTML=`<div class="notice info">Đã tìm thấy kỳ lương đã lưu trong tháng ${escapeHtml(month)}. Mở báo cáo để xem dữ liệu; thao tác này không tính lại lương.</div><div class="stack">${periods.map(p=>`<div class="item"><div class="row"><div><b>${escapeHtml(p.period_name||'Kỳ lương')}</b><div class="muted">${escapeHtml(p.start_date)} → ${escapeHtml(p.end_date)}</div></div><div><span class="badge ${p.status==='paid'?'ok':p.status==='locked'?'info':p.status==='review'?'wait':'info'}">${escapeHtml(({draft:'Nháp',review:'Đang kiểm tra',locked:'Đã chốt',paid:'Đã trả'}[p.status]||p.status))}</span><button type="button" class="btn light ui-mt-9" onclick="openPayrollReport('${escapeHtml(p.id)}')">Mở kỳ lương</button></div></div></div>`).join('')}</div>`;
    return;
@@ -5248,6 +5343,10 @@ async function createPayrollPeriod(){
    const {data,error}=await sb.rpc('owner_create_payroll_period',{p_period_name:name,p_start_date:a,p_end_date:b,p_note:el('payrollNote').value.trim()||null});
    if(error){
      const msg=String(error?.message||error?.details||'');
+     if(/KY_LUONG_BI_CHONG_NGAY/i.test(msg)){
+       el('payrollMsg').innerHTML='<div class="notice warn"><b>Khoảng ngày đang trùng với kỳ lương đã có.</b> App không tạo kỳ trùng. Hãy chọn tháng ở phía trên để mở dữ liệu; nếu app báo lỗi policy payroll_periods thì cần sửa quyền đọc trên Supabase trước.</div>';
+       return;
+     }
      if(/KY_LUONG_DA_TON_TAI|đã tồn tại|already exists/i.test(msg)){
        const {data:existing,error:findError}=await sb.from('payroll_periods').select('id').eq('store_id',getActiveStoreId()).eq('start_date',a).eq('end_date',b).order('created_at',{ascending:false}).limit(1).maybeSingle();
        if(findError||!existing?.id)throw error;
@@ -5261,9 +5360,10 @@ async function createPayrollPeriod(){
      throw error;
    }
    payrollSelectedId=data;
+   const generated=await preparePayrollCalculation(data);
    const {error:calcError}=await sb.rpc('owner_calculate_payroll',{p_payroll_period_id:data});
    if(calcError)throw calcError;
-   el('payrollMsg').innerHTML='<div class="notice ok">Đã tạo và tính kỳ lương. Báo cáo đang mở.</div>';
+   el('payrollMsg').innerHTML=`<div class="notice ok">Đã tạo và tính kỳ lương. ${generated} phiếu phạt tự động đang chờ Owner duyệt. Báo cáo đang mở.</div>`;
    await openPayrollReport(data);
    await loadPayroll();
    await loadOwnerPayrollMonth(initOwnerPayrollMonth());
@@ -5273,9 +5373,9 @@ async function createPayrollPeriod(){
 }
 
 async function loadPayroll(){
- if(!el('payrollPeriods')||profile?.role!=='owner')return;initPayrollDates();const {data,error}=await sb.from('payroll_periods').select('id,period_name,start_date,end_date,status,locked_at,paid_at,note,created_at').eq('store_id',getActiveStoreId()).order('start_date',{ascending:false}).limit(24);if(error){el('payrollPeriods').innerHTML='<div class="notice warn">Không tải được kỳ lương.</div>';return}if(!data?.length){el('payrollPeriods').innerHTML='<div class="empty">Chưa có kỳ lương. Tạo kỳ đầu tiên ở phía trên.</div>';el('payrollSelected').style.display='none';return}el('payrollPeriods').innerHTML=data.map(x=>{const cls=x.status==='paid'?'ok':x.status==='locked'?'info':x.status==='review'?'wait':'info';return `<button type="button" class="item" style="text-align:left;width:100%;cursor:pointer" onclick="selectPayrollPeriod('${x.id}')"><div class="row"><div><b>${escapeHtml(x.period_name)}</b><div class="muted">${x.start_date} → ${x.end_date}</div></div><span class="badge ${cls}">${({draft:'Nháp',review:'Đang kiểm tra',locked:'Đã chốt',paid:'Đã trả'}[x.status]||x.status)}</span></div></button>`}).join('');if(payrollSelectedId&&data.some(x=>x.id===payrollSelectedId))await selectPayrollPeriod(payrollSelectedId);else await selectPayrollPeriod(data[0].id)}
+ if(!el('payrollPeriods')||profile?.role!=='owner')return;ensurePayrollWorkflowMarkup();await loadPayrollPenaltyRules();initPayrollDates();const {data,error}=await sb.from('payroll_periods').select('id,period_name,start_date,end_date,status,locked_at,paid_at,note,created_at').eq('store_id',getActiveStoreId()).order('start_date',{ascending:false}).limit(24);if(error){el('payrollPeriods').innerHTML='<div class="notice warn">Không tải được kỳ lương.</div>';return}if(!data?.length){el('payrollPeriods').innerHTML='<div class="empty">Chưa có kỳ lương. Tạo kỳ đầu tiên ở phía trên.</div>';el('payrollSelected').style.display='none';return}el('payrollPeriods').innerHTML=data.map(x=>{const cls=x.status==='paid'?'ok':x.status==='locked'?'info':x.status==='review'?'wait':'info';return `<button type="button" class="item" style="text-align:left;width:100%;cursor:pointer" onclick="selectPayrollPeriod('${x.id}')"><div class="row"><div><b>${escapeHtml(x.period_name)}</b><div class="muted">${x.start_date} → ${x.end_date}</div></div><span class="badge ${cls}">${({draft:'Nháp',review:'Đang kiểm tra',locked:'Đã chốt',paid:'Đã trả'}[x.status]||x.status)}</span></div></button>`}).join('');if(payrollSelectedId&&data.some(x=>x.id===payrollSelectedId))await selectPayrollPeriod(payrollSelectedId);else await selectPayrollPeriod(data[0].id)}
 async function selectPayrollPeriod(id){payrollSelectedId=id;const {data:p,error}=await sb.from('payroll_periods').select('id,period_name,start_date,end_date,status,note').eq('id',id).eq('store_id',getActiveStoreId()).single();if(error||!p)return;el('payrollSelected').style.display='block';const statusBtns=p.status==='draft'?`<button type="button" class="btn light" onclick="setPayrollStatus('${p.id}','review')">Đưa kiểm tra</button>`:p.status==='review'?`<button type="button" class="btn light" onclick="setPayrollStatus('${p.id}','locked')">Chốt lương</button>`:p.status==='locked'?`<button type="button" class="btn green" onclick="setPayrollStatus('${p.id}','paid')">Đánh dấu đã trả</button>`:'';el('payrollSelectedHead').innerHTML=`<div class="row"><div><b>${escapeHtml(p.period_name)}</b><div class="muted">${p.start_date} → ${p.end_date} · ${({draft:'Nháp',review:'Đang kiểm tra',locked:'Đã chốt',paid:'Đã trả'}[p.status]||p.status)}</div></div><div class="admin-actions" style="margin-top:0"><button type="button" class="btn primary" ${['locked','paid'].includes(p.status)?'disabled':''} onclick="calculatePayroll('${p.id}')">Tính lương</button>${statusBtns}</div></div>`;await loadPayrollRuns(p)}
-async function calculatePayroll(id){const {data,error}=await sb.rpc('owner_calculate_payroll',{p_payroll_period_id:id});if(error){toast(error.message);return}toast('Đã tính lại bảng lương.');await loadPayroll();await selectPayrollPeriod(id);await loadOwnerPayrollMonth(initOwnerPayrollMonth())}
+async function calculatePayroll(id){try{const generated=await preparePayrollCalculation(id);const {error}=await sb.rpc('owner_calculate_payroll',{p_payroll_period_id:id});if(error)throw error;toast(generated?`Đã tính lương; có ${generated} phiếu phạt chờ Owner duyệt.`:'Đã tính lại bảng lương.');await loadPayroll();await selectPayrollPeriod(id);await loadOwnerPayrollMonth(initOwnerPayrollMonth())}catch(e){toast(e?.message||'Không thể tính lương.')}}
 async function loadPayrollRuns(p){
  const {data:runs,error}=await sb.from('payroll_runs').select('id,employee_id,hourly_rate,worked_minutes,gross_amount,bonus_amount,advance_amount,net_amount,penalty_amount,profiles:employee_id(full_name)').eq('payroll_period_id',p.id).order('net_amount',{ascending:false});
  if(error){el('payrollRuns').innerHTML='<div class="notice warn">Không tải được bảng lương.</div>';return}
@@ -5388,7 +5488,7 @@ async function openPayrollDailyDetail(metric){
 function closePayrollDailyDetail(){el('payrollDailyDetailModal')?.classList.remove('open')}
 async function setPayrollStatus(id,status){const {error}=await sb.rpc('owner_set_payroll_status',{p_payroll_period_id:id,p_status:status});if(error){toast(error.message);return}toast(status==='locked'?'Đã chốt kỳ lương.':status==='paid'?'Đã đánh dấu kỳ lương đã trả.':'Đã chuyển kỳ lương sang kiểm tra.');await loadPayroll();await selectPayrollPeriod(id);await loadOwnerPayrollMonth(initOwnerPayrollMonth())}
 async function addPayrollAdjustment(){if(!payrollSelectedId)return;const employee=el('payrollAdjEmployee').value,type=el('payrollAdjType').value,amount=Number(el('payrollAdjAmount').value||0),reason=el('payrollAdjReason').value.trim();if(!employee||amount<=0||!reason){toast('Nhập đủ nhân viên, số tiền và lý do.');return}const {error}=await sb.rpc('owner_add_payroll_adjustment',{p_employee_id:employee,p_payroll_period_id:payrollSelectedId,p_type:type,p_amount:amount,p_reason:reason});if(error){toast(error.message);return}el('payrollAdjAmount').value='';el('payrollAdjReason').value='';toast('Đã thêm khoản điều chỉnh ở trạng thái chờ duyệt.');await selectPayrollPeriod(payrollSelectedId);await loadOwnerPayrollMonth(initOwnerPayrollMonth())}
-async function reviewPayrollAdjustment(id,action){const {error}=await sb.rpc('owner_review_payroll_adjustment',{p_adjustment_id:id,p_action:action});if(error){toast(error.message);return}toast(action==='approve'?'Đã duyệt khoản điều chỉnh.':'Đã từ chối khoản điều chỉnh.');await selectPayrollPeriod(payrollSelectedId);await loadOwnerPayrollMonth(initOwnerPayrollMonth())}
+async function reviewPayrollAdjustment(id,action){const {data,error}=await sb.rpc('owner_review_payroll_adjustment_guarded',{p_adjustment_id:id,p_action:action});if(error){toast(error.message);return}toast(data?.status==='approved_late_exempted'?'Đã miễn phạt vì yêu cầu đi trễ đã được duyệt; phiếu tự động không được tính vào lương.':action==='approve'?'Đã duyệt khoản điều chỉnh.':'Đã từ chối khoản điều chỉnh.');await selectPayrollPeriod(payrollSelectedId);await loadOwnerPayrollMonth(initOwnerPayrollMonth())}
 async function loadAudit(){const target=el('auditList');if(!target||!sb||!profile)return;const {data,error}=await sb.from('audit_logs').select('id,action,entity_type,entity_id,created_at,actor_id,profiles:actor_id(full_name)').eq('store_id',getActiveStoreId()).order('created_at',{ascending:false}).limit(100);if(error){target.innerHTML='<div class="notice warn">Không tải được nhật ký.</div>';return}target.innerHTML=data?.length?data.map(x=>`<div class="audit-row"><div class="audit-action">${escapeHtml(x.action)}</div><div class="audit-meta">${escapeHtml(x.profiles?.full_name||'Hệ thống')} · ${new Date(x.created_at).toLocaleString('vi-VN')} · ${escapeHtml(x.entity_type||'')} ${x.entity_id?'· '+escapeHtml(x.entity_id):''}</div></div>`).join(''):'<div class="empty">Chưa có nhật ký.</div>'}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&el('adminContent')?.classList.contains('open'))closeAdminPane()});
 window.addEventListener('error',e=>{console.error('HongCha HRM:',e.error||e.message)});
