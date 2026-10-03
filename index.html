@@ -5204,9 +5204,11 @@ async function loadEmployeeAdvanceLimit(){
  const {data,error}=await sb.rpc('employee_get_payroll_advance_limit');
  if(error){target.innerHTML='Không tải được hạn mức tạm ứng.';target.className='notice warn';return null}
  const d=data||{},money=n=>Number(n||0).toLocaleString('vi-VN')+'đ';employeeAdvanceLimitCache=d;
- target.innerHTML=`Tiền công đã thực hiện tháng này: <b>${money(d.earned_amount)}</b><br>Đã xin/được duyệt: <b>${money(d.requested_amount)}</b> / ${money(d.maximum_amount)} · Còn được xin: <b>${money(d.remaining_amount)}</b><br>Số phiếu: <b>${Number(d.request_count||0)} / 2</b>`;
- const button=document.querySelector('#employeeAdvancePanel button[onclick="openEmployeeAdvanceModal()"]');
- if(button)button.disabled=Number(d.request_count||0)>=2||Number(d.remaining_amount||0)<=0;
+ const exhausted=Number(d.request_count||0)>=2||Number(d.remaining_amount||0)<=0;
+ target.className=exhausted?'notice warn':'notice info';
+ target.innerHTML=`Tiền công đã thực hiện tháng này: <b>${money(d.earned_amount)}</b><br>Đã xin/được duyệt: <b>${money(d.requested_amount)}</b> / ${money(d.maximum_amount)} · Còn được xin: <b>${money(d.remaining_amount)}</b><br>Số phiếu: <b>${Number(d.request_count||0)} / 2</b>${Number(d.request_count||0)>=2?'<br>Bạn đã đạt số phiếu tối đa tháng này.':Number(d.remaining_amount||0)<=0?'<br>Hạn mức chỉ mở khi có thêm giờ công đã checkout.':''}`;
+ const submit=el('employeeAdvanceSubmit');
+ if(submit)submit.disabled=exhausted;
  return d;
 }
 async function openEmployeeAdvanceModal(){
@@ -5215,7 +5217,8 @@ async function openEmployeeAdvanceModal(){
  el('employeeAdvanceAmount').value='';
  el('employeeAdvanceReason').value='';
  modal.classList.add('open');
- await loadEmployeeAdvanceLimit();
+ const limit=await loadEmployeeAdvanceLimit();
+ if(!limit){const submit=el('employeeAdvanceSubmit');if(submit)submit.disabled=true}
  updateEmployeeAdvanceAmountHint();
 }
 function closeEmployeeAdvanceModal(){el('employeeAdvanceModal')?.classList.remove('open')}
