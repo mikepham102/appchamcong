@@ -5172,11 +5172,12 @@ async function loadAttendanceHistory(){
 
 
 let adminDeviceFilter='all';
+let employeeAdvanceLimitCache=null;
 async function filterAdminDevices(filter){adminDeviceFilter=filter||'all';document.querySelectorAll('[data-device-filter]').forEach(b=>b.classList.toggle('active',b.dataset.deviceFilter===adminDeviceFilter));await loadDevices();}
 function ensurePayrollWorkflowMarkup(){
  if(profile?.role==='employee'){
   const root=el('employeeSalaryContent');
-  if(root&&!el('employeeAdvancePanel'))root.insertAdjacentHTML('beforeend',`<section class="detail-card" id="employeeAdvancePanel"><div class="row"><div><b>Phiếu tạm ứng</b><div class="muted">Manager/Owner duyệt; khoản được duyệt sẽ cấn trừ vào kỳ lương mở gần nhất.</div></div></div><div class="formgrid ui-mt-10"><div class="field"><label for="employeeAdvanceAmount">Số tiền</label><input id="employeeAdvanceAmount" type="number" min="1" step="1000" inputmode="numeric"/></div><div class="field full"><label for="employeeAdvanceReason">Lý do</label><input id="employeeAdvanceReason" maxlength="500" placeholder="Lý do xin tạm ứng"/></div></div><button class="btn primary ui-mt-9" id="employeeAdvanceSubmit" onclick="submitEmployeeAdvanceRequest()" type="button">Gửi phiếu xin tạm ứng</button><div class="stack ui-mt-10" id="employeeAdvanceList"><div class="muted">Đang tải phiếu tạm ứng…</div></div></section>`);
+  if(root&&!el('employeeAdvancePanel'))root.insertAdjacentHTML('beforeend',`<section class="detail-card" id="employeeAdvancePanel"><div class="row"><div><b>Tạm ứng</b><div class="muted">Tối đa 2 phiếu mỗi tháng; tổng tiền không quá 50% tiền công đã thực hiện trong tháng.</div></div><button class="btn primary" onclick="openEmployeeAdvanceModal()" type="button">＋ Xin tạm ứng</button></div><div class="stack ui-mt-10" id="employeeAdvanceList"><div class="muted">Đang tải phiếu tạm ứng…</div></div></section><div class="modal" id="employeeAdvanceModal" role="dialog" aria-modal="true" aria-labelledby="employeeAdvanceTitle"><div class="modalbox"><div class="modal-head"><div><h2 id="employeeAdvanceTitle">Phiếu xin tạm ứng</h2><div class="muted">Chọn nhanh số tiền hoặc nhập số tiền muốn ứng.</div></div><button class="modal-close" onclick="closeEmployeeAdvanceModal()" type="button" aria-label="Đóng">×</button></div><div class="stack ui-mt-14"><div class="notice info" id="employeeAdvanceLimit">Đang tải hạn mức tạm ứng…</div><div class="row"><b>Chọn nhanh</b><span class="muted">Số tiền chẵn</span></div><div class="admin-actions"><button class="btn light" onclick="chooseEmployeeAdvanceAmount(200000)" type="button">200.000đ</button><button class="btn light" onclick="chooseEmployeeAdvanceAmount(500000)" type="button">500.000đ</button></div><div class="field"><label for="employeeAdvanceAmount">Số tiền muốn ứng</label><input id="employeeAdvanceAmount" type="number" min="1000" step="1000" inputmode="numeric" oninput="updateEmployeeAdvanceAmountHint()"/></div><div class="muted" id="employeeAdvanceAmountHint">Hạn mức còn lại tính theo tiền công đã checkout.</div><div class="field"><label for="employeeAdvanceReason">Lý do</label><input id="employeeAdvanceReason" maxlength="500" placeholder="Lý do xin tạm ứng"/></div><button class="btn primary ui-mt-9" id="employeeAdvanceSubmit" onclick="submitEmployeeAdvanceRequest()" type="button">Gửi phiếu xin tạm ứng</button></div></div></div>`);
  }
  if(['owner','manager'].includes(profile?.role)){
   const requests=el('scheduleRequestAdminList');
@@ -5195,19 +5196,60 @@ async function loadEmployeeAdvanceRequests(){
  if(error){target.innerHTML='<div class="notice warn">Không tải được phiếu tạm ứng của bạn.</div>';return}
  const labels={pending:'Chờ Manager/Owner duyệt',rejected:'Đã từ chối'};
  target.innerHTML=data?.length?data.map(x=>`<div class="item"><div class="row"><div><b>${Number(x.amount||0).toLocaleString('vi-VN')}đ</b><div class="muted">${escapeHtml(x.reason||'')}</div><div class="mini">${new Date(x.created_at).toLocaleString('vi-VN')}</div></div><span class="badge ${x.status==='approved'?'ok':x.status==='pending'?'wait':'bad'}">${x.status==='approved'?(x.payroll_period_id?'Đã duyệt · đã xếp kỳ':'Đã duyệt · chờ kỳ lương mở'):labels[x.status]||escapeHtml(x.status)}</span></div></div>`).join(''):'<div class="empty">Bạn chưa gửi phiếu tạm ứng.</div>';
+ await loadEmployeeAdvanceLimit();
+}
+async function loadEmployeeAdvanceLimit(){
+ const target=el('employeeAdvanceLimit');
+ if(!target||profile?.role!=='employee')return null;
+ const {data,error}=await sb.rpc('employee_get_payroll_advance_limit');
+ if(error){target.innerHTML='Không tải được hạn mức tạm ứng.';target.className='notice warn';return null}
+ const d=data||{},money=n=>Number(n||0).toLocaleString('vi-VN')+'đ';employeeAdvanceLimitCache=d;
+ target.innerHTML=`Tiền công đã thực hiện tháng này: <b>${money(d.earned_amount)}</b><br>Đã xin/được duyệt: <b>${money(d.requested_amount)}</b> / ${money(d.maximum_amount)} · Còn được xin: <b>${money(d.remaining_amount)}</b><br>Số phiếu: <b>${Number(d.request_count||0)} / 2</b>`;
+ const button=document.querySelector('#employeeAdvancePanel button[onclick="openEmployeeAdvanceModal()"]');
+ if(button)button.disabled=Number(d.request_count||0)>=2||Number(d.remaining_amount||0)<=0;
+ return d;
+}
+async function openEmployeeAdvanceModal(){
+ const modal=el('employeeAdvanceModal');
+ if(!modal||profile?.role!=='employee')return;
+ el('employeeAdvanceAmount').value='';
+ el('employeeAdvanceReason').value='';
+ modal.classList.add('open');
+ await loadEmployeeAdvanceLimit();
+ updateEmployeeAdvanceAmountHint();
+}
+function closeEmployeeAdvanceModal(){el('employeeAdvanceModal')?.classList.remove('open')}
+function chooseEmployeeAdvanceAmount(amount){
+ const input=el('employeeAdvanceAmount');
+ if(input){input.value=String(amount);updateEmployeeAdvanceAmountHint()}
+}
+function updateEmployeeAdvanceAmountHint(){
+ const hint=el('employeeAdvanceAmountHint'),input=el('employeeAdvanceAmount');
+ if(!hint||!input)return;
+ const limit=employeeAdvanceLimitCache;
+ if(!limit){hint.textContent='Không xác định được hạn mức hiện tại.';return}
+ const amount=Number(input.value||0),remaining=Number(limit.remaining_amount||0);
+ hint.textContent=amount>remaining
+  ?`Số tiền vượt hạn mức còn lại ${remaining.toLocaleString('vi-VN')}đ.`
+  :`Sau khi gửi, hạn mức còn lại khoảng ${Math.max(0,remaining-amount).toLocaleString('vi-VN')}đ.`;
 }
 async function submitEmployeeAdvanceRequest(){
  if(profile?.role!=='employee'||!session?.user?.id)return;
  const amount=Number(el('employeeAdvanceAmount')?.value||0),reason=el('employeeAdvanceReason')?.value?.trim()||'',button=el('employeeAdvanceSubmit');
+ const limit=await loadEmployeeAdvanceLimit();
  if(!Number.isFinite(amount)||amount<=0||!reason){toast('Nhập số tiền lớn hơn 0 và lý do xin tạm ứng.');return}
+ if(!limit){toast('Chưa tải được hạn mức tạm ứng. Vui lòng thử lại.');return}
+ if(Number(limit.request_count||0)>=2){toast('Mỗi tháng chỉ được gửi tối đa 2 phiếu tạm ứng.');return}
+ if(amount>Number(limit.remaining_amount||0)){toast(`Số tiền vượt hạn mức còn lại ${Number(limit.remaining_amount||0).toLocaleString('vi-VN')}đ.`);return}
  setBusyButton(button,true,'Đang gửi…');
  try{
   const {error}=await sb.rpc('employee_request_payroll_advance',{p_amount:amount,p_reason:reason});
   if(error)throw error;
   el('employeeAdvanceAmount').value='';el('employeeAdvanceReason').value='';
   toast('Đã gửi phiếu xin tạm ứng.');
+  closeEmployeeAdvanceModal();
   await loadEmployeeAdvanceRequests();
- }catch(e){toast(e?.message||'Không thể gửi phiếu tạm ứng.')}
+ }catch(e){const errors={'TAM_UNG_VUOT_SO_LAN_THANG':'Bạn đã gửi đủ 2 phiếu tạm ứng trong tháng này.','TAM_UNG_VUOT_HAN_MUC_50_PERCENT':'Số tiền xin ứng vượt quá 50% tiền công đã thực hiện hoặc hạn mức còn lại.'};toast(errors[e?.message]||e?.message||'Không thể gửi phiếu tạm ứng.')}
  finally{setBusyButton(button,false,'Gửi phiếu xin tạm ứng')}
 }
 async function loadManagerAdvanceRequests(){
