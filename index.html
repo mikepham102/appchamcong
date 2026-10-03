@@ -2770,7 +2770,7 @@ input:focus,select:focus,textarea:focus{
 <section class="view" id="profile">
 <header class="screen-header page-screen-header"><div><div class="eyebrow">CÁ NHÂN</div><h1 class="page-title">Tài khoản</h1><p class="page-sub">Thông tin cá nhân và thiết lập tài khoản.</p></div></header>
 <section class="settings-list">
-<div class="settings-group"><div class="settings-group-title">Hồ sơ</div><div class="settings-card"><div class="field"><label>Họ và tên</label><input id="fullName"/></div><div class="field"><label>Email</label><input id="email" readonly=""/></div><div class="field"><label>Số điện thoại</label><input id="phone"/></div><div class="field"><label>Địa chỉ</label><input id="address"/></div><button class="btn primary" id="saveProfileBtn" onclick="saveProfile()" disabled>Lưu thay đổi</button><div id="profileMsg"></div></div></div>
+<div class="settings-group"><div class="settings-group-title">Hồ sơ</div><div class="settings-card"><div class="field"><label>Họ và tên</label><input id="fullName"/></div><div class="field"><label>Email đăng nhập</label><input id="email" type="email" autocomplete="email"/></div><button class="btn light" id="changeEmailBtn" onclick="changeMyEmail()" type="button">Đổi email</button><div class="field"><label>Số điện thoại</label><input id="phone"/></div><div class="field"><label>Địa chỉ</label><input id="address"/></div><div class="field"><label>Ngân hàng</label><input id="bankName" autocomplete="organization" placeholder="Tên ngân hàng"/></div><div class="field"><label>Số tài khoản</label><input id="bankAccountNumber" autocomplete="off" inputmode="numeric"/></div><div class="field"><label>Chủ tài khoản</label><input id="bankAccountHolder" autocomplete="name"/></div><button class="btn primary" id="saveProfileBtn" onclick="saveProfile()" disabled>Lưu thay đổi</button><div id="profileMsg"></div></div></div>
 <div class="settings-group"><div class="settings-group-title">Bảo mật</div><div class="settings-card"><button class="settings-action" onclick="openPasswordModal()"><span>Đổi mật khẩu</span><span>›</span></button></div></div>
 <div class="settings-group"><div class="settings-card"><button class="settings-action danger-action" onclick="signOut()"><span>Đăng xuất</span><span>›</span></button></div></div>
 </section>
@@ -2809,7 +2809,7 @@ input:focus,select:focus,textarea:focus{
 </div>
 <div class="modal" id="branchSwitcherModal"><div class="modalbox branch-switcher-modal"><div class="modal-head"><div><h2>Chọn chi nhánh</h2><div class="muted ui-small-sub">Dữ liệu của toàn bộ hệ thống sẽ theo chi nhánh đang chọn.</div></div><button class="modal-close" onclick="closeBranchSwitcher()" type="button">×</button></div><div class="stack ui-mt-14" id="branchSwitcherList"><div class="empty">Đang tải…</div></div></div></div><div class="modal" id="createBranchModal"><div class="modalbox branch-create-modal"><div class="modal-head"><div><h2>Tạo chi nhánh</h2><div class="muted ui-small-sub">Tạo cửa hàng mới ngay trong ứng dụng. Không cần SQL, GitHub hay Supabase thủ công.</div></div><button class="modal-close" onclick="closeCreateBranch()" type="button">×</button></div><div class="stack ui-mt-14"><div class="formgrid"><div class="field full"><label>Tên chi nhánh *</label><input id="newBranchName" maxlength="48" placeholder="Ví dụ: Nguyễn Trãi"/><div class="branch-name-hint">Nên đặt theo vị trí dễ nhận biết. Tên ngắn sẽ hiển thị đẹp hơn trên điện thoại.</div><div class="branch-name-examples"><span class="branch-name-example">Nguyễn Trãi</span><span class="branch-name-example">Củ Chi</span><span class="branch-name-example">Tân Phú</span><span class="branch-name-example">Phạm Văn Đồng</span></div></div><div class="field full"><label>Địa chỉ</label><input id="newBranchAddress" placeholder="Địa chỉ chi nhánh"/></div><div class="field"><label>Vĩ độ</label><input id="newBranchLat" type="number" step="any" placeholder="10.77…"/></div><div class="field"><label>Kinh độ</label><input id="newBranchLng" type="number" step="any" placeholder="106.68…"/></div></div><div class="notice info">Cấu hình vận hành của chi nhánh hiện tại sẽ được dùng làm mặc định (bán kính GPS, thời gian check-in, đơn giá mặc định và mẫu giờ đăng ký nếu có). Nhân viên, lịch, ca mẫu và dữ liệu lương <b>không bị sao chép</b>.</div><div id="createBranchMsg"></div></div><div class="modal-actions"><button class="btn light" onclick="closeCreateBranch()" type="button">Hủy</button><button class="btn primary" onclick="createBranch()" type="button">Tạo chi nhánh</button></div></div></div><div class="toast" id="toast"></div><script>
 
-let sb=null,session=null,profile=null,currentView='dashboard',loginMode='password',appBusy=false,currentWorkState=null;
+let sb=null,session=null,profile=null,profileBankAccount=null,currentView='dashboard',loginMode='password',appBusy=false,currentWorkState=null;
 let activeStoreId=null;
 let branchContextReady=false;
 function getActiveStoreId(){return activeStoreId||profile?.store_id||null}
@@ -3230,19 +3230,62 @@ async function setNewPassword(){
 }
 function syncProfileSaveState(){
  const b=el('saveProfileBtn');if(!b||!profile)return;
- const same=(el('fullName')?.value||'').trim()===(profile.full_name||'') && (el('phone')?.value||'').trim()===(profile.phone||'') && (el('address')?.value||'').trim()===(profile.address||'');
+ const same=(el('fullName')?.value||'').trim()===(profile.full_name||'') && (el('phone')?.value||'').trim()===(profile.phone||'') && (el('address')?.value||'').trim()===(profile.address||'') && (el('bankName')?.value||'').trim()===(profileBankAccount?.bank_name||'') && (el('bankAccountNumber')?.value||'').trim()===(profileBankAccount?.account_number||'') && (el('bankAccountHolder')?.value||'').trim()===(profileBankAccount?.account_holder||'');
  b.disabled=same;
+}
+async function loadProfileBankAccount(employeeId){
+ const {data,error}=await sb.from('employee_bank_accounts').select('bank_name,account_number,account_holder').eq('employee_id',employeeId).maybeSingle();
+ if(appHydratedUserId!==employeeId)return;
+ if(error){el('profileMsg').innerHTML='<div class="notice warn">Không tải được thông tin ngân hàng. Hãy kiểm tra migration hồ sơ ngân hàng trên Supabase.</div>';return}
+ profileBankAccount=data;
+ el('bankName').value=data?.bank_name||'';el('bankAccountNumber').value=data?.account_number||'';el('bankAccountHolder').value=data?.account_holder||'';
+ syncProfileSaveState();
+}
+async function syncConfirmedProfileEmail(employeeId,email){
+ try{
+  const {error}=await sb.from('profiles').update({email}).eq('id',employeeId);
+  if(error)throw error;
+  if(profile?.id===employeeId)profile.email=email;
+ }catch(e){
+  console.warn('[HongCha Profile] Auth email sync failed',e);
+  if(appHydratedUserId===employeeId)el('profileMsg').innerHTML='<div class="notice warn">Email đăng nhập đã xác nhận nhưng chưa đồng bộ được vào hồ sơ: '+escapeHtml(e?.message||'Vui lòng liên hệ Owner.')+'</div>';
+ }
 }
 async function saveProfile(){
  if(!sb||!session||!profile)return;
  const b=el('saveProfileBtn');if(b?.disabled)return;
  const payload={full_name:el('fullName').value.trim(),phone:el('phone').value.trim(),address:el('address').value.trim()};
+ const bankPayload={bank_name:el('bankName').value.trim(),account_number:el('bankAccountNumber').value.trim(),account_holder:el('bankAccountHolder').value.trim()};
  if(!payload.full_name){el('profileMsg').innerHTML='<div class="notice warn">Họ và tên không được để trống.</div>';return}
+ if((bankPayload.bank_name||bankPayload.account_number||bankPayload.account_holder)&&(!bankPayload.bank_name||!bankPayload.account_number||!bankPayload.account_holder)){el('profileMsg').innerHTML='<div class="notice warn">Vui lòng nhập đầy đủ ngân hàng, số tài khoản và chủ tài khoản.</div>';return}
  if(b){b.disabled=true;b.textContent='Đang lưu…'}
- const {error}=await sb.from('profiles').update(payload).eq('id',session.user.id);
- el('profileMsg').innerHTML=error?'<div class="notice warn">Không thể lưu hồ sơ.</div>':'<div class="notice ok">Đã lưu hồ sơ.</div>';
- if(!error){profile={...profile,...payload};syncHeader()}
+ const {error:profileError}=await sb.from('profiles').update(payload).eq('id',session.user.id);
+ let bankError=null;
+ if(!profileError){
+  if(bankPayload.bank_name||bankPayload.account_number||bankPayload.account_holder){
+   const result=await sb.from('employee_bank_accounts').upsert({employee_id:session.user.id,...bankPayload},{onConflict:'employee_id'});
+   bankError=result.error;
+  }else if(profileBankAccount){
+   const result=await sb.from('employee_bank_accounts').delete().eq('employee_id',session.user.id);
+   bankError=result.error;
+  }
+ }
+ const error=profileError||bankError;
+ el('profileMsg').innerHTML=error?'<div class="notice warn">Không thể lưu đầy đủ hồ sơ: '+escapeHtml(error.message||'Vui lòng kiểm tra cấu hình Supabase.')+'</div>':'<div class="notice ok">Đã lưu hồ sơ.</div>';
+ if(!profileError){profile={...profile,...payload};if(!bankError)profileBankAccount=bankPayload.bank_name?bankPayload:null;syncHeader()}
  if(b){b.textContent=error?'Lưu thay đổi':'Đã lưu';if(!error)setTimeout(()=>{b.textContent='Lưu thay đổi';syncProfileSaveState()},900);else syncProfileSaveState()}
+}
+async function changeMyEmail(){
+ if(!sb||!session)return;
+ const input=el('email'),button=el('changeEmailBtn'),email=(input?.value||'').trim().toLowerCase();
+ if(!email||!input.checkValidity()){el('profileMsg').innerHTML='<div class="notice warn">Vui lòng nhập email hợp lệ.</div>';return}
+ if(email===String(session.user.email||'').toLowerCase()){el('profileMsg').innerHTML='<div class="notice info">Email này đang được dùng để đăng nhập.</div>';return}
+ if(button){button.disabled=true;button.textContent='Đang gửi…'}
+ try{
+  const {error}=await sb.auth.updateUser({email});
+  el('profileMsg').innerHTML=error?'<div class="notice warn">Không thể đổi email: '+escapeHtml(error.message||'Vui lòng thử lại.')+'</div>':'<div class="notice info">Đã yêu cầu đổi email. Hãy xác nhận theo hướng dẫn Supabase gửi đến email của bạn; email đăng nhập chỉ đổi sau khi xác nhận.</div>';
+ }catch(e){el('profileMsg').innerHTML='<div class="notice warn">Không thể đổi email: '+escapeHtml(e?.message||'Vui lòng thử lại.')+'</div>'}
+ finally{if(button){button.disabled=false;button.textContent='Đổi email'}}
 }
 
 function syncHeader(){if(!profile)return;el('roleLabel').textContent=ROLE_LABEL[profile.role]||'Tài khoản';updateGreetingAndClock();syncBranchUI();}
@@ -3748,7 +3791,11 @@ async function saveManagerPermissions(){
 function adminTab(tab,btn,opts={}){if(tab==='managerPermissions'&&profile?.role!=='owner'){toast('Chỉ Owner được cấu hình quyền Manager.');return}if(tab==='attendance'){if(profile?.role==='manager'&&!hasManagerPermission('attendance_process')){toast('Owner chưa cấp quyền xem chấm công.');return}closeAdminPane();navigate('attendance');return}if(tab==='payroll'){if(profile?.role!=='owner'){toast('Khu vực tổng hợp lương chỉ dành cho Owner.');return}closeAdminPane();navigate('salary');return}if(profile?.role==='manager'&&!managerPermissionForTab(tab)){toast('Owner chưa cấp quyền sử dụng chức năng này.');return}currentAdminTab=tab;document.querySelectorAll('.admin-pane').forEach(x=>x.classList.remove('active'));document.querySelectorAll('#admin .admin-group-item').forEach(x=>x.classList.remove('active'));const pane=el('admin'+tab.charAt(0).toUpperCase()+tab.slice(1));if(pane)pane.classList.add('active');const adminContent=el('adminContent'),back=el('adminSheetBackdrop');const meta=adminTabMeta[tab]||[tab,''];const title=el('adminSheetTitle'),sub=el('adminSheetSub');if(title)title.textContent=meta[0];if(sub)sub.textContent=meta[1];if(adminContent){adminContent.classList.add('open');document.body.classList.add('admin-sheet-open');if(back)back.classList.add('open')}if(btn){btn.classList.add('active');const group=btn.closest('details');if(group)group.open=true}
  if(!adminTabLoaded[tab]||opts.forceLoad){adminTabLoaded[tab]=true;adminContent?.classList.add('is-loading');const done=()=>setTimeout(()=>el('adminContent')?.classList.remove('is-loading'),120);if(tab==='branches')Promise.resolve(loadBranches()).finally(done);if(tab==='employees')Promise.resolve(loadEmployees()).finally(done);if(tab==='templates')Promise.resolve(loadTemplates()).finally(done);if(tab==='schedules')Promise.resolve(loadWeeklyPlan()).finally(done);if(tab==='registrationSettings')Promise.resolve(loadRegistrationWindow()).finally(done);if(tab==='registrations')Promise.all([loadRegistrations(),loadScheduleRequests()]).finally(done);if(tab==='leaves')Promise.resolve(loadLeaves()).finally(done);if(tab==='devices')Promise.resolve(loadDevices()).finally(done);if(tab==='store')Promise.resolve(loadStore()).finally(done);if(tab==='audit')Promise.resolve(loadAudit()).finally(done);if(tab==='managerPermissions')Promise.resolve(loadManagerPermissions()).finally(done)}
  if(!opts.skipPersist)saveUiState()}
-function openEmployeeModal(x){el('editEmployeeId').value=x.id;el('editEmployeeCurrentRate').value=Number(x.hourly_rate||0);el('editEmployeeName').value=x.full_name||'';el('editEmployeePhone').value=x.phone||'';el('editEmployeeRole').value=x.role||'employee';el('editEmployeeStatus').value=x.employment_status||'active';el('editEmployeeRate').value=x.hourly_rate||0;el('editEmployeeRateEffective').value=localToday();const manager=profile?.role==='manager';el('editEmployeeRole').disabled=manager;el('editEmployeeStatus').disabled=manager;el('editEmployeeRate').disabled=manager;el('employeePasswordMsg').innerHTML='';el('employeeMsg').innerHTML='';el('employeeModal').classList.add('open')}
+function ensureEmployeePrivateFields(){
+ const phoneField=el('editEmployeePhone')?.closest('.field');if(!phoneField||el('editEmployeeAddress'))return;
+ phoneField.insertAdjacentHTML('afterend','<div class="employee-private-fields"><div class="field"><label>Địa chỉ</label><input id="editEmployeeAddress"/></div><div id="editEmployeeBankFields"><div class="field"><label>Ngân hàng</label><input id="editEmployeeBankName"/></div><div class="field"><label>Số tài khoản</label><input id="editEmployeeBankNumber" inputmode="numeric" autocomplete="off"/></div><div class="field"><label>Chủ tài khoản</label><input id="editEmployeeBankHolder"/></div></div></div>');
+}
+function openEmployeeModal(x){ensureEmployeePrivateFields();el('editEmployeeId').value=x.id;el('editEmployeeCurrentRate').value=Number(x.hourly_rate||0);el('editEmployeeName').value=x.full_name||'';el('editEmployeePhone').value=x.phone||'';el('editEmployeeAddress').value=x.address||'';el('editEmployeeBankName').value=x.bankAccount?.bank_name||'';el('editEmployeeBankNumber').value=x.bankAccount?.account_number||'';el('editEmployeeBankHolder').value=x.bankAccount?.account_holder||'';el('editEmployeeBankFields').dataset.hasSavedAccount=x.bankAccount?'1':'';el('editEmployeeBankFields').classList.toggle('hidden',profile?.role!=='owner');el('editEmployeeRole').value=x.role||'employee';el('editEmployeeStatus').value=x.employment_status||'active';el('editEmployeeRate').value=x.hourly_rate||0;el('editEmployeeRateEffective').value=localToday();const manager=profile?.role==='manager';el('editEmployeeRole').disabled=manager;el('editEmployeeStatus').disabled=manager;el('editEmployeeRate').disabled=manager;el('employeePasswordMsg').innerHTML='';el('employeeMsg').innerHTML='';el('employeeModal').classList.add('open')}
 function closeEmployeeModal(){el('employeeModal').classList.remove('open')}
 function openCreateEmployee(){if(!profile||!['owner','manager'].includes(profile.role)||(profile.role==='manager'&&!hasManagerPermission('employee_create'))){toast('Owner chưa cấp quyền tạo tài khoản nhân viên.');return}el('newEmployeeName').value='';el('newEmployeeEmail').value='';el('newEmployeePhone').value='';el('newEmployeeRate').value=30000;el('createEmployeeMsg').innerHTML='';el('createEmployeeModal').classList.add('open')}
 function closeCreateEmployee(){el('createEmployeeModal').classList.remove('open')}
@@ -3772,7 +3819,7 @@ async function createEmployee(){
 }
 function openProfileFromHeader(){navigate('profile')}
 function initProfileFieldEvents(){
- ['fullName','phone','address'].forEach(id=>{const x=el(id);if(x&&!x.dataset.profileBound){x.dataset.profileBound='1';x.addEventListener('input',syncProfileSaveState);}});
+ ['fullName','phone','address','bankName','bankAccountNumber','bankAccountHolder'].forEach(id=>{const x=el(id);if(x&&!x.dataset.profileBound){x.dataset.profileBound='1';x.addEventListener('input',syncProfileSaveState);}});
 }
 
 function initModalEvents(){document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal.open').forEach(m=>m.classList.remove('open'))})}
@@ -3781,13 +3828,21 @@ window.addEventListener('pagehide',()=>saveUiState());window.addEventListener('b
 async function loadEmployees(){
  const target=document.getElementById('employeeTable');if(!sb||!profile)return;
  const canSeePay=profile.role==='owner';
- const fields=canSeePay?'id,full_name,email,phone,role,employment_status,hourly_rate,store_id':'id,full_name,email,phone,role,employment_status,store_id';
+ const fields=canSeePay?'id,full_name,email,phone,address,role,employment_status,hourly_rate,store_id':'id,full_name,email,phone,address,role,employment_status,store_id';
  const {data,error}=await sb.from('profiles').select(fields).eq('store_id',getActiveStoreId()).order('full_name');
  if(error){target.innerHTML='<div class="notice warn">Có lỗi xảy ra. Vui lòng thử lại.</div>';return}
  if(!data?.length){target.innerHTML='<div class="empty">Chưa có nhân viên nào trong cửa hàng.</div>';return}
+ let bankWarning='';
+ if(canSeePay){
+  const {data:accounts,error:bankError}=await sb.from('employee_bank_accounts').select('employee_id,bank_name,account_number,account_holder').in('employee_id',data.map(x=>x.id));
+  if(bankError)bankWarning='<div class="notice warn">Không tải được tài khoản ngân hàng; hãy kiểm tra migration hồ sơ ngân hàng trên Supabase.</div>';
+  else{const accountMap=new Map((accounts||[]).map(x=>[x.employee_id,x]));data.forEach(x=>x.bankAccount=accountMap.get(x.id)||null)}
+ }
+ window.__employeeRows=new Map(data.map(x=>[x.id,x]));
  target.innerHTML='<table class="table"><thead><tr><th>Nhân viên</th><th>Vai trò</th><th>Trạng thái</th>'+(canSeePay?'<th>Lương/giờ</th>':'')+'<th></th></tr></thead><tbody>'+
- data.map(x=>`<tr><td><b>${escapeHtml(x.full_name||'(Chưa đặt tên)')}</b><br><span class="muted">${escapeHtml(x.email||'')}</span><br><span class="muted">${escapeHtml(x.phone||'')}</span></td><td>${escapeHtml(ROLE_LABEL[x.role]||x.role)}</td><td>${escapeHtml(({active:'Đang làm',inactive:'Tạm nghỉ',invited:'Chưa kích hoạt',terminated:'Đã nghỉ'}[x.employment_status]||x.employment_status))}</td>${canSeePay?`<td>${Number(x.hourly_rate||0).toLocaleString('vi-VN')}đ</td>`:''}<td>${['owner','manager'].includes(profile.role)?`<button type="button" class="btn light" onclick='openEmployeeModal(${JSON.stringify(x)})'>Sửa</button>`:''}</td></tr>`).join('')+'</tbody></table>';
+ data.map(x=>`<tr><td><b>${escapeHtml(x.full_name||'(Chưa đặt tên)')}</b><br><span class="muted">${escapeHtml(x.email||'')}</span><br><span class="muted">${escapeHtml(x.phone||'')}</span></td><td>${escapeHtml(ROLE_LABEL[x.role]||x.role)}</td><td>${escapeHtml(({active:'Đang làm',inactive:'Tạm nghỉ',invited:'Chưa kích hoạt',terminated:'Đã nghỉ'}[x.employment_status]||x.employment_status))}</td>${canSeePay?`<td>${Number(x.hourly_rate||0).toLocaleString('vi-VN')}đ</td>`:''}<td>${['owner','manager'].includes(profile.role)?`<button type="button" class="btn light" onclick="openEmployeeModalById('${x.id}')">Sửa</button>`:''}</td></tr>`).join('')+'</tbody></table>'+bankWarning;
 }
+function openEmployeeModalById(id){const x=window.__employeeRows?.get(id);if(x)openEmployeeModal(x);else toast('Không tìm thấy hồ sơ nhân viên. Hãy tải lại danh sách.')}
 async function changeEmployeePassword(){
  if(!sb||!session||!profile||profile.role!=='owner'){alert('Chỉ Owner được đổi mật khẩu tài khoản nhân viên.');return}
  const id=document.getElementById('editEmployeeId').value;
@@ -3846,10 +3901,17 @@ async function saveEmployee(){
  }
  if(profile.role!=='owner'){alert('Bạn không có quyền sửa nhân viên.');return}
  const payload={full_name:document.getElementById('editEmployeeName').value.trim(),phone:document.getElementById('editEmployeePhone').value.trim(),role:document.getElementById('editEmployeeRole').value,employment_status:document.getElementById('editEmployeeStatus').value};
+ payload.address=document.getElementById('editEmployeeAddress').value.trim();
+ const bankPayload={bank_name:document.getElementById('editEmployeeBankName').value.trim(),account_number:document.getElementById('editEmployeeBankNumber').value.trim(),account_holder:document.getElementById('editEmployeeBankHolder').value.trim()};
  if(!payload.full_name){alert('Họ tên không được để trống.');return}
+ if((bankPayload.bank_name||bankPayload.account_number||bankPayload.account_holder)&&(!bankPayload.bank_name||!bankPayload.account_number||!bankPayload.account_holder)){alert('Vui lòng nhập đầy đủ ngân hàng, số tài khoản và chủ tài khoản.');return}
  const oldRate=Number(document.getElementById('editEmployeeCurrentRate').value||0),newRate=Number(document.getElementById('editEmployeeRate').value||0),effectiveDate=document.getElementById('editEmployeeRateEffective').value||localToday();
  if(newRate<0){alert('Mức lương không hợp lệ.');return}if(effectiveDate<localToday()){alert('Ngày áp dụng mức lương không được ở quá khứ.');return}
  let {error}=await sb.from('profiles').update(payload).eq('id',id);
+ if(!error&&(bankPayload.bank_name||bankPayload.account_number||bankPayload.account_holder||document.getElementById('editEmployeeBankFields').dataset.hasSavedAccount)){
+  const bankResult=bankPayload.bank_name?await sb.from('employee_bank_accounts').upsert({employee_id:id,...bankPayload},{onConflict:'employee_id'}):await sb.from('employee_bank_accounts').delete().eq('employee_id',id);
+  error=bankResult.error;
+ }
  if(!error && (newRate!==oldRate || effectiveDate!==localToday())){const r=await sb.rpc('owner_set_employee_salary',{p_employee_id:id,p_hourly_rate:newRate,p_effective_date:effectiveDate});error=r.error}
  document.getElementById('employeeMsg').innerHTML=error?'<div class="notice warn">Có lỗi xảy ra: '+escapeHtml(error.message||'')+'</div>':'<div class="notice ok">Đã lưu. Mức lương áp dụng từ '+escapeHtml(effectiveDate)+'.</div>';
  if(!error){closeEmployeeModal();await loadEmployees();}
@@ -4660,10 +4722,12 @@ async function loadApp(){
       if(!act.error){const r=await sb.from('profiles').select('*').eq('id',session.user.id).single();if(r.data)p=r.data}
     }
     if(p.employment_status==='terminated'){await sb.auth.signOut();showLogin('Tài khoản đã kết thúc sử dụng.');return}
-    profile=p;activeStoreId=p.store_id||null;branchContextReady=!!activeStoreId;appHydratedUserId=session.user.id;syncHeader();updateGreetingAndClock();syncBranchUI();if(p.role==='manager')loadCurrentManagerPermissions();
+    if(session.user.email&&p.email!==session.user.email)syncConfirmedProfileEmail(session.user.id,session.user.email);
+    profile=p;profileBankAccount=null;activeStoreId=p.store_id||null;branchContextReady=!!activeStoreId;appHydratedUserId=session.user.id;syncHeader();updateGreetingAndClock();syncBranchUI();if(p.role==='manager')loadCurrentManagerPermissions();
+    loadProfileBankAccount(session.user.id).catch(e=>{console.error('[HongCha Profile] Bank details load failed',e);if(appHydratedUserId===session.user.id)el('profileMsg').innerHTML='<div class="notice warn">Không tải được thông tin ngân hàng. Vui lòng tải lại hồ sơ.</div>'});
     // Realtime is a background enhancement; it must never block app entry.
     startRealtime(activeStoreId).catch(e=>console.warn('[HongCha Realtime] startup',e));
-    el('fullName').value=p.full_name||'';el('email').value=session.user.email||p.email||'';el('phone').value=p.phone||'';el('address').value=p.address||'';syncProfileSaveState();
+    el('fullName').value=p.full_name||'';el('email').value=session.user.email||p.email||'';el('phone').value=p.phone||'';el('address').value=p.address||'';el('bankName').value=profileBankAccount?.bank_name||'';el('bankAccountNumber').value=profileBankAccount?.account_number||'';el('bankAccountHolder').value=profileBankAccount?.account_holder||'';syncProfileSaveState();
     if(p.role==='employee'){
       let access;
       try{ access=await Promise.race([
@@ -5544,6 +5608,12 @@ async function openPayrollReport(id){
    if(pErr||!p)throw pErr||new Error('Không tìm thấy kỳ lương.');
    const {data:runs,error:rErr}=await sb.from('payroll_runs').select('id,employee_id,hourly_rate,worked_minutes,gross_amount,bonus_amount,penalty_amount,advance_amount,net_amount,profiles:employee_id(full_name)').eq('payroll_period_id',p.id).order('net_amount',{ascending:false});
    if(rErr)throw rErr;
+   if(runs?.length){
+    const {data:bankAccounts,error:bankError}=await sb.from('employee_bank_accounts').select('employee_id,bank_name,account_number,account_holder').in('employee_id',runs.map(x=>x.employee_id));
+    if(bankError)throw bankError;
+    const bankMap=new Map((bankAccounts||[]).map(x=>[x.employee_id,x]));
+    runs.forEach(x=>x.bankAccount=bankMap.get(x.employee_id)||null);
+   }
    const {data:atts,error:aErr}=await sb.from('attendance').select('id,employee_id,check_in,check_out,worked_minutes,late_minutes,early_leave_minutes,work_schedules:schedule_id!inner(work_date,start_time,end_time,status,store_id)').eq('work_schedules.store_id',getActiveStoreId()).gte('work_schedules.work_date',p.start_date).lte('work_schedules.work_date',p.end_date).not('check_out','is',null).order('work_schedules(work_date)',{ascending:true});
    if(aErr)throw aErr;
    const {data:adj,error:adjErr}=await sb.from('payroll_adjustments').select('id,employee_id,adjustment_type,amount,reason,status,created_at,profiles:employee_id(full_name)').eq('payroll_period_id',p.id).order('created_at',{ascending:true});
@@ -5586,7 +5656,7 @@ function exportPayrollReportExcel(){
  const d=payrollReportData,p=d.period,rows=[];
  const summary=[['BÁO CÁO KỲ LƯƠNG'],['Kỳ lương',p.period_name],['Từ ngày',p.start_date],['Đến ngày',p.end_date],['Tổng lương trong kỳ',d.totalNet],['Tổng giờ công',d.totalMinutes/60],['Tổng số ca',d.totalShifts],[],['Ghi chú','Tổng lương là số thực nhận từ payroll_runs; tiền theo ngày là tiền công theo giờ. Các khoản điều chỉnh được liệt kê riêng.']];
  const daily=[['Ngày','Tiền công trong ngày','Giờ công','Số ca','Số nhân viên'],...d.daily.map(x=>[x.date,x.money,x.minutes/60,x.shifts,x.people])];
- const emp=[['Nhân viên','Giờ công','Đơn giá/giờ','Lương gộp','Thưởng','Phạt','Tạm ứng','Thực nhận'],...d.runs.map(x=>[x.profiles?.full_name||'Nhân viên',Number(x.worked_minutes||0)/60,Number(x.hourly_rate||0),Number(x.gross_amount||0),Number(x.bonus_amount||0),Number(x.penalty_amount||0),Number(x.advance_amount||0),Number(x.net_amount||0)])];
+ const emp=[['Nhân viên','Ngân hàng','Số tài khoản','Chủ tài khoản','Giờ công','Đơn giá/giờ','Lương gộp','Thưởng','Phạt','Tạm ứng','Thực nhận'],...d.runs.map(x=>[x.profiles?.full_name||'Nhân viên',x.bankAccount?.bank_name||'',x.bankAccount?.account_number||'',x.bankAccount?.account_holder||'',Number(x.worked_minutes||0)/60,Number(x.hourly_rate||0),Number(x.gross_amount||0),Number(x.bonus_amount||0),Number(x.penalty_amount||0),Number(x.advance_amount||0),Number(x.net_amount||0)])];
  const ad=[['Nhân viên','Loại','Số tiền','Lý do','Trạng thái','Thời gian'],...d.adjustments.map(x=>[x.profiles?.full_name||'Nhân viên',({bonus:'Thưởng',penalty:'Phạt',advance:'Tạm ứng'}[x.adjustment_type]||x.adjustment_type),Number(x.amount||0),x.reason||'',({approved:'Đã duyệt',pending:'Chờ duyệt',rejected:'Từ chối'}[x.status]||x.status),new Date(x.created_at).toLocaleString('vi-VN')])];
  const detail=[['Ngày','Nhân viên','Ca','Check-in','Check-out','Giờ công','Lương ngày'],...d.attendance.map(x=>{const s=x.work_schedules||{},mins=Number(x.worked_minutes||0),rate=Number((d.runs.find(r=>r.employee_id===x.employee_id)||{}).hourly_rate||0);return [s.work_date,x.profiles?.full_name||((d.runs.find(r=>r.employee_id===x.employee_id)||{}).profiles?.full_name)||'Nhân viên',`${String(s.start_time||'').slice(0,5)}–${String(s.end_time||'').slice(0,5)}`,x.check_in?new Date(x.check_in).toLocaleString('vi-VN'):'',x.check_out?new Date(x.check_out).toLocaleString('vi-VN'):'',mins/60,Math.round(mins/60*rate)]})];
  const sheets=[buildXlsxSheet('Tổng quan',summary),buildXlsxSheet('Theo ngày',daily),buildXlsxSheet('Theo nhân viên',emp),buildXlsxSheet('Chi tiết chấm công',detail),buildXlsxSheet('Điều chỉnh',ad)];
@@ -5896,73 +5966,3 @@ body.data-fetching .admin-content.open .admin-pane.active>.card,body.data-fetchi
 .attendance-day-person{display:grid;grid-template-columns:36px minmax(0,1fr) auto auto;align-items:center;gap:9px;padding:10px 12px;border-top:1px solid #D9E5EE;min-width:0}
 .attendance-day-person:first-child{border-top:0}
 .attendance-day-person-main{min-width:0}
-.attendance-day-person-name{font-size:13px;font-weight:780;line-height:1.25;overflow-wrap:anywhere}
-.attendance-day-person-meta{margin-top:2px;font-size:10px;color:#71808D;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.attendance-day-status{min-width:0;display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right}
-.attendance-day-status .att-state{white-space:nowrap}
-.attendance-day-actions{display:flex;justify-content:flex-end;min-width:0}
-.attendance-inline-action{min-height:32px!important;padding:0 9px!important;font-size:10px!important;white-space:nowrap}
-@media(max-width:560px){
- .attendance-day-shift-head{padding-left:13px}
- .attendance-day-person{grid-template-columns:36px minmax(0,1fr) auto;gap:8px}
- .attendance-day-status{grid-column:3;grid-row:1;align-self:center}
- .attendance-day-actions{grid-column:2 / 4;grid-row:2;justify-content:flex-end;padding-top:2px}
- .attendance-day-actions:empty{display:none}
- .attendance-day-person:has(.attendance-day-actions:not(:empty)){padding-bottom:9px}
- .attendance-day-person-main{align-self:center}
-}
-/* V84.19 — Owner attendance selected-day data fix. */
-.attendance-week-day{display:grid;gap:8px;scroll-margin-top:12px}
-.attendance-week-day+.attendance-week-day{margin-top:14px}
-.attendance-week-day-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 3px 2px;color:#14202B}
-.attendance-week-day-head b{font-size:14px;font-weight:850}
-.attendance-week-day-head span{font-size:10px;color:#687786;font-weight:750}
-.attendance-day-shift-head-right{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
-.attendance-shift-adjust{min-height:32px!important;padding:0 10px!important;font-size:10px!important;white-space:nowrap}
-.attendance-day-shift-head{align-items:center!important}
-@media(max-width:560px){
- .attendance-day-shift-head{gap:7px;padding-right:9px!important}
- .attendance-day-shift-head-right{gap:5px}
- .attendance-day-shift-meta{font-size:9px}
- .attendance-shift-adjust{min-height:31px!important;padding:0 8px!important}
- .attendance-day-person{grid-template-columns:36px minmax(0,1fr) auto!important;grid-template-rows:auto!important}
- .attendance-day-status{grid-column:3!important;grid-row:1!important}
- .attendance-day-actions{grid-column:2 / 4!important;grid-row:2!important}
- .attendance-day-actions:empty{display:none}
-}
-/* Payroll: creation is a report action, not a second list to maintain. */
-.payroll-report-primary-note{display:flex;flex-direction:column;gap:2px;margin-top:10px;padding:10px 12px;border:1px dashed #C8D8E6;border-radius:12px;background:#F7FAFD}
-.payroll-report-primary-note b{font-size:12px}
-.payroll-report-primary-note span{font-size:11px;color:#687786;line-height:1.35}
-
-/* V84.22 — Attendance: compact status and week navigation share one row above day strip */
-.attendance-control-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;margin-bottom:10px;min-width:0}
-.attendance-status-summary-wrap{min-width:0;display:flex;align-items:center;gap:8px}
-.attendance-status-summary-label{flex:0 0 auto;font-size:11px;font-weight:800;color:var(--ink);white-space:nowrap}
-#adminAttendanceSummary{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px!important;min-height:0!important;margin:0!important;flex:1;min-width:0}
-#adminAttendanceSummary .attendance-compact-summary{display:contents}
-#adminAttendanceSummary .attendance-compact-row{min-width:0;display:flex;align-items:center;justify-content:center;gap:4px;padding:6px 7px;background:#fff;border:1px solid #E2E8ED;border-radius:8px;line-height:1.1}
-#adminAttendanceSummary .attendance-compact-row b{font-size:14px;line-height:1;font-weight:800;color:var(--ink)}
-#adminAttendanceSummary .attendance-compact-row span{font-size:8px;line-height:1.1;font-weight:750;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.attendance-date-nav{display:flex;align-items:center;gap:6px;flex:0 0 auto}
-.attendance-date-nav .icon-button{width:34px;height:34px;min-width:34px}
-.attendance-date-nav .today-btn{height:34px;min-width:78px;padding:0 10px;font-size:10px}
-@media(max-width:430px){
-  .attendance-control-row{grid-template-columns:minmax(0,1fr) auto;gap:7px}
-  .attendance-status-summary-wrap{gap:5px}
-  .attendance-status-summary-label{font-size:9px}
-  #adminAttendanceSummary{gap:3px!important}
-  #adminAttendanceSummary .attendance-compact-row{padding:6px 4px;gap:3px}
-  #adminAttendanceSummary .attendance-compact-row b{font-size:13px}
-  #adminAttendanceSummary .attendance-compact-row span{font-size:7.5px}
-  .attendance-date-nav{gap:4px}
-  .attendance-date-nav .icon-button{width:32px;height:32px;min-width:32px}
-  .attendance-date-nav .today-btn{min-width:70px;height:32px;padding:0 7px;font-size:9px}
-}
-@media(max-width:375px){
-  .attendance-status-summary-label{display:none}
-  #adminAttendanceSummary .attendance-compact-row{padding:6px 3px}
-  #adminAttendanceSummary .attendance-compact-row span{font-size:7px}
-  .attendance-date-nav .today-btn{min-width:64px}
-}
-</style>
