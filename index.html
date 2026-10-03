@@ -3261,7 +3261,7 @@ function saveUiState(){if(!session?.user?.id)return;try{localStorage.setItem(uiS
 function readUiState(){try{const raw=localStorage.getItem(uiStateKey());return raw?JSON.parse(raw):null}catch(e){return null}}
 function restoreUiState(opts={}){const st=readUiState();if(!st){navigate('dashboard',{restore:true,deferLoad:!!opts.deferData});return}if(profile?.role==='employee'&&st.currentView==='admin')st.currentView='dashboard';if(profile?.role==='manager'&&st.currentView==='salary')st.currentView='dashboard';if(st.employeeSelectedDate)employeeSelectedDate=st.employeeSelectedDate;if(st.employeeDayWindowStart)employeeDayWindowStart=st.employeeDayWindowStart;if(['owner','manager'].includes(profile?.role)){mainScheduleDate=localToday();mainScheduleWindowStart=mondayOfWeek(mainScheduleDate)}else{if(st.mainScheduleDate)mainScheduleDate=st.mainScheduleDate;if(st.mainScheduleWindowStart)mainScheduleWindowStart=st.mainScheduleWindowStart}if(st.adminSelectedDate)adminSelectedDate=st.adminSelectedDate;if(st.adminDayWindowStart)adminDayWindowStart=st.adminDayWindowStart;if(st.adminAttendanceDate)adminAttendanceDate=st.adminAttendanceDate;if(st.adminAttendanceWindowStart)adminAttendanceWindowStart=st.adminAttendanceWindowStart;currentAdminTab=st.currentAdminTab||'employees';navigate(st.currentView||'dashboard',{restore:true,deferLoad:!!opts.deferData,scrollY:Number(st.scrollY||0)})}
 function openAttendanceNav(){navigate('attendance')}
-function syncRoleContent(){const staff=['owner','manager'].includes(profile?.role),isOwner=profile?.role==='owner';document.querySelectorAll('.role-employee').forEach(x=>x.classList.toggle('ui-hidden',staff));document.querySelectorAll('.role-staff').forEach(x=>x.classList.toggle('ui-hidden',!staff));el('staffPayrollContent')?.classList.toggle('ui-hidden',!isOwner);const aTitle=el('attendancePageTitle'),aSub=el('attendancePageSub'),sTitle=el('salaryPageTitle'),sSub=el('salaryPageSub');if(aTitle)aTitle.textContent=staff?'Chấm công nhân sự':'Chấm công';if(aSub)aSub.textContent=staff?'Xem lại chấm công theo ngày, ca và nhân viên.':'Trạng thái ca và thao tác chấm công của bạn.';if(sTitle)sTitle.textContent='Lương';if(sSub)sSub.textContent=isOwner?'Quản lý kỳ lương, bảng lương và các khoản điều chỉnh.':staff?'Khu vực lương chỉ dành cho Owner.':'Xem lương theo tháng và chi tiết từng ngày của bạn.';const top=el('adminTopAction');if(top)top.classList.toggle('hidden',!staff);ensurePayrollWorkflowMarkup();syncBranchUI();}
+function syncRoleContent(){const staff=['owner','manager'].includes(profile?.role),isOwner=profile?.role==='owner';document.querySelectorAll('.role-employee').forEach(x=>x.classList.toggle('ui-hidden',staff));document.querySelectorAll('.role-staff').forEach(x=>x.classList.toggle('ui-hidden',!staff));el('staffPayrollContent')?.classList.toggle('ui-hidden',!isOwner);const aTitle=el('attendancePageTitle'),aSub=el('attendancePageSub'),sTitle=el('salaryPageTitle'),sSub=el('salaryPageSub');if(aTitle)aTitle.textContent=staff?'Chấm công nhân sự':'Chấm công';if(aSub)aSub.textContent=staff?'Xem lại chấm công theo ngày, ca và nhân viên.':'Trạng thái ca và thao tác chấm công của bạn.';if(sTitle)sTitle.textContent='Lương';if(sSub)sSub.textContent=isOwner?'Quản lý kỳ lương, bảng lương và các khoản điều chỉnh.':staff?'Khu vực lương chỉ dành cho Owner.':'Xem lương theo tháng và chi tiết từng ngày của bạn.';const top=el('adminTopAction');if(top)top.classList.toggle('hidden',!staff);ensurePayrollWorkflowMarkup();ensureManagerPermissionMarkup();if(profile?.role==='manager')syncManagerPermissionUI();syncBranchUI();}
 function openAdminHome(){
  const role=profile?.role;
  if(!['owner','manager'].includes(role))return;
@@ -3273,6 +3273,8 @@ function navigate(id,opts={}){
  const s=session,p=profile;if(!s||!p){showLogin('Vui lòng đăng nhập để tiếp tục.');return}
  if(p.role==='employee'&&id==='admin')return;
  if(p.role==='manager'&&id==='salary'){toast('Khu vực tổng hợp lương chỉ dành cho Owner.');return}
+ if(p.role==='manager'&&id==='attendance'&&!hasManagerPermission('attendance_process')){toast('Owner chưa cấp quyền xem chấm công.');return}
+ if(p.role==='manager'&&id==='schedule'&&!hasManagerPermission('schedule_manage')){toast('Owner chưa cấp quyền xem và quản lý lịch ca.');return}
  const previousView=currentView;
  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
  const v=el(id);if(!v)return;
@@ -3658,17 +3660,88 @@ function ownerAttendanceSummary(rows,attendanceBySchedule,now=Date.now()){
  return {working,done,needsAction,late,missingCheckout,noCheckin};
 }
 const adminTabLoaded={};
-const adminTabMeta={employees:['Nhân viên','Hồ sơ, trạng thái và đơn giá giờ'],leaves:['Nghỉ phép','Xem và duyệt yêu cầu nghỉ'],registrations:['Yêu cầu nhân viên','Yêu cầu đổi ca / đi trễ'],templates:['Mẫu ca','Khung giờ chuẩn dùng để tạo lịch'],schedules:['Mẫu lịch tuần','Thiết lập cấu trúc ca T2–CN'],registrationSettings:['Đăng ký ca','Thời gian mở/đóng và tự động duyệt'],store:['Cửa hàng','Vị trí và quy tắc chấm công'],audit:['Nhật ký','Lịch sử thao tác'],devices:['Thiết bị','Duyệt, khóa và thu hồi thiết bị']};
+const adminTabMeta={employees:['Nhân viên','Hồ sơ, trạng thái và đơn giá giờ'],leaves:['Nghỉ phép','Xem và duyệt yêu cầu nghỉ'],registrations:['Yêu cầu nhân viên','Yêu cầu đổi ca / đi trễ'],templates:['Mẫu ca','Khung giờ chuẩn dùng để tạo lịch'],schedules:['Mẫu lịch tuần','Thiết lập cấu trúc ca T2–CN'],registrationSettings:['Đăng ký ca','Thời gian mở/đóng và tự động duyệt'],store:['Cửa hàng','Vị trí và quy tắc chấm công'],audit:['Nhật ký','Lịch sử thao tác'],devices:['Thiết bị','Duyệt, khóa và thu hồi thiết bị'],managerPermissions:['Quyền Manager','Chọn các chức năng Manager được phép sử dụng']};
+const MANAGER_PERMISSION_DEFS=[
+ {key:'attendance_process',label:'Chấm công & xử lý ngoại lệ',description:'Xem dữ liệu chấm công và xử lý bổ sung khi nhân viên quên chấm công/checkout.'},
+ {key:'schedule_manage',label:'Lịch làm việc & ca',description:'Tạo lịch, phân ca và quản lý mẫu ca/mẫu tuần.'},
+ {key:'shift_registration',label:'Duyệt đăng ký ca',description:'Xem và duyệt nhân viên đăng ký ca còn trống.'},
+ {key:'leave_manage',label:'Nghỉ phép & yêu cầu nhân viên',description:'Xem, duyệt nghỉ phép và yêu cầu đi trễ/đổi ca.'},
+ {key:'employee_basic',label:'Hồ sơ cơ bản nhân viên',description:'Xem hồ sơ cơ bản và cập nhật họ tên/số điện thoại; không xem lương hoặc đổi vai trò.'},
+ {key:'employee_create',label:'Mời/tạo tài khoản nhân viên',description:'Cho phép tạo tài khoản nhân viên mới; không cấp quyền đổi vai trò hoặc đơn giá lương.'},
+ {key:'audit_view',label:'Xem nhật ký thao tác',description:'Đọc nhật ký hoạt động của cửa hàng; không thể sửa hoặc xóa nhật ký.'}
+];
+let managerPermissionMap={};
 function closeAdminPane(){const c=el('adminContent'),back=el('adminSheetBackdrop');if(c){c.classList.remove('open');c.classList.remove('is-loading')}if(back)back.classList.remove('open');document.body.classList.remove('admin-sheet-open');document.querySelectorAll('#admin .admin-group-item').forEach(x=>x.classList.remove('active'));}
-function adminTab(tab,btn,opts={}){if(tab==='attendance'){closeAdminPane();navigate('attendance');return}if(tab==='payroll'){if(profile?.role!=='owner'){toast('Khu vực tổng hợp lương chỉ dành cho Owner.');return}closeAdminPane();navigate('salary');return}currentAdminTab=tab;document.querySelectorAll('.admin-pane').forEach(x=>x.classList.remove('active'));document.querySelectorAll('#admin .admin-group-item').forEach(x=>x.classList.remove('active'));const pane=el('admin'+tab.charAt(0).toUpperCase()+tab.slice(1));if(pane)pane.classList.add('active');const adminContent=el('adminContent'),back=el('adminSheetBackdrop');const meta=adminTabMeta[tab]||[tab,''];const title=el('adminSheetTitle'),sub=el('adminSheetSub');if(title)title.textContent=meta[0];if(sub)sub.textContent=meta[1];if(adminContent){adminContent.classList.add('open');document.body.classList.add('admin-sheet-open');if(back)back.classList.add('open')}if(btn){btn.classList.add('active');const group=btn.closest('details');if(group)group.open=true}
- if(!adminTabLoaded[tab]||opts.forceLoad){adminTabLoaded[tab]=true;adminContent?.classList.add('is-loading');const done=()=>setTimeout(()=>el('adminContent')?.classList.remove('is-loading'),120);if(tab==='branches')Promise.resolve(loadBranches()).finally(done);if(tab==='employees')Promise.resolve(loadEmployees()).finally(done);if(tab==='templates')Promise.resolve(loadTemplates()).finally(done);if(tab==='schedules')Promise.resolve(loadWeeklyPlan()).finally(done);if(tab==='registrationSettings')Promise.resolve(loadRegistrationWindow()).finally(done);if(tab==='registrations')Promise.all([loadRegistrations(),loadScheduleRequests()]).finally(done);if(tab==='leaves')Promise.resolve(loadLeaves()).finally(done);if(tab==='devices')Promise.resolve(loadDevices()).finally(done);if(tab==='store')Promise.resolve(loadStore()).finally(done);if(tab==='audit')Promise.resolve(loadAudit()).finally(done)}
+function hasManagerPermission(key){return profile?.role==='owner'||(profile?.role==='manager'&&managerPermissionMap[key]===true)}
+function managerPermissionForTab(tab){
+ const keyByTab={leaves:'leave_manage',templates:'schedule_manage',schedules:'schedule_manage',registrationSettings:'schedule_manage',audit:'audit_view'};
+ if(tab==='employees')return hasManagerPermission('employee_basic')||hasManagerPermission('employee_create');
+ if(tab==='registrations')return hasManagerPermission('leave_manage')||hasManagerPermission('shift_registration');
+ if(['branches','store','devices','managerPermissions'].includes(tab))return profile?.role==='owner';
+ const key=keyByTab[tab];
+ return key?hasManagerPermission(key):false;
+}
+function syncManagerPermissionUI(){
+ if(profile?.role!=='manager')return;
+ document.querySelectorAll('#admin .admin-group-item[data-admin-tab]').forEach(button=>{
+  const tab=button.dataset.adminTab;
+  button.classList.toggle('hidden',!managerPermissionForTab(tab));
+ });
+ const attendanceNav=document.querySelector('.nav[data-nav="attendance"]');
+ const scheduleNav=document.querySelector('.nav[data-nav="schedule"]');
+ attendanceNav?.classList.toggle('hidden',!hasManagerPermission('attendance_process'));
+ scheduleNav?.classList.toggle('hidden',!hasManagerPermission('schedule_manage'));
+ const create=document.querySelector('#adminEmployees .btn.primary');
+ if(create)create.classList.toggle('hidden',!hasManagerPermission('employee_create'));
+ if(currentView==='attendance'&&!hasManagerPermission('attendance_process'))navigate('dashboard');
+ if(currentView==='schedule'&&!hasManagerPermission('schedule_manage'))navigate('dashboard');
+ if(currentView==='admin'&&!managerPermissionForTab(currentAdminTab))closeAdminPane();
+}
+function ensureManagerPermissionMarkup(){
+ if(profile?.role!=='owner')return;
+ const groups=document.querySelector('.admin-groups');
+ if(groups&&!el('managerPermissionsAdminLink'))groups.insertAdjacentHTML('beforeend',`<details class="admin-group"><summary><span class="admin-group-chevron">⌄</span><span class="admin-group-summary"><b>Phân quyền</b><small>Chọn chức năng Manager được phép sử dụng.</small></span></summary><div class="admin-group-items"><button class="admin-group-item" id="managerPermissionsAdminLink" data-admin-tab="managerPermissions" onclick="adminTab('managerPermissions',this)" type="button"><span class="admin-group-item-copy"><b>Quyền Manager</b><small>Bật/tắt quyền theo cửa hàng</small></span><span class="admin-group-arrow">›</span></button></div></details>`);
+ const content=el('adminContent');
+ if(content&&!el('adminManagerPermissions'))content.insertAdjacentHTML('beforeend',`<div class="admin-pane" id="adminManagerPermissions"><div class="card"><div class="row"><div><b>Quyền của Manager</b><div class="muted">Quyền áp dụng cho Manager trong cửa hàng hiện tại. Tắt quyền sẽ chặn chức năng qua policy/RPC đã tích hợp, không chỉ ẩn nút.</div></div><button class="btn light" onclick="loadManagerPermissions()" type="button">Tải lại</button></div><div class="stack ui-mt-10" id="managerPermissionList"><div class="muted">Đang tải quyền…</div></div><button class="btn primary ui-mt-10" id="saveManagerPermissionsButton" onclick="saveManagerPermissions()" type="button">Lưu quyền Manager</button><div class="ui-mt-9" id="managerPermissionsMsg"></div><div class="notice info ui-mt-10"><b>Owner-only:</b> bảng lương, đơn giá lương, cài đặt cửa hàng, quản lý chi nhánh và thiết bị. Không bật các quyền này cho Manager tại đây.</div></div></div>`);
+}
+async function loadCurrentManagerPermissions(){
+ if(profile?.role!=='manager'){managerPermissionMap={};return}
+ const {data,error}=await sb.rpc('get_my_manager_permissions');
+ if(error){managerPermissionMap={};console.error('get_my_manager_permissions',error);toast('Không tải được quyền Manager; các chức năng quản trị sẽ tạm ẩn.');syncManagerPermissionUI();return}
+ managerPermissionMap=Object.fromEntries((data||[]).map(row=>[row.permission_key,row.enabled===true]));
+ syncManagerPermissionUI();
+}
+async function loadManagerPermissions(){
+ const target=el('managerPermissionList');
+ if(!target||profile?.role!=='owner')return;
+ const {data,error}=await sb.rpc('owner_get_manager_permissions');
+ if(error){target.innerHTML='<div class="notice warn">Không tải được quyền Manager. Kiểm tra RPC owner_get_manager_permissions trên Supabase.</div>';return}
+ const permissions=Object.fromEntries((data||[]).map(row=>[row.permission_key,row.enabled===true]));
+ target.innerHTML=MANAGER_PERMISSION_DEFS.map(item=>`<label class="item row" style="cursor:pointer;align-items:flex-start"><span><b>${escapeHtml(item.label)}</b><span class="muted" style="display:block;margin-top:4px">${escapeHtml(item.description)}</span></span><input type="checkbox" data-manager-permission="${item.key}" ${permissions[item.key]?'checked':''} style="width:20px;height:20px;flex:0 0 auto"/></label>`).join('');
+ el('managerPermissionsMsg').innerHTML='<div class="muted">Thiết lập đang áp dụng cho Manager của cửa hàng này.</div>';
+}
+async function saveManagerPermissions(){
+ if(profile?.role!=='owner'){toast('Chỉ Owner được thay đổi quyền Manager.');return}
+ const button=el('saveManagerPermissionsButton'),msg=el('managerPermissionsMsg');
+ const permissions=MANAGER_PERMISSION_DEFS.map(item=>({permission_key:item.key,enabled:!!document.querySelector(`[data-manager-permission="${item.key}"]`)?.checked}));
+ setBusyButton(button,true,'Đang lưu…');
+ try{
+  const {error}=await sb.rpc('owner_save_manager_permissions',{p_permissions:permissions});
+  if(error)throw error;
+  await loadManagerPermissions();
+  msg.innerHTML='<div class="notice ok">Đã lưu quyền Manager cho cửa hàng này.</div>';
+ }catch(e){msg.innerHTML=`<div class="notice warn">Không lưu được quyền Manager: ${escapeHtml(e?.message||'Lỗi không xác định')}</div>`}
+ finally{setBusyButton(button,false,'Lưu quyền Manager')}
+}
+function adminTab(tab,btn,opts={}){if(tab==='managerPermissions'&&profile?.role!=='owner'){toast('Chỉ Owner được cấu hình quyền Manager.');return}if(tab==='attendance'){if(profile?.role==='manager'&&!hasManagerPermission('attendance_process')){toast('Owner chưa cấp quyền xem chấm công.');return}closeAdminPane();navigate('attendance');return}if(tab==='payroll'){if(profile?.role!=='owner'){toast('Khu vực tổng hợp lương chỉ dành cho Owner.');return}closeAdminPane();navigate('salary');return}if(profile?.role==='manager'&&!managerPermissionForTab(tab)){toast('Owner chưa cấp quyền sử dụng chức năng này.');return}currentAdminTab=tab;document.querySelectorAll('.admin-pane').forEach(x=>x.classList.remove('active'));document.querySelectorAll('#admin .admin-group-item').forEach(x=>x.classList.remove('active'));const pane=el('admin'+tab.charAt(0).toUpperCase()+tab.slice(1));if(pane)pane.classList.add('active');const adminContent=el('adminContent'),back=el('adminSheetBackdrop');const meta=adminTabMeta[tab]||[tab,''];const title=el('adminSheetTitle'),sub=el('adminSheetSub');if(title)title.textContent=meta[0];if(sub)sub.textContent=meta[1];if(adminContent){adminContent.classList.add('open');document.body.classList.add('admin-sheet-open');if(back)back.classList.add('open')}if(btn){btn.classList.add('active');const group=btn.closest('details');if(group)group.open=true}
+ if(!adminTabLoaded[tab]||opts.forceLoad){adminTabLoaded[tab]=true;adminContent?.classList.add('is-loading');const done=()=>setTimeout(()=>el('adminContent')?.classList.remove('is-loading'),120);if(tab==='branches')Promise.resolve(loadBranches()).finally(done);if(tab==='employees')Promise.resolve(loadEmployees()).finally(done);if(tab==='templates')Promise.resolve(loadTemplates()).finally(done);if(tab==='schedules')Promise.resolve(loadWeeklyPlan()).finally(done);if(tab==='registrationSettings')Promise.resolve(loadRegistrationWindow()).finally(done);if(tab==='registrations')Promise.all([loadRegistrations(),loadScheduleRequests()]).finally(done);if(tab==='leaves')Promise.resolve(loadLeaves()).finally(done);if(tab==='devices')Promise.resolve(loadDevices()).finally(done);if(tab==='store')Promise.resolve(loadStore()).finally(done);if(tab==='audit')Promise.resolve(loadAudit()).finally(done);if(tab==='managerPermissions')Promise.resolve(loadManagerPermissions()).finally(done)}
  if(!opts.skipPersist)saveUiState()}
 function openEmployeeModal(x){el('editEmployeeId').value=x.id;el('editEmployeeCurrentRate').value=Number(x.hourly_rate||0);el('editEmployeeName').value=x.full_name||'';el('editEmployeePhone').value=x.phone||'';el('editEmployeeRole').value=x.role||'employee';el('editEmployeeStatus').value=x.employment_status||'active';el('editEmployeeRate').value=x.hourly_rate||0;el('editEmployeeRateEffective').value=localToday();const manager=profile?.role==='manager';el('editEmployeeRole').disabled=manager;el('editEmployeeStatus').disabled=manager;el('editEmployeeRate').disabled=manager;el('employeePasswordMsg').innerHTML='';el('employeeMsg').innerHTML='';el('employeeModal').classList.add('open')}
 function closeEmployeeModal(){el('employeeModal').classList.remove('open')}
-function openCreateEmployee(){if(!profile||!['owner','manager'].includes(profile.role)){toast('Bạn không có quyền tạo nhân viên.');return}el('newEmployeeName').value='';el('newEmployeeEmail').value='';el('newEmployeePhone').value='';el('newEmployeeRate').value=30000;el('createEmployeeMsg').innerHTML='';el('createEmployeeModal').classList.add('open')}
+function openCreateEmployee(){if(!profile||!['owner','manager'].includes(profile.role)||(profile.role==='manager'&&!hasManagerPermission('employee_create'))){toast('Owner chưa cấp quyền tạo tài khoản nhân viên.');return}el('newEmployeeName').value='';el('newEmployeeEmail').value='';el('newEmployeePhone').value='';el('newEmployeeRate').value=30000;el('createEmployeeMsg').innerHTML='';el('createEmployeeModal').classList.add('open')}
 function closeCreateEmployee(){el('createEmployeeModal').classList.remove('open')}
 async function createEmployee(){
-  if(!sb||!session||!profile||!['owner','manager'].includes(profile.role)){toast('Bạn không có quyền tạo nhân viên.');return}
+  if(!sb||!session||!profile||!['owner','manager'].includes(profile.role)||(profile.role==='manager'&&!hasManagerPermission('employee_create'))){toast('Owner chưa cấp quyền tạo tài khoản nhân viên.');return}
   const name=el('newEmployeeName').value.trim();
   const email=el('newEmployeeEmail').value.trim().toLowerCase();
   const phone=el('newEmployeePhone').value.trim();
@@ -4575,7 +4648,7 @@ async function loadApp(){
       if(!act.error){const r=await sb.from('profiles').select('*').eq('id',session.user.id).single();if(r.data)p=r.data}
     }
     if(p.employment_status==='terminated'){await sb.auth.signOut();showLogin('Tài khoản đã kết thúc sử dụng.');return}
-    profile=p;activeStoreId=p.store_id||null;branchContextReady=!!activeStoreId;appHydratedUserId=session.user.id;syncHeader();updateGreetingAndClock();syncBranchUI();
+    profile=p;activeStoreId=p.store_id||null;branchContextReady=!!activeStoreId;appHydratedUserId=session.user.id;syncHeader();updateGreetingAndClock();syncBranchUI();if(p.role==='manager')loadCurrentManagerPermissions();
     // Realtime is a background enhancement; it must never block app entry.
     startRealtime(activeStoreId).catch(e=>console.warn('[HongCha Realtime] startup',e));
     el('fullName').value=p.full_name||'';el('email').value=session.user.email||p.email||'';el('phone').value=p.phone||'';el('address').value=p.address||'';syncProfileSaveState();
