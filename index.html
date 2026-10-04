@@ -3351,7 +3351,7 @@ function navigate(id,opts={}){
    if(p.role==='employee'){refreshAttendanceState();loadAttendanceHistory();syncDeviceUI();checkAttendanceEnvironment();}
    else{adminAttendanceDate=localToday();adminAttendanceWindowStart=mondayOfWeek(adminAttendanceDate);renderScheduleForKind('attendance');}
  }
- if(id==='salary'&&!opts.deferLoad){if(p.role==='owner')loadOwnerPayrollMonth(initOwnerPayrollMonth());else if(p.role==='manager')loadManagerPayrollPeriods();else if(p.role==='employee')loadSalarySummary()}
+ if(id==='salary'&&!opts.deferLoad){if(p.role==='owner'){loadOwnerPayrollMonth(initOwnerPayrollMonth());loadPayroll()}else if(p.role==='manager')loadManagerPayrollPeriods();else if(p.role==='employee')loadSalarySummary()}
  if(id==='admin'){
    closeAdminPane();
    document.querySelectorAll('#admin .admin-pane').forEach(x=>x.classList.remove('active'));
@@ -4637,7 +4637,8 @@ async function loadCurrentViewData(){
   }else if(view==='attendance'){
     adminAttendanceDate=adminAttendanceDate||localToday();adminAttendanceWindowStart=adminAttendanceWindowStart||mondayOfWeek(adminAttendanceDate);renderScheduleForKind('attendance');
   }else if(view==='salary'){
-    await loadOwnerPayrollMonth(initOwnerPayrollMonth());
+    if(role==='owner')await Promise.all([loadOwnerPayrollMonth(initOwnerPayrollMonth()),loadPayroll()]);
+    else if(role==='manager')await loadManagerPayrollPeriods();
   }
 }
 
