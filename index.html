@@ -5302,7 +5302,10 @@ async function saveSupplementAttendance(){
    closeSupplementAttendance();adminAttendanceWeekCache={};await loadAdminAttendance({force:true});await loadOwnerOverview();
  }catch(e){
    const map={'GIO_NAM_NGOAI_CA':'Thời gian phải nằm trong phạm vi ca.','GIO_TUONG_LAI':'Không được nhập thời gian ở tương lai.','GIO_KHONG_HOP_LE':'Giờ kết thúc phải sau giờ bắt đầu.','CA_KHONG_HOP_LE':'Ca không còn hợp lệ để bổ sung chấm công.','FORBIDDEN':'Chỉ Owner/Manager được xử lý chấm công.','KY_LUONG_DA_CHOT':'Kỳ lương đã chốt/đã trả. Không thể sửa chấm công của kỳ này.'};
-   if(operationId===supplementAttendanceOperationId)el('supplementAttendanceMsg').innerHTML=`<div class="notice warn">${escapeHtml(map[e?.message]||e?.message||'Không thể lưu chấm công.')}</div>`;
+   const message=/permission denied for function resolve_missing_checkout/i.test(e?.message||'')
+     ?'Supabase chưa cấp quyền gọi chức năng xác nhận checkout. Owner cần chạy FIX_RESOLVE_MISSING_CHECKOUT_EXECUTE_V84_25.sql rồi thử lại.'
+     :map[e?.message]||e?.message||'Không thể lưu chấm công.';
+   if(operationId===supplementAttendanceOperationId)el('supplementAttendanceMsg').innerHTML=`<div class="notice warn">${escapeHtml(message)}</div>`;
  }finally{
    if(operationId===supplementAttendanceOperationId){supplementAttendanceSaving=false;resetSupplementAttendanceSaveButton();}
  }
