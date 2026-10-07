@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.24 · Registration Automation Fix</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.24 · Unassign Shift Fix</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -98,7 +98,9 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
 /* V71 — employee home shift summary */
 .employee-home-shift-summary{padding:16px 16px 15px}.employee-home-shift-summary .shift-main{font-size:20px;line-height:1.22;font-weight:780;letter-spacing:-.3px}.employee-home-shifts{display:grid;gap:8px;margin:10px 0 12px}.employee-home-shift-item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-soft)}.employee-home-shift-copy{min-width:0}.employee-home-shift-copy b{display:block;font-size:14px;line-height:1.25}.employee-home-shift-copy span{display:block;margin-top:3px;color:var(--muted);font-size:12px;line-height:1.3}.employee-home-shift-day{font-size:11px;font-weight:780;color:var(--info);white-space:nowrap;text-align:right}.employee-home-next{border-color:var(--info-soft);background:var(--info-soft)}
 /* ---------- Owner home ---------- */
-.owner-header{padding-top:4px}.owner-title{margin-top:3px}.owner-store{display:flex;align-items:center;gap:6px;margin-top:7px;color:var(--muted);font-size:13px;min-width:0}.owner-store span{min-width:0;overflow-wrap:anywhere}.owner-today-card{background:var(--brand);color:#fff;border-radius:var(--radius-xl);padding:20px;box-shadow:var(--shadow)}.owner-today-card .card-kicker{color:#F1D7CD}.owner-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:15px;border-top:1px solid rgba(255,255,255,.16);padding-top:15px}.owner-kpis>div{min-width:0;padding:0 10px;border-left:1px solid rgba(255,255,255,.14)}.owner-kpis>div:first-child{border-left:0;padding-left:0}.owner-kpis b{display:block;font-size:22px;line-height:1.1;font-weight:780;font-variant-numeric:tabular-nums}.owner-kpis span{display:block;margin-top:4px;color:#F3DCD3;font-size:11px;overflow-wrap:anywhere}.owner-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.owner-action{min-width:0;min-height:98px;padding:14px;border:1px solid var(--line);border-radius:15px;background:#fff;text-align:left}.owner-action .ico{font-size:19px;margin-bottom:9px}.owner-action b{display:block;font-size:13px;line-height:1.25;overflow-wrap:anywhere}.owner-action span{display:block;margin-top:4px;color:var(--muted);font-size:11px;line-height:1.35;overflow-wrap:anywhere}.pending-banner{background:var(--info-soft);border:1px solid #D9E6EE;color:#405D74}
+.owner-header{padding-top:4px}.owner-title{margin-top:3px}.owner-store{display:flex;align-items:center;gap:6px;margin-top:7px;color:var(--muted);font-size:13px;min-width:0}.owner-store span{min-width:0;overflow-wrap:anywhere}.owner-today-card{background:var(--brand);color:#fff;border-radius:var(--radius-xl);padding:20px;box-shadow:var(--shadow)}
+.owner-home-labor{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}.owner-labor-card{min-width:0;padding:15px;border:1px solid var(--line);border-radius:15px;background:#fff;box-shadow:var(--shadow-sm)}.owner-labor-card .card-kicker{color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.08em}.owner-labor-card b{display:block;margin-top:6px;font-size:22px;line-height:1.15;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.owner-labor-card span{display:block;margin-top:5px;color:var(--muted);font-size:10px;line-height:1.35}.owner-labor-card.money b{color:var(--brand)}.owner-labor-note{margin-top:7px;color:var(--muted);font-size:10px;line-height:1.35}
+@media(max-width:390px){.owner-home-labor{gap:7px}.owner-labor-card{padding:12px}.owner-labor-card b{font-size:18px}}.owner-today-card .card-kicker{color:#F1D7CD}.owner-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:15px;border-top:1px solid rgba(255,255,255,.16);padding-top:15px}.owner-kpis>div{min-width:0;padding:0 10px;border-left:1px solid rgba(255,255,255,.14)}.owner-kpis>div:first-child{border-left:0;padding-left:0}.owner-kpis b{display:block;font-size:22px;line-height:1.1;font-weight:780;font-variant-numeric:tabular-nums}.owner-kpis span{display:block;margin-top:4px;color:#F3DCD3;font-size:11px;overflow-wrap:anywhere}.owner-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.owner-action{min-width:0;min-height:98px;padding:14px;border:1px solid var(--line);border-radius:15px;background:#fff;text-align:left}.owner-action .ico{font-size:19px;margin-bottom:9px}.owner-action b{display:block;font-size:13px;line-height:1.25;overflow-wrap:anywhere}.owner-action span{display:block;margin-top:4px;color:var(--muted);font-size:11px;line-height:1.35;overflow-wrap:anywhere}.pending-banner{background:var(--info-soft);border:1px solid #D9E6EE;color:#405D74}
 
 /* ---------- Schedule ---------- */
 .request-row{display:flex;gap:8px;overflow-x:auto;max-width:100%;padding:1px 0 3px;margin:-4px 0 16px;scrollbar-width:none}.request-row::-webkit-scrollbar{display:none}.request-chip{flex:0 0 auto;min-height:40px;padding:8px 11px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#4F4D4A;font-size:12px;font-weight:700;white-space:nowrap}.request-chip span{color:var(--brand);margin-right:4px}
@@ -2687,6 +2689,14 @@ input:focus,select:focus,textarea:focus{
 <div><b id="statShift">0</b><span>Ca</span></div><div><b id="statPending">0</b><span>Chờ xử lý</span></div><div><b id="statEmployees">0</b><span>Nhân viên</span></div><div><b id="statLate">0</b><span>Đi muộn</span></div>
 </div>
 </section>
+<section class="home-section owner-home-labor-section">
+<div class="section-title-row"><h2>Nhân sự tháng này</h2><span class="muted" id="ownerLaborMonthLabel">Tạm tính đến hôm nay</span></div>
+<div class="owner-home-labor">
+<div class="owner-labor-card"><div class="card-kicker">TỔNG GIỜ CÔNG</div><b id="ownerLaborHours">0h</b><span>Chỉ tính các ca đã checkout trong tháng hiện tại.</span></div>
+<div class="owner-labor-card money"><div class="card-kicker">LƯƠNG TẠM TÍNH</div><b id="ownerLaborAmount">0đ</b><span>Giờ công đã checkout × đơn giá giờ hiện tại.</span></div>
+</div>
+<div class="owner-labor-note">Chưa bao gồm thưởng, phạt, tạm ứng và chưa phải bảng lương chốt.</div>
+</section>
 <section class="home-section"><div class="section-title-row"><h2>Việc cần xử lý</h2><button class="section-link" onclick="navigate('admin')">Xem tất cả</button></div><div class="stack" id="ownerPending"></div></section>
 <section class="home-section"><div class="section-title-row"><h2>Quản lý nhanh</h2></div><div class="owner-actions" id="ownerActions"><button class="owner-action" onclick="openAdminQuick('employees')"><div class="ico">👥</div><b>Nhân viên</b><span>Hồ sơ, trạng thái &amp; đơn giá giờ</span></button><button class="owner-action" onclick="openAdminQuick('schedules')"><div class="ico">🗓</div><b>Thiết lập lịch tuần</b><span>Cài mẫu tuần và mở đăng ký</span></button><button class="owner-action" onclick="openAdminQuick('registrations')"><div class="ico">✓</div><b>Duyệt đăng ký</b><span>Phê duyệt ca của nhân viên</span></button><button class="owner-action" onclick="openAdminQuick('devices')"><div class="ico">📱</div><b>Thiết bị</b><span>Duyệt thiết bị đăng nhập</span></button></div></section>
 </div>
@@ -3363,17 +3373,24 @@ function navigate(id,opts={}){
 }
 async function loadOwnerOverview(){
  if(!profile||!['owner','manager'].includes(profile.role)||!sb)return;
- const storeId=getActiveStoreId(),today=localToday();
+ const storeId=getActiveStoreId(),today=localToday(),monthStart=today.slice(0,8)+'01',tomorrow=dateAdd(today,1);
  try{
-  const [{data:emps,error:empErr},{data:todayShifts,error:shiftErr},{data:atts,error:attErr},{data:regs,error:regErr},{data:devs,error:devErr},{data:leaves,error:leaveErr}]=await Promise.all([
+  const [{data:emps,error:empErr},{data:todayShifts,error:shiftErr},{data:atts,error:attErr},{data:regs,error:regErr},{data:devs,error:devErr},{data:leaves,error:leaveErr},{data:laborRows,error:laborErr},{data:storeRow,error:storeErr}]=await Promise.all([
    sb.from('profiles').select('id').eq('store_id',storeId).eq('employment_status','active'),
    sb.from('work_schedules').select('id,status,employee_id,start_at,end_at,start_time,end_time').eq('store_id',storeId).eq('work_date',today),
-   sb.from('attendance').select('id,employee_id,late_minutes,check_in,check_out,schedule_id,work_schedules:schedule_id!inner(store_id)').eq('work_schedules.store_id',storeId).gte('check_in',today+'T00:00:00+07:00').lt('check_in',dateAdd(today,1)+'T00:00:00+07:00'),
+   sb.from('attendance').select('id,employee_id,late_minutes,check_in,check_out,schedule_id,work_schedules:schedule_id!inner(store_id)').eq('work_schedules.store_id',storeId).gte('check_in',today+'T00:00:00+07:00').lt('check_in',tomorrow+'T00:00:00+07:00'),
    sb.from('shift_registrations').select('id,schedule_id').eq('status','pending').limit(100),
    sb.from('devices').select('id,employee_id').eq('status','pending').limit(100),
-   sb.from('leave_requests').select('id').eq('store_id',storeId).eq('status','pending').limit(100)
+   sb.from('leave_requests').select('id').eq('store_id',storeId).eq('status','pending').limit(100),
+   sb.from('attendance').select('id,employee_id,worked_minutes,profiles:employee_id(hourly_rate),work_schedules:schedule_id!inner(work_date,status,store_id)').eq('work_schedules.store_id',storeId).gte('work_schedules.work_date',monthStart).lt('work_schedules.work_date',tomorrow).neq('work_schedules.status','cancelled').not('check_out','is',null),
+   sb.from('stores').select('hourly_default_rate').eq('id',storeId).single()
   ]);
-  if(empErr||shiftErr||attErr||regErr||devErr||leaveErr)throw empErr||shiftErr||attErr||regErr||devErr||leaveErr;
+  if(empErr||shiftErr||attErr||regErr||devErr||leaveErr||laborErr||storeErr)throw empErr||shiftErr||attErr||regErr||devErr||leaveErr||laborErr||storeErr;
+  const fallbackRate=Number(storeRow?.hourly_default_rate||0);
+  const labor=(laborRows||[]).reduce((acc,row)=>{const mins=Math.max(0,Number(row.worked_minutes||0)),rate=Number(row.profiles?.hourly_rate??fallbackRate);acc.minutes+=mins;acc.amount+=Math.round(mins/60*rate);return acc;},{minutes:0,amount:0});
+  if(el('ownerLaborHours')){const h=Math.floor(labor.minutes/60),m=labor.minutes%60;el('ownerLaborHours').textContent=m?`${h}h ${m}p`:`${h}h`;}
+  if(el('ownerLaborAmount'))el('ownerLaborAmount').textContent=Number(labor.amount||0).toLocaleString('vi-VN')+'đ';
+  if(el('ownerLaborMonthLabel'))el('ownerLaborMonthLabel').textContent=`${monthStart.slice(5,7)}/${monthStart.slice(0,4)} · đến ${today.slice(8,10)}/${today.slice(5,7)}`;
   const regIds=[],devIds=(devs||[]).map(x=>x.employee_id).filter(Boolean);
   let storeRegs=[],storeDevs=[];
   if(regIds.length){const {data,error}=await sb.from('work_schedules').select('id').eq('store_id',storeId).in('id',regIds);if(error)throw error;const ok=new Set((data||[]).map(x=>x.id));storeRegs=(regs||[]).filter(x=>ok.has(x.schedule_id))}
@@ -3834,11 +3851,7 @@ function initProfileFieldEvents(){
 }
 
 function initModalEvents(){document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal.open').forEach(m=>m.classList.remove('open'))})}
-window.addEventListener('pagehide',()=>saveUiState());window.addEventListener('beforeunload',()=>saveUiState());document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveUiState();});window.addEventListener('pageshow',()=>{if(session&&profile)saveUiState()});document.addEventListener('DOMContentLoaded',()=>{
-  initModalEvents();setupDateConstraints();init();updateGreetingAndClock();
-  setInterval(updateGreetingAndClock,1000);
-  startRegistrationAutomationSync();
-});
+window.addEventListener('pagehide',()=>saveUiState());window.addEventListener('beforeunload',()=>saveUiState());document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveUiState();});window.addEventListener('pageshow',()=>{if(session&&profile)saveUiState()});document.addEventListener('DOMContentLoaded',()=>{initModalEvents();setupDateConstraints();init();updateGreetingAndClock();setInterval(updateGreetingAndClock,1000)});
 
 async function loadEmployees(){
  const target=document.getElementById('employeeTable');if(!sb||!profile)return;
@@ -5881,43 +5894,6 @@ window.addEventListener('error',e=>{console.error('HongCha HRM:',e.error||e.mess
 window.addEventListener('unhandledrejection',e=>{console.error('HongCha HRM:',e.reason)});
 
 /* V66: Owner schedule clarity + direct add + red/blue UI */
-
-/* V84.24 AUTO REGISTRATION RELIABILITY
-   Backend pg_cron is authoritative. This lightweight foreground sync is only a
-   recovery/UI accelerator when an Owner/Employee has the app open; it never
-   replaces backend automation and never polls faster than once per minute. */
-let hcRegistrationAutomationTimer=null;
-let hcRegistrationAutomationBusy=false;
-async function runRegistrationAutomationSync({silent=true}={}){
-  if(hcRegistrationAutomationBusy||!sb||!session||!profile||!getActiveStoreId())return;
-  hcRegistrationAutomationBusy=true;
-  try{
-    const {error}=await sb.rpc('process_shift_registration_automation');
-    if(error){
-      if(!silent) console.warn('[HongCha Registration Automation]',error.message||error);
-      return;
-    }
-    employeeScheduleCache={};
-    clearScheduleDataCaches();
-    if(currentView==='schedule'){
-      if(profile.role==='employee') await loadSchedules({force:true,keepContent:true});
-      else await Promise.allSettled([loadMainSchedule(),loadAdminSchedules()]);
-    }
-    if(currentAdminTab==='registrationSettings'&&profile.role==='owner') await loadRegistrationWindow();
-    if(currentAdminTab==='registrations'&&['owner','manager'].includes(profile.role)) await loadRegistrations();
-  }catch(e){
-    if(!silent)console.warn('[HongCha Registration Automation]',e);
-  }finally{hcRegistrationAutomationBusy=false}
-}
-function startRegistrationAutomationSync(){
-  clearInterval(hcRegistrationAutomationTimer);
-  hcRegistrationAutomationTimer=setInterval(()=>runRegistrationAutomationSync(),60000);
-  setTimeout(()=>runRegistrationAutomationSync(),1200);
-}
-function stopRegistrationAutomationSync(){
-  clearInterval(hcRegistrationAutomationTimer);hcRegistrationAutomationTimer=null;
-}
-
 </script>
 <style id="hongcha-v65-effective-date">
 .effective-date-note{margin-top:5px;color:var(--muted);font-size:11px;line-height:1.4}
