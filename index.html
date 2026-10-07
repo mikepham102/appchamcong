@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.24 · Unassign Shift Fix</title><style id="hongcha-v25-design-system">
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/><meta content="#A9482D" name="theme-color"/><meta content="light" name="color-scheme"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="default" name="apple-mobile-web-app-status-bar-style"/><meta content="HongCha HRM" name="apple-mobile-web-app-title"/><title>HongCha HRM V84.24 · Registration Automation Fix</title><style id="hongcha-v25-design-system">
 :root{
   --bg:#F5F3EF;
   --surface:#FFFFFF;
@@ -3834,7 +3834,11 @@ function initProfileFieldEvents(){
 }
 
 function initModalEvents(){document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal.open').forEach(m=>m.classList.remove('open'))})}
-window.addEventListener('pagehide',()=>saveUiState());window.addEventListener('beforeunload',()=>saveUiState());document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveUiState();});window.addEventListener('pageshow',()=>{if(session&&profile)saveUiState()});document.addEventListener('DOMContentLoaded',()=>{initModalEvents();setupDateConstraints();init();updateGreetingAndClock();setInterval(updateGreetingAndClock,1000)});
+window.addEventListener('pagehide',()=>saveUiState());window.addEventListener('beforeunload',()=>saveUiState());document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveUiState();});window.addEventListener('pageshow',()=>{if(session&&profile)saveUiState()});document.addEventListener('DOMContentLoaded',()=>{
+  initModalEvents();setupDateConstraints();init();updateGreetingAndClock();
+  setInterval(updateGreetingAndClock,1000);
+  startRegistrationAutomationSync();
+});
 
 async function loadEmployees(){
  const target=document.getElementById('employeeTable');if(!sb||!profile)return;
@@ -5877,6 +5881,43 @@ window.addEventListener('error',e=>{console.error('HongCha HRM:',e.error||e.mess
 window.addEventListener('unhandledrejection',e=>{console.error('HongCha HRM:',e.reason)});
 
 /* V66: Owner schedule clarity + direct add + red/blue UI */
+
+/* V84.24 AUTO REGISTRATION RELIABILITY
+   Backend pg_cron is authoritative. This lightweight foreground sync is only a
+   recovery/UI accelerator when an Owner/Employee has the app open; it never
+   replaces backend automation and never polls faster than once per minute. */
+let hcRegistrationAutomationTimer=null;
+let hcRegistrationAutomationBusy=false;
+async function runRegistrationAutomationSync({silent=true}={}){
+  if(hcRegistrationAutomationBusy||!sb||!session||!profile||!getActiveStoreId())return;
+  hcRegistrationAutomationBusy=true;
+  try{
+    const {error}=await sb.rpc('process_shift_registration_automation');
+    if(error){
+      if(!silent) console.warn('[HongCha Registration Automation]',error.message||error);
+      return;
+    }
+    employeeScheduleCache={};
+    clearScheduleDataCaches();
+    if(currentView==='schedule'){
+      if(profile.role==='employee') await loadSchedules({force:true,keepContent:true});
+      else await Promise.allSettled([loadMainSchedule(),loadAdminSchedules()]);
+    }
+    if(currentAdminTab==='registrationSettings'&&profile.role==='owner') await loadRegistrationWindow();
+    if(currentAdminTab==='registrations'&&['owner','manager'].includes(profile.role)) await loadRegistrations();
+  }catch(e){
+    if(!silent)console.warn('[HongCha Registration Automation]',e);
+  }finally{hcRegistrationAutomationBusy=false}
+}
+function startRegistrationAutomationSync(){
+  clearInterval(hcRegistrationAutomationTimer);
+  hcRegistrationAutomationTimer=setInterval(()=>runRegistrationAutomationSync(),60000);
+  setTimeout(()=>runRegistrationAutomationSync(),1200);
+}
+function stopRegistrationAutomationSync(){
+  clearInterval(hcRegistrationAutomationTimer);hcRegistrationAutomationTimer=null;
+}
+
 </script>
 <style id="hongcha-v65-effective-date">
 .effective-date-note{margin-top:5px;color:var(--muted);font-size:11px;line-height:1.4}
