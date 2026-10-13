@@ -3631,7 +3631,7 @@ async function loadRegistrationOptions(){
    if(token!==registrationOptionsToken)return;
    const m=String(e?.message||e||'');
    const detail=(e?.details||e?.hint||'').trim();
-   target.innerHTML=`<div class="notice warn">${m.includes('TIMEOUT')?'Máy chủ phản hồi quá lâu.':'Không tải được thời gian đăng ký.'}${detail?`<div class="mini ui-mt-4">${escapeHtml(detail)}</div>`:''} Vui lòng thử lại.</div>`;
+   target.innerHTML=`<div class="notice warn">${m.includes('TIMEOUT')?'Máy chủ phản hồi quá lâu.':'Không tải được thời gian đăng ký.'}<div class="mini ui-mt-4">Mã lỗi: ${escapeHtml(m||'không rõ')}${detail?' · '+escapeHtml(detail):''}</div> Vui lòng tải lại. Nếu lỗi còn tiếp diễn, gửi Owner mã lỗi này để kiểm tra cấu hình cửa sổ và tác vụ tự động.</div>`;
  }
 }
 async function fetchEmployeeRegistrationRange(start,end,force=false){
