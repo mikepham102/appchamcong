@@ -7003,4 +7003,45 @@ body.data-fetching .admin-content.open .admin-pane.active>.card,body.data-fetchi
   #adminAttendanceList .attendance-inline-action{height:27px!important;min-height:27px!important;padding:0 8px!important;font-size:9px!important;border-radius:8px!important}
 }
 </style>
+<style id="hongcha-v84-schedule-add-compact-qa">
+/* Compact, readable spacing for the add-to-schedule dialog. */
+#directScheduleModal .schedule-add-modal{max-width:620px;max-height:min(90svh,820px);padding:14px 16px calc(12px + env(safe-area-inset-bottom));overflow:auto}
+#directScheduleModal .modal-head{gap:10px;align-items:flex-start}
+#directScheduleModal .modal-head h2{font-size:19px;line-height:1.2;margin:0}
+#directScheduleModal .modal-head .ui-small-sub{font-size:12px;line-height:1.35;margin-top:3px}
+#directScheduleModal .modal-close{width:36px;height:36px;min-height:36px;flex:0 0 36px}
+#directScheduleModal .stack.ui-mt-16{gap:9px;margin-top:10px!important}
+#directScheduleModal .field{gap:4px}
+#directScheduleModal .field>label{font-size:11px;line-height:1.25}
+#directScheduleModal input:not([type=checkbox]),#directScheduleModal select{min-height:40px;padding:8px 11px}
+#directScheduleModal .schedule-add-tabs{gap:4px;padding:4px;border-radius:11px}
+#directScheduleModal .schedule-add-tab{min-height:38px;font-size:13px}
+#directScheduleModal .schedule-add-panel-head{align-items:center;gap:8px}
+#directScheduleModal .schedule-add-panel-head b{font-size:14px;line-height:1.25}
+#directScheduleModal .schedule-add-panel-head .muted{font-size:11px;line-height:1.35;margin-top:2px}
+#directScheduleModal .schedule-add-panel-head .badge{font-size:10px;padding:5px 8px;white-space:nowrap}
+#directScheduleModal .schedule-add-panel .ui-mt-10{margin-top:7px!important}
+#directScheduleModal .formgrid{gap:8px}
+#directScheduleModal .schedule-template-choice-list,#directScheduleModal .schedule-person-choice-list{gap:6px;max-height:35vh;padding:1px}
+#directScheduleModal .schedule-template-choice{grid-template-columns:22px minmax(0,1fr) 78px;gap:7px;padding:7px 8px;border-radius:11px}
+#directScheduleModal .schedule-template-choice input,#directScheduleModal .schedule-person-choice input{width:20px;height:20px;margin:0}
+#directScheduleModal .schedule-template-choice-copy b,#directScheduleModal .schedule-person-choice-copy b{font-size:13px;line-height:1.2}
+#directScheduleModal .schedule-template-choice-copy span,#directScheduleModal .schedule-person-choice-copy span{font-size:10px;line-height:1.25;margin-top:2px}
+#directScheduleModal .schedule-template-capacity{justify-content:flex-end;gap:4px}
+#directScheduleModal .schedule-template-capacity small{font-size:9px}
+#directScheduleModal .schedule-template-capacity input{width:42px;min-height:32px;height:32px;padding:4px;text-align:center}
+#directScheduleModal .schedule-template-check{display:none!important}
+#directScheduleModal .schedule-person-choice{grid-template-columns:20px 32px minmax(0,1fr) auto;gap:7px;padding:6px 8px;border-radius:11px}
+#directScheduleModal .schedule-person-choice .person-avatar{width:32px;height:32px;min-width:32px;font-size:12px}
+#directScheduleModal .schedule-person-check{font-size:14px}
+#directScheduleModal .schedule-add-panel .empty{padding:10px;font-size:12px}
+#directScheduleModal .schedule-add-modal .modal-actions,#directScheduleModal .modal-actions{position:sticky;bottom:-12px;z-index:2;background:#fff;padding:9px 0 0;margin-top:2px;border-top:1px solid #D8E4EF;gap:8px}
+#directScheduleModal .modal-actions .btn{min-height:42px;padding:9px 12px;font-size:13px}
+@media(max-width:520px){
+ #directScheduleModal .schedule-add-modal{max-width:none;width:min(100%,520px);max-height:92svh;padding:13px 12px calc(10px + env(safe-area-inset-bottom));border-radius:20px 20px 0 0}
+ #directScheduleModal .schedule-template-choice{grid-template-columns:22px minmax(0,1fr) 78px}
+ #directScheduleModal .schedule-template-capacity{grid-column:3;grid-row:1;margin:0}
+ #directScheduleModal .schedule-person-choice{grid-template-columns:20px 32px minmax(0,1fr) auto}
+}
+</style>
 </body></html>
