@@ -3341,7 +3341,7 @@ function saveUiState(){if(!session?.user?.id)return;try{localStorage.setItem(uiS
 function readUiState(){try{const raw=localStorage.getItem(uiStateKey());return raw?JSON.parse(raw):null}catch(e){return null}}
 function restoreUiState(opts={}){const st=readUiState();if(!st){navigate('dashboard',{restore:true,deferLoad:!!opts.deferData});return}if(profile?.role==='employee'&&st.currentView==='admin')st.currentView='dashboard';if(isBranchAdmin()&&st.currentView==='salary'&&!hasManagerPermission('payroll_view'))st.currentView='dashboard';if(st.employeeSelectedDate)employeeSelectedDate=st.employeeSelectedDate;if(st.employeeDayWindowStart)employeeDayWindowStart=st.employeeDayWindowStart;if(isStaffAdmin()){mainScheduleDate=localToday();mainScheduleWindowStart=mondayOfWeek(mainScheduleDate)}else{if(st.mainScheduleDate)mainScheduleDate=st.mainScheduleDate;if(st.mainScheduleWindowStart)mainScheduleWindowStart=st.mainScheduleWindowStart}if(st.adminSelectedDate)adminSelectedDate=st.adminSelectedDate;if(st.adminDayWindowStart)adminDayWindowStart=st.adminDayWindowStart;if(st.adminAttendanceDate)adminAttendanceDate=st.adminAttendanceDate;if(st.adminAttendanceWindowStart)adminAttendanceWindowStart=st.adminAttendanceWindowStart;currentAdminTab=st.currentAdminTab||'employees';navigate(st.currentView||'dashboard',{restore:true,deferLoad:!!opts.deferData,scrollY:Number(st.scrollY||0)})}
 function openAttendanceNav(){navigate('attendance')}
-function syncRoleContent(){const staff=isStaffAdmin(),isOwner=profile?.role==='owner',managerPayroll=isBranchAdmin()&&hasManagerPermission('payroll_view');document.querySelectorAll('.role-employee').forEach(x=>x.classList.toggle('ui-hidden',staff));document.querySelectorAll('.role-staff').forEach(x=>x.classList.toggle('ui-hidden',!staff));el('staffPayrollContent')?.classList.toggle('ui-hidden',!isOwner&&!managerPayroll);el('ownerPayrollMonthPanel')?.classList.toggle('ui-hidden',!isOwner);el('ownerPayrollManagement')?.classList.toggle('ui-hidden',!isOwner);el('managerPayrollPanel')?.classList.toggle('ui-hidden',!managerPayroll);const aTitle=el('attendancePageTitle'),aSub=el('attendancePageSub'),sTitle=el('salaryPageTitle'),sSub=el('salaryPageSub');if(aTitle)aTitle.textContent=staff?'Chấm công nhân sự':'Chấm công';if(aSub)aSub.textContent=staff?'Xem lại chấm công theo ngày, ca và nhân viên.':'Trạng thái ca và thao tác chấm công của bạn.';if(sTitle)sTitle.textContent='Lương';if(sSub)sSub.textContent=isOwner?'Truy vấn lương theo tháng từ giờ công và các khoản liên quan; chỉ xem và xuất, không tạo kỳ lương.':managerPayroll?'Xem và xuất báo cáo lương theo tháng.':'Xem lương theo tháng và chi tiết từng ngày của bạn.';const top=el('adminTopAction');if(top)top.classList.toggle('hidden',!staff);ensurePayrollWorkflowMarkup();ensureManagerPermissionMarkup();if(isBranchAdmin())syncManagerPermissionUI();syncBranchUI();}
+function syncRoleContent(){const staff=isStaffAdmin(),isOwner=profile?.role==='owner',managerPayroll=isBranchAdmin()&&hasManagerPermission('payroll_view');document.querySelectorAll('.role-employee').forEach(x=>x.classList.toggle('ui-hidden',staff));document.querySelectorAll('.role-staff').forEach(x=>x.classList.toggle('ui-hidden',!staff));el('staffPayrollContent')?.classList.toggle('ui-hidden',!isOwner&&!managerPayroll);el('ownerPayrollMonthPanel')?.classList.toggle('ui-hidden',!isOwner&&!managerPayroll);el('ownerPayrollManagement')?.classList.toggle('ui-hidden',!isOwner);el('managerPayrollPanel')?.classList.add('ui-hidden');const aTitle=el('attendancePageTitle'),aSub=el('attendancePageSub'),sTitle=el('salaryPageTitle'),sSub=el('salaryPageSub');if(aTitle)aTitle.textContent=staff?'Chấm công nhân sự':'Chấm công';if(aSub)aSub.textContent=staff?'Xem lại chấm công theo ngày, ca và nhân viên.':'Trạng thái ca và thao tác chấm công của bạn.';if(sTitle)sTitle.textContent='Lương';if(sSub)sSub.textContent=isOwner?'Truy vấn lương theo tháng từ giờ công và các khoản liên quan; chỉ xem và xuất, không tạo kỳ lương.':managerPayroll?'Truy vấn lương theo tháng của chi nhánh; chỉ xem và xuất, không tạo kỳ lương.':'Xem lương theo tháng và chi tiết từng ngày của bạn.';const top=el('adminTopAction');if(top)top.classList.toggle('hidden',!staff);ensurePayrollWorkflowMarkup();ensureManagerPermissionMarkup();if(isBranchAdmin())syncManagerPermissionUI();syncBranchUI();}
 function openAdminHome(){
  const role=profile?.role;
  if(!isStaffAdmin())return;
@@ -3387,7 +3387,7 @@ function navigate(id,opts={}){
    if(p.role==='employee'){refreshAttendanceState();loadAttendanceHistory();syncDeviceUI();checkAttendanceEnvironment();}
    else{adminAttendanceDate=localToday();adminAttendanceWindowStart=mondayOfWeek(adminAttendanceDate);renderScheduleForKind('attendance');}
  }
- if(id==='salary'&&!opts.deferLoad){if(p.role==='owner'){loadOwnerPayrollMonth(initOwnerPayrollMonth())}else if(p.role==='manager')loadManagerPayrollPeriods();else if(p.role==='employee')loadSalarySummary()}
+ if(id==='salary'&&!opts.deferLoad){if(p.role==='owner'||(p.role==='manager'&&hasManagerPermission('payroll_view'))){loadOwnerPayrollMonth(initOwnerPayrollMonth())}else if(p.role==='employee')loadSalarySummary()}
  if(id==='admin'){
    closeAdminPane();
    document.querySelectorAll('#admin .admin-pane').forEach(x=>x.classList.remove('active'));
@@ -3791,7 +3791,8 @@ function syncManagerPermissionUI(){
  scheduleNav?.classList.toggle('hidden',!hasManagerPermission('schedule_manage'));
  el('salaryNav')?.classList.toggle('hidden',!hasManagerPermission('payroll_view'));
  el('staffPayrollContent')?.classList.toggle('ui-hidden',!hasManagerPermission('payroll_view'));
- el('managerPayrollPanel')?.classList.toggle('ui-hidden',!hasManagerPermission('payroll_view'));
+ el('managerPayrollPanel')?.classList.add('ui-hidden');
+ el('ownerPayrollMonthPanel')?.classList.toggle('ui-hidden',!hasManagerPermission('payroll_view'));
  const create=document.querySelector('#adminEmployees .btn.primary');
  if(create)create.classList.toggle('hidden',!hasManagerPermission('employee_create'));
  if(currentView==='attendance'&&!hasManagerPermission('attendance_process'))navigate('dashboard');
@@ -3853,7 +3854,7 @@ async function saveManagerPermissions(){
  finally{setBusyButton(button,false,'Lưu quyền Manager');if(!el('managerPermissionList')?.querySelector('[data-manager-permission]'))button.disabled=true}
 }
 function adminTab(tab,btn,opts={}){if(tab==='managerPermissions'&&profile?.role!=='owner'){toast('Chỉ Owner được cấu hình quyền Manager.');return}if(tab==='attendance'){if(profile?.role==='manager'&&!hasManagerPermission('attendance_process')){toast('Owner chưa cấp quyền xem chấm công.');return}closeAdminPane();navigate('attendance');return}if(tab==='payroll'){if(profile?.role!=='owner'){toast('Khu vực tổng hợp lương chỉ dành cho Owner.');return}closeAdminPane();navigate('salary');return}if(profile?.role==='manager'&&!managerPermissionForTab(tab)){toast('Owner chưa cấp quyền sử dụng chức năng này.');return}if(tab==='bonuses')ensureBonusManagementMarkup();currentAdminTab=tab;document.querySelectorAll('.admin-pane').forEach(x=>x.classList.remove('active'));document.querySelectorAll('#admin .admin-group-item').forEach(x=>x.classList.remove('active'));const pane=el('admin'+tab.charAt(0).toUpperCase()+tab.slice(1));if(pane)pane.classList.add('active');if(tab==='penalties'){ensurePayrollWorkflowMarkup();loadPayrollPenaltyRules();loadOwnerPenaltyManagement()}if(tab==='advances'){ensurePayrollWorkflowMarkup();loadManagerAdvanceRequests()}const adminContent=el('adminContent'),back=el('adminSheetBackdrop');const meta=adminTabMeta[tab]||[tab,''];const title=el('adminSheetTitle'),sub=el('adminSheetSub');if(title)title.textContent=meta[0];if(sub)sub.textContent=meta[1];if(adminContent){adminContent.classList.add('open');document.body.classList.add('admin-sheet-open');if(back)back.classList.add('open')}if(btn){btn.classList.add('active');const group=btn.closest('details');if(group)group.open=true}
- if(!adminTabLoaded[tab]||opts.forceLoad){adminTabLoaded[tab]=true;adminContent?.classList.add('is-loading');const done=()=>setTimeout(()=>el('adminContent')?.classList.remove('is-loading'),120);if(tab==='branches')Promise.resolve(loadBranches()).finally(done);if(tab==='employees')Promise.resolve(loadEmployees()).finally(done);if(tab==='templates')Promise.resolve(loadTemplates()).finally(done);if(tab==='schedules')Promise.resolve(loadWeeklyPlan()).finally(done);if(tab==='registrationSettings')Promise.resolve(loadRegistrationWindow()).finally(done);if(tab==='registrations')Promise.all([loadRegistrations(),loadScheduleRequests()]).finally(done);if(tab==='leaves')Promise.resolve(loadLeaves()).finally(done);if(tab==='devices')Promise.resolve(loadDevices()).finally(done);if(tab==='store')Promise.resolve(loadStore()).finally(done);if(tab==='audit')Promise.resolve(loadAudit()).finally(done);if(tab==='bonuses')Promise.resolve(loadBonusManagement()).finally(done);if(tab==='managerPermissions')Promise.resolve(loadManagerPermissions()).finally(done)}
+ if(tab==='registrationSettings'||!adminTabLoaded[tab]||opts.forceLoad){adminTabLoaded[tab]=true;adminContent?.classList.add('is-loading');const done=()=>setTimeout(()=>el('adminContent')?.classList.remove('is-loading'),120);if(tab==='branches')Promise.resolve(loadBranches()).finally(done);if(tab==='employees')Promise.resolve(loadEmployees()).finally(done);if(tab==='templates')Promise.resolve(loadTemplates()).finally(done);if(tab==='schedules')Promise.resolve(loadWeeklyPlan()).finally(done);if(tab==='registrationSettings')Promise.resolve(loadRegistrationWindow()).finally(done);if(tab==='registrations')Promise.all([loadRegistrations(),loadScheduleRequests()]).finally(done);if(tab==='leaves')Promise.resolve(loadLeaves()).finally(done);if(tab==='devices')Promise.resolve(loadDevices()).finally(done);if(tab==='store')Promise.resolve(loadStore()).finally(done);if(tab==='audit')Promise.resolve(loadAudit()).finally(done);if(tab==='bonuses')Promise.resolve(loadBonusManagement()).finally(done);if(tab==='managerPermissions')Promise.resolve(loadManagerPermissions()).finally(done)}
  if(!opts.skipPersist)saveUiState()}
 function ensureEmployeePrivateFields(){
  const phoneField=el('editEmployeePhone')?.closest('.field');if(!phoneField||el('editEmployeeAddress'))return;
@@ -4088,7 +4089,7 @@ let weeklyPlanItems=[];let currentAdminTab='employees';
 
 function registrationWeekValue(){return mondayOfWeek(dateAdd(localToday(),7))}
 function registrationDayName(day){return ['Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy','Chủ Nhật'][Number(day)-1]||'—'}
-function registrationWeekDisplayLabel(weekStart){const [year,month,day]=String(weekStart||'').split('-').map(Number);if(!year||!month||!day)return 'Tuần đã chọn';const ordinal=Math.floor((day-1)/7)+1;return `Tuần thứ ${ordinal} của tháng ${month}, ngày đầu tuần ${String(day).padStart(2,'0')}/${String(month).padStart(2,'0')}`}
+function registrationWeekDisplayLabel(weekStart){const [year,month,day]=String(weekStart||'').split('-').map(Number);if(!year||!month||!day)return {week:'Tuần đã chọn',date:'Ngày đầu tuần —'};const ordinal=Math.floor((day-1)/7)+1;return {week:`Tuần thứ ${ordinal} của tháng ${month}/${year}`,date:`Ngày đầu tuần ${String(day).padStart(2,'0')}/${String(month).padStart(2,'0')}`}}
 function registrationWindowLabel(status,openAt,closeAt){const now=Date.now(),o=openAt?new Date(openAt).getTime():0,c=closeAt?new Date(closeAt).getTime():0;if(status==='finalized')return ['Đã tự chốt','ok'];if(!openAt||!closeAt)return ['Chưa cài','wait'];if(now<o)return ['Chưa mở','info'];if(now<=c)return ['Đang mở','ok'];if(status==='closed')return ['Đã đóng · đang tự chốt','info'];return ['Đang tự chốt','wait']}
 async function loadRegistrationWindow(targetWeekStart=null){
  if(profile?.role!=='owner')return;
@@ -4100,13 +4101,17 @@ async function loadRegistrationWindow(targetWeekStart=null){
   weekInput.value=normalizeMondayInput(targetWeekStart||weekInput.value||registrationWeekValue());
  }
  const targetWeek=weekInput?.value||currentWeek;
+ const weekLoadingLabel=registrationWeekDisplayLabel(targetWeek),statusTarget=el('registrationWindowStatus');
+ if(statusTarget){statusTarget.innerHTML=`<span class="registration-status-week">${escapeHtml(weekLoadingLabel.week)}</span><span class="registration-status-detail">${escapeHtml(weekLoadingLabel.date)} · Đang tải</span>`;statusTarget.className='badge info registration-status-badge'}
  msg.innerHTML='<div class="notice info">Đang tải mẫu đăng ký và tình trạng vị trí…</div>';
  const {data,error}=await sb.rpc('get_shift_registration_recurring_rule');
- if(error){msg.innerHTML='<div class="notice warn">Chưa thể tải mẫu đăng ký. '+escapeHtml(error.message||'')+'</div>';return}
+ if(error){if(statusTarget){statusTarget.innerHTML=`<span class="registration-status-week">${escapeHtml(weekLoadingLabel.week)}</span><span class="registration-status-detail">${escapeHtml(weekLoadingLabel.date)} · Không tải được</span>`;statusTarget.className='badge wait registration-status-badge'}msg.innerHTML='<div class="notice warn">Chưa thể tải mẫu đăng ký. '+escapeHtml(error.message||'')+' Không lưu giá trị mặc định khi dữ liệu chưa tải xong.</div>';return}
  if(!data){
-  el('registrationWindowOpenDay').value='1';el('registrationWindowOpenTime').value='09:00';el('registrationWindowCloseDay').value='2';el('registrationWindowCloseTime').value='18:00';el('registrationAutoOpen').checked=true;el('registrationAutoApprove').checked=true;
-  el('registrationWindowStatus').textContent=`${registrationWeekDisplayLabel(targetWeek)}: Chưa cài`;el('registrationWindowStatus').className='badge wait';
-  msg.innerHTML='<div class="notice info">Chưa cài mẫu tự động. Hãy chọn ngày/giờ và lưu cài đặt; mở thủ công chỉ dùng sau khi đã có mẫu.</div>';
+  const windowResult=await sb.rpc('get_shift_registration_window',{p_week_start:targetWeek});
+  if(windowResult.error){msg.innerHTML='<div class="notice warn"><b>Không tải được mẫu hoặc trạng thái tuần.</b> '+escapeHtml(windowResult.error.message||'')+' Không lưu các giá trị mặc định khi chưa xác minh chi nhánh.</div>';return}
+  const weekLabel=registrationWeekDisplayLabel(targetWeek),w=windowResult.data||null,[windowLabel,tone]=registrationWindowLabel(w?.status,w?.open_at,w?.close_at),statusText=w?.status?windowLabel:'Chưa xác định trạng thái';
+  el('registrationWindowStatus').innerHTML=`<span class="registration-status-week">${escapeHtml(weekLabel.week)}</span><span class="registration-status-detail">${escapeHtml(weekLabel.date)} · ${escapeHtml(statusText)}</span>`;el('registrationWindowStatus').className='badge '+(w?.status?tone:'wait')+' registration-status-badge';
+  msg.innerHTML=`<div class="notice warn"><b>Không tìm thấy mẫu lặp đang bật cho chi nhánh mà hồ sơ đang truy vấn.</b> Trạng thái cửa sổ tuần được kiểm tra riêng: ${escapeHtml(statusText)}${w?.open_at&&w?.close_at?' · '+new Date(w.open_at).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'})+' → '+new Date(w.close_at).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}):''}. Điều này chưa chứng minh mẫu cũ đã bị xóa. Không lưu các ô ngày/giờ trống; hãy xác minh đúng chi nhánh trước khi cập nhật mẫu.</div>`;
   return;
  }
  el('registrationWindowOpenDay').value=String(data.open_weekday);el('registrationWindowOpenTime').value=String(data.open_time).slice(0,5);el('registrationWindowCloseDay').value=String(data.close_weekday);el('registrationWindowCloseTime').value=String(data.close_time).slice(0,5);el('registrationAutoOpen').checked=data.auto_open!==false;el('registrationAutoApprove').checked=data.auto_approve!==false;
@@ -4119,7 +4124,7 @@ async function loadRegistrationWindow(targetWeekStart=null){
   w=result.data||null;
  }
  const targetLabel=prettyDate(targetWeek),weekDisplayLabel=registrationWeekDisplayLabel(targetWeek),[label,tone]=registrationWindowLabel(w?.status,w?.open_at,w?.close_at),status=el('registrationWindowStatus');
- status.textContent=`${weekDisplayLabel}: ${label}`;status.className='badge '+tone;
+ status.innerHTML=`<span class="registration-status-week">${escapeHtml(weekDisplayLabel.week)}</span><span class="registration-status-detail">${escapeHtml(weekDisplayLabel.date)} · ${escapeHtml(label)}</span>`;status.className='badge '+tone+' registration-status-badge';
  let slotSummary='Chưa có cửa sổ đăng ký cho tuần đã chọn.',openSlotCount=null;
  if(w){
   const {count,error:slotError}=await sb.from('work_schedules').select('id',{count:'exact',head:true}).eq('store_id',getActiveStoreId()).eq('status','open').is('employee_id',null).gte('work_date',targetWeek).lt('work_date',dateAdd(targetWeek,7));
@@ -4129,7 +4134,7 @@ async function loadRegistrationWindow(targetWeekStart=null){
    ?'Không có vị trí ca đang mở và chưa xếp nhân viên; nhân viên sẽ chưa thấy ca để đăng ký.'
    :`Có ${openSlotCount} vị trí ca đang mở, chưa xếp nhân viên.`;
  }
- msg.innerHTML=`<div class="muted"><b>Lịch tự động:</b> ${escapeHtml(registrationDayName(data.open_weekday))} ${escapeHtml(String(data.open_time).slice(0,5))} → ${escapeHtml(registrationDayName(data.close_weekday))} ${escapeHtml(String(data.close_time).slice(0,5))} · <b>${escapeHtml(weekDisplayLabel)}</b></div><div class="muted ui-mt-4">${w?.open_at&&w?.close_at?'Cửa sổ tuần này: '+new Date(w.open_at).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'})+' → '+new Date(w.close_at).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}):'Chưa tạo cửa sổ cho tuần đã chọn.'}</div><div class="notice ${w?.status==='open'&&openSlotCount===0?'warn':'info'} ui-mt-8">${escapeHtml(slotSummary)}</div><div class="muted ui-mt-4">Lịch mở tự động được xử lý nền mỗi phút theo giờ Việt Nam. Cần bật pg_cron trong Supabase và chạy migration tự động đăng ký ca đi kèm. Mở thủ công chỉ tác động tuần đã chọn; không đổi mẫu lặp.</div>`;
+ msg.innerHTML=`<div class="muted"><b>Lịch tự động:</b> ${escapeHtml(registrationDayName(data.open_weekday))} ${escapeHtml(String(data.open_time).slice(0,5))} → ${escapeHtml(registrationDayName(data.close_weekday))} ${escapeHtml(String(data.close_time).slice(0,5))} · <b>${escapeHtml(weekDisplayLabel.week)}</b></div><div class="muted ui-mt-4">${w?.open_at&&w?.close_at?'Cửa sổ tuần này: '+new Date(w.open_at).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'})+' → '+new Date(w.close_at).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}):'Chưa tạo cửa sổ cho tuần đã chọn.'}</div><div class="notice ${w?.status==='open'&&openSlotCount===0?'warn':'info'} ui-mt-8">${escapeHtml(slotSummary)}</div><div class="muted ui-mt-4">Lịch mở tự động được xử lý nền mỗi phút theo giờ Việt Nam. Cần bật pg_cron trong Supabase và chạy migration tự động đăng ký ca đi kèm. Mở thủ công chỉ tác động tuần đã chọn; không đổi mẫu lặp.</div>`;
 }
 async function saveRegistrationWindow(){
  if(profile?.role!=='owner')return;
@@ -4866,8 +4871,7 @@ async function loadCurrentViewData(){
   }else if(view==='attendance'){
     adminAttendanceDate=adminAttendanceDate||localToday();adminAttendanceWindowStart=adminAttendanceWindowStart||mondayOfWeek(adminAttendanceDate);renderScheduleForKind('attendance');
   }else if(view==='salary'){
-    if(role==='owner')await loadOwnerPayrollMonth(initOwnerPayrollMonth());
-    else if(role==='manager')await loadManagerPayrollPeriods();
+    if(role==='owner'||(role==='manager'&&hasManagerPermission('payroll_view')))await loadOwnerPayrollMonth(initOwnerPayrollMonth());
   }
 }
 
@@ -5913,12 +5917,13 @@ function exportOwnerMonthlyPayroll(){
  const summary=[['BÁO CÁO LƯƠNG HONGCHA'],['Tháng',report.month],['Phạm vi','Truy vấn trực tiếp · không tạo kỳ lương'],['Tổng lương dự kiến',report.rows.reduce((n,x)=>n+Number(x.amount||0),0)],['Tổng giờ công',report.rows.reduce((n,x)=>n+Number(x.minutes||0),0)/60],['Tổng số ca',report.rows.reduce((n,x)=>n+Number(x.shifts||0),0)],[],['Ghi chú','Lương giờ công + thưởng đã duyệt − phạt đã duyệt − tạm ứng đã duyệt. Chỉ gồm các khoản điều chỉnh đã ghi nhận trong tháng.']];
  const emp=[['Nhân viên','Số ca checkout','Giờ công','Đơn giá/giờ','Lương giờ công','Thưởng đã duyệt','Phạt đã duyệt','Ứng lương đã duyệt','Tổng dự kiến'],...report.rows.map(x=>[x.name,x.shifts,x.minutes/60,x.rate,money(x.gross),money(x.bonus),money(x.penalty),money(x.advance),money(x.amount)])];
  const daily=[['Ngày','Số ca','Giờ công','Tiền công'],...report.days.map(([date,x])=>[date,x.shifts,x.minutes/60,money(x.amount)])];
- const ad=[['Nhân viên','Loại','Số tiền','Lý do','Ngày ghi nhận'],...report.adjustments.map(x=>[x.employee_name,({bonus:'Thưởng',penalty:'Phạt',advance:'Tạm ứng'}[x.adjustment_type]||x.adjustment_type),money(x.amount),x.reason||'',x.created_at||''])];
+ const ad=[['Nhân viên','Loại','Số tiền','Lý do','Ngày áp dụng'],...report.adjustments.map(x=>[x.employee_name,({bonus:'Thưởng',penalty:'Phạt',advance:'Tạm ứng'}[x.adjustment_type]||x.adjustment_type),money(x.amount),x.reason||'',x.effective_date||''])];
  const blob=makeXlsxFile([buildXlsxSheet('Tổng quan',summary),buildXlsxSheet('Theo nhân viên',emp),buildXlsxSheet('Theo ngày',daily),buildXlsxSheet('Điều chỉnh',ad)]);
  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='HongCha_BaoCaoLuong_'+report.month+'.xlsx';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Đã xuất file Excel báo cáo tháng.');
 }
 async function loadOwnerPayrollMonth(month){
- if(profile?.role!=='owner'||!sb)return;
+ const canViewPayroll=profile?.role==='owner'||(profile?.role==='manager'&&hasManagerPermission('payroll_view'));
+ if(!canViewPayroll||!sb)return;
  const range=salaryMonthDate(month),target=el('ownerPayrollMonthResult'),token=++ownerPayrollMonthLoadToken;
  if(!range||!target)return;
  target.innerHTML='<div class="notice info">Đang truy vấn dữ liệu lương tháng '+escapeHtml(month)+'…</div>';
@@ -5927,7 +5932,7 @@ async function loadOwnerPayrollMonth(month){
    sb.from('profiles').select('id,full_name,hourly_rate').eq('store_id',storeId).eq('role','employee').order('full_name'),
    sb.from('stores').select('hourly_default_rate').eq('id',storeId).single(),
    sb.from('attendance').select('id,employee_id,worked_minutes,check_in,check_out,profiles:employee_id(full_name,hourly_rate),work_schedules:schedule_id!inner(work_date,start_time,end_time,status,store_id)').eq('work_schedules.store_id',storeId).gte('work_schedules.work_date',range.start).lt('work_schedules.work_date',range.end).neq('work_schedules.status','cancelled').not('check_out','is',null).order('work_schedules(work_date)',{ascending:true}),
-   sb.from('payroll_adjustments').select('id,employee_id,amount,adjustment_type,reason,created_at,profiles:employee_id(full_name)').gte('created_at',range.start+'T00:00:00+07:00').lt('created_at',range.end+'T00:00:00+07:00').eq('status','approved').not('payroll_period_id','is',null)
+   sb.from('payroll_adjustments').select('id,employee_id,amount,adjustment_type,reason,created_at,effective_date,profiles:employee_id(full_name)').eq('origin_store_id',storeId).gte('effective_date',range.start).lt('effective_date',range.end).eq('status','approved')
  ]);
  if(token!==ownerPayrollMonthLoadToken)return;
  if(employeeError||storeError||attendanceError||adjErr){
@@ -5948,19 +5953,19 @@ async function loadOwnerPayrollMonth(month){
  });
  const adjustmentRows=[];
  (monthAdjs||[]).forEach(ad=>{
-   const emp=employeeMap.get(ad.employee_id);
-   if(!emp)return;
+   let emp=employeeMap.get(ad.employee_id);
+   if(!emp){const person=ad.profiles||{};emp={id:ad.employee_id,name:person.full_name||'Nhân viên',rate:fallbackRate,minutes:0,gross:0,amount:0,bonus:0,penalty:0,advance:0,shifts:0};employeeMap.set(ad.employee_id,emp)}
    const amount=Math.max(0,Number(ad.amount||0));
    if(ad.adjustment_type==='bonus'){emp.bonus+=amount;emp.amount+=amount}
    else if(ad.adjustment_type==='penalty'){emp.penalty+=amount;emp.amount-=amount}
    else if(ad.adjustment_type==='advance'){emp.advance+=amount;emp.amount-=amount}
-   adjustmentRows.push({employee_id:ad.employee_id,employee_name:emp.name,adjustment_type:ad.adjustment_type,amount,reason:ad.reason,created_at:ad.created_at});
+ adjustmentRows.push({employee_id:ad.employee_id,employee_name:emp.name,adjustment_type:ad.adjustment_type,amount,reason:ad.reason,created_at:ad.created_at,effective_date:ad.effective_date});
  });
  const rows=[...employeeMap.values()].sort((a,b)=>b.amount-a.amount),days=[...dailyMap.entries()].sort(([a],[b])=>a.localeCompare(b));
  const totalMinutes=rows.reduce((sum,x)=>sum+x.minutes,0),totalAmount=rows.reduce((sum,x)=>sum+x.amount,0),totalShifts=rows.reduce((sum,x)=>sum+x.shifts,0),hours=minutes=>(Number(minutes||0)/60).toLocaleString('vi-VN',{maximumFractionDigits:2})+' giờ';
  ownerMonthlyPayrollExport={month,rows,days,adjustments:adjustmentRows};
  const adjLabel={bonus:'Thưởng',penalty:'Phạt',advance:'Tạm ứng'};
- target.innerHTML=`<div class="notice info"><b>Báo cáo truy vấn · chỉ đọc.</b> Tháng ${escapeHtml(month)} được tổng hợp trực tiếp từ giờ công đã checkout, đơn giá hiện tại và các khoản điều chỉnh đã duyệt ghi nhận trong tháng. Không tạo kỳ lương, không chốt lương, không phát sinh phiếu.</div><div class="payroll-kpis"><div class="payroll-kpi"><b>${money(totalAmount)}</b><span>TỔNG LƯƠNG DỰ KIẾN SAU CỘNG/TRỪ</span></div><div class="payroll-kpi"><b>${hours(totalMinutes)}</b><span>TỔNG GIỜ CÔNG</span></div><div class="payroll-kpi"><b>${totalShifts}</b><span>SỐ CA ĐÃ CHECKOUT</span></div></div><details class="detail-card payroll-collapsible"><summary><b>Bảng lương dự kiến theo nhân viên</b><span>Mở danh sách nhân viên</span></summary><div class="stack ui-mt-10">${rows.length?rows.map(x=>`<div class="payroll-run"><div><div class="name">${escapeHtml(x.name)}</div><div class="meta">${x.shifts} ca · ${hours(x.minutes)} · ${money(x.rate)}/giờ<br>Lương công ${money(x.gross)} · Thưởng +${money(x.bonus)} · Phạt −${money(x.penalty)} · Ứng −${money(x.advance)}</div></div><div class="amount">${money(x.amount)}<small>DỰ KIẾN</small></div></div>`).join(''):'<div class="empty">Chưa có nhân viên trong cửa hàng.</div>'}</div></details><details class="detail-card payroll-collapsible"><summary><b>Tiền công theo ngày</b><span>Mở chi tiết theo ngày</span></summary><div class="stack ui-mt-10">${days.length?days.map(([date,x])=>`<div class="detail-row"><span>${escapeHtml(payrollDateLabel(date))}<br>${x.shifts} ca · ${hours(x.minutes)}</span><b>${money(x.amount)}</b></div>`).join(''):'<div class="empty">Tháng này chưa có ca đã checkout.</div>'}</div></details><div class="detail-card"><b>Các khoản điều chỉnh đã duyệt</b><div class="stack ui-mt-10">${adjustmentRows.length?adjustmentRows.map(x=>`<div class="detail-row"><span>${escapeHtml(x.employee_name)}<br>${escapeHtml(adjLabel[x.adjustment_type]||x.adjustment_type)} · ${escapeHtml(x.reason||'Không có lý do')}<br><small>${escapeHtml((x.created_at||'').slice(0,10))}</small></span><b>${x.adjustment_type==='bonus'?'+':'−'}${money(x.amount)}</b></div>`).join(''):'<div class="empty">Không có khoản thưởng, phạt hoặc tạm ứng đã duyệt được ghi nhận trong tháng này.</div>'}</div></div><button class="btn primary ui-w-full" type="button" onclick="exportOwnerMonthlyPayroll()">↧ Xuất báo cáo tháng (Excel)</button><div class="muted ui-mt-4">Xuất file CSV mở được bằng Excel. Báo cáo luôn truy vấn lại dữ liệu hiện hành khi đổi tháng; không cần tạo hay lưu kỳ lương.</div>`;
+ target.innerHTML=`<div class="notice info"><b>Báo cáo truy vấn · chỉ đọc.</b> Tháng ${escapeHtml(month)} được tổng hợp trực tiếp từ giờ công đã checkout và các khoản cộng/trừ đã duyệt theo ngày áp dụng. Không tạo kỳ lương, không chốt lương, không phát sinh phiếu. Các khoản thưởng tự động chỉ hiện khi đã được ghi nhận thành phiếu.</div><div class="payroll-kpis"><div class="payroll-kpi"><b>${money(totalAmount)}</b><span>TỔNG LƯƠNG DỰ KIẾN SAU CỘNG/TRỪ</span></div><div class="payroll-kpi"><b>${hours(totalMinutes)}</b><span>TỔNG GIỜ CÔNG</span></div><div class="payroll-kpi"><b>${totalShifts}</b><span>SỐ CA ĐÃ CHECKOUT</span></div></div><details class="detail-card payroll-collapsible"><summary><b>Bảng lương dự kiến theo nhân viên</b><span>Mở danh sách nhân viên</span></summary><div class="stack ui-mt-10">${rows.length?rows.map(x=>`<div class="payroll-run"><div><div class="name">${escapeHtml(x.name)}</div><div class="meta">${x.shifts} ca · ${hours(x.minutes)} · ${money(x.rate)}/giờ<br>Lương công ${money(x.gross)} · Thưởng +${money(x.bonus)} · Phạt −${money(x.penalty)} · Ứng −${money(x.advance)}</div></div><div class="amount">${money(x.amount)}<small>DỰ KIẾN</small></div></div>`).join(''):'<div class="empty">Chưa có nhân viên trong cửa hàng.</div>'}</div></details><details class="detail-card payroll-collapsible"><summary><b>Tiền công theo ngày</b><span>Mở chi tiết theo ngày</span></summary><div class="stack ui-mt-10">${days.length?days.map(([date,x])=>`<div class="detail-row"><span>${escapeHtml(payrollDateLabel(date))}<br>${x.shifts} ca · ${hours(x.minutes)}</span><b>${money(x.amount)}</b></div>`).join(''):'<div class="empty">Tháng này chưa có ca đã checkout.</div>'}</div></details><div class="detail-card"><b>Các khoản điều chỉnh đã duyệt</b><div class="stack ui-mt-10">${adjustmentRows.length?adjustmentRows.map(x=>`<div class="detail-row"><span>${escapeHtml(x.employee_name)}<br>${escapeHtml(adjLabel[x.adjustment_type]||x.adjustment_type)} · ${escapeHtml(x.reason||'Không có lý do')}<br><small>${escapeHtml(x.effective_date||'')}</small></span><b>${x.adjustment_type==='bonus'?'+':'−'}${money(x.amount)}</b></div>`).join(''):'<div class="empty">Không có khoản thưởng, phạt hoặc tạm ứng đã duyệt được ghi nhận trong tháng này.</div>'}</div></div><button class="btn primary ui-w-full" type="button" onclick="exportOwnerMonthlyPayroll()">↧ Xuất báo cáo tháng (Excel)</button><div class="muted ui-mt-4">Tệp Excel chứa tổng quan, bảng nhân viên, tiền công theo ngày và khoản điều chỉnh. Mỗi lần đổi tháng, dữ liệu được truy vấn lại; không cần tạo/lưu kỳ lương.</div>`;
 }
 async function createPayrollPeriod(){
  if(profile?.role!=='owner'){toast('Chỉ Owner được quản lý kỳ lương.');return}
@@ -7043,5 +7048,17 @@ body.data-fetching .admin-content.open .admin-pane.active>.card,body.data-fetchi
  #directScheduleModal .schedule-template-capacity{grid-column:3;grid-row:1;margin:0}
  #directScheduleModal .schedule-person-choice{grid-template-columns:20px 32px minmax(0,1fr) auto}
 }
+</style>
+<style id="v84-payroll-registration-refinement">
+#registrationWindowStatus.registration-status-badge{display:flex;flex-direction:column;align-items:flex-start;gap:3px;max-width:min(62%,260px);white-space:normal;line-height:1.25;padding:8px 10px;text-align:left}
+.registration-status-week{display:block;font-size:12px;font-weight:800;line-height:1.25}
+.registration-status-detail{display:block;font-size:10px;font-weight:650;line-height:1.3;opacity:.9}
+.settings-toggle-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.settings-toggle-card{display:grid;grid-template-columns:18px minmax(0,1fr);align-items:center;gap:9px;padding:9px 10px;min-width:0;border:1px solid var(--line);border-radius:12px;background:#fff}
+.settings-toggle-card>input{width:17px;height:17px;min-width:17px;margin:0;accent-color:var(--brand)}
+.settings-toggle-card>span{min-width:0}
+.settings-toggle-card b{display:block;font-size:12px;line-height:1.3}
+.settings-toggle-card small{display:block;margin-top:3px;font-size:10px;line-height:1.35;color:var(--muted)}
+@media(max-width:520px){.settings-toggle-grid{grid-template-columns:1fr;gap:6px}.settings-toggle-card{grid-template-columns:18px minmax(0,1fr);padding:8px 9px}.settings-toggle-card small{margin-top:2px}.registration-status-week{font-size:11px}}
 </style>
 </body></html>
