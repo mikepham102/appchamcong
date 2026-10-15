@@ -5960,7 +5960,7 @@ async function loadOwnerPayrollMonth(month){
  const totalMinutes=rows.reduce((sum,x)=>sum+x.minutes,0),totalAmount=rows.reduce((sum,x)=>sum+x.amount,0),totalShifts=rows.reduce((sum,x)=>sum+x.shifts,0),hours=minutes=>(Number(minutes||0)/60).toLocaleString('vi-VN',{maximumFractionDigits:2})+' giờ';
  ownerMonthlyPayrollExport={month,rows,days,adjustments:adjustmentRows};
  const adjLabel={bonus:'Thưởng',penalty:'Phạt',advance:'Tạm ứng'};
- target.innerHTML=`<div class="notice info"><b>Báo cáo truy vấn · chỉ đọc.</b> Tháng ${escapeHtml(month)} được tổng hợp trực tiếp từ giờ công đã checkout, đơn giá hiện tại và các khoản điều chỉnh đã duyệt ghi nhận trong tháng. Không tạo kỳ lương, không chốt lương, không phát sinh phiếu.</div><div class="payroll-kpis"><div class="payroll-kpi"><b>${money(totalAmount)}</b><span>TỔNG LƯƠNG DỰ KIẾN SAU CỘNG/TRỪ</span></div><div class="payroll-kpi"><b>${hours(totalMinutes)}</b><span>TỔNG GIỜ CÔNG</span></div><div class="payroll-kpi"><b>${totalShifts}</b><span>SỐ CA ĐÃ CHECKOUT</span></div></div><div class="detail-card"><b>Bảng lương dự kiến theo nhân viên</b><div class="stack ui-mt-10">${rows.length?rows.map(x=>`<div class="payroll-run"><div><div class="name">${escapeHtml(x.name)}</div><div class="meta">${x.shifts} ca · ${hours(x.minutes)} · ${money(x.rate)}/giờ<br>Lương công ${money(x.gross)} · Thưởng +${money(x.bonus)} · Phạt −${money(x.penalty)} · Ứng −${money(x.advance)}</div></div><div class="amount">${money(x.amount)}<small>DỰ KIẾN</small></div></div>`).join(''):'<div class="empty">Chưa có nhân viên trong cửa hàng.</div>'}</div></div><div class="detail-card"><b>Tiền công theo ngày</b><div class="stack ui-mt-10">${days.length?days.map(([date,x])=>`<div class="detail-row"><span>${escapeHtml(payrollDateLabel(date))}<br>${x.shifts} ca · ${hours(x.minutes)}</span><b>${money(x.amount)}</b></div>`).join(''):'<div class="empty">Tháng này chưa có ca đã checkout.</div>'}</div></div><div class="detail-card"><b>Các khoản điều chỉnh đã duyệt</b><div class="stack ui-mt-10">${adjustmentRows.length?adjustmentRows.map(x=>`<div class="detail-row"><span>${escapeHtml(x.employee_name)}<br>${escapeHtml(adjLabel[x.adjustment_type]||x.adjustment_type)} · ${escapeHtml(x.reason||'Không có lý do')}<br><small>${escapeHtml((x.created_at||'').slice(0,10))}</small></span><b>${x.adjustment_type==='bonus'?'+':'−'}${money(x.amount)}</b></div>`).join(''):'<div class="empty">Không có khoản thưởng, phạt hoặc tạm ứng đã duyệt được ghi nhận trong tháng này.</div>'}</div></div><button class="btn primary ui-w-full" type="button" onclick="exportOwnerMonthlyPayroll()">↧ Xuất báo cáo tháng (Excel)</button><div class="muted ui-mt-4">Xuất file CSV mở được bằng Excel. Báo cáo luôn truy vấn lại dữ liệu hiện hành khi đổi tháng; không cần tạo hay lưu kỳ lương.</div>`;
+ target.innerHTML=`<div class="notice info"><b>Báo cáo truy vấn · chỉ đọc.</b> Tháng ${escapeHtml(month)} được tổng hợp trực tiếp từ giờ công đã checkout, đơn giá hiện tại và các khoản điều chỉnh đã duyệt ghi nhận trong tháng. Không tạo kỳ lương, không chốt lương, không phát sinh phiếu.</div><div class="payroll-kpis"><div class="payroll-kpi"><b>${money(totalAmount)}</b><span>TỔNG LƯƠNG DỰ KIẾN SAU CỘNG/TRỪ</span></div><div class="payroll-kpi"><b>${hours(totalMinutes)}</b><span>TỔNG GIỜ CÔNG</span></div><div class="payroll-kpi"><b>${totalShifts}</b><span>SỐ CA ĐÃ CHECKOUT</span></div></div><details class="detail-card payroll-collapsible"><summary><b>Bảng lương dự kiến theo nhân viên</b><span>Mở danh sách nhân viên</span></summary><div class="stack ui-mt-10">${rows.length?rows.map(x=>`<div class="payroll-run"><div><div class="name">${escapeHtml(x.name)}</div><div class="meta">${x.shifts} ca · ${hours(x.minutes)} · ${money(x.rate)}/giờ<br>Lương công ${money(x.gross)} · Thưởng +${money(x.bonus)} · Phạt −${money(x.penalty)} · Ứng −${money(x.advance)}</div></div><div class="amount">${money(x.amount)}<small>DỰ KIẾN</small></div></div>`).join(''):'<div class="empty">Chưa có nhân viên trong cửa hàng.</div>'}</div></details><details class="detail-card payroll-collapsible"><summary><b>Tiền công theo ngày</b><span>Mở chi tiết theo ngày</span></summary><div class="stack ui-mt-10">${days.length?days.map(([date,x])=>`<div class="detail-row"><span>${escapeHtml(payrollDateLabel(date))}<br>${x.shifts} ca · ${hours(x.minutes)}</span><b>${money(x.amount)}</b></div>`).join(''):'<div class="empty">Tháng này chưa có ca đã checkout.</div>'}</div></details><div class="detail-card"><b>Các khoản điều chỉnh đã duyệt</b><div class="stack ui-mt-10">${adjustmentRows.length?adjustmentRows.map(x=>`<div class="detail-row"><span>${escapeHtml(x.employee_name)}<br>${escapeHtml(adjLabel[x.adjustment_type]||x.adjustment_type)} · ${escapeHtml(x.reason||'Không có lý do')}<br><small>${escapeHtml((x.created_at||'').slice(0,10))}</small></span><b>${x.adjustment_type==='bonus'?'+':'−'}${money(x.amount)}</b></div>`).join(''):'<div class="empty">Không có khoản thưởng, phạt hoặc tạm ứng đã duyệt được ghi nhận trong tháng này.</div>'}</div></div><button class="btn primary ui-w-full" type="button" onclick="exportOwnerMonthlyPayroll()">↧ Xuất báo cáo tháng (Excel)</button><div class="muted ui-mt-4">Xuất file CSV mở được bằng Excel. Báo cáo luôn truy vấn lại dữ liệu hiện hành khi đổi tháng; không cần tạo hay lưu kỳ lương.</div>`;
 }
 async function createPayrollPeriod(){
  if(profile?.role!=='owner'){toast('Chỉ Owner được quản lý kỳ lương.');return}
@@ -6710,29 +6710,46 @@ body.data-fetching .admin-content.open .admin-pane.active>.card,body.data-fetchi
   .schedule-browser-top .selected-date{font-size:19px!important;line-height:1.15!important}
   .schedule-browser-top .selected-date-sub{font-size:10px!important}
   .schedule-browser-top .date-nav{grid-template-columns:30px minmax(0,1fr) 30px!important;grid-template-rows:36px 34px!important;gap:5px!important}
-  .schedule-browser-top .owner-schedule-add{grid-column:1/-1!important;grid-row:1!important;width:100%!important;height:36px!important;min-height:36px!important;padding:0 8px!important;font-size:11px!important;border-radius:9px!important}
+  .schedule-browser-top .owner-schedule-add{grid-column:1/-1!important;grid-row:1!important;justify-self:end!important;width:max-content!important;max-width:118px!important;height:32px!important;min-height:32px!important;padding:0 9px!important;font-size:10.5px!important;border-radius:9px!important}
   .schedule-browser-top .date-nav .icon-button,.schedule-browser-top .date-nav .today-btn{height:34px!important;min-height:34px!important;border-radius:9px!important}
   .schedule-browser{padding:12px}
   #mainScheduleList .shift-card{margin-bottom:8px;border-radius:13px}
-  #mainScheduleList .shift-card-head{min-height:0;padding:10px 10px 8px 13px;gap:8px}
+  #mainScheduleList .shift-card-head{grid-template-columns:minmax(0,1fr) auto!important;min-height:0;padding:9px 10px 7px 13px;gap:4px 8px!important}
   #mainScheduleList .shift-card-title{font-size:14px;line-height:1.2}
   #mainScheduleList .shift-card-time{margin-left:2px;padding:2px 5px;font-size:10px}
   #mainScheduleList .shift-card-sub{margin-top:3px;font-size:10px}
-  #mainScheduleList .shift-card-head>div:last-child{max-width:42%}
-  #mainScheduleList .shift-card-head .btn{min-height:34px!important;height:34px!important;padding:0 10px!important;border-radius:9px!important;font-size:11px!important}
-  #mainScheduleList .employee-shift-person,#mainScheduleList .employee-shift-open{padding:8px 10px;gap:8px}
-  #mainScheduleList .person-avatar{width:34px;height:34px}
+  #mainScheduleList .shift-card-head>div:last-child{max-width:none!important;width:auto!important;justify-self:end!important;align-self:start}
+  #mainScheduleList .shift-card-head>div:last-child:has(.btn){display:flex!important;justify-content:flex-end!important}
+  #mainScheduleList .shift-card-head .btn{min-width:0!important;min-height:34px!important;height:34px!important;padding:0 10px!important;border-radius:9px!important;font-size:11px!important}
+  #mainScheduleList .shift-card-sub{grid-column:1}
+  #mainScheduleList .employee-shift-people{padding:7px 11px 6px 13px!important}
+  #mainScheduleList .employee-shift-people-title{margin-bottom:4px!important;font-size:9px!important}
+  #mainScheduleList .employee-shift-person{padding:5px 0!important;gap:8px!important}
+  #mainScheduleList .employee-shift-person-avatar{width:30px!important;height:30px!important}
+  #mainScheduleList .employee-shift-open{padding:7px 10px!important}
+  #mainScheduleList .schedule-status{min-height:26px!important;padding:4px 7px!important}
+  /* Compact the owner calendar's actual manager-shift rows. */
+  #mainScheduleList .manager-shift-head{grid-template-columns:minmax(0,1fr) auto!important;grid-template-rows:auto auto!important;align-items:center!important;gap:2px 8px!important;padding:8px 9px 7px 12px!important}
+  #mainScheduleList .manager-shift-title-line{grid-column:1!important;grid-row:1!important;display:flex;align-items:baseline;gap:6px;min-width:0}
+  #mainScheduleList .manager-shift-name{font-size:14px!important;line-height:1.15!important}
+  #mainScheduleList .manager-shift-time{margin:0!important;font-size:11px!important;line-height:1.15!important}
+  #mainScheduleList .manager-shift-capacity{grid-column:1!important;grid-row:2!important;margin:0!important;text-align:left!important;font-size:9px!important;line-height:1.2!important}
+  #mainScheduleList .manager-shift-actions{grid-column:2!important;grid-row:1/3!important;align-self:center!important;gap:4px!important}
+  #mainScheduleList .manager-shift-actions .schedule-add-btn{height:30px!important;min-height:30px!important;padding:0 8px!important;border-radius:8px!important;font-size:10px!important}
 
   /* Attendance: place the supplemental action directly below the name, compactly. */
-  #staffAttendanceContent .attendance-day-person{grid-template-columns:32px minmax(0,1fr) auto!important;grid-template-rows:auto auto;gap:4px 8px;padding:8px 10px}
-  #staffAttendanceContent .attendance-day-person>.person-avatar{grid-column:1;grid-row:1/3;width:32px;height:32px}
-  #staffAttendanceContent .attendance-day-person-main{grid-column:2;grid-row:1;align-self:end}
-  #staffAttendanceContent .attendance-day-person-name{font-size:12px}
-  #staffAttendanceContent .attendance-day-person-meta{font-size:9px}
-  #staffAttendanceContent .attendance-day-status{grid-column:3;grid-row:1;align-self:center}
-  #staffAttendanceContent .attendance-day-actions{grid-column:2/4;grid-row:2;justify-content:flex-start;padding:0!important}
-  #staffAttendanceContent .attendance-inline-action{height:28px!important;min-height:28px!important;padding:0 8px!important;font-size:9px!important;border-radius:8px!important}
-  #staffAttendanceContent .attendance-day-person:has(.attendance-day-actions:not(:empty)){padding-bottom:8px}
+  #adminAttendanceList .attendance-day-person{grid-template-columns:32px minmax(0,1fr) auto!important;grid-template-rows:auto auto!important;gap:3px 8px!important;padding:7px 10px!important}
+  #adminAttendanceList .attendance-day-person>.person-avatar{grid-column:1!important;grid-row:1/3!important;width:32px!important;height:32px!important}
+  #adminAttendanceList .attendance-day-person-main{display:contents!important}
+  #adminAttendanceList .attendance-day-person-name{grid-column:2!important;grid-row:1!important;align-self:center;font-size:12px!important}
+  #adminAttendanceList .attendance-day-person-meta{grid-column:2!important;grid-row:2!important;align-self:center;font-size:9px!important}
+  #adminAttendanceList .attendance-day-status{grid-column:2!important;grid-row:2!important;justify-self:start!important;align-self:center!important;text-align:left!important}
+  #adminAttendanceList .attendance-day-status:has(.attendance-status-meta){display:none!important}
+  #adminAttendanceList .attendance-day-actions{grid-column:3!important;grid-row:1!important;justify-content:flex-end!important;align-self:center!important;padding:0!important}
+  #adminAttendanceList .attendance-inline-action{height:27px!important;min-height:27px!important;padding:0 7px!important;font-size:9px!important;border-radius:8px!important}
+  #adminAttendanceList .attendance-day-person:has(.attendance-day-actions:not(:empty)){padding-bottom:7px}
+  #adminAttendanceList .attendance-day-person:has(.attendance-day-actions:empty) .attendance-day-status{grid-column:2/4!important;grid-row:2!important;justify-self:end!important}
+  #adminAttendanceList .attendance-day-person:has(.attendance-day-actions:empty) .attendance-day-status:has(.attendance-status-meta){display:flex!important}
 
   /* Salary: reserve enough room for native month controls and retain a clear label. */
   #ownerPayrollMonthPanel{padding:14px}
@@ -6764,4 +6781,17 @@ body.data-fetching .admin-content.open .admin-pane.active>.card,body.data-fetchi
 }
 </style>
 
+
+<style id="hongcha-v84-payroll-disclosures">
+.payroll-collapsible{padding:0!important;overflow:hidden}
+.payroll-collapsible>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;padding:11px 13px;cursor:pointer}
+.payroll-collapsible>summary::-webkit-details-marker{display:none}
+.payroll-collapsible>summary>b{font-size:14px;line-height:1.25}
+.payroll-collapsible>summary>span{flex:none;color:#1769AA;font-size:10px;font-weight:750}
+.payroll-collapsible>summary::after{content:"＋";color:#1769AA;font-size:15px;font-weight:800}
+.payroll-collapsible[open]>summary{border-bottom:1px solid #D8E4EF;background:#F7FAFD}
+.payroll-collapsible[open]>summary::after{content:"−"}
+.payroll-collapsible>.stack{padding:0 12px 12px}
+@media(max-width:699px){.payroll-collapsible>summary{min-height:44px;padding:9px 11px}.payroll-collapsible>summary>b{font-size:13px}.payroll-collapsible>.stack{padding:0 9px 9px}}
+</style>
 </body></html>
