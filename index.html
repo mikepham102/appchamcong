@@ -4651,6 +4651,7 @@ async function loadDevices(){
  const {data,error}=await sb.from('devices').select('id,device_key,device_name,platform,status,requested_at,last_seen_at,employee_id,profiles:employee_id!inner(full_name,email,store_id)').eq('profiles.store_id',getActiveStoreId()).order('requested_at',{ascending:false});
  if(error){el.innerHTML='<div class="notice warn">Không thể tải danh sách thiết bị. Vui lòng thử lại.</div>';return}
  const devices=data||[];
+ window.__adminDevices=devices;
  const counts={pending:0,approved:0,restricted:0};
  devices.forEach(x=>{if(x.status==='pending')counts.pending++;else if(x.status==='approved')counts.approved++;else if(x.status==='rejected'||x.status==='revoked')counts.restricted++;});
  const setText=(id,value)=>{const n=document.getElementById(id);if(n)n.textContent=String(value)};
@@ -4666,10 +4667,20 @@ async function loadDevices(){
    let actions='';
    if(x.status==='pending'&&profile.role==='owner') actions=`<div class="device-row-actions"><button class="btn green" onclick="reviewDevice('${x.id}','approved')">Duyệt</button><button class="btn danger" onclick="reviewDevice('${x.id}','rejected')">Từ chối</button></div>`;
    else if(x.status==='approved'&&profile.role==='owner') actions=`<div class="device-row-actions"><button class="btn danger" onclick="reviewDevice('${x.id}','revoked')">Thu hồi</button></div>`;
+   else if((x.status==='revoked'||x.status==='rejected')&&profile.role==='owner') actions=`<div class="device-row-actions"><button class="btn danger device-delete-inactive" onclick="deleteInactiveDevice('${x.id}')">Xóa thiết bị đã ngừng</button></div>`;
    return `<article class="device-row"><div class="device-person"><div class="device-avatar">${initials}</div><div class="device-person-copy"><b>${escapeHtml(x.profiles?.full_name||'Nhân viên')}</b><span>${escapeHtml(x.device_name||'Thiết bị')} · ${escapeHtml(x.platform||'')}</span><small>Mã ${escapeHtml(shortDeviceKey(x.device_key))} · ${escapeHtml(last)}</small></div></div><span class="badge ${tone} device-status">${label}</span>${actions}</article>`;
  }).join('');
 }
 async function reviewDevice(id,status){const action=status==='approved'?'approve':status==='rejected'?'reject':'revoke';if(profile?.role!=='owner'){toast('Chỉ Owner được quản lý thiết bị.');return}const reason=action==='reject'?(prompt('Lý do từ chối (có thể bỏ trống):','')??''):'';const {error}=await sb.rpc('review_attendance_device',{p_device_id:id,p_action:action,p_reason:reason});if(error){const raw=String(error.message||'');const friendly=raw.includes('NHAN_VIEN_DA_CO_THIET_BI_DUOC_DUYET')?'Nhân viên này đã có một thiết bị được duyệt. Nếu muốn đổi thiết bị, hãy thu hồi thiết bị đang được duyệt trước.':raw.includes('THIET_BI_DA_XU_LY')?'Yêu cầu thiết bị này đã được xử lý. Vui lòng làm mới danh sách.':raw.includes('THIET_BI_CHUA_DUOC_DUYET')?'Thiết bị này chưa được duyệt nên không thể thu hồi.':'Không thể cập nhật thiết bị. Vui lòng thử lại.';toast(friendly);return}toast(action==='approve'?'Đã duyệt thiết bị.':action==='reject'?'Đã từ chối thiết bị.':'Đã thu hồi thiết bị.');await loadDevices()}
+async function deleteInactiveDevice(id){
+ if(profile?.role!=='owner'){toast('Chỉ Owner được xóa thiết bị.');return}
+ const device=(window.__adminDevices||[]).find(x=>x.id===id);
+ const description=device?`${device.device_name||'Thiết bị'} của ${device.profiles?.full_name||'nhân viên này'}`:'thiết bị này';
+ if(!confirm(`Xóa ${description} khỏi danh sách? Chỉ thiết bị đã thu hồi/từ chối và chưa gắn với lịch sử chấm công mới được xóa. Nếu thiết bị đã có lịch sử, hệ thống sẽ giữ nguyên bản ghi.`))return;
+ const {data,error}=await sb.rpc('owner_delete_inactive_attendance_device',{p_device_id:id});
+ if(error){const raw=String(error.message||'');const friendly=raw.includes('DEVICE_ATTENDANCE_HISTORY')?'Không thể xóa vì thiết bị đã được ghi nhận trong lịch sử chấm công. Bản ghi được giữ để bảo toàn lịch sử; nhân viên có thể gửi yêu cầu liên kết lại bằng chính thiết bị đó.':raw.includes('DEVICE_NOT_INACTIVE')?'Chỉ xóa được thiết bị đã thu hồi hoặc bị từ chối.':raw.includes('DEVICE_NOT_FOUND')?'Thiết bị không còn trong danh sách. Hãy tải lại.':raw.includes('FORBIDDEN')?'Bạn không có quyền xóa thiết bị của chi nhánh này.':'Không thể xóa thiết bị. Vui lòng tải lại và thử lại.';toast(friendly);return}
+ toast('Đã xóa thiết bị khỏi danh sách. Nhân viên có thể đăng ký lại từ thiết bị đó.');await loadDevices();
+}
 function branchShortName(name){
  const raw=String(name||'Chi nhánh').trim().replace(/\s+/g,' ');
  return raw.replace(/^(chi nhánh|cửa hàng|hongcha|hongcha hrm)\s*[-–—:|]\s*/i,'').trim()||raw;
