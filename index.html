@@ -2780,7 +2780,7 @@ input:focus,select:focus,textarea:focus{
 <section class="view" id="profile">
 <header class="screen-header page-screen-header"><div><div class="eyebrow">CÁ NHÂN</div><h1 class="page-title">Tài khoản</h1><p class="page-sub">Thông tin cá nhân và thiết lập tài khoản.</p></div></header>
 <section class="device-setup-panel ui-hidden" id="employeeAccessSetup" aria-live="polite">
-<div class="device-setup-intro"><b>Đăng nhập thành công</b><span>Bạn có thể cập nhật hồ sơ bên dưới. Để mở Lịch, Đăng ký ca và Chấm công, hãy hoàn tất thiết lập thiết bị.</span></div>
+<div class="device-setup-intro"><b>Đăng nhập thành công</b><span>Hãy cập nhật hồ sơ bên dưới. Để mở được Lịch, Đăng ký ca và Chấm công, hãy hoàn tất thiết lập thiết bị và hồ sơ cá nhân.</span></div>
 <div class="device-setup-step"><div class="device-setup-step-head"><b>1. Đăng ký thiết bị</b><span class="badge info" id="employeeSetupDeviceStatus">Chưa đăng ký</span></div><p id="employeeSetupDeviceMessage">Owner cần duyệt thiết bị trước khi sử dụng các chức năng làm việc.</p><button class="btn primary" id="employeeSetupDeviceAction" onclick="registerDeviceAndRefresh()" type="button">Đăng ký thiết bị</button></div>
 <div class="device-setup-step"><div class="device-setup-step-head"><b>2. Cho phép vị trí</b><span class="badge info" id="employeeSetupGpsStatus">Chưa kiểm tra</span></div><p id="employeeSetupGpsMessage">Cho phép vị trí để hệ thống xác nhận khu vực khi bạn chấm công.</p><button class="btn light" id="employeeSetupGpsAction" onclick="requestGpsForSetup()" type="button">Cho phép truy cập vị trí</button></div>
 </section>
@@ -5138,7 +5138,7 @@ function renderEmployeeAccessSetup(access=employeeDeviceAccessState){
    pending:['Đang chờ duyệt','Yêu cầu đã gửi. Owner cần duyệt thiết bị trước khi mở lịch và chấm công.','Kiểm tra lại',refreshDeviceGate],
    rejected:['Bị từ chối',access.device?.rejected_reason||'Owner chưa duyệt thiết bị này. Bạn có thể gửi lại yêu cầu.','Gửi lại yêu cầu',registerDeviceAndRefresh],
    revoked:['Đã thu hồi','Thiết bị đã bị thu hồi. Gửi lại yêu cầu để Owner duyệt.','Yêu cầu liên kết lại',registerDeviceAndRefresh],
-   other_device_approved:['Thiết bị khác đã được duyệt','Tài khoản đang gắn với '+(access.approved?.device_name||'một thiết bị khác')+'. Hãy dùng thiết bị đó hoặc liên hệ Owner để đổi thiết bị.',null,null],
+   other_device_approved:['Tài khoản đã được duyệt ở thiết bị khác','Tài khoản đang gắn với '+(access.approved?.device_name||'một thiết bị khác')+'. Hãy dùng thiết bị đó đăng nhập hoặc liên hệ Owner để đổi thiết bị.',null,null],
    other_device_pending:['Thiết bị khác đang chờ duyệt','Tài khoản đã có yêu cầu trên '+(access.pending?.device_name||'thiết bị khác')+'. Hãy dùng thiết bị đó hoặc liên hệ Owner.',null,null],
    error:['Chưa kiểm tra được','Không thể xác nhận trạng thái thiết bị. '+(access.message||'Hãy thử lại.'),'Thử lại',refreshDeviceGate],
    not_registered:['Chưa đăng ký','Gửi yêu cầu để Owner xác nhận thiết bị này.','Đăng ký thiết bị',registerDeviceAndRefresh]
