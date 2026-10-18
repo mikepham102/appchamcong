@@ -2780,7 +2780,7 @@ input:focus,select:focus,textarea:focus{
 <section class="view" id="profile">
 <header class="screen-header page-screen-header"><div><div class="eyebrow">CÁ NHÂN</div><h1 class="page-title">Tài khoản</h1><p class="page-sub">Thông tin cá nhân và thiết lập tài khoản.</p></div></header>
 <section class="device-setup-panel ui-hidden" id="employeeAccessSetup" aria-live="polite">
-<div class="device-setup-intro"><b>Đăng nhập thành công</b><span>Hãy cập nhật hồ sơ bên dưới. Để mở được Lịch, Đăng ký ca và Chấm công, hãy hoàn tất thiết lập thiết bị và hồ sơ cá nhân.</span></div>
+<div class="device-setup-intro"><b>Đăng nhập thành công</b><span>Bạn có thể cập nhật hồ sơ bên dưới. Để mở Lịch, Đăng ký ca và Chấm công, hãy hoàn tất thiết lập thiết bị.</span></div>
 <div class="device-setup-step"><div class="device-setup-step-head"><b>1. Đăng ký thiết bị</b><span class="badge info" id="employeeSetupDeviceStatus">Chưa đăng ký</span></div><p id="employeeSetupDeviceMessage">Owner cần duyệt thiết bị trước khi sử dụng các chức năng làm việc.</p><button class="btn primary" id="employeeSetupDeviceAction" onclick="registerDeviceAndRefresh()" type="button">Đăng ký thiết bị</button></div>
 <div class="device-setup-step"><div class="device-setup-step-head"><b>2. Cho phép vị trí</b><span class="badge info" id="employeeSetupGpsStatus">Chưa kiểm tra</span></div><p id="employeeSetupGpsMessage">Cho phép vị trí để hệ thống xác nhận khu vực khi bạn chấm công.</p><button class="btn light" id="employeeSetupGpsAction" onclick="requestGpsForSetup()" type="button">Cho phép truy cập vị trí</button></div>
 </section>
@@ -2822,7 +2822,7 @@ input:focus,select:focus,textarea:focus{
 </div>
 </div>
 </div>
-<div class="modal" id="branchSwitcherModal"><div class="modalbox branch-switcher-modal"><div class="modal-head"><div><h2>Chọn chi nhánh</h2><div class="muted ui-small-sub">Chỉ Owner được chuyển chi nhánh. Mọi lần chuyển đều được máy chủ xác thực.</div></div><button class="modal-close" onclick="closeBranchSwitcher()" type="button">×</button></div><div class="stack ui-mt-14" id="branchSwitcherList"><div class="empty">Đang tải…</div></div></div></div><div class="modal" id="createBranchModal"><div class="modalbox branch-create-modal"><div class="modal-head"><div><h2>Tạo chi nhánh</h2><div class="muted ui-small-sub">Tạo cửa hàng mới ngay trong ứng dụng. Không cần SQL, GitHub hay Supabase thủ công.</div></div><button class="modal-close" onclick="closeCreateBranch()" type="button">×</button></div><div class="stack ui-mt-14"><div class="formgrid"><div class="field full"><label>Tên chi nhánh *</label><input id="newBranchName" maxlength="48" placeholder="Ví dụ: Nguyễn Trãi"/><div class="branch-name-hint">Nên đặt theo vị trí dễ nhận biết. Tên ngắn sẽ hiển thị đẹp hơn trên điện thoại.</div><div class="branch-name-examples"><span class="branch-name-example">Nguyễn Trãi</span><span class="branch-name-example">Củ Chi</span><span class="branch-name-example">Tân Phú</span><span class="branch-name-example">Phạm Văn Đồng</span></div></div><div class="field full"><label>Địa chỉ</label><input id="newBranchAddress" placeholder="Địa chỉ chi nhánh"/></div><div class="field"><label>Vĩ độ</label><input id="newBranchLat" type="number" step="any" placeholder="10.77…"/></div><div class="field"><label>Kinh độ</label><input id="newBranchLng" type="number" step="any" placeholder="106.68…"/></div></div><div class="notice info">Cấu hình vận hành của chi nhánh hiện tại sẽ được dùng làm mặc định (bán kính GPS, thời gian check-in, đơn giá mặc định và mẫu giờ đăng ký nếu có). Nhân viên, lịch, ca mẫu và dữ liệu lương <b>không bị sao chép</b>.</div><div id="createBranchMsg"></div></div><div class="modal-actions"><button class="btn light" onclick="closeCreateBranch()" type="button">Hủy</button><button class="btn primary" onclick="createBranch()" type="button">Tạo chi nhánh</button></div></div></div><div class="toast" id="toast"></div><script>
+<div class="modal" id="branchSwitcherModal"><div class="modalbox branch-switcher-modal"><div class="modal-head"><div><h2>Chọn chi nhánh</h2><div class="muted ui-small-sub">Chỉ chuyển được đến chi nhánh được cấp quyền; máy chủ xác nhận mỗi lần chuyển.</div></div><button class="modal-close" onclick="closeBranchSwitcher()" type="button">×</button></div><div class="stack ui-mt-14" id="branchSwitcherList"><div class="empty">Đang tải…</div></div></div></div><div class="modal" id="createBranchModal"><div class="modalbox branch-create-modal"><div class="modal-head"><div><h2>Tạo chi nhánh</h2><div class="muted ui-small-sub">Tạo cửa hàng mới ngay trong ứng dụng. Không cần SQL, GitHub hay Supabase thủ công.</div></div><button class="modal-close" onclick="closeCreateBranch()" type="button">×</button></div><div class="stack ui-mt-14"><div class="formgrid"><div class="field full"><label>Tên chi nhánh *</label><input id="newBranchName" maxlength="48" placeholder="Ví dụ: Nguyễn Trãi"/><div class="branch-name-hint">Nên đặt theo vị trí dễ nhận biết. Tên ngắn sẽ hiển thị đẹp hơn trên điện thoại.</div><div class="branch-name-examples"><span class="branch-name-example">Nguyễn Trãi</span><span class="branch-name-example">Củ Chi</span><span class="branch-name-example">Tân Phú</span><span class="branch-name-example">Phạm Văn Đồng</span></div></div><div class="field full"><label>Địa chỉ</label><input id="newBranchAddress" placeholder="Địa chỉ chi nhánh"/></div><div class="field"><label>Vĩ độ</label><input id="newBranchLat" type="number" step="any" placeholder="10.77…"/></div><div class="field"><label>Kinh độ</label><input id="newBranchLng" type="number" step="any" placeholder="106.68…"/></div></div><div class="notice info">Cấu hình vận hành của chi nhánh hiện tại sẽ được dùng làm mặc định (bán kính GPS, thời gian check-in, đơn giá mặc định và mẫu giờ đăng ký nếu có). Nhân viên, lịch, ca mẫu và dữ liệu lương <b>không bị sao chép</b>.</div><div id="createBranchMsg"></div></div><div class="modal-actions"><button class="btn light" onclick="closeCreateBranch()" type="button">Hủy</button><button class="btn primary" onclick="createBranch()" type="button">Tạo chi nhánh</button></div></div></div><div class="toast" id="toast"></div><script>
 
 let sb=null,session=null,profile=null,profileBankAccount=null,currentView='dashboard',loginMode='password',appBusy=false,currentWorkState=null;
 let employeeAccessRestricted=false,employeeProfileIncomplete=false,employeeProfilePendingRequest=null,employeeDeviceAccessState=null;
@@ -2838,7 +2838,7 @@ const UI_STATE_KEY='hongcha_hrm_ui_state_v21_3';
 let appHydratedUserId=null;
 const DEFAULT_SUPABASE_URL='https://qwrcjxicudxlspxqfjkj.supabase.co';
 const DEFAULT_SUPABASE_KEY='sb_publishable_YH3fxd3AUJu2p_ADijIpLQ_iuFvEKGk';
-const ROLE_LABEL={owner:'Chủ quán',manager:'Quản lý chi nhánh',employee:'Nhân viên'};
+const ROLE_LABEL={owner:'Chủ quán',manager:'Quản lý',employee:'Nhân viên'};
 let employeeSelectedDate=localToday(), employeeDayWindowStart=null, adminSelectedDate=localToday(), adminDayWindowStart=null, adminAttendanceDate=localToday(), adminAttendanceWindowStart=null, mainScheduleDate=localToday(), mainScheduleWindowStart=null;
 let mainScheduleWeekCountCache={};
 let mainScheduleWeekDataCache={};
@@ -3876,7 +3876,7 @@ function ensureManagerPermissionMarkup(){
  const groups=document.querySelector('.admin-groups');
  if(groups&&!el('managerPermissionsAdminLink'))groups.insertAdjacentHTML('beforeend',`<details class="admin-group"><summary><span class="admin-group-chevron">⌄</span><span class="admin-group-summary"><b>Phân quyền</b><small>Chọn chức năng Manager được phép sử dụng.</small></span></summary><div class="admin-group-items"><button class="admin-group-item" id="managerPermissionsAdminLink" data-admin-tab="managerPermissions" onclick="adminTab('managerPermissions',this)" type="button"><span class="admin-group-item-copy"><b>Quyền Manager</b><small>Bật/tắt quyền theo cửa hàng</small></span><span class="admin-group-arrow">›</span></button></div></details>`);
  const content=el('adminContent');
- if(content&&!el('adminManagerPermissions'))content.insertAdjacentHTML('beforeend',`<div class="admin-pane" id="adminManagerPermissions"><div class="card"><div class="row"><div><b>Quyền của Manager</b><div class="muted">Quyền áp dụng cho Manager trong cửa hàng hiện tại. Tắt quyền sẽ chặn chức năng qua policy/RPC đã tích hợp, không chỉ ẩn nút.</div></div><button class="btn light" onclick="loadManagerPermissions()" type="button">Tải lại</button></div><div class="stack ui-mt-10" id="managerPermissionList"><div class="muted">Đang tải quyền…</div></div><button class="btn primary ui-mt-10" id="saveManagerPermissionsButton" onclick="saveManagerPermissions()" type="button">Lưu quyền Manager</button><div class="ui-mt-9" id="managerPermissionsMsg"></div><div class="notice info ui-mt-10"><b>Owner-only:</b> tạo/tính/chỉnh sửa/chốt/trả bảng lương, đơn giá lương, cài đặt cửa hàng, quản lý chi nhánh và thiết bị. Manager chỉ được xem/xuất lương nếu bật quyền riêng.</div></div></div>`);
+ if(content&&!el('adminManagerPermissions'))content.insertAdjacentHTML('beforeend',`<div class="admin-pane" id="adminManagerPermissions"><div class="card"><div class="row"><div><b>Quyền chức năng Manager</b><div class="muted">Quyền chức năng áp dụng cho Manager tại chi nhánh đang chọn.</div></div><button class="btn light" onclick="loadManagerPermissions()" type="button">Tải lại</button></div><div class="stack ui-mt-10" id="managerPermissionList"><div class="muted">Đang tải quyền…</div></div><button class="btn primary ui-mt-10" id="saveManagerPermissionsButton" onclick="saveManagerPermissions()" type="button">Lưu quyền Manager</button><div class="ui-mt-9" id="managerPermissionsMsg"></div><div class="notice info ui-mt-10"><b>Owner-only:</b> tạo/tính/chỉnh sửa/chốt/trả bảng lương, đơn giá lương, cài đặt cửa hàng, quản lý chi nhánh và thiết bị. Manager chỉ được xem/xuất lương nếu bật quyền riêng.</div></div><div class="card ui-mt-10"><div class="row"><div><b>Chi nhánh được giao cho Manager</b><div class="muted">Mỗi Manager chỉ được chuyển đến các chi nhánh Owner giao. Quyền chức năng vẫn cài riêng cho từng chi nhánh.</div></div><button class="btn light" onclick="loadOwnerManagerBranches()" type="button">Tải lại</button></div><div class="stack ui-mt-10" id="managerBranchAssignments"><div class="muted">Đang tải danh sách Manager…</div></div><div class="ui-mt-9" id="managerBranchAssignmentsMsg"></div></div></div>`);
 }
 async function loadCurrentManagerPermissions(){
  if(!isBranchAdmin()){managerPermissionMap={};return}
@@ -3902,8 +3902,46 @@ async function loadManagerPermissions(){
  const permissions=Object.fromEntries((data||[]).map(row=>[row.permission_key,row.enabled===true]));
  target.innerHTML=MANAGER_PERMISSION_DEFS.map(item=>`<label class="item row" style="cursor:pointer;align-items:flex-start"><span><b>${escapeHtml(item.label)}</b><span class="muted" style="display:block;margin-top:4px">${escapeHtml(item.description)}</span></span><input type="checkbox" data-manager-permission="${item.key}" ${permissions[item.key]?'checked':''} style="width:20px;height:20px;flex:0 0 auto"/></label>`).join('');
  if(saveButton)saveButton.disabled=false;
- el('managerPermissionsMsg').innerHTML='<div class="muted">Thiết lập đang áp dụng cho Manager của cửa hàng này.</div>';
+ el('managerPermissionsMsg').innerHTML='<div class="muted">Thiết lập đang áp dụng cho Manager tại chi nhánh đang chọn.</div>';
+ await loadOwnerManagerBranches();
  return true;
+}
+async function loadOwnerManagerBranches(){
+ const target=el('managerBranchAssignments');
+ if(!target||profile?.role!=='owner'||!sb)return;
+ target.innerHTML='<div class="muted">Đang tải danh sách Manager và chi nhánh…</div>';
+ const {data:stores,error:storeError}=await sb.from('stores').select('id,name').order('name');
+ if(storeError){target.innerHTML='<div class="notice warn">Không tải được chi nhánh thuộc Owner.</div>';return}
+ const branchRows=stores||[],branchIds=branchRows.map(x=>x.id);
+ if(!branchIds.length){target.innerHTML='<div class="empty">Chưa có chi nhánh.</div>';return}
+ const {data:members,error}=await sb.from('store_memberships').select('user_id,store_id,role,is_active,profiles:user_id!inner(id,full_name,role,employment_status)').eq('role','manager').in('store_id',branchIds);
+ if(error){target.innerHTML='<div class="notice warn">Không tải được danh sách phân công Manager: '+escapeHtml(error.message||'')+'</div>';return}
+ const grouped=new Map();
+ (members||[]).forEach(row=>{
+  const person=Array.isArray(row.profiles)?row.profiles[0]:row.profiles;
+  if(!person||person.role!=='manager'||person.employment_status!=='active')return;
+  if(!grouped.has(row.user_id))grouped.set(row.user_id,{person,branches:new Set()});
+  if(row.is_active)grouped.get(row.user_id).branches.add(row.store_id);
+ });
+ const managers=[...grouped.entries()].sort((a,b)=>String(a[1].person.full_name||'').localeCompare(String(b[1].person.full_name||''),'vi'));
+ if(!managers.length){target.innerHTML='<div class="empty">Chưa có tài khoản Manager trong các chi nhánh của bạn. Hãy tạo hoặc chuyển một tài khoản sang vai trò Manager trước.</div>';return}
+ target.innerHTML=managers.map(([managerId,item])=>`<article class="detail-card" data-manager-branch-card="${escapeHtml(managerId)}"><div class="row"><div><b>${escapeHtml(item.person.full_name||'Manager')}</b><div class="muted">Chọn các chi nhánh được phép quản lý</div></div><button class="btn primary" type="button" onclick="saveManagerBranchAssignments('${escapeHtml(managerId)}',this)">Lưu chi nhánh</button></div><div class="stack ui-mt-9">${branchRows.map(branch=>`<label class="item row" style="cursor:pointer"><span>${escapeHtml(branchDisplayName(branch.name))}</span><input type="checkbox" data-manager-branch-choice="${escapeHtml(branch.id)}" ${item.branches.has(branch.id)?'checked':''} style="width:20px;height:20px;flex:0 0 auto"/></label>`).join('')}</div></article>`).join('');
+}
+async function saveManagerBranchAssignments(managerId,button){
+ if(profile?.role!=='owner'||!managerId)return;
+ const card=document.querySelector(`[data-manager-branch-card="${CSS.escape(managerId)}"]`);
+ if(!card)return;
+ const storeIds=[...card.querySelectorAll('[data-manager-branch-choice]:checked')].map(x=>x.dataset.managerBranchChoice);
+ setBusyButton(button,true,'Đang lưu…');
+ try{
+  const {error}=await sb.rpc('owner_set_manager_branches',{p_manager_id:managerId,p_store_ids:storeIds});
+  if(error)throw error;
+  el('managerBranchAssignmentsMsg').innerHTML='<div class="notice ok">Đã cập nhật các chi nhánh được giao cho Manager.</div>';
+  await loadOwnerManagerBranches();
+ }catch(e){
+  const detail=e?.message==='FORBIDDEN_BRANCH_SCOPE'?'Chỉ có thể giao các chi nhánh thuộc quyền Owner hiện tại.':e?.message||'Không xác định';
+  el('managerBranchAssignmentsMsg').innerHTML='<div class="notice warn">Không lưu được phân công: '+escapeHtml(detail)+'</div>';
+ }finally{setBusyButton(button,false,'Lưu chi nhánh')}
 }
 async function saveManagerPermissions(){
  if(profile?.role!=='owner'){toast('Chỉ Owner được thay đổi quyền Manager.');return}
@@ -4045,7 +4083,7 @@ function initProfileFieldEvents(){
 }
 
 function initModalEvents(){document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal.open').forEach(m=>m.classList.remove('open'))})}
-window.addEventListener('pagehide',()=>saveUiState());window.addEventListener('beforeunload',()=>saveUiState());document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveUiState();});window.addEventListener('pageshow',()=>{if(session&&profile)saveUiState()});document.addEventListener('DOMContentLoaded',()=>{initModalEvents();setupDateConstraints();init();updateGreetingAndClock();setInterval(updateGreetingAndClock,1000)});
+window.addEventListener('pagehide',()=>saveUiState());window.addEventListener('beforeunload',()=>saveUiState());document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveUiState();else if(session&&profile?.role==='employee'&&currentView==='attendance')refreshAttendanceState()});window.addEventListener('pageshow',()=>{if(session&&profile)saveUiState()});document.addEventListener('DOMContentLoaded',()=>{initModalEvents();setupDateConstraints();init();updateGreetingAndClock();setInterval(updateGreetingAndClock,1000);setInterval(()=>{if(session&&profile?.role==='employee'&&currentView==='attendance')refreshAttendanceState()},30000)});
 
 async function loadEmployees(){
  const target=document.getElementById('employeeTable');if(!sb||!profile)return;
@@ -4773,10 +4811,11 @@ function branchColor(name){
 function applyBranchAccent(name){const [c,soft]=branchColor(name);document.documentElement.style.setProperty('--branch-accent',c);document.documentElement.style.setProperty('--branch-accent-soft',soft)}
 function syncBranchUI(){
  const owner=isOwner();
+ const canSwitch=['owner','manager'].includes(profile?.role);
  const current=window.__branchStores?.find(x=>x.id===getActiveStoreId());
  const display=branchDisplayName(current?.name||'Chi nhánh');
  const top=el('branchTopAction');
- if(top){top.classList.toggle('hidden',!owner);top.disabled=!owner||!activeStoreId;top.title=current?.name||'Chi nhánh'}
+ if(top){top.classList.toggle('hidden',!canSwitch);top.disabled=!canSwitch||!activeStoreId;top.title=current?.name||'Chi nhánh'}
  const name=el('branchTopName');
  if(name)name.textContent=display;
  applyBranchAccent(current?.name||'Chi nhánh');
@@ -4784,13 +4823,15 @@ function syncBranchUI(){
  if(el('ownerStoreName'))el('ownerStoreName').textContent=display;
 }
 async function loadBranches(){
- if(!isOwner()||!sb)return;
- const target=el('branchList');
+ if(!['owner','manager'].includes(profile?.role)||!sb)return;
+ const owner=isOwner();
+ const target=owner?el('branchList'):null;
  if(target)target.innerHTML='<div class="empty">Đang tải chi nhánh…</div>';
  const {data,error}=await sb.from('stores').select('id,name,address,latitude,longitude,gps_radius_m,hourly_default_rate,created_at').order('created_at',{ascending:true});
  if(error){if(target)target.innerHTML='<div class="notice warn">Không tải được danh sách chi nhánh.</div>';return}
  window.__branchStores=data||[];
  syncBranchUI();
+ if(!owner)return;
  const html=(data||[]).map((x,i)=>{
    const active=x.id===getActiveStoreId();
    return `<article class="branch-card ${active?'active':''}"><div class="branch-card-main"><div class="branch-card-mark">${active?'✓':'⌖'}</div><div class="branch-card-copy"><div class="branch-card-title"><b title="${escapeHtml(x.name||'Chi nhánh')}">${escapeHtml(branchDisplayName(x.name||'Chi nhánh'))}</b>${active?'<span class="badge ok">Đang dùng</span>':''}</div><div class="branch-card-address">${escapeHtml(x.address||'Chưa nhập địa chỉ')}</div><div class="branch-card-meta">GPS ${Number(x.gps_radius_m||100)}m · ${Number(x.hourly_default_rate||0).toLocaleString('vi-VN')}đ/giờ</div></div></div><button type="button" class="btn ${active?'light':'primary'}" ${active?'disabled':''} onclick="switchBranch('${x.id}')">${active?'Đang chọn':'Chọn chi nhánh'}</button></article>`;
@@ -4798,7 +4839,7 @@ async function loadBranches(){
  if(target)target.innerHTML=html||'<div class="empty">Chưa có chi nhánh. Hãy tạo chi nhánh đầu tiên.</div>';
 }
 async function openBranchSwitcher(){
- if(!isOwner())return;
+ if(!['owner','manager'].includes(profile?.role))return;
  const modal=el('branchSwitcherModal');if(!modal)return;
  modal.classList.add('open');
  await loadBranchSwitcherList();
@@ -4806,7 +4847,7 @@ async function openBranchSwitcher(){
 function closeBranchSwitcher(){el('branchSwitcherModal')?.classList.remove('open')}
 async function loadBranchSwitcherList(){
  const target=el('branchSwitcherList');if(!target)return;
- if(!sb||!isOwner()){target.innerHTML='<div class="empty">Không có quyền.</div>';return}
+ if(!sb||!['owner','manager'].includes(profile?.role)){target.innerHTML='<div class="empty">Không có quyền.</div>';return}
  const {data,error}=await sb.from('stores').select('id,name,address').order('created_at',{ascending:true});
  if(error){target.innerHTML='<div class="notice warn">Không tải được chi nhánh.</div>';return}
  window.__branchStores=data||[];syncBranchUI();
@@ -4815,7 +4856,7 @@ async function loadBranchSwitcherList(){
 let branchSwitchInFlight=false;
 async function switchBranch(storeId){
  if(branchSwitchInFlight)return;
- if(!isOwner()||!storeId||storeId===getActiveStoreId())return closeBranchSwitcher();
+ if(!['owner','manager'].includes(profile?.role)||!storeId||storeId===getActiveStoreId())return closeBranchSwitcher();
  if(!sb||!session){toast('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');return}
  const targetStore=(window.__branchStores||[]).find(x=>x.id===storeId);
  const targetName=targetStore?.name||'chi nhánh đã chọn';
@@ -4847,6 +4888,7 @@ async function switchBranch(storeId){
   Object.keys(adminTabLoaded).forEach(k=>delete adminTabLoaded[k]);
   await startRealtime(storeId);
   await loadBranches();
+  if(isBranchAdmin())await loadCurrentManagerPermissions();
   currentView='dashboard';
   navigate('dashboard',{branchChanged:true});
   saveUiState();
@@ -5066,7 +5108,7 @@ async function loadApp(){
     if(p.role!=='employee'&&session.user.email&&p.email!==session.user.email)syncConfirmedProfileEmail(session.user.id,session.user.email);
     profile=p;profileBankAccount=null;activeStoreId=p.store_id||null;branchContextReady=!!activeStoreId;
     // Do not auto-switch branch during authentication. Start from the server profile's store_id; Owner may switch explicitly after app startup.
-    appHydratedUserId=session.user.id;syncHeader();updateGreetingAndClock();syncBranchUI();if(p.role==='manager')loadCurrentManagerPermissions();
+    appHydratedUserId=session.user.id;syncHeader();updateGreetingAndClock();syncBranchUI();if(p.role==='manager')loadCurrentManagerPermissions();if(['owner','manager'].includes(p.role))loadBranches();
     loadProfileBankAccount(session.user.id).catch(e=>{console.error('[HongCha Profile] Bank details load failed',e);if(appHydratedUserId===session.user.id)el('profileMsg').innerHTML='<div class="notice warn">Không tải được thông tin ngân hàng. Vui lòng tải lại hồ sơ.</div>'});
     employeeProfileIncomplete=p.role==='employee'&&(!String(p.full_name||'').trim()||!String(p.phone||'').trim()||!String(p.address||'').trim());employeeProfilePendingRequest=null;el('changeEmailBtn')?.classList.toggle('ui-hidden',p.role==='employee');el('email').readOnly=p.role==='employee';el('fullName').value=p.full_name||'';el('email').value=session.user.email||p.email||'';el('phone').value=p.phone||'';el('address').value=p.address||'';el('bankName').value=profileBankAccount?.bank_name||'';el('bankAccountNumber').value=profileBankAccount?.account_number||'';el('bankAccountHolder').value=profileBankAccount?.account_holder||'';syncProfileSaveState();
     if(p.role==='employee')loadMyEmployeeProfileChange().catch(e=>console.warn('[HongCha Profile] pending request load failed',e));
@@ -5138,7 +5180,7 @@ function renderEmployeeAccessSetup(access=employeeDeviceAccessState){
    pending:['Đang chờ duyệt','Yêu cầu đã gửi. Owner cần duyệt thiết bị trước khi mở lịch và chấm công.','Kiểm tra lại',refreshDeviceGate],
    rejected:['Bị từ chối',access.device?.rejected_reason||'Owner chưa duyệt thiết bị này. Bạn có thể gửi lại yêu cầu.','Gửi lại yêu cầu',registerDeviceAndRefresh],
    revoked:['Đã thu hồi','Thiết bị đã bị thu hồi. Gửi lại yêu cầu để Owner duyệt.','Yêu cầu liên kết lại',registerDeviceAndRefresh],
-   other_device_approved:['Tài khoản đã được duyệt ở thiết bị khác','Tài khoản đang gắn với '+(access.approved?.device_name||'một thiết bị khác')+'. Hãy dùng thiết bị đó đăng nhập hoặc liên hệ Owner để đổi thiết bị.',null,null],
+   other_device_approved:['Thiết bị khác đã được duyệt','Tài khoản đang gắn với '+(access.approved?.device_name||'một thiết bị khác')+'. Hãy dùng thiết bị đó hoặc liên hệ Owner để đổi thiết bị.',null,null],
    other_device_pending:['Thiết bị khác đang chờ duyệt','Tài khoản đã có yêu cầu trên '+(access.pending?.device_name||'thiết bị khác')+'. Hãy dùng thiết bị đó hoặc liên hệ Owner.',null,null],
    error:['Chưa kiểm tra được','Không thể xác nhận trạng thái thiết bị. '+(access.message||'Hãy thử lại.'),'Thử lại',refreshDeviceGate],
    not_registered:['Chưa đăng ký','Gửi yêu cầu để Owner xác nhận thiết bị này.','Đăng ký thiết bị',registerDeviceAndRefresh]
@@ -5273,8 +5315,8 @@ async function punchAttendance(){
   if(profile.role!=='employee'){alert('Tài khoản quản lý không thực hiện chấm công nhân viên tại đây.');return}
   const btn=el('checkBtn');
   const state=currentWorkState;
-  if(!state||!['CHECKIN_AVAILABLE','WORKING'].includes(state.state)){await refreshAttendanceState();return}
-  const action=state.state==='WORKING'?'checkout':'checkin';
+  if(!state||!['CHECKIN_AVAILABLE','WORKING','HANDOFF_CHECKOUT'].includes(state.state)){await refreshAttendanceState();return}
+  const action=['WORKING','HANDOFF_CHECKOUT'].includes(state.state)?'checkout':'checkin';
   const scheduleId=state.schedule_id;
   if(!scheduleId){toast('Chưa xác định được ca chấm công.');return}
   setBusyButton(btn,true);btn.textContent=action==='checkin'?'ĐANG CHECK-IN...':'ĐANG CHECK-OUT...';
@@ -5285,7 +5327,7 @@ async function punchAttendance(){
     const {data,error}=await sb.rpc('attendance_punch',{p_action:action,p_device_key:getDeviceKey(),p_latitude:lat,p_longitude:lng,p_accuracy_m:acc,p_schedule_id:scheduleId});
     if(error)throw error;
     el('attendanceMsg').className='notice ok';
-    el('attendanceMsg').textContent=action==='checkin'?`Check-in thành công lúc ${formatTime(data.check_in)} · trễ ${data.late_minutes||0} phút.`:`Check-out thành công lúc ${formatTime(data.check_out)} · giờ công ${Math.floor((data.worked_minutes||0)/60)}h ${(data.worked_minutes||0)%60}p.`;
+    el('attendanceMsg').textContent=action==='checkin'?`Check-in thành công lúc ${formatTime(data.check_in)} · trễ ${data.late_minutes||0} phút.`:data.handoff?`Bàn giao ca tự động: ca trước checkout và ca này check-in lúc ${formatTime(data.check_in)}. Check-out ca này lúc ${formatTime(data.check_out)} · ${Math.floor((data.worked_minutes||0)/60)}h ${(data.worked_minutes||0)%60}p.`:`Check-out thành công lúc ${formatTime(data.check_out)} · giờ công ${Math.floor((data.worked_minutes||0)/60)}h ${(data.worked_minutes||0)%60}p.`;
     Promise.allSettled([refreshAttendanceState(),loadAttendanceHistory()]);
   }catch(e){
     // Xác minh lại dữ liệu thực tế sau lỗi RPC để nhân viên không phải đoán
@@ -5308,7 +5350,7 @@ async function punchAttendance(){
     el('attendanceMsg').className='notice warn';
     el('attendanceMsg').textContent=attendanceErrorText(e?.message||String(e))+verifyMsg;
     await refreshAttendanceState();
-  }finally{setBusyButton(btn,false,currentWorkState?.state==='WORKING'?'CHECK-OUT':currentWorkState?.state==='CHECKIN_AVAILABLE'?'CHECK-IN':currentWorkState?.state==='EARLY_CHECKED_IN'?'ĐÃ CHECK-IN':'THỬ LẠI');}
+  }finally{setBusyButton(btn,false,currentWorkState?.state==='HANDOFF_CHECKOUT'?'CHECK-OUT CA LIỀN KỀ':currentWorkState?.state==='WORKING'?(currentWorkState?.next_shift_handoff?'CHECK-OUT CA NÀY':'CHECK-OUT'):currentWorkState?.state==='CHECKIN_AVAILABLE'?'CHECK-IN':currentWorkState?.state==='EARLY_CHECKED_IN'?'ĐÃ CHECK-IN':'THỬ LẠI');}
 }
 function attendanceErrorText(msg){
  const map={
@@ -5419,11 +5461,15 @@ async function getEmployeeWorkState(){
   // It must NOT fall through to NO_SHIFT/COMPLETED. Checkout is enabled only after start.
   const checkedIn=enriched.find(x=>x.attendance?.check_in&&!x.attendance?.check_out);
   if(checkedIn){
+    const adjacent=enriched.find(x=>x.id!==checkedIn.id&&x.startTs===checkedIn.endTs&&!x.attendance?.check_in);
     if(now<checkedIn.startTs){
       return {state:'EARLY_CHECKED_IN',schedule_id:checkedIn.id,attendance_id:checkedIn.attendance.id,check_in:checkedIn.attendance.check_in,start_at:checkedIn.start_at,end_at:checkedIn.end_at,late_minutes:checkedIn.attendance.late_minutes||0};
     }
+    if(adjacent&&now>=adjacent.startTs&&now<=adjacent.endTs+60*60000){
+      return {state:'HANDOFF_CHECKOUT',schedule_id:adjacent.id,start_at:adjacent.start_at,end_at:adjacent.end_at,previous_schedule_id:checkedIn.id,previous_check_in:checkedIn.attendance.check_in,previous_start_at:checkedIn.start_at,previous_end_at:checkedIn.end_at};
+    }
     if(now<=checkedIn.endTs+240*60000){
-      return {state:'WORKING',schedule_id:checkedIn.id,attendance_id:checkedIn.attendance.id,check_in:checkedIn.attendance.check_in,start_at:checkedIn.start_at,end_at:checkedIn.end_at,late_minutes:checkedIn.attendance.late_minutes||0};
+      return {state:'WORKING',schedule_id:checkedIn.id,attendance_id:checkedIn.attendance.id,check_in:checkedIn.attendance.check_in,start_at:checkedIn.start_at,end_at:checkedIn.end_at,late_minutes:checkedIn.attendance.late_minutes||0,next_shift_handoff:adjacent?{start_at:adjacent.start_at,end_at:adjacent.end_at}:null};
     }
     return {state:'MISSING_CHECKOUT',schedule_id:checkedIn.id,attendance_id:checkedIn.attendance.id,check_in:checkedIn.attendance.check_in,start_at:checkedIn.start_at,end_at:checkedIn.end_at,late_minutes:checkedIn.attendance.late_minutes||0};
   }
@@ -5446,7 +5492,7 @@ async function getEmployeeWorkState(){
   return {state:'NO_SHIFT'};
 }
 function workStateLabel(state){
-  return ({NO_SHIFT:'Chưa có ca',UPCOMING:'Ca sắp tới',CHECKIN_AVAILABLE:'Đến giờ check-in',EARLY_CHECKED_IN:'Đã check-in sớm',WORKING:'Đang làm việc',COMPLETED:'Đã hoàn tất ca',MISSING_CHECKOUT:'Quên checkout',MISSED_CHECKIN:'Chưa chấm công',CHECKIN_EXPIRED:'Quá hạn check-in · cần quản lý',ON_LEAVE:'Đang nghỉ phép',DATA_CONFLICT:'Cần kiểm tra lịch'}[state]||'Trạng thái ca');
+  return ({NO_SHIFT:'Chưa có ca',UPCOMING:'Ca sắp tới',CHECKIN_AVAILABLE:'Đến giờ check-in',EARLY_CHECKED_IN:'Đã check-in sớm',WORKING:'Đang làm việc',HANDOFF_CHECKOUT:'Đến giờ checkout ca liền kề',COMPLETED:'Đã hoàn tất ca',MISSING_CHECKOUT:'Quên checkout',MISSED_CHECKIN:'Chưa chấm công',CHECKIN_EXPIRED:'Quá hạn check-in · cần quản lý',ON_LEAVE:'Đang nghỉ phép',DATA_CONFLICT:'Cần kiểm tra lịch'}[state]||'Trạng thái ca');
 }
 function formatStateSchedule(x){
   if(!x?.start_at||!x?.end_at)return '';
@@ -5466,7 +5512,7 @@ function updateEmployeeHomeFromState(st){
 function updateEmployeeHomePrimary(st){
  const btn=el('employeeHomePrimaryBtn');if(!btn)return;
  const state=st?.state||'NO_SHIFT';
- const map={CHECKIN_AVAILABLE:['Mở chấm công','attendance'],EARLY_CHECKED_IN:['Xem chấm công','attendance'],WORKING:['Mở chấm công','attendance'],MISSING_CHECKOUT:['Xem chấm công','attendance'],CHECKIN_EXPIRED:['Xem chấm công','attendance'],MISSED_CHECKIN:['Xem chấm công','attendance'],UPCOMING:['Xem lịch làm việc','schedule'],COMPLETED:['Xem lịch làm việc','schedule'],ON_LEAVE:['Xem lịch làm việc','schedule'],NO_SHIFT:['Xem lịch làm việc','schedule'],DATA_CONFLICT:['Xem chấm công','attendance']};
+ const map={CHECKIN_AVAILABLE:['Mở chấm công','attendance'],EARLY_CHECKED_IN:['Xem chấm công','attendance'],WORKING:['Mở chấm công','attendance'],HANDOFF_CHECKOUT:['Checkout ca liền kề','attendance'],MISSING_CHECKOUT:['Xem chấm công','attendance'],CHECKIN_EXPIRED:['Xem chấm công','attendance'],MISSED_CHECKIN:['Xem chấm công','attendance'],UPCOMING:['Xem lịch làm việc','schedule'],COMPLETED:['Xem lịch làm việc','schedule'],ON_LEAVE:['Xem lịch làm việc','schedule'],NO_SHIFT:['Xem lịch làm việc','schedule'],DATA_CONFLICT:['Xem chấm công','attendance']};
  const [label,target]=map[state]||['Xem lịch làm việc','schedule'];
  btn.innerHTML=`${escapeHtml(label)} <span>→</span>`;btn.onclick=()=>navigate(target);
 }
@@ -5479,13 +5525,15 @@ async function refreshAttendanceState(opts={}){
   try{
     const st=await getEmployeeWorkState();
     if(session!==s||profile!==p||token!==employeeAttendanceStateToken)return;
-    currentWorkState=st;if(opts.refreshHome)loadEmployeeHomeShiftSummary();updateEmployeeHomePrimary(st);const pre=el('attendancePrecheckGrid');if(pre)pre.style.display=['CHECKIN_AVAILABLE','EARLY_CHECKED_IN','WORKING','CHECKIN_EXPIRED','MISSING_CHECKOUT'].includes(st?.state)?'grid':'none';if(el('attendanceShiftLabel'))el('attendanceShiftLabel').textContent=st?.start_at?formatStateSchedule(st)+' · '+workStateLabel(st.state):workStateLabel(st?.state);
+    currentWorkState=st;if(opts.refreshHome)loadEmployeeHomeShiftSummary();updateEmployeeHomePrimary(st);const pre=el('attendancePrecheckGrid');if(pre)pre.style.display=['CHECKIN_AVAILABLE','EARLY_CHECKED_IN','WORKING','HANDOFF_CHECKOUT','CHECKIN_EXPIRED','MISSING_CHECKOUT'].includes(st?.state)?'grid':'none';if(el('attendanceShiftLabel'))el('attendanceShiftLabel').textContent=st?.start_at?formatStateSchedule(st)+' · '+workStateLabel(st.state):workStateLabel(st?.state);
     if(st.state==='CHECKIN_AVAILABLE'){
       btn.disabled=false;btn.textContent='CHECK-IN';msg.className='notice warn';msg.textContent='Đã đến thời gian check-in. Hệ thống sẽ kiểm tra thiết bị và GPS khi bạn bấm.';
     }else if(st.state==='EARLY_CHECKED_IN'){
       btn.disabled=true;btn.textContent='ĐÃ CHECK-IN';msg.className='notice ok';msg.textContent=`Đã check-in lúc ${formatTime(st.check_in)} · ca bắt đầu ${formatTime(st.start_at)}. Chỉ có thể checkout từ giờ mở ca.`;
     }else if(st.state==='WORKING'){
-      btn.disabled=false;btn.textContent='CHECK-OUT';msg.className='notice ok';msg.textContent=`Đã check-in lúc ${formatTime(st.check_in)} · ${Date.now()>new Date(st.end_at).getTime()?'đã qua giờ kết thúc ca, giờ công sẽ chốt theo giờ kết thúc.':'đang trong ca.'}`;
+      btn.disabled=false;btn.textContent=st.next_shift_handoff?'CHECK-OUT CA NÀY':'CHECK-OUT';msg.className=st.next_shift_handoff?'notice info':'notice ok';msg.textContent=st.next_shift_handoff?`Bạn có ca liền kề bắt đầu lúc ${formatTime(st.next_shift_handoff.start_at)}. Nếu tiếp tục làm ca đó, không cần checkout ca này hay check-in ca sau; hãy checkout ở ca sau để hệ thống tự ghi nhận bàn giao.`:`Đã check-in lúc ${formatTime(st.check_in)} · ${Date.now()>new Date(st.end_at).getTime()?'đã qua giờ kết thúc ca, giờ công sẽ chốt theo giờ kết thúc.':'đang trong ca.'}`;
+    }else if(st.state==='HANDOFF_CHECKOUT'){
+      btn.disabled=false;btn.textContent='CHECK-OUT CA LIỀN KỀ';msg.className='notice info';msg.textContent=`Bạn đang làm ca liền kề. Bấm checkout một lần; hệ thống sẽ tự checkout ca trước và ghi check-in ca này tại ${formatTime(st.start_at)}.`;
     }else if(st.state==='MISSING_CHECKOUT'){
       btn.disabled=true;btn.textContent='CẦN XỬ LÝ';msg.className='notice warn';msg.textContent='Ca đã quá thời gian checkout. Vui lòng liên hệ Owner/Manager để xử lý.';
     }else if(st.state==='CHECKIN_EXPIRED'){
