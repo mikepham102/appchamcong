@@ -1,6 +1,6 @@
 # Bản đồ dự án — HongCha HRM
 
-Cập nhật: 30/10/2026. Nguồn: `index.html` (bản đang chạy, blob `718c2cba…`) + `sql/snapshots/hongcha_schema.sql` (ảnh chụp DB **13/10**, cũ hơn 5 migration).
+Cập nhật: 30/10/2026. Nguồn: `index.html` (bản đang chạy, blob `718c2cba…`) + `sql/snapshots/schema_2026-10-30.csv` (ảnh chụp cấu trúc DB ngày **30/10**, đã đối chiếu với `hongcha_schema.sql` ngày 13/10).
 
 ## 1. Tổng quan
 
@@ -50,7 +50,7 @@ _archive/                  Bản sao lưu cục bộ (không đưa lên GitHub)
 - `store_memberships` = quyền thật (user thuộc chi nhánh nào, vai trò gì).
 - `profiles.store_id` = **con trỏ "chi nhánh đang làm việc"**. Nhiều policy và hàm đọc theo cột này → khi Manager chuyển chi nhánh, phạm vi dữ liệu đổi theo.
 
-Theo snapshot 13/10: **25/25 bảng bật RLS**, 59 policy, 96 hàm, 21 trigger, 10 enum.
+Theo ảnh chụp 30/10: **28/28 bảng bật RLS**, 60 policy, 118 hàm (119 chữ ký), 34 trigger, 38 giá trị enum.
 
 ## 5. Bảng dữ liệu (25)
 
@@ -59,12 +59,13 @@ Theo snapshot 13/10: **25/25 bảng bật RLS**, 59 policy, 96 hàm, 21 trigger,
 | Tổ chức | `stores`, `profiles`, `store_memberships`, `manager_permissions` |
 | Lịch & ca | `shift_templates`, `shift_template_versions`, `work_schedules`, `weekly_shift_plan_items`, `schedule_requests`, `shift_registrations`, `shift_registration_windows`, `shift_registration_recurring_rules` |
 | Chấm công | `attendance`, `attendance_events`, `devices` |
-| Lương | `payroll_periods`, `payroll_runs`, `payroll_run_items`, `payroll_adjustments`, `payroll_penalty_rules`, `employee_salary_versions` |
+| Lương | `payroll_periods`, `payroll_runs`, `payroll_run_items`, `payroll_adjustments`, `payroll_penalty_rules`, `payroll_full_day_bonus_rules`, `payroll_holiday_pay_rules`, `employee_salary_versions` |
 | Nghỉ phép | `leave_requests` |
 | Ngân hàng | `employee_bank_accounts` (**chuẩn**), `employee_bank_details` (**cũ**) |
 | Hệ thống | `audit_logs` |
+| Duyệt hồ sơ | `employee_profile_change_requests` |
 
-Bảng mới từ V84.29 (chưa có trong snapshot): `employee_profile_change_requests`, `private.platform_admins`.
+**Chưa có trên DB:** `private.platform_admins` — bảng này chỉ được tạo bởi migration đa chi nhánh, mà migration đó **chưa được áp dụng** (xem mục 8.0).
 
 
 ## 6. Quyết định đã chốt: bảng ngân hàng
@@ -85,14 +86,16 @@ Bảng mới từ V84.29 (chưa có trong snapshot): `employee_profile_change_re
 
 | # | Vấn đề | Mức độ | Ghi chú |
 |---|---|---|---|
-| 1 | Snapshot DB (`sql/snapshots/`) cũ hơn 5 migration | Cao | Cần ảnh chụp mới trước khi sửa DB |
-| 2 | Job `pg_cron` không nằm trong snapshot | Cao | Nếu job không tồn tại, tự chốt đăng ký ca sẽ không chạy. Cần kiểm tra `cron.job` (chỉ đọc) |
+| **0** | **Migration đa chi nhánh CHƯA áp dụng lên DB** (phát hiện 30/10) | **Nghiêm trọng** | Thiếu hàm `owner_set_manager_branches` và bảng `private.platform_admins`. `index.html` **có gọi** `owner_set_manager_branches` → thao tác "gán chi nhánh cho Manager" trong màn Quản trị **đang lỗi**. Cũng chưa rõ `switch_active_store` trên DB là bản cũ (chỉ Owner) hay bản mới |
+| 1 | Snapshot cũ `sql/snapshots/hongcha_schema.sql` (13/10) | Đã xử lý | Đã có `schema_2026-10-30.csv` làm chuẩn mới; file cũ chỉ giữ để đối chiếu |
+| 2 | Job `pg_cron` không nằm trong dữ liệu chụp | Cao | Chưa xác nhận job tự chốt đăng ký ca có tồn tại/đang bật |
 | 3 | Không có môi trường staging | Cao | Mọi thử nghiệm đang chạm dữ liệu thật |
 | 4 | Vài policy cũ so sánh trực tiếp `store_id = profiles.store_id` trong khi mô hình mới dùng `store_memberships` | Trung bình | Xem `schedules_employee_select_v21`, `manager_permissions_manager_read`, `weekly_shift_plan_insert` |
 | 5 | Frontend ghi trực tiếp bảng (`profiles`, `stores`, `payroll_penalty_rules`, `employee_bank_accounts`) thay vì RPC | Trung bình | Không có `audit_logs` cho các thay đổi này |
-| 6 | CSS lỗi cú pháp: thừa 1 dấu `}` cuối rule `.app-brand-center .brand-mark` (dòng 977) | Thấp | Trình duyệt bỏ qua; chỉ là lỗi cú pháp |
+| 6 | ~~CSS lỗi cú pháp~~ | Đã sửa | Bỏ 1 dấu `}` thừa (30/10) |
 | 7 | Realtime subscribe 7 bảng không lọc theo `store_id` | Thấp | Tăng tải khi nhiều chi nhánh online |
 | 8 | Không có log tập trung | Trung bình | Chỉ có `console.error` trên máy người dùng |
+| 9 | `authenticated` được cấp `TRUNCATE`/`TRIGGER`/`REFERENCES` trên bảng (mặc định Supabase) | Thấp | `TRUNCATE` không bị RLS chặn; không lộ qua PostgREST nhưng nên thu hồi |
 
 ## 9. Bảo mật
 

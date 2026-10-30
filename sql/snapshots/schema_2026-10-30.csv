@@ -1,0 +1,2138 @@
+section,object_name,detail
+01_table,public.attendance,kind=r; rls=true; force_rls=false
+01_table,public.attendance_events,kind=r; rls=true; force_rls=false
+01_table,public.audit_logs,kind=r; rls=true; force_rls=false
+01_table,public.devices,kind=r; rls=true; force_rls=false
+01_table,public.employee_bank_accounts,kind=r; rls=true; force_rls=false
+01_table,public.employee_bank_details,kind=r; rls=true; force_rls=false
+01_table,public.employee_profile_change_requests,kind=r; rls=true; force_rls=false
+01_table,public.employee_salary_versions,kind=r; rls=true; force_rls=false
+01_table,public.leave_requests,kind=r; rls=true; force_rls=false
+01_table,public.manager_permissions,kind=r; rls=true; force_rls=false
+01_table,public.payroll_adjustments,kind=r; rls=true; force_rls=false
+01_table,public.payroll_full_day_bonus_rules,kind=r; rls=true; force_rls=false
+01_table,public.payroll_holiday_pay_rules,kind=r; rls=true; force_rls=false
+01_table,public.payroll_penalty_rules,kind=r; rls=true; force_rls=false
+01_table,public.payroll_periods,kind=r; rls=true; force_rls=false
+01_table,public.payroll_run_items,kind=r; rls=true; force_rls=false
+01_table,public.payroll_runs,kind=r; rls=true; force_rls=false
+01_table,public.profiles,kind=r; rls=true; force_rls=false
+01_table,public.schedule_requests,kind=r; rls=true; force_rls=false
+01_table,public.shift_registration_recurring_rules,kind=r; rls=true; force_rls=false
+01_table,public.shift_registration_windows,kind=r; rls=true; force_rls=false
+01_table,public.shift_registrations,kind=r; rls=true; force_rls=false
+01_table,public.shift_template_versions,kind=r; rls=true; force_rls=false
+01_table,public.shift_templates,kind=r; rls=true; force_rls=false
+01_table,public.store_memberships,kind=r; rls=true; force_rls=false
+01_table,public.stores,kind=r; rls=true; force_rls=false
+01_table,public.weekly_shift_plan_items,kind=r; rls=true; force_rls=false
+01_table,public.work_schedules,kind=r; rls=true; force_rls=false
+02_column,public.attendance,check_out_status USER-DEFINED (attendance_status); null=YES; default=-
+02_column,public.attendance,check_in_status USER-DEFINED (attendance_status); null=YES; default=-
+02_column,public.attendance,check_out_distance_m double precision; null=YES; default=-
+02_column,public.attendance,check_in_distance_m double precision; null=YES; default=-
+02_column,public.attendance,check_out_longitude double precision; null=YES; default=-
+02_column,public.attendance,check_out_latitude double precision; null=YES; default=-
+02_column,public.attendance,check_in_longitude double precision; null=YES; default=-
+02_column,public.attendance,check_in_latitude double precision; null=YES; default=-
+02_column,public.attendance,late_minutes integer; null=NO; default=0
+02_column,public.attendance,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.attendance,early_leave_minutes integer; null=NO; default=0
+02_column,public.attendance,check_in timestamp with time zone; null=YES; default=-
+02_column,public.attendance,device_id uuid; null=YES; default=-
+02_column,public.attendance,employee_id uuid; null=NO; default=-
+02_column,public.attendance,schedule_id uuid; null=NO; default=-
+02_column,public.attendance,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.attendance,check_in_device_key text; null=YES; default=-
+02_column,public.attendance,check_out_device_key text; null=YES; default=-
+02_column,public.attendance,note text; null=YES; default=-
+02_column,public.attendance,check_out timestamp with time zone; null=YES; default=-
+02_column,public.attendance,worked_minutes integer; null=NO; default=0
+02_column,public.attendance,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.attendance_events,reason text; null=YES; default=-
+02_column,public.attendance_events,event_type text; null=NO; default=-
+02_column,public.attendance_events,metadata jsonb; null=NO; default='{}'::jsonb
+02_column,public.attendance_events,success boolean; null=NO; default=true
+02_column,public.attendance_events,device_id uuid; null=YES; default=-
+02_column,public.attendance_events,distance_m double precision; null=YES; default=-
+02_column,public.attendance_events,longitude double precision; null=YES; default=-
+02_column,public.attendance_events,latitude double precision; null=YES; default=-
+02_column,public.attendance_events,event_at timestamp with time zone; null=NO; default=now()
+02_column,public.attendance_events,employee_id uuid; null=YES; default=-
+02_column,public.attendance_events,attendance_id uuid; null=YES; default=-
+02_column,public.attendance_events,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.audit_logs,actor_id uuid; null=YES; default=-
+02_column,public.audit_logs,entity_id uuid; null=YES; default=-
+02_column,public.audit_logs,old_data jsonb; null=YES; default=-
+02_column,public.audit_logs,new_data jsonb; null=YES; default=-
+02_column,public.audit_logs,action text; null=NO; default=-
+02_column,public.audit_logs,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.audit_logs,store_id uuid; null=YES; default=-
+02_column,public.audit_logs,entity_type text; null=YES; default=-
+02_column,public.audit_logs,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.devices,approved_by uuid; null=YES; default=-
+02_column,public.devices,status USER-DEFINED (device_status); null=NO; default='pending'::device_status
+02_column,public.devices,employee_id uuid; null=NO; default=-
+02_column,public.devices,platform text; null=YES; default=-
+02_column,public.devices,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.devices,last_seen_at timestamp with time zone; null=YES; default=-
+02_column,public.devices,revoked_at timestamp with time zone; null=YES; default=-
+02_column,public.devices,approved_at timestamp with time zone; null=YES; default=-
+02_column,public.devices,requested_at timestamp with time zone; null=NO; default=now()
+02_column,public.devices,device_key text; null=NO; default=-
+02_column,public.devices,device_name text; null=YES; default=-
+02_column,public.devices,rejected_reason text; null=YES; default=-
+02_column,public.devices,user_agent text; null=YES; default=-
+02_column,public.devices,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.devices,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.employee_bank_accounts,account_number text; null=NO; default=-
+02_column,public.employee_bank_accounts,employee_id uuid; null=NO; default=-
+02_column,public.employee_bank_accounts,account_holder text; null=NO; default=-
+02_column,public.employee_bank_accounts,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.employee_bank_accounts,bank_name text; null=NO; default=-
+02_column,public.employee_bank_details,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.employee_bank_details,branch_name text; null=NO; default=''::text
+02_column,public.employee_bank_details,bank_name text; null=NO; default=''::text
+02_column,public.employee_bank_details,account_holder text; null=NO; default=''::text
+02_column,public.employee_bank_details,account_number text; null=NO; default=''::text
+02_column,public.employee_bank_details,employee_id uuid; null=NO; default=-
+02_column,public.employee_bank_details,updated_by uuid; null=YES; default=-
+02_column,public.employee_profile_change_requests,reviewed_by uuid; null=YES; default=-
+02_column,public.employee_profile_change_requests,store_id uuid; null=NO; default=-
+02_column,public.employee_profile_change_requests,status text; null=NO; default='pending'::text
+02_column,public.employee_profile_change_requests,full_name text; null=NO; default=-
+02_column,public.employee_profile_change_requests,review_note text; null=YES; default=-
+02_column,public.employee_profile_change_requests,phone text; null=NO; default=-
+02_column,public.employee_profile_change_requests,employee_id uuid; null=NO; default=-
+02_column,public.employee_profile_change_requests,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.employee_profile_change_requests,account_number text; null=YES; default=-
+02_column,public.employee_profile_change_requests,account_holder text; null=YES; default=-
+02_column,public.employee_profile_change_requests,address text; null=NO; default=-
+02_column,public.employee_profile_change_requests,bank_name text; null=YES; default=-
+02_column,public.employee_profile_change_requests,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.employee_profile_change_requests,reviewed_at timestamp with time zone; null=YES; default=-
+02_column,public.employee_salary_versions,effective_from date; null=NO; default=-
+02_column,public.employee_salary_versions,employee_id uuid; null=NO; default=-
+02_column,public.employee_salary_versions,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.employee_salary_versions,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.employee_salary_versions,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.employee_salary_versions,created_by uuid; null=YES; default=-
+02_column,public.employee_salary_versions,hourly_rate numeric; null=NO; default=-
+02_column,public.leave_requests,start_date date; null=NO; default=-
+02_column,public.leave_requests,employee_id uuid; null=NO; default=-
+02_column,public.leave_requests,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.leave_requests,rejection_reason text; null=YES; default=-
+02_column,public.leave_requests,reason text; null=NO; default=-
+02_column,public.leave_requests,schedule_id uuid; null=YES; default=-
+02_column,public.leave_requests,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.leave_requests,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.leave_requests,reviewed_at timestamp with time zone; null=YES; default=-
+02_column,public.leave_requests,reviewed_by uuid; null=YES; default=-
+02_column,public.leave_requests,status USER-DEFINED (leave_status); null=NO; default='pending'::leave_status
+02_column,public.leave_requests,end_date date; null=NO; default=-
+02_column,public.leave_requests,store_id uuid; null=NO; default=-
+02_column,public.manager_permissions,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.manager_permissions,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.manager_permissions,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.manager_permissions,permission_key text; null=NO; default=-
+02_column,public.manager_permissions,store_id uuid; null=NO; default=-
+02_column,public.manager_permissions,enabled boolean; null=NO; default=true
+02_column,public.manager_permissions,updated_by uuid; null=YES; default=-
+02_column,public.payroll_adjustments,employee_id uuid; null=NO; default=-
+02_column,public.payroll_adjustments,payroll_period_id uuid; null=YES; default=-
+02_column,public.payroll_adjustments,adjustment_type USER-DEFINED (adjustment_type); null=NO; default=-
+02_column,public.payroll_adjustments,amount numeric; null=NO; default=-
+02_column,public.payroll_adjustments,reason text; null=NO; default=-
+02_column,public.payroll_adjustments,status USER-DEFINED (adjustment_status); null=NO; default='pending'::adjustment_status
+02_column,public.payroll_adjustments,created_by uuid; null=YES; default=-
+02_column,public.payroll_adjustments,approved_by uuid; null=YES; default=-
+02_column,public.payroll_adjustments,effective_date date; null=YES; default=-
+02_column,public.payroll_adjustments,source_rule_id uuid; null=YES; default=-
+02_column,public.payroll_adjustments,origin_store_id uuid; null=YES; default=-
+02_column,public.payroll_adjustments,source_schedule_id uuid; null=YES; default=-
+02_column,public.payroll_adjustments,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.payroll_adjustments,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.payroll_adjustments,approved_at timestamp with time zone; null=YES; default=-
+02_column,public.payroll_adjustments,source_key text; null=YES; default=-
+02_column,public.payroll_adjustments,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.payroll_full_day_bonus_rules,amount numeric; null=NO; default=0
+02_column,public.payroll_full_day_bonus_rules,is_active boolean; null=NO; default=false
+02_column,public.payroll_full_day_bonus_rules,created_by uuid; null=YES; default=-
+02_column,public.payroll_full_day_bonus_rules,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.payroll_full_day_bonus_rules,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.payroll_full_day_bonus_rules,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.payroll_full_day_bonus_rules,store_id uuid; null=NO; default=-
+02_column,public.payroll_full_day_bonus_rules,minimum_worked_minutes integer; null=NO; default=480
+02_column,public.payroll_holiday_pay_rules,is_active boolean; null=NO; default=true
+02_column,public.payroll_holiday_pay_rules,start_date date; null=NO; default=-
+02_column,public.payroll_holiday_pay_rules,end_date date; null=NO; default=-
+02_column,public.payroll_holiday_pay_rules,created_by uuid; null=YES; default=-
+02_column,public.payroll_holiday_pay_rules,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.payroll_holiday_pay_rules,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.payroll_holiday_pay_rules,label text; null=NO; default=-
+02_column,public.payroll_holiday_pay_rules,store_id uuid; null=NO; default=-
+02_column,public.payroll_holiday_pay_rules,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.payroll_holiday_pay_rules,calculation_mode text; null=NO; default=-
+02_column,public.payroll_holiday_pay_rules,amount numeric; null=NO; default=-
+02_column,public.payroll_penalty_rules,store_id uuid; null=NO; default=-
+02_column,public.payroll_penalty_rules,threshold_minutes integer; null=NO; default=0
+02_column,public.payroll_penalty_rules,threshold_occurrences integer; null=YES; default=-
+02_column,public.payroll_penalty_rules,amount numeric; null=NO; default=-
+02_column,public.payroll_penalty_rules,enabled boolean; null=NO; default=true
+02_column,public.payroll_penalty_rules,created_by uuid; null=YES; default=-
+02_column,public.payroll_penalty_rules,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.payroll_penalty_rules,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.payroll_penalty_rules,label text; null=NO; default=-
+02_column,public.payroll_penalty_rules,rule_type text; null=NO; default=-
+02_column,public.payroll_penalty_rules,amount_mode text; null=NO; default='fixed'::text
+02_column,public.payroll_penalty_rules,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.payroll_periods,note text; null=YES; default=-
+02_column,public.payroll_periods,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.payroll_periods,store_id uuid; null=NO; default=-
+02_column,public.payroll_periods,start_date date; null=NO; default=-
+02_column,public.payroll_periods,end_date date; null=NO; default=-
+02_column,public.payroll_periods,status USER-DEFINED (payroll_status); null=NO; default='draft'::payroll_status
+02_column,public.payroll_periods,locked_at timestamp with time zone; null=YES; default=-
+02_column,public.payroll_periods,locked_by uuid; null=YES; default=-
+02_column,public.payroll_periods,paid_at timestamp with time zone; null=YES; default=-
+02_column,public.payroll_periods,paid_by uuid; null=YES; default=-
+02_column,public.payroll_periods,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.payroll_periods,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.payroll_periods,period_name text; null=NO; default=-
+02_column,public.payroll_run_items,schedule_start_at timestamp with time zone; null=NO; default=-
+02_column,public.payroll_run_items,schedule_end_at timestamp with time zone; null=NO; default=-
+02_column,public.payroll_run_items,check_in_at timestamp with time zone; null=YES; default=-
+02_column,public.payroll_run_items,check_out_at timestamp with time zone; null=YES; default=-
+02_column,public.payroll_run_items,worked_minutes integer; null=NO; default=-
+02_column,public.payroll_run_items,hourly_rate numeric; null=NO; default=-
+02_column,public.payroll_run_items,gross_amount numeric; null=NO; default=-
+02_column,public.payroll_run_items,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.payroll_run_items,source text; null=NO; default='attendance'::text
+02_column,public.payroll_run_items,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.payroll_run_items,employee_id uuid; null=NO; default=-
+02_column,public.payroll_run_items,attendance_id uuid; null=NO; default=-
+02_column,public.payroll_run_items,payroll_run_id uuid; null=NO; default=-
+02_column,public.payroll_run_items,work_date date; null=NO; default=-
+02_column,public.payroll_runs,advance_amount numeric; null=NO; default=0
+02_column,public.payroll_runs,penalty_amount numeric; null=NO; default=0
+02_column,public.payroll_runs,hourly_rate numeric; null=NO; default=0
+02_column,public.payroll_runs,employee_id uuid; null=NO; default=-
+02_column,public.payroll_runs,payroll_period_id uuid; null=NO; default=-
+02_column,public.payroll_runs,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.payroll_runs,bonus_amount numeric; null=NO; default=0
+02_column,public.payroll_runs,gross_amount numeric; null=NO; default=0
+02_column,public.payroll_runs,note text; null=YES; default=-
+02_column,public.payroll_runs,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.payroll_runs,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.payroll_runs,calculated_by uuid; null=YES; default=-
+02_column,public.payroll_runs,calculated_at timestamp with time zone; null=YES; default=-
+02_column,public.payroll_runs,worked_minutes integer; null=NO; default=0
+02_column,public.payroll_runs,net_amount numeric; null=NO; default=0
+02_column,public.profiles,hired_at date; null=YES; default=-
+02_column,public.profiles,id uuid; null=NO; default=-
+02_column,public.profiles,date_of_birth date; null=YES; default=-
+02_column,public.profiles,role USER-DEFINED (user_role); null=NO; default='employee'::user_role
+02_column,public.profiles,employment_status USER-DEFINED (employment_status); null=NO; default='invited'::employment_status
+02_column,public.profiles,hourly_rate numeric; null=NO; default=0
+02_column,public.profiles,store_id uuid; null=YES; default=-
+02_column,public.profiles,notes text; null=YES; default=-
+02_column,public.profiles,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.profiles,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.profiles,full_name text; null=NO; default=''::text
+02_column,public.profiles,phone text; null=YES; default=-
+02_column,public.profiles,email text; null=YES; default=-
+02_column,public.profiles,avatar_url text; null=YES; default=-
+02_column,public.profiles,national_id text; null=YES; default=-
+02_column,public.profiles,address text; null=YES; default=-
+02_column,public.schedule_requests,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.schedule_requests,review_note text; null=YES; default=-
+02_column,public.schedule_requests,status text; null=NO; default='pending'::text
+02_column,public.schedule_requests,note text; null=YES; default=-
+02_column,public.schedule_requests,request_type text; null=NO; default=-
+02_column,public.schedule_requests,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.schedule_requests,store_id uuid; null=NO; default=-
+02_column,public.schedule_requests,employee_id uuid; null=NO; default=-
+02_column,public.schedule_requests,schedule_id uuid; null=NO; default=-
+02_column,public.schedule_requests,target_schedule_id uuid; null=YES; default=-
+02_column,public.schedule_requests,reviewed_by uuid; null=YES; default=-
+02_column,public.schedule_requests,reviewed_at timestamp with time zone; null=YES; default=-
+02_column,public.shift_registration_recurring_rules,open_weekday smallint; null=NO; default=-
+02_column,public.shift_registration_recurring_rules,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.shift_registration_recurring_rules,open_time time without time zone; null=NO; default=-
+02_column,public.shift_registration_recurring_rules,close_weekday smallint; null=NO; default=-
+02_column,public.shift_registration_recurring_rules,close_time time without time zone; null=NO; default=-
+02_column,public.shift_registration_recurring_rules,is_active boolean; null=NO; default=true
+02_column,public.shift_registration_recurring_rules,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.shift_registration_recurring_rules,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.shift_registration_recurring_rules,auto_open boolean; null=NO; default=true
+02_column,public.shift_registration_recurring_rules,auto_approve boolean; null=NO; default=true
+02_column,public.shift_registration_recurring_rules,store_id uuid; null=NO; default=-
+02_column,public.shift_registration_windows,store_id uuid; null=NO; default=-
+02_column,public.shift_registration_windows,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.shift_registration_windows,week_start date; null=NO; default=-
+02_column,public.shift_registration_windows,open_at timestamp with time zone; null=NO; default=-
+02_column,public.shift_registration_windows,close_at timestamp with time zone; null=NO; default=-
+02_column,public.shift_registration_windows,closed_at timestamp with time zone; null=YES; default=-
+02_column,public.shift_registration_windows,closed_by uuid; null=YES; default=-
+02_column,public.shift_registration_windows,finalized_at timestamp with time zone; null=YES; default=-
+02_column,public.shift_registration_windows,finalized_by uuid; null=YES; default=-
+02_column,public.shift_registration_windows,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.shift_registration_windows,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.shift_registration_windows,status text; null=NO; default='open'::text
+02_column,public.shift_registrations,reviewed_at timestamp with time zone; null=YES; default=-
+02_column,public.shift_registrations,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.shift_registrations,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.shift_registrations,reviewed_by uuid; null=YES; default=-
+02_column,public.shift_registrations,requested_at timestamp with time zone; null=NO; default=now()
+02_column,public.shift_registrations,status USER-DEFINED (registration_status); null=NO; default='pending'::registration_status
+02_column,public.shift_registrations,employee_id uuid; null=NO; default=-
+02_column,public.shift_registrations,schedule_id uuid; null=NO; default=-
+02_column,public.shift_registrations,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.shift_registrations,note text; null=YES; default=-
+02_column,public.shift_registrations,rejection_reason text; null=YES; default=-
+02_column,public.shift_template_versions,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.shift_template_versions,shift_template_id uuid; null=NO; default=-
+02_column,public.shift_template_versions,effective_from date; null=NO; default=-
+02_column,public.shift_template_versions,start_time time without time zone; null=NO; default=-
+02_column,public.shift_template_versions,end_time time without time zone; null=NO; default=-
+02_column,public.shift_template_versions,break_minutes integer; null=NO; default=0
+02_column,public.shift_template_versions,capacity integer; null=NO; default=1
+02_column,public.shift_template_versions,is_active boolean; null=NO; default=true
+02_column,public.shift_template_versions,created_by uuid; null=YES; default=-
+02_column,public.shift_template_versions,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.shift_template_versions,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.shift_template_versions,name text; null=NO; default=-
+02_column,public.shift_templates,is_active boolean; null=NO; default=true
+02_column,public.shift_templates,capacity integer; null=NO; default=1
+02_column,public.shift_templates,break_minutes integer; null=NO; default=0
+02_column,public.shift_templates,end_time time without time zone; null=NO; default=-
+02_column,public.shift_templates,start_time time without time zone; null=NO; default=-
+02_column,public.shift_templates,store_id uuid; null=NO; default=-
+02_column,public.shift_templates,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.shift_templates,name text; null=NO; default=-
+02_column,public.shift_templates,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.shift_templates,color text; null=YES; default=-
+02_column,public.shift_templates,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.store_memberships,left_at timestamp with time zone; null=YES; default=-
+02_column,public.store_memberships,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.store_memberships,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.store_memberships,joined_at timestamp with time zone; null=NO; default=now()
+02_column,public.store_memberships,is_active boolean; null=NO; default=true
+02_column,public.store_memberships,role USER-DEFINED (user_role); null=NO; default=-
+02_column,public.store_memberships,store_id uuid; null=NO; default=-
+02_column,public.store_memberships,user_id uuid; null=NO; default=-
+02_column,public.store_memberships,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.stores,name text; null=NO; default=-
+02_column,public.stores,address text; null=YES; default=-
+02_column,public.stores,wifi_note text; null=YES; default=-
+02_column,public.stores,timezone text; null=NO; default='Asia/Ho_Chi_Minh'::text
+02_column,public.stores,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.stores,longitude double precision; null=YES; default=-
+02_column,public.stores,checkout_late_minutes integer; null=NO; default=240
+02_column,public.stores,wifi_enabled boolean; null=NO; default=false
+02_column,public.stores,hourly_default_rate numeric; null=NO; default=30000
+02_column,public.stores,latitude double precision; null=YES; default=-
+02_column,public.stores,checkin_early_minutes integer; null=NO; default=60
+02_column,public.stores,wifi_name text; null=YES; default=-
+02_column,public.stores,late_grace_minutes integer; null=NO; default=5
+02_column,public.stores,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.stores,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.stores,checkin_cutoff_minutes integer; null=NO; default=30
+02_column,public.stores,gps_radius_m integer; null=NO; default=100
+02_column,public.weekly_shift_plan_items,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.weekly_shift_plan_items,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.weekly_shift_plan_items,store_id uuid; null=NO; default=-
+02_column,public.weekly_shift_plan_items,note text; null=YES; default=-
+02_column,public.weekly_shift_plan_items,capacity integer; null=NO; default=1
+02_column,public.weekly_shift_plan_items,is_active boolean; null=NO; default=true
+02_column,public.weekly_shift_plan_items,shift_template_id uuid; null=NO; default=-
+02_column,public.weekly_shift_plan_items,weekday smallint; null=NO; default=-
+02_column,public.weekly_shift_plan_items,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.weekly_shift_plan_items,sort_order integer; null=NO; default=0
+02_column,public.work_schedules,shift_group_id uuid; null=YES; default=-
+02_column,public.work_schedules,id uuid; null=NO; default=gen_random_uuid()
+02_column,public.work_schedules,store_id uuid; null=NO; default=-
+02_column,public.work_schedules,shift_template_id uuid; null=YES; default=-
+02_column,public.work_schedules,work_date date; null=NO; default=-
+02_column,public.work_schedules,start_time time without time zone; null=NO; default=-
+02_column,public.work_schedules,end_time time without time zone; null=NO; default=-
+02_column,public.work_schedules,employee_id uuid; null=YES; default=-
+02_column,public.work_schedules,status USER-DEFINED (schedule_status); null=NO; default='open'::schedule_status
+02_column,public.work_schedules,created_by uuid; null=YES; default=-
+02_column,public.work_schedules,assigned_at timestamp with time zone; null=YES; default=-
+02_column,public.work_schedules,created_at timestamp with time zone; null=NO; default=now()
+02_column,public.work_schedules,updated_at timestamp with time zone; null=NO; default=now()
+02_column,public.work_schedules,start_at timestamp with time zone; null=NO; default=-
+02_column,public.work_schedules,end_at timestamp with time zone; null=NO; default=-
+02_column,public.work_schedules,weekly_plan_item_id uuid; null=YES; default=-
+02_column,public.work_schedules,custom_name text; null=YES; default=-
+02_column,public.work_schedules,schedule_kind text; null=NO; default='template'::text
+02_column,public.work_schedules,note text; null=YES; default=-
+03_constraint,attendance.attendance_device_id_fkey,FOREIGN KEY (device_id) REFERENCES devices(id) ON DELETE SET NULL
+03_constraint,attendance.attendance_early_leave_minutes_check,CHECK ((early_leave_minutes >= 0))
+03_constraint,attendance.attendance_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES profiles(id) ON DELETE RESTRICT
+03_constraint,attendance.attendance_late_minutes_check,CHECK ((late_minutes >= 0))
+03_constraint,attendance.attendance_pkey,PRIMARY KEY (id)
+03_constraint,attendance.attendance_schedule_id_fkey,FOREIGN KEY (schedule_id) REFERENCES work_schedules(id) ON DELETE RESTRICT
+03_constraint,attendance.attendance_schedule_id_key,UNIQUE (schedule_id)
+03_constraint,attendance.attendance_worked_minutes_check,CHECK ((worked_minutes >= 0))
+03_constraint,attendance_events.attendance_events_attendance_id_fkey,FOREIGN KEY (attendance_id) REFERENCES attendance(id) ON DELETE CASCADE
+03_constraint,attendance_events.attendance_events_device_id_fkey,FOREIGN KEY (device_id) REFERENCES devices(id) ON DELETE SET NULL
+03_constraint,attendance_events.attendance_events_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,attendance_events.attendance_events_pkey,PRIMARY KEY (id)
+03_constraint,audit_logs.audit_logs_actor_id_fkey,FOREIGN KEY (actor_id) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,audit_logs.audit_logs_pkey,PRIMARY KEY (id)
+03_constraint,audit_logs.audit_logs_store_id_fkey,FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE SET NULL
+03_constraint,devices.devices_approved_by_fkey,FOREIGN KEY (approved_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,devices.devices_device_key_key,UNIQUE (device_key)
+03_constraint,devices.devices_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES profiles(id) ON DELETE CASCADE
+03_constraint,devices.devices_pkey,PRIMARY KEY (id)
+03_constraint,employee_bank_accounts.employee_bank_accounts_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES profiles(id) ON DELETE CASCADE
+03_constraint,employee_bank_accounts.employee_bank_accounts_nonempty_values,CHECK (((length(btrim(bank_name)) > 0) AND (length(btrim(account_number)) > 0) AND (length(btrim(account_holder)) > 0)))
+03_constraint,employee_bank_accounts.employee_bank_accounts_pkey,PRIMARY KEY (employee_id)
+03_constraint,employee_bank_details.employee_bank_details_account_holder_length,CHECK ((char_length(account_holder) <= 160))
+03_constraint,employee_bank_details.employee_bank_details_account_number_length,CHECK ((char_length(account_number) <= 64))
+03_constraint,employee_bank_details.employee_bank_details_bank_name_length,CHECK ((char_length(bank_name) <= 120))
+03_constraint,employee_bank_details.employee_bank_details_branch_name_length,CHECK ((char_length(branch_name) <= 160))
+03_constraint,employee_bank_details.employee_bank_details_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES profiles(id) ON DELETE CASCADE
+03_constraint,employee_bank_details.employee_bank_details_pkey,PRIMARY KEY (employee_id)
+03_constraint,employee_bank_details.employee_bank_details_updated_by_fkey,FOREIGN KEY (updated_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,employee_profile_change_requests.employee_profile_change_bank_complete,"CHECK ((((COALESCE(bank_name, ''::text) = ''::text) AND (COALESCE(account_number, ''::text) = ''::text) AND (COALESCE(account_holder, ''::text) = ''::text)) OR ((NULLIF(TRIM(BOTH FROM bank_name), ''::text) IS NOT NULL) AND (NULLIF(TRIM(BOTH FROM account_number), ''::text) IS NOT NULL) AND (NULLIF(TRIM(BOTH FROM account_holder), ''::text) IS NOT NULL))))"
+03_constraint,employee_profile_change_requests.employee_profile_change_requests_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES profiles(id) ON DELETE CASCADE
+03_constraint,employee_profile_change_requests.employee_profile_change_requests_pkey,PRIMARY KEY (id)
+03_constraint,employee_profile_change_requests.employee_profile_change_requests_reviewed_by_fkey,FOREIGN KEY (reviewed_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,employee_profile_change_requests.employee_profile_change_requests_status_check,"CHECK ((status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text])))"
+03_constraint,employee_profile_change_requests.employee_profile_change_requests_store_id_fkey,FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE RESTRICT
+03_constraint,employee_salary_versions.employee_salary_versions_created_by_fkey,FOREIGN KEY (created_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,employee_salary_versions.employee_salary_versions_employee_id_effective_from_key,"UNIQUE (employee_id, effective_from)"
+03_constraint,employee_salary_versions.employee_salary_versions_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES profiles(id) ON DELETE CASCADE
+03_constraint,employee_salary_versions.employee_salary_versions_hourly_rate_check,CHECK ((hourly_rate >= (0)::numeric))
+03_constraint,employee_salary_versions.employee_salary_versions_pkey,PRIMARY KEY (id)
+03_constraint,leave_requests.leave_requests_check,CHECK ((end_date >= start_date))
+03_constraint,leave_requests.leave_requests_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES profiles(id) ON DELETE CASCADE
+03_constraint,leave_requests.leave_requests_pkey,PRIMARY KEY (id)
+03_constraint,leave_requests.leave_requests_reviewed_by_fkey,FOREIGN KEY (reviewed_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,leave_requests.leave_requests_schedule_id_fkey,FOREIGN KEY (schedule_id) REFERENCES work_schedules(id) ON DELETE RESTRICT
+03_constraint,leave_requests.leave_requests_store_id_fkey,FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+03_constraint,manager_permissions.manager_permissions_pkey,PRIMARY KEY (id)
+03_constraint,manager_permissions.manager_permissions_store_id_fkey,FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+03_constraint,manager_permissions.manager_permissions_store_id_permission_key_key,"UNIQUE (store_id, permission_key)"
+03_constraint,manager_permissions.manager_permissions_updated_by_fkey,FOREIGN KEY (updated_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,payroll_adjustments.payroll_adjustments_amount_check,CHECK ((amount > (0)::numeric))
+03_constraint,payroll_adjustments.payroll_adjustments_approved_by_fkey,FOREIGN KEY (approved_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,payroll_adjustments.payroll_adjustments_created_by_fkey,FOREIGN KEY (created_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,payroll_adjustments.payroll_adjustments_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES profiles(id) ON DELETE CASCADE
+03_constraint,payroll_adjustments.payroll_adjustments_origin_store_id_fkey,FOREIGN KEY (origin_store_id) REFERENCES stores(id) ON DELETE RESTRICT
+03_constraint,payroll_adjustments.payroll_adjustments_payroll_period_id_fkey,FOREIGN KEY (payroll_period_id) REFERENCES payroll_periods(id) ON DELETE SET NULL
+03_constraint,payroll_adjustments.payroll_adjustments_pkey,PRIMARY KEY (id)
+03_constraint,payroll_adjustments.payroll_adjustments_source_rule_id_fkey,FOREIGN KEY (source_rule_id) REFERENCES payroll_penalty_rules(id) ON DELETE SET NULL
+03_constraint,payroll_adjustments.payroll_adjustments_source_schedule_id_fkey,FOREIGN KEY (source_schedule_id) REFERENCES work_schedules(id) ON DELETE SET NULL
+03_constraint,payroll_full_day_bonus_rules.payroll_full_day_bonus_rules_amount_check,CHECK ((amount >= (0)::numeric))
+03_constraint,payroll_full_day_bonus_rules.payroll_full_day_bonus_rules_created_by_fkey,FOREIGN KEY (created_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,payroll_full_day_bonus_rules.payroll_full_day_bonus_rules_minimum_worked_minutes_check,CHECK (((minimum_worked_minutes >= 1) AND (minimum_worked_minutes <= 1440)))
+03_constraint,payroll_full_day_bonus_rules.payroll_full_day_bonus_rules_pkey,PRIMARY KEY (id)
+03_constraint,payroll_full_day_bonus_rules.payroll_full_day_bonus_rules_store_id_fkey,FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+03_constraint,payroll_full_day_bonus_rules.payroll_full_day_bonus_rules_store_id_key,UNIQUE (store_id)
+03_constraint,payroll_holiday_pay_rules.payroll_holiday_pay_rules_amount_check,CHECK ((amount > (0)::numeric))
+03_constraint,payroll_holiday_pay_rules.payroll_holiday_pay_rules_calculation_mode_check,"CHECK ((calculation_mode = ANY (ARRAY['multiplier'::text, 'percent'::text, 'fixed_hour'::text, 'fixed_shift'::text, 'fixed_day'::text])))"
+03_constraint,payroll_holiday_pay_rules.payroll_holiday_pay_rules_check,CHECK ((end_date >= start_date))
+03_constraint,payroll_holiday_pay_rules.payroll_holiday_pay_rules_check1,CHECK (((calculation_mode <> 'multiplier'::text) OR (amount > (1)::numeric)))
+03_constraint,payroll_holiday_pay_rules.payroll_holiday_pay_rules_created_by_fkey,FOREIGN KEY (created_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,payroll_holiday_pay_rules.payroll_holiday_pay_rules_label_check,CHECK (((length(TRIM(BOTH FROM label)) >= 1) AND (length(TRIM(BOTH FROM label)) <= 120)))
+03_constraint,payroll_holiday_pay_rules.payroll_holiday_pay_rules_pkey,PRIMARY KEY (id)
+03_constraint,payroll_holiday_pay_rules.payroll_holiday_pay_rules_store_id_fkey,FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+03_constraint,payroll_penalty_rules.payroll_penalty_rules_amount_check,CHECK ((amount > (0)::numeric))
+03_constraint,payroll_penalty_rules.payroll_penalty_rules_amount_mode_check,"CHECK ((amount_mode = ANY (ARRAY['fixed'::text, 'per_minute'::text])))"
+03_constraint,payroll_penalty_rules.payroll_penalty_rules_created_by_fkey,FOREIGN KEY (created_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,payroll_penalty_rules.payroll_penalty_rules_label_check,CHECK ((length(TRIM(BOTH FROM label)) > 0))
+03_constraint,payroll_penalty_rules.payroll_penalty_rules_nonminute_shape,"CHECK (((rule_type <> ALL (ARRAY['absence'::text, 'late_monthly'::text])) OR (amount_mode = 'fixed'::text)))"
+03_constraint,payroll_penalty_rules.payroll_penalty_rules_pkey,PRIMARY KEY (id)
+03_constraint,payroll_penalty_rules.payroll_penalty_rules_rule_type_check,"CHECK ((rule_type = ANY (ARRAY['late'::text, 'late_monthly'::text, 'early_leave'::text, 'absence'::text])))"
+03_constraint,payroll_penalty_rules.payroll_penalty_rules_store_id_fkey,FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+03_constraint,payroll_penalty_rules.payroll_penalty_rules_threshold_minutes_check,CHECK ((threshold_minutes >= 0))
+03_constraint,payroll_penalty_rules.payroll_penalty_rules_threshold_shape,CHECK ((((rule_type = 'late_monthly'::text) AND (threshold_occurrences IS NOT NULL) AND (threshold_occurrences > 0) AND (amount_mode = 'fixed'::text)) OR ((rule_type <> 'late_monthly'::text) AND (threshold_occurrences IS NULL))))
+03_constraint,payroll_periods.payroll_periods_check,CHECK ((end_date >= start_date))
+03_constraint,payroll_periods.payroll_periods_locked_by_fkey,FOREIGN KEY (locked_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,payroll_periods.payroll_periods_paid_by_fkey,FOREIGN KEY (paid_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,payroll_periods.payroll_periods_pkey,PRIMARY KEY (id)
+03_constraint,payroll_periods.payroll_periods_store_id_fkey,FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+03_constraint,payroll_periods.payroll_periods_store_id_start_date_end_date_key,"UNIQUE (store_id, start_date, end_date)"
+03_constraint,payroll_run_items.payroll_run_items_attendance_id_fkey,FOREIGN KEY (attendance_id) REFERENCES attendance(id) ON DELETE RESTRICT
+03_constraint,payroll_run_items.payroll_run_items_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES profiles(id) ON DELETE RESTRICT
+03_constraint,payroll_run_items.payroll_run_items_gross_amount_check,CHECK ((gross_amount >= (0)::numeric))
+03_constraint,payroll_run_items.payroll_run_items_hourly_rate_check,CHECK ((hourly_rate >= (0)::numeric))
+03_constraint,payroll_run_items.payroll_run_items_payroll_run_id_attendance_id_key,"UNIQUE (payroll_run_id, attendance_id)"
+03_constraint,payroll_run_items.payroll_run_items_payroll_run_id_fkey,FOREIGN KEY (payroll_run_id) REFERENCES payroll_runs(id) ON DELETE CASCADE
+03_constraint,payroll_run_items.payroll_run_items_pkey,PRIMARY KEY (id)
+03_constraint,payroll_run_items.payroll_run_items_source_check,"CHECK ((source = ANY (ARRAY['attendance'::text, 'manual'::text])))"
+03_constraint,payroll_run_items.payroll_run_items_worked_minutes_check,CHECK ((worked_minutes >= 0))
+03_constraint,payroll_runs.payroll_runs_advance_amount_check,CHECK ((advance_amount >= (0)::numeric))
+03_constraint,payroll_runs.payroll_runs_bonus_amount_check,CHECK ((bonus_amount >= (0)::numeric))
+03_constraint,payroll_runs.payroll_runs_calculated_by_fkey,FOREIGN KEY (calculated_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,payroll_runs.payroll_runs_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES profiles(id) ON DELETE RESTRICT
+03_constraint,payroll_runs.payroll_runs_gross_amount_check,CHECK ((gross_amount >= (0)::numeric))
+03_constraint,payroll_runs.payroll_runs_hourly_rate_check,CHECK ((hourly_rate >= (0)::numeric))
+03_constraint,payroll_runs.payroll_runs_payroll_period_id_employee_id_key,"UNIQUE (payroll_period_id, employee_id)"
+03_constraint,payroll_runs.payroll_runs_payroll_period_id_fkey,FOREIGN KEY (payroll_period_id) REFERENCES payroll_periods(id) ON DELETE CASCADE
+03_constraint,payroll_runs.payroll_runs_penalty_amount_check,CHECK ((penalty_amount >= (0)::numeric))
+03_constraint,payroll_runs.payroll_runs_pkey,PRIMARY KEY (id)
+03_constraint,payroll_runs.payroll_runs_worked_minutes_check,CHECK ((worked_minutes >= 0))
+03_constraint,profiles.profiles_hourly_rate_check,CHECK ((hourly_rate >= (0)::numeric))
+03_constraint,profiles.profiles_id_fkey,FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE
+03_constraint,profiles.profiles_pkey,PRIMARY KEY (id)
+03_constraint,profiles.profiles_store_id_fkey,FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE SET NULL
+03_constraint,schedule_requests.schedule_requests_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES profiles(id) ON DELETE CASCADE
+03_constraint,schedule_requests.schedule_requests_pkey,PRIMARY KEY (id)
+03_constraint,schedule_requests.schedule_requests_request_type_check,"CHECK ((request_type = ANY (ARRAY['late'::text, 'swap'::text])))"
+03_constraint,schedule_requests.schedule_requests_reviewed_by_fkey,FOREIGN KEY (reviewed_by) REFERENCES profiles(id)
+03_constraint,schedule_requests.schedule_requests_schedule_id_fkey,FOREIGN KEY (schedule_id) REFERENCES work_schedules(id) ON DELETE CASCADE
+03_constraint,schedule_requests.schedule_requests_status_check,"CHECK ((status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text, 'cancelled'::text])))"
+03_constraint,schedule_requests.schedule_requests_store_id_fkey,FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+03_constraint,schedule_requests.schedule_requests_target_schedule_id_fkey,FOREIGN KEY (target_schedule_id) REFERENCES work_schedules(id) ON DELETE SET NULL
+03_constraint,shift_registration_recurring_rules.shift_registration_recurring_rules_close_weekday_check,CHECK (((close_weekday >= 1) AND (close_weekday <= 7)))
+03_constraint,shift_registration_recurring_rules.shift_registration_recurring_rules_open_weekday_check,CHECK (((open_weekday >= 1) AND (open_weekday <= 7)))
+03_constraint,shift_registration_recurring_rules.shift_registration_recurring_rules_pkey,PRIMARY KEY (id)
+03_constraint,shift_registration_recurring_rules.shift_registration_recurring_rules_store_id_fkey,FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+03_constraint,shift_registration_recurring_rules.shift_registration_recurring_rules_store_id_key,UNIQUE (store_id)
+03_constraint,shift_registration_windows.shift_registration_windows_check,CHECK ((close_at > open_at))
+03_constraint,shift_registration_windows.shift_registration_windows_closed_by_fkey,FOREIGN KEY (closed_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,shift_registration_windows.shift_registration_windows_finalized_by_fkey,FOREIGN KEY (finalized_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,shift_registration_windows.shift_registration_windows_pkey,PRIMARY KEY (id)
+03_constraint,shift_registration_windows.shift_registration_windows_status_check,"CHECK ((status = ANY (ARRAY['open'::text, 'closed'::text, 'finalized'::text])))"
+03_constraint,shift_registration_windows.shift_registration_windows_store_id_fkey,FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+03_constraint,shift_registration_windows.shift_registration_windows_store_id_week_start_key,"UNIQUE (store_id, week_start)"
+03_constraint,shift_registrations.shift_registrations_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES profiles(id) ON DELETE CASCADE
+03_constraint,shift_registrations.shift_registrations_pkey,PRIMARY KEY (id)
+03_constraint,shift_registrations.shift_registrations_reviewed_by_fkey,FOREIGN KEY (reviewed_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,shift_registrations.shift_registrations_schedule_id_fkey,FOREIGN KEY (schedule_id) REFERENCES work_schedules(id) ON DELETE CASCADE
+03_constraint,shift_template_versions.shift_template_versions_break_minutes_check,CHECK (((break_minutes >= 0) AND (break_minutes <= 180)))
+03_constraint,shift_template_versions.shift_template_versions_capacity_check,CHECK (((capacity >= 1) AND (capacity <= 50)))
+03_constraint,shift_template_versions.shift_template_versions_check,CHECK ((start_time <> end_time))
+03_constraint,shift_template_versions.shift_template_versions_created_by_fkey,FOREIGN KEY (created_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,shift_template_versions.shift_template_versions_pkey,PRIMARY KEY (id)
+03_constraint,shift_template_versions.shift_template_versions_shift_template_id_effective_from_key,"UNIQUE (shift_template_id, effective_from)"
+03_constraint,shift_template_versions.shift_template_versions_shift_template_id_fkey,FOREIGN KEY (shift_template_id) REFERENCES shift_templates(id) ON DELETE CASCADE
+03_constraint,shift_templates.shift_templates_break_minutes_check,CHECK (((break_minutes >= 0) AND (break_minutes <= 180)))
+03_constraint,shift_templates.shift_templates_capacity_check,CHECK (((capacity >= 1) AND (capacity <= 50)))
+03_constraint,shift_templates.shift_templates_pkey,PRIMARY KEY (id)
+03_constraint,shift_templates.shift_templates_store_id_fkey,FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+03_constraint,shift_templates.shift_templates_store_id_name_key,"UNIQUE (store_id, name)"
+03_constraint,store_memberships.store_memberships_pkey,PRIMARY KEY (id)
+03_constraint,store_memberships.store_memberships_store_id_fkey,FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+03_constraint,store_memberships.store_memberships_user_id_fkey,FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE
+03_constraint,store_memberships.store_memberships_user_id_store_id_key,"UNIQUE (user_id, store_id)"
+03_constraint,stores.stores_checkin_cutoff_minutes_check,CHECK (((checkin_cutoff_minutes >= 0) AND (checkin_cutoff_minutes <= 240)))
+03_constraint,stores.stores_checkin_early_minutes_check,CHECK (((checkin_early_minutes >= 0) AND (checkin_early_minutes <= 360)))
+03_constraint,stores.stores_checkout_late_minutes_check,CHECK (((checkout_late_minutes >= 0) AND (checkout_late_minutes <= 1440)))
+03_constraint,stores.stores_gps_radius_m_check,CHECK (((gps_radius_m >= 20) AND (gps_radius_m <= 1000)))
+03_constraint,stores.stores_hourly_default_rate_check,CHECK ((hourly_default_rate >= (0)::numeric))
+03_constraint,stores.stores_late_grace_minutes_check,CHECK (((late_grace_minutes >= 0) AND (late_grace_minutes <= 60)))
+03_constraint,stores.stores_pkey,PRIMARY KEY (id)
+03_constraint,weekly_shift_plan_items.weekly_shift_plan_items_capacity_check,CHECK (((capacity >= 1) AND (capacity <= 10)))
+03_constraint,weekly_shift_plan_items.weekly_shift_plan_items_pkey,PRIMARY KEY (id)
+03_constraint,weekly_shift_plan_items.weekly_shift_plan_items_shift_template_id_fkey,FOREIGN KEY (shift_template_id) REFERENCES shift_templates(id) ON DELETE RESTRICT
+03_constraint,weekly_shift_plan_items.weekly_shift_plan_items_store_id_fkey,FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+03_constraint,weekly_shift_plan_items.weekly_shift_plan_items_weekday_check,CHECK (((weekday >= 1) AND (weekday <= 7)))
+03_constraint,work_schedules.work_schedules_check,CHECK ((end_time <> start_time))
+03_constraint,work_schedules.work_schedules_created_by_fkey,FOREIGN KEY (created_by) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,work_schedules.work_schedules_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES profiles(id) ON DELETE SET NULL
+03_constraint,work_schedules.work_schedules_pkey,PRIMARY KEY (id)
+03_constraint,work_schedules.work_schedules_schedule_kind_check,"CHECK ((schedule_kind = ANY (ARRAY['template'::text, 'supplemental'::text])))"
+03_constraint,work_schedules.work_schedules_shift_template_id_fkey,FOREIGN KEY (shift_template_id) REFERENCES shift_templates(id) ON DELETE SET NULL
+03_constraint,work_schedules.work_schedules_start_end_at_check,CHECK ((end_at > start_at))
+03_constraint,work_schedules.work_schedules_store_id_fkey,FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+03_constraint,work_schedules.work_schedules_weekly_plan_item_fk,FOREIGN KEY (weekly_plan_item_id) REFERENCES weekly_shift_plan_items(id) ON DELETE SET NULL
+04_index,public.attendance.attendance_pkey,CREATE UNIQUE INDEX attendance_pkey ON public.attendance USING btree (id)
+04_index,public.attendance.attendance_schedule_id_key,CREATE UNIQUE INDEX attendance_schedule_id_key ON public.attendance USING btree (schedule_id)
+04_index,public.attendance.idx_attendance_employee_date,"CREATE INDEX idx_attendance_employee_date ON public.attendance USING btree (employee_id, check_in)"
+04_index,public.attendance_events.attendance_events_pkey,CREATE UNIQUE INDEX attendance_events_pkey ON public.attendance_events USING btree (id)
+04_index,public.attendance_events.idx_attendance_events_attendance,"CREATE INDEX idx_attendance_events_attendance ON public.attendance_events USING btree (attendance_id, event_at DESC)"
+04_index,public.audit_logs.audit_logs_pkey,CREATE UNIQUE INDEX audit_logs_pkey ON public.audit_logs USING btree (id)
+04_index,public.audit_logs.idx_audit_actor_time,"CREATE INDEX idx_audit_actor_time ON public.audit_logs USING btree (actor_id, created_at DESC)"
+04_index,public.audit_logs.idx_audit_entity,"CREATE INDEX idx_audit_entity ON public.audit_logs USING btree (entity_type, entity_id, created_at DESC)"
+04_index,public.audit_logs.idx_audit_store_time,"CREATE INDEX idx_audit_store_time ON public.audit_logs USING btree (store_id, created_at DESC)"
+04_index,public.devices.devices_device_key_key,CREATE UNIQUE INDEX devices_device_key_key ON public.devices USING btree (device_key)
+04_index,public.devices.devices_pkey,CREATE UNIQUE INDEX devices_pkey ON public.devices USING btree (id)
+04_index,public.devices.idx_devices_employee_status,"CREATE INDEX idx_devices_employee_status ON public.devices USING btree (employee_id, status)"
+04_index,public.employee_bank_accounts.employee_bank_accounts_pkey,CREATE UNIQUE INDEX employee_bank_accounts_pkey ON public.employee_bank_accounts USING btree (employee_id)
+04_index,public.employee_bank_details.employee_bank_details_pkey,CREATE UNIQUE INDEX employee_bank_details_pkey ON public.employee_bank_details USING btree (employee_id)
+04_index,public.employee_profile_change_requests.employee_profile_change_one_pending_per_employee,CREATE UNIQUE INDEX employee_profile_change_one_pending_per_employee ON public.employee_profile_change_requests USING btree (employee_id) WHERE (status = 'pending'::text)
+04_index,public.employee_profile_change_requests.employee_profile_change_owner_queue,"CREATE INDEX employee_profile_change_owner_queue ON public.employee_profile_change_requests USING btree (store_id, created_at DESC) WHERE (status = 'pending'::text)"
+04_index,public.employee_profile_change_requests.employee_profile_change_requests_pkey,CREATE UNIQUE INDEX employee_profile_change_requests_pkey ON public.employee_profile_change_requests USING btree (id)
+04_index,public.employee_salary_versions.employee_salary_versions_employee_id_effective_from_key,"CREATE UNIQUE INDEX employee_salary_versions_employee_id_effective_from_key ON public.employee_salary_versions USING btree (employee_id, effective_from)"
+04_index,public.employee_salary_versions.employee_salary_versions_pkey,CREATE UNIQUE INDEX employee_salary_versions_pkey ON public.employee_salary_versions USING btree (id)
+04_index,public.employee_salary_versions.idx_employee_salary_versions_lookup,"CREATE INDEX idx_employee_salary_versions_lookup ON public.employee_salary_versions USING btree (employee_id, effective_from DESC)"
+04_index,public.leave_requests.idx_leave_employee_dates,"CREATE INDEX idx_leave_employee_dates ON public.leave_requests USING btree (employee_id, start_date, end_date, status)"
+04_index,public.leave_requests.idx_leave_store_status,"CREATE INDEX idx_leave_store_status ON public.leave_requests USING btree (store_id, status, start_date)"
+04_index,public.leave_requests.leave_requests_pkey,CREATE UNIQUE INDEX leave_requests_pkey ON public.leave_requests USING btree (id)
+04_index,public.leave_requests.leave_requests_schedule_status_idx,"CREATE INDEX leave_requests_schedule_status_idx ON public.leave_requests USING btree (schedule_id, status) WHERE (schedule_id IS NOT NULL)"
+04_index,public.manager_permissions.idx_manager_permissions_store,"CREATE INDEX idx_manager_permissions_store ON public.manager_permissions USING btree (store_id, permission_key)"
+04_index,public.manager_permissions.manager_permissions_pkey,CREATE UNIQUE INDEX manager_permissions_pkey ON public.manager_permissions USING btree (id)
+04_index,public.manager_permissions.manager_permissions_store_id_permission_key_key,"CREATE UNIQUE INDEX manager_permissions_store_id_permission_key_key ON public.manager_permissions USING btree (store_id, permission_key)"
+04_index,public.payroll_adjustments.idx_adjustments_employee_period,"CREATE INDEX idx_adjustments_employee_period ON public.payroll_adjustments USING btree (employee_id, payroll_period_id, status)"
+04_index,public.payroll_adjustments.payroll_adjustments_bonus_queue_idx,"CREATE INDEX payroll_adjustments_bonus_queue_idx ON public.payroll_adjustments USING btree (origin_store_id, effective_date, status) WHERE (adjustment_type = 'bonus'::adjustment_type)"
+04_index,public.payroll_adjustments.payroll_adjustments_pkey,CREATE UNIQUE INDEX payroll_adjustments_pkey ON public.payroll_adjustments USING btree (id)
+04_index,public.payroll_adjustments.payroll_adjustments_source_key_uq,CREATE UNIQUE INDEX payroll_adjustments_source_key_uq ON public.payroll_adjustments USING btree (source_key) WHERE (source_key IS NOT NULL)
+04_index,public.payroll_adjustments.payroll_adjustments_source_schedule_idx,CREATE INDEX payroll_adjustments_source_schedule_idx ON public.payroll_adjustments USING btree (source_schedule_id) WHERE (source_schedule_id IS NOT NULL)
+04_index,public.payroll_adjustments.payroll_adjustments_standalone_penalty_idx,"CREATE INDEX payroll_adjustments_standalone_penalty_idx ON public.payroll_adjustments USING btree (origin_store_id, created_at, status) WHERE ((adjustment_type = 'penalty'::adjustment_type) AND (payroll_period_id IS NULL))"
+04_index,public.payroll_full_day_bonus_rules.payroll_full_day_bonus_rules_pkey,CREATE UNIQUE INDEX payroll_full_day_bonus_rules_pkey ON public.payroll_full_day_bonus_rules USING btree (id)
+04_index,public.payroll_full_day_bonus_rules.payroll_full_day_bonus_rules_store_id_key,CREATE UNIQUE INDEX payroll_full_day_bonus_rules_store_id_key ON public.payroll_full_day_bonus_rules USING btree (store_id)
+04_index,public.payroll_holiday_pay_rules.payroll_holiday_pay_rules_pkey,CREATE UNIQUE INDEX payroll_holiday_pay_rules_pkey ON public.payroll_holiday_pay_rules USING btree (id)
+04_index,public.payroll_holiday_pay_rules.payroll_holiday_pay_rules_store_dates_idx,"CREATE INDEX payroll_holiday_pay_rules_store_dates_idx ON public.payroll_holiday_pay_rules USING btree (store_id, start_date, end_date) WHERE is_active"
+04_index,public.payroll_penalty_rules.payroll_penalty_rules_pkey,CREATE UNIQUE INDEX payroll_penalty_rules_pkey ON public.payroll_penalty_rules USING btree (id)
+04_index,public.payroll_periods.payroll_periods_pkey,CREATE UNIQUE INDEX payroll_periods_pkey ON public.payroll_periods USING btree (id)
+04_index,public.payroll_periods.payroll_periods_store_id_start_date_end_date_key,"CREATE UNIQUE INDEX payroll_periods_store_id_start_date_end_date_key ON public.payroll_periods USING btree (store_id, start_date, end_date)"
+04_index,public.payroll_run_items.idx_payroll_run_items_employee_date,"CREATE INDEX idx_payroll_run_items_employee_date ON public.payroll_run_items USING btree (employee_id, work_date)"
+04_index,public.payroll_run_items.idx_payroll_run_items_run,"CREATE INDEX idx_payroll_run_items_run ON public.payroll_run_items USING btree (payroll_run_id, work_date)"
+04_index,public.payroll_run_items.payroll_run_items_payroll_run_id_attendance_id_key,"CREATE UNIQUE INDEX payroll_run_items_payroll_run_id_attendance_id_key ON public.payroll_run_items USING btree (payroll_run_id, attendance_id)"
+04_index,public.payroll_run_items.payroll_run_items_pkey,CREATE UNIQUE INDEX payroll_run_items_pkey ON public.payroll_run_items USING btree (id)
+04_index,public.payroll_runs.payroll_runs_payroll_period_id_employee_id_key,"CREATE UNIQUE INDEX payroll_runs_payroll_period_id_employee_id_key ON public.payroll_runs USING btree (payroll_period_id, employee_id)"
+04_index,public.payroll_runs.payroll_runs_pkey,CREATE UNIQUE INDEX payroll_runs_pkey ON public.payroll_runs USING btree (id)
+04_index,public.profiles.idx_profiles_status,CREATE INDEX idx_profiles_status ON public.profiles USING btree (employment_status)
+04_index,public.profiles.idx_profiles_store_role,"CREATE INDEX idx_profiles_store_role ON public.profiles USING btree (store_id, role)"
+04_index,public.profiles.profiles_pkey,CREATE UNIQUE INDEX profiles_pkey ON public.profiles USING btree (id)
+04_index,public.schedule_requests.schedule_requests_employee_idx,"CREATE INDEX schedule_requests_employee_idx ON public.schedule_requests USING btree (employee_id, created_at DESC)"
+04_index,public.schedule_requests.schedule_requests_pkey,CREATE UNIQUE INDEX schedule_requests_pkey ON public.schedule_requests USING btree (id)
+04_index,public.schedule_requests.schedule_requests_store_status_idx,"CREATE INDEX schedule_requests_store_status_idx ON public.schedule_requests USING btree (store_id, status, created_at DESC)"
+04_index,public.shift_registration_recurring_rules.idx_shift_registration_recurring_active,"CREATE INDEX idx_shift_registration_recurring_active ON public.shift_registration_recurring_rules USING btree (store_id, is_active)"
+04_index,public.shift_registration_recurring_rules.shift_registration_recurring_rules_pkey,CREATE UNIQUE INDEX shift_registration_recurring_rules_pkey ON public.shift_registration_recurring_rules USING btree (id)
+04_index,public.shift_registration_recurring_rules.shift_registration_recurring_rules_store_id_key,CREATE UNIQUE INDEX shift_registration_recurring_rules_store_id_key ON public.shift_registration_recurring_rules USING btree (store_id)
+04_index,public.shift_registration_windows.idx_shift_registration_windows_store_week,"CREATE INDEX idx_shift_registration_windows_store_week ON public.shift_registration_windows USING btree (store_id, week_start)"
+04_index,public.shift_registration_windows.shift_registration_windows_pkey,CREATE UNIQUE INDEX shift_registration_windows_pkey ON public.shift_registration_windows USING btree (id)
+04_index,public.shift_registration_windows.shift_registration_windows_store_id_week_start_key,"CREATE UNIQUE INDEX shift_registration_windows_store_id_week_start_key ON public.shift_registration_windows USING btree (store_id, week_start)"
+04_index,public.shift_registrations.idx_registrations_status,"CREATE INDEX idx_registrations_status ON public.shift_registrations USING btree (status, requested_at)"
+04_index,public.shift_registrations.shift_registrations_pkey,CREATE UNIQUE INDEX shift_registrations_pkey ON public.shift_registrations USING btree (id)
+04_index,public.shift_registrations.uq_shift_registration_employee_schedule_active,"CREATE UNIQUE INDEX uq_shift_registration_employee_schedule_active ON public.shift_registrations USING btree (schedule_id, employee_id) WHERE (status = ANY (ARRAY['pending'::registration_status, 'approved'::registration_status]))"
+04_index,public.shift_template_versions.idx_shift_template_versions_lookup,"CREATE INDEX idx_shift_template_versions_lookup ON public.shift_template_versions USING btree (shift_template_id, effective_from DESC)"
+04_index,public.shift_template_versions.shift_template_versions_pkey,CREATE UNIQUE INDEX shift_template_versions_pkey ON public.shift_template_versions USING btree (id)
+04_index,public.shift_template_versions.shift_template_versions_shift_template_id_effective_from_key,"CREATE UNIQUE INDEX shift_template_versions_shift_template_id_effective_from_key ON public.shift_template_versions USING btree (shift_template_id, effective_from)"
+04_index,public.shift_templates.shift_templates_pkey,CREATE UNIQUE INDEX shift_templates_pkey ON public.shift_templates USING btree (id)
+04_index,public.shift_templates.shift_templates_store_id_name_key,"CREATE UNIQUE INDEX shift_templates_store_id_name_key ON public.shift_templates USING btree (store_id, name)"
+04_index,public.store_memberships.idx_store_memberships_store,"CREATE INDEX idx_store_memberships_store ON public.store_memberships USING btree (store_id, is_active, role, user_id)"
+04_index,public.store_memberships.idx_store_memberships_user,"CREATE INDEX idx_store_memberships_user ON public.store_memberships USING btree (user_id, is_active, store_id)"
+04_index,public.store_memberships.store_memberships_pkey,CREATE UNIQUE INDEX store_memberships_pkey ON public.store_memberships USING btree (id)
+04_index,public.store_memberships.store_memberships_user_id_store_id_key,"CREATE UNIQUE INDEX store_memberships_user_id_store_id_key ON public.store_memberships USING btree (user_id, store_id)"
+04_index,public.stores.stores_pkey,CREATE UNIQUE INDEX stores_pkey ON public.stores USING btree (id)
+04_index,public.weekly_shift_plan_items.idx_weekly_shift_plan_store_day,"CREATE INDEX idx_weekly_shift_plan_store_day ON public.weekly_shift_plan_items USING btree (store_id, weekday, sort_order)"
+04_index,public.weekly_shift_plan_items.weekly_shift_plan_items_pkey,CREATE UNIQUE INDEX weekly_shift_plan_items_pkey ON public.weekly_shift_plan_items USING btree (id)
+04_index,public.work_schedules.idx_work_schedules_employee_date,"CREATE INDEX idx_work_schedules_employee_date ON public.work_schedules USING btree (employee_id, work_date)"
+04_index,public.work_schedules.idx_work_schedules_employee_start_at,"CREATE INDEX idx_work_schedules_employee_start_at ON public.work_schedules USING btree (employee_id, start_at)"
+04_index,public.work_schedules.idx_work_schedules_group,"CREATE INDEX idx_work_schedules_group ON public.work_schedules USING btree (shift_group_id, status)"
+04_index,public.work_schedules.idx_work_schedules_store_date,"CREATE INDEX idx_work_schedules_store_date ON public.work_schedules USING btree (store_id, work_date)"
+04_index,public.work_schedules.idx_work_schedules_store_date_template,"CREATE INDEX idx_work_schedules_store_date_template ON public.work_schedules USING btree (store_id, work_date, shift_template_id, status)"
+04_index,public.work_schedules.idx_work_schedules_store_start_at,"CREATE INDEX idx_work_schedules_store_start_at ON public.work_schedules USING btree (store_id, start_at)"
+04_index,public.work_schedules.idx_work_schedules_weekly_plan_item,"CREATE INDEX idx_work_schedules_weekly_plan_item ON public.work_schedules USING btree (weekly_plan_item_id, work_date)"
+04_index,public.work_schedules.uq_assigned_employee_shift,"CREATE UNIQUE INDEX uq_assigned_employee_shift ON public.work_schedules USING btree (employee_id, work_date, start_time, end_time) WHERE ((employee_id IS NOT NULL) AND (status = ANY (ARRAY['open'::schedule_status, 'assigned'::schedule_status])))"
+04_index,public.work_schedules.work_schedules_pkey,CREATE UNIQUE INDEX work_schedules_pkey ON public.work_schedules USING btree (id)
+05_policy,public.attendance.attendance_manager_select_branch,"cmd=SELECT; roles=authenticated; using=(is_manager_or_owner() AND (EXISTS ( SELECT 1
+   FROM work_schedules s
+  WHERE ((s.id = attendance.schedule_id) AND is_store_member(s.store_id) AND current_user_has_manager_permission('attendance_process'::text))))); check=-"
+05_policy,public.attendance.attendance_self_read_branch,"cmd=SELECT; roles=authenticated; using=((employee_id = auth.uid()) OR (is_manager_or_owner() AND (EXISTS ( SELECT 1
+   FROM work_schedules s
+  WHERE ((s.id = attendance.schedule_id) AND is_store_member(s.store_id) AND current_user_has_manager_permission('attendance_process'::text)))))); check=-"
+05_policy,public.attendance_events.attendance_events_manager_select_branch,"cmd=SELECT; roles=authenticated; using=(is_manager_or_owner() AND (EXISTS ( SELECT 1
+   FROM (attendance a
+     JOIN work_schedules s ON ((s.id = a.schedule_id)))
+  WHERE ((a.id = attendance_events.attendance_id) AND is_store_member(s.store_id) AND current_user_has_manager_permission('attendance_process'::text))))); check=-"
+05_policy,public.attendance_events.attendance_events_self_read_branch,"cmd=SELECT; roles=authenticated; using=((employee_id = auth.uid()) OR (is_manager_or_owner() AND (EXISTS ( SELECT 1
+   FROM (attendance a
+     JOIN work_schedules s ON ((s.id = a.schedule_id)))
+  WHERE ((a.id = attendance_events.attendance_id) AND is_store_member(s.store_id) AND current_user_has_manager_permission('attendance_process'::text)))))); check=-"
+05_policy,public.audit_logs.audit_manager_read_branch,cmd=SELECT; roles=authenticated; using=(is_manager_or_owner() AND (store_id IS NOT NULL) AND is_store_member(store_id) AND current_user_has_manager_permission('audit_view'::text)); check=-
+05_policy,public.devices.devices_owner_manage_branch,"cmd=ALL; roles=authenticated; using=(is_owner() AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = devices.employee_id) AND is_store_owner(p.store_id))))); check=(is_owner() AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = devices.employee_id) AND is_store_owner(p.store_id)))))"
+05_policy,public.devices.devices_self_insert_branch,"cmd=INSERT; roles=authenticated; using=-; check=((employee_id = auth.uid()) AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = auth.uid()) AND is_store_member(p.store_id)))) AND (status = 'pending'::device_status))"
+05_policy,public.devices.devices_self_read_branch,"cmd=SELECT; roles=authenticated; using=((employee_id = auth.uid()) OR (is_manager_or_owner() AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = devices.employee_id) AND is_store_member(p.store_id)))))); check=-"
+05_policy,public.devices.devices_self_update_pending_branch,cmd=UPDATE; roles=authenticated; using=((employee_id = auth.uid()) AND (status = 'pending'::device_status)); check=((employee_id = auth.uid()) AND (status = 'pending'::device_status))
+05_policy,public.employee_bank_accounts.employee_bank_accounts_delete_self_or_owner,"cmd=DELETE; roles=authenticated; using=((employee_id = auth.uid()) OR (is_owner() AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = employee_bank_accounts.employee_id) AND (p.store_id IS NOT NULL) AND is_store_owner(p.store_id)))))); check=-"
+05_policy,public.employee_bank_accounts.employee_bank_accounts_insert_self_or_owner,"cmd=INSERT; roles=authenticated; using=-; check=((employee_id = auth.uid()) OR (is_owner() AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = employee_bank_accounts.employee_id) AND (p.store_id IS NOT NULL) AND is_store_owner(p.store_id))))))"
+05_policy,public.employee_bank_accounts.employee_bank_accounts_manager_payroll_read,cmd=SELECT; roles=authenticated; using=can_manager_view_employee_payroll(employee_id); check=-
+05_policy,public.employee_bank_accounts.employee_bank_accounts_read_self_or_owner,"cmd=SELECT; roles=authenticated; using=((employee_id = auth.uid()) OR (is_owner() AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = employee_bank_accounts.employee_id) AND (p.store_id IS NOT NULL) AND is_store_owner(p.store_id)))))); check=-"
+05_policy,public.employee_bank_accounts.employee_bank_accounts_update_self_or_owner,"cmd=UPDATE; roles=authenticated; using=((employee_id = auth.uid()) OR (is_owner() AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = employee_bank_accounts.employee_id) AND (p.store_id IS NOT NULL) AND is_store_owner(p.store_id)))))); check=((employee_id = auth.uid()) OR (is_owner() AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = employee_bank_accounts.employee_id) AND (p.store_id IS NOT NULL) AND is_store_owner(p.store_id))))))"
+05_policy,public.employee_profile_change_requests.employee_profile_change_read_self_or_owner,cmd=SELECT; roles=authenticated; using=((employee_id = auth.uid()) OR is_store_owner(store_id)); check=-
+05_policy,public.employee_salary_versions.employee_salary_versions_employee_read_own,cmd=SELECT; roles=authenticated; using=(employee_id = auth.uid()); check=-
+05_policy,public.employee_salary_versions.employee_salary_versions_manage_branch,"cmd=ALL; roles=authenticated; using=(is_owner() AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = employee_salary_versions.employee_id) AND is_store_owner(p.store_id))))); check=(is_owner() AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = employee_salary_versions.employee_id) AND is_store_owner(p.store_id)))))"
+05_policy,public.leave_requests.leave_self_insert_branch,cmd=INSERT; roles=authenticated; using=-; check=((employee_id = auth.uid()) AND is_store_member(store_id))
+05_policy,public.leave_requests.leave_self_read_branch,cmd=SELECT; roles=authenticated; using=((employee_id = auth.uid()) OR (is_manager_or_owner() AND is_store_member(store_id) AND current_user_has_manager_permission('leave_manage'::text))); check=-
+05_policy,public.manager_permissions.manager_permissions_manager_read,"cmd=SELECT; roles=authenticated; using=((my_role() = 'manager'::user_role) AND (store_id = ( SELECT profiles.store_id
+   FROM profiles
+  WHERE (profiles.id = auth.uid())))); check=-"
+05_policy,public.manager_permissions.manager_permissions_owner_manage,cmd=ALL; roles=authenticated; using=is_owner(); check=is_owner()
+05_policy,public.payroll_adjustments.adjustments_owner_manage_branch,"cmd=ALL; roles=authenticated; using=(is_owner() AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = payroll_adjustments.employee_id) AND is_store_owner(p.store_id))))); check=(is_owner() AND (EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = payroll_adjustments.employee_id) AND is_store_owner(p.store_id)))))"
+05_policy,public.payroll_adjustments.payroll_adjustments_employee_read_own,cmd=SELECT; roles=authenticated; using=(employee_id = auth.uid()); check=-
+05_policy,public.payroll_adjustments.payroll_adjustments_manager_read_branch,cmd=SELECT; roles=authenticated; using=can_manager_view_employee_payroll(employee_id); check=-
+05_policy,public.payroll_penalty_rules.payroll_penalty_rules_owner_manage_branch,cmd=ALL; roles=authenticated; using=(is_owner() AND is_store_owner(store_id)); check=(is_owner() AND is_store_owner(store_id))
+05_policy,public.payroll_periods.payroll_periods_employee_read_own,"cmd=SELECT; roles=authenticated; using=(EXISTS ( SELECT 1
+   FROM payroll_runs r
+  WHERE ((r.payroll_period_id = payroll_periods.id) AND (r.employee_id = auth.uid())))); check=-"
+05_policy,public.payroll_periods.payroll_periods_manager_read_branch,cmd=SELECT; roles=authenticated; using=((my_role() = 'manager'::user_role) AND current_user_has_manager_permission('payroll_view'::text) AND is_store_member(store_id)); check=-
+05_policy,public.payroll_periods.payroll_periods_owner_manage_branch,cmd=ALL; roles=authenticated; using=is_store_owner(store_id); check=is_store_owner(store_id)
+05_policy,public.payroll_run_items.payroll_run_items_employee_read,"cmd=SELECT; roles=authenticated; using=((employee_id = auth.uid()) OR (is_owner() AND (EXISTS ( SELECT 1
+   FROM (payroll_runs r
+     JOIN payroll_periods p ON ((p.id = r.payroll_period_id)))
+  WHERE ((r.id = payroll_run_items.payroll_run_id) AND is_store_owner(p.store_id)))))); check=-"
+05_policy,public.payroll_runs.payroll_runs_employee_read_own,cmd=SELECT; roles=authenticated; using=(employee_id = auth.uid()); check=-
+05_policy,public.payroll_runs.payroll_runs_manager_read_branch,cmd=SELECT; roles=authenticated; using=can_manager_view_payroll_run(payroll_period_id); check=-
+05_policy,public.payroll_runs.payroll_runs_owner_manage_branch,cmd=ALL; roles=authenticated; using=can_owner_manage_payroll_run(payroll_period_id); check=can_owner_manage_payroll_run(payroll_period_id)
+05_policy,public.profiles.profiles_owner_manage_branch,cmd=ALL; roles=authenticated; using=(is_owner() AND (store_id IS NOT NULL) AND is_store_owner(store_id)); check=(is_owner() AND (store_id IS NOT NULL) AND is_store_owner(store_id))
+05_policy,public.profiles.profiles_self_read,cmd=SELECT; roles=authenticated; using=(id = auth.uid()); check=-
+05_policy,public.profiles.profiles_self_update,"cmd=UPDATE; roles=authenticated; using=(id = auth.uid()); check=((id = auth.uid()) AND (role = ( SELECT profiles_1.role
+   FROM profiles profiles_1
+  WHERE (profiles_1.id = auth.uid()))) AND (employment_status = ( SELECT profiles_1.employment_status
+   FROM profiles profiles_1
+  WHERE (profiles_1.id = auth.uid()))) AND (hourly_rate = ( SELECT profiles_1.hourly_rate
+   FROM profiles profiles_1
+  WHERE (profiles_1.id = auth.uid()))) AND (store_id = ( SELECT profiles_1.store_id
+   FROM profiles profiles_1
+  WHERE (profiles_1.id = auth.uid()))))"
+05_policy,public.profiles.profiles_staff_read_branch,cmd=SELECT; roles=authenticated; using=(is_manager_or_owner() AND (store_id IS NOT NULL) AND is_store_member(store_id) AND current_user_has_manager_permission('employee_basic'::text)); check=-
+05_policy,public.schedule_requests.schedule_requests_employee_select,cmd=SELECT; roles=authenticated; using=(employee_id = auth.uid()); check=-
+05_policy,public.schedule_requests.schedule_requests_self_read_branch,cmd=SELECT; roles=authenticated; using=((employee_id = auth.uid()) OR (is_manager_or_owner() AND is_store_member(store_id) AND current_user_has_manager_permission('leave_manage'::text))); check=-
+05_policy,public.schedule_requests.schedule_requests_staff_select,cmd=SELECT; roles=authenticated; using=(is_manager_or_owner() AND is_store_member(store_id) AND current_user_has_manager_permission('leave_manage'::text)); check=-
+05_policy,public.schedule_requests.schedule_requests_staff_update,"cmd=UPDATE; roles=authenticated; using=(EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = auth.uid()) AND (p.store_id = schedule_requests.store_id) AND (p.role = ANY (ARRAY['owner'::user_role, 'manager'::user_role])) AND (p.employment_status = 'active'::employment_status)))); check=(EXISTS ( SELECT 1
+   FROM profiles p
+  WHERE ((p.id = auth.uid()) AND (p.store_id = schedule_requests.store_id) AND (p.role = ANY (ARRAY['owner'::user_role, 'manager'::user_role])) AND (p.employment_status = 'active'::employment_status))))"
+05_policy,public.shift_registration_recurring_rules.registration_recurring_read_branch,cmd=SELECT; roles=authenticated; using=(is_store_member(store_id) AND ((NOT is_manager_or_owner()) OR current_user_has_manager_permission('schedule_manage'::text))); check=-
+05_policy,public.shift_registration_windows.registration_windows_read_branch,cmd=SELECT; roles=authenticated; using=(is_store_member(store_id) AND ((NOT is_manager_or_owner()) OR current_user_has_manager_permission('schedule_manage'::text))); check=-
+05_policy,public.shift_registrations.registrations_self_read_branch,"cmd=SELECT; roles=authenticated; using=((employee_id = auth.uid()) OR (is_manager_or_owner() AND (EXISTS ( SELECT 1
+   FROM work_schedules s
+  WHERE ((s.id = shift_registrations.schedule_id) AND is_store_member(s.store_id) AND current_user_has_manager_permission('shift_registration'::text)))))); check=-"
+05_policy,public.shift_template_versions.shift_template_versions_manage_branch,"cmd=ALL; roles=authenticated; using=(is_manager_or_owner() AND (EXISTS ( SELECT 1
+   FROM shift_templates t
+  WHERE ((t.id = shift_template_versions.shift_template_id) AND is_store_member(t.store_id) AND current_user_has_manager_permission('schedule_manage'::text))))); check=(is_manager_or_owner() AND (EXISTS ( SELECT 1
+   FROM shift_templates t
+  WHERE ((t.id = shift_template_versions.shift_template_id) AND is_store_member(t.store_id) AND current_user_has_manager_permission('schedule_manage'::text)))))"
+05_policy,public.shift_template_versions.shift_template_versions_read_branch,"cmd=SELECT; roles=authenticated; using=(EXISTS ( SELECT 1
+   FROM shift_templates t
+  WHERE ((t.id = shift_template_versions.shift_template_id) AND is_store_member(t.store_id) AND ((NOT is_manager_or_owner()) OR current_user_has_manager_permission('schedule_manage'::text))))); check=-"
+05_policy,public.shift_templates.shift_templates_manage_branch,cmd=ALL; roles=authenticated; using=(is_manager_or_owner() AND is_store_member(store_id) AND current_user_has_manager_permission('schedule_manage'::text)); check=(is_manager_or_owner() AND is_store_member(store_id) AND current_user_has_manager_permission('schedule_manage'::text))
+05_policy,public.shift_templates.shift_templates_read_branch,cmd=SELECT; roles=authenticated; using=(is_store_member(store_id) AND ((NOT is_manager_or_owner()) OR current_user_has_manager_permission('schedule_manage'::text))); check=-
+05_policy,public.store_memberships.store_memberships_owner_manage,cmd=ALL; roles=authenticated; using=is_store_owner(store_id); check=is_store_owner(store_id)
+05_policy,public.store_memberships.store_memberships_owner_read,cmd=SELECT; roles=authenticated; using=is_store_owner(store_id); check=-
+05_policy,public.store_memberships.store_memberships_self_read,cmd=SELECT; roles=authenticated; using=(user_id = auth.uid()); check=-
+05_policy,public.stores.stores_owner_update,cmd=UPDATE; roles=authenticated; using=is_store_owner(id); check=is_store_owner(id)
+05_policy,public.stores.stores_read_member,cmd=SELECT; roles=authenticated; using=is_store_member(id); check=-
+05_policy,public.weekly_shift_plan_items.weekly_plan_manage_branch,cmd=ALL; roles=authenticated; using=(is_manager_or_owner() AND is_store_member(store_id) AND current_user_has_manager_permission('schedule_manage'::text)); check=(is_manager_or_owner() AND is_store_member(store_id) AND current_user_has_manager_permission('schedule_manage'::text))
+05_policy,public.weekly_shift_plan_items.weekly_plan_read_branch,cmd=SELECT; roles=authenticated; using=(is_store_member(store_id) AND ((NOT is_manager_or_owner()) OR current_user_has_manager_permission('schedule_manage'::text))); check=-
+05_policy,public.weekly_shift_plan_items.weekly_shift_plan_delete,"cmd=DELETE; roles=authenticated; using=((store_id = ( SELECT profiles.store_id
+   FROM profiles
+  WHERE (profiles.id = auth.uid()))) AND (( SELECT (profiles.role)::text AS role
+   FROM profiles
+  WHERE (profiles.id = auth.uid())) = ANY (ARRAY['owner'::text, 'manager'::text]))); check=-"
+05_policy,public.weekly_shift_plan_items.weekly_shift_plan_insert,"cmd=INSERT; roles=authenticated; using=-; check=((store_id = ( SELECT profiles.store_id
+   FROM profiles
+  WHERE (profiles.id = auth.uid()))) AND (( SELECT (profiles.role)::text AS role
+   FROM profiles
+  WHERE (profiles.id = auth.uid())) = ANY (ARRAY['owner'::text, 'manager'::text])))"
+05_policy,public.weekly_shift_plan_items.weekly_shift_plan_select,"cmd=SELECT; roles=authenticated; using=((store_id = ( SELECT p.store_id
+   FROM profiles p
+  WHERE (p.id = auth.uid()))) AND (is_owner() OR current_user_has_manager_permission('schedule_manage'::text))); check=-"
+05_policy,public.weekly_shift_plan_items.weekly_shift_plan_update,"cmd=UPDATE; roles=authenticated; using=((store_id = ( SELECT profiles.store_id
+   FROM profiles
+  WHERE (profiles.id = auth.uid()))) AND (( SELECT (profiles.role)::text AS role
+   FROM profiles
+  WHERE (profiles.id = auth.uid())) = ANY (ARRAY['owner'::text, 'manager'::text]))); check=((store_id = ( SELECT profiles.store_id
+   FROM profiles
+  WHERE (profiles.id = auth.uid()))) AND (( SELECT (profiles.role)::text AS role
+   FROM profiles
+  WHERE (profiles.id = auth.uid())) = ANY (ARRAY['owner'::text, 'manager'::text])))"
+05_policy,public.work_schedules.schedules_employee_select_v21,"cmd=SELECT; roles=authenticated; using=((employee_id = auth.uid()) OR ((status = 'open'::schedule_status) AND (employee_id IS NULL) AND (store_id = ( SELECT profiles.store_id
+   FROM profiles
+  WHERE ((profiles.id = auth.uid()) AND (profiles.role = 'employee'::user_role) AND (profiles.employment_status = 'active'::employment_status)))))); check=-"
+05_policy,public.work_schedules.schedules_read_employee_branch,cmd=SELECT; roles=authenticated; using=((employee_id = auth.uid()) OR ((employee_id IS NULL) AND is_store_member(store_id) AND (status = 'open'::schedule_status) AND (NOT is_manager_or_owner())) OR (is_manager_or_owner() AND is_store_member(store_id) AND current_user_has_manager_permission('schedule_manage'::text))); check=-
+06_function,public.activate_my_employee(),returns=jsonb; security_definer=true; volatility=v
+06_function,"public.add_template_schedules_to_date(p_store_id uuid, p_work_date date, p_template_ids uuid[], p_slots integer[], p_note text)",returns=integer; security_definer=true; volatility=v
+06_function,"public.assign_employee_to_schedule(p_schedule_id uuid, p_employee_id uuid, p_note text)",returns=boolean; security_definer=true; volatility=v
+06_function,"public.assign_employees_to_schedule_group(p_schedule_id uuid, p_employee_ids uuid[], p_note text)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.attendance_punch(p_action text, p_device_key text, p_latitude double precision, p_longitude double precision, p_accuracy_m double precision, p_schedule_id uuid)",returns=jsonb; security_definer=true; volatility=v
+06_function,public.auto_finalize_due_shift_registrations(),returns=jsonb; security_definer=true; volatility=v
+06_function,"public.auto_generate_weekly_schedule_from_plan(p_store_id uuid, p_week_start date)",returns=jsonb; security_definer=true; volatility=v
+06_function,public.can_manager_view_employee_payroll(p_employee_id uuid),returns=boolean; security_definer=true; volatility=s
+06_function,public.can_manager_view_payroll_run(p_payroll_period_id uuid),returns=boolean; security_definer=true; volatility=s
+06_function,public.can_owner_manage_payroll_run(p_payroll_period_id uuid),returns=boolean; security_definer=true; volatility=s
+06_function,"public.cancel_work_schedule(p_schedule_id uuid, p_reason text)",returns=boolean; security_definer=true; volatility=v
+06_function,public.close_shift_registration_window(p_week_start date),returns=boolean; security_definer=true; volatility=v
+06_function,"public.complete_my_employee_profile(p_full_name text, p_phone text, p_address text, p_bank_name text, p_account_number text, p_account_holder text)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.confirm_late_checkin(p_schedule_id uuid, p_check_in_at timestamp with time zone, p_note text)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.create_branch(p_name text, p_address text, p_latitude double precision, p_longitude double precision)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.create_schedule_slots(p_store_id uuid, p_shift_template_id uuid, p_work_date date, p_note text, p_slots integer)",returns=integer; security_definer=true; volatility=v
+06_function,"public.create_supplemental_schedule(p_store_id uuid, p_work_date date, p_name text, p_start_time time without time zone, p_end_time time without time zone, p_employee_ids uuid[], p_note text)",returns=jsonb; security_definer=true; volatility=v
+06_function,public.current_user_has_manager_permission(p_permission_key text),returns=boolean; security_definer=true; volatility=s
+06_function,public.delete_supplemental_schedule(p_schedule_id uuid),returns=jsonb; security_definer=true; volatility=v
+06_function,public.employee_get_payroll_advance_limit(),returns=jsonb; security_definer=true; volatility=s
+06_function,"public.employee_request_payroll_advance(p_amount numeric, p_reason text)",returns=uuid; security_definer=true; volatility=v
+06_function,"public.employee_schedule_conflict(p_employee_id uuid, p_start_at timestamp with time zone, p_end_at timestamp with time zone, p_exclude_schedule_id uuid)",returns=uuid; security_definer=true; volatility=s
+06_function,public.enforce_manager_business_permission(),returns=trigger; security_definer=true; volatility=v
+06_function,public.ensure_recurring_shift_registration_windows(),returns=jsonb; security_definer=true; volatility=v
+06_function,public.ensure_shift_registration_window(p_week_start date),returns=jsonb; security_definer=true; volatility=v
+06_function,public.finalize_shift_registrations(p_week_start date),returns=jsonb; security_definer=true; volatility=v
+06_function,"public.generate_weekly_schedule_from_plan(p_store_id uuid, p_week_start date)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.get_employee_hourly_rate(p_employee_id uuid, p_work_date date)",returns=numeric; security_definer=true; volatility=s
+06_function,"public.get_employee_schedule_overview(p_start_date date, p_end_date date)","returns=TABLE(id uuid, work_date date, start_time time without time zone, end_time time without time zone, start_at timestamp with time zone, end_at timestamp with time zone, status text, note text, employee_id uuid, shift_group_id uuid, template_name text, employee_name text, employee_phone text); security_definer=true; volatility=v"
+06_function,public.get_employee_shift_capacity(p_schedule_ids uuid[]),"returns=TABLE(schedule_id uuid, group_id uuid, capacity integer, assigned_count integer, reserved_count integer); security_definer=true; volatility=v"
+06_function,public.get_employee_shift_registrants(p_schedule_ids uuid[]),"returns=TABLE(schedule_id uuid, employee_id uuid, employee_name text, requested_at timestamp with time zone, status text); security_definer=true; volatility=v"
+06_function,public.get_my_active_store_id(),returns=uuid; security_definer=true; volatility=s
+06_function,public.get_my_bank_details(),returns=jsonb; security_definer=true; volatility=v
+06_function,public.get_my_manager_permissions(),"returns=TABLE(permission_key text, enabled boolean); security_definer=true; volatility=v"
+06_function,public.get_my_payroll_slips(),"returns=TABLE(payroll_period_id uuid, period_name text, start_date date, end_date date, status payroll_status, paid_at timestamp with time zone, worked_minutes integer, gross_amount numeric, bonus_amount numeric, penalty_amount numeric, advance_amount numeric, net_amount numeric, items jsonb, adjustments jsonb); security_definer=true; volatility=s"
+06_function,public.get_my_work_state(),returns=jsonb; security_definer=true; volatility=v
+06_function,public.get_shift_registration_recurring_rule(),returns=jsonb; security_definer=true; volatility=v
+06_function,public.get_shift_registration_window(p_week_start date),returns=jsonb; security_definer=true; volatility=v
+06_function,"public.get_shift_template_version(p_shift_template_id uuid, p_work_date date)",returns=shift_template_versions; security_definer=true; volatility=s
+06_function,"public.gps_distance_m(p_lat1 double precision, p_lon1 double precision, p_lat2 double precision, p_lon2 double precision)",returns=double precision; security_definer=false; volatility=i
+06_function,public.guard_employee_bank_self_update(),returns=trigger; security_definer=false; volatility=v
+06_function,public.guard_employee_profile_self_update(),returns=trigger; security_definer=false; volatility=v
+06_function,public.guard_owner_schedule_configuration(),returns=trigger; security_definer=true; volatility=v
+06_function,public.guard_registration_window_write(),returns=trigger; security_definer=true; volatility=v
+06_function,public.handle_new_user(),returns=trigger; security_definer=true; volatility=v
+06_function,public.is_manager_or_owner(),returns=boolean; security_definer=true; volatility=s
+06_function,public.is_owner(),returns=boolean; security_definer=true; volatility=s
+06_function,public.is_store_member(p_store_id uuid),returns=boolean; security_definer=true; volatility=s
+06_function,public.is_store_owner(p_store_id uuid),returns=boolean; security_definer=true; volatility=s
+06_function,public.manager_list_payroll_advance_requests(),"returns=TABLE(adjustment_id uuid, employee_id uuid, employee_name text, amount numeric, reason text, created_at timestamp with time zone, payroll_period_id uuid, advance_status text); security_definer=true; volatility=s"
+06_function,"public.manager_owner_add_bonus_standalone_v1(p_employee_id uuid, p_amount numeric, p_reason text, p_effective_date date)",returns=uuid; security_definer=true; volatility=v
+06_function,"public.manager_owner_add_penalty_standalone_v85(p_employee_id uuid, p_amount numeric, p_reason text)",returns=uuid; security_definer=true; volatility=v
+06_function,public.manager_owner_bonus_context_v1(),returns=jsonb; security_definer=true; volatility=v
+06_function,"public.manager_owner_list_bonus_vouchers_v1(p_status text, p_limit integer, p_offset integer)","returns=TABLE(adjustment_id uuid, employee_id uuid, employee_name text, effective_date date, amount numeric, reason text, status adjustment_status, payroll_period_id uuid, period_name text, source_key text, created_at timestamp with time zone); security_definer=true; volatility=v"
+06_function,"public.manager_owner_list_penalties_v85(p_status text, p_limit integer, p_offset integer)","returns=TABLE(adjustment_id uuid, employee_id uuid, employee_name text, payroll_period_id uuid, period_name text, start_date date, end_date date, amount numeric, reason text, status adjustment_status, created_at timestamp with time zone); security_definer=true; volatility=v"
+06_function,public.manager_owner_penalty_context_v85(),returns=jsonb; security_definer=true; volatility=v
+06_function,"public.manager_owner_review_bonus_v1(p_adjustment_id uuid, p_action text)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.manager_owner_review_penalty_v85(p_adjustment_id uuid, p_action text)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.manager_owner_save_full_day_bonus_rule_v1(p_minimum_worked_minutes integer, p_amount numeric, p_is_active boolean)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.manager_owner_save_holiday_pay_rule_v1(p_rule_id uuid, p_label text, p_start_date date, p_end_date date, p_calculation_mode text, p_amount numeric, p_is_active boolean)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.manager_review_payroll_advance(p_adjustment_id uuid, p_action text)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.manager_update_employee_contact(p_employee_id uuid, p_full_name text, p_phone text)",returns=boolean; security_definer=true; volatility=v
+06_function,public.materialize_future_weekly_schedule_horizon_v1(),returns=jsonb; security_definer=true; volatility=v
+06_function,"public.materialize_plan_week_internal_v1(p_store_id uuid, p_week_start date)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.materialize_weekly_registration_slots(p_store_id uuid, p_week_start date)",returns=jsonb; security_definer=true; volatility=v
+06_function,public.materialize_weekly_schedule_from_saved_plan_v1(p_week_start date),returns=jsonb; security_definer=true; volatility=v
+06_function,public.my_role(),returns=user_role; security_definer=true; volatility=s
+06_function,public.open_shift_registration_window(p_week_start date),returns=jsonb; security_definer=true; volatility=v
+06_function,"public.owner_add_payroll_adjustment(p_employee_id uuid, p_payroll_period_id uuid, p_type text, p_amount numeric, p_reason text)",returns=uuid; security_definer=true; volatility=v
+06_function,public.owner_assign_queued_payroll_advances(p_payroll_period_id uuid),returns=integer; security_definer=true; volatility=v
+06_function,public.owner_assign_standalone_payroll_adjustments(p_payroll_period_id uuid),returns=integer; security_definer=true; volatility=v
+06_function,public.owner_calculate_payroll(p_payroll_period_id uuid),returns=jsonb; security_definer=true; volatility=v
+06_function,"public.owner_create_payroll_period(p_period_name text, p_start_date date, p_end_date date, p_note text)",returns=uuid; security_definer=true; volatility=v
+06_function,public.owner_delete_inactive_attendance_device(p_device_id uuid),returns=jsonb; security_definer=true; volatility=v
+06_function,public.owner_generate_payroll_penalties(p_payroll_period_id uuid),returns=integer; security_definer=true; volatility=v
+06_function,public.owner_get_employee_bank_details(p_employee_id uuid),returns=jsonb; security_definer=true; volatility=v
+06_function,public.owner_get_manager_permissions(),"returns=TABLE(permission_key text, enabled boolean); security_definer=true; volatility=v"
+06_function,public.owner_prepare_payroll_bonuses_v1(p_payroll_period_id uuid),returns=jsonb; security_definer=true; volatility=v
+06_function,"public.owner_review_employee_profile_change(p_request_id uuid, p_approve boolean, p_note text)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.owner_review_payroll_adjustment(p_adjustment_id uuid, p_action text)",returns=boolean; security_definer=true; volatility=v
+06_function,"public.owner_review_payroll_adjustment_guarded(p_adjustment_id uuid, p_action text)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.owner_save_employee_bank_details(p_employee_id uuid, p_bank_name text, p_account_holder text, p_account_number text, p_branch_name text)",returns=boolean; security_definer=true; volatility=v
+06_function,public.owner_save_manager_permissions(p_permissions jsonb),returns=boolean; security_definer=true; volatility=v
+06_function,public.owner_save_manager_permissions_v2(p_permissions jsonb),returns=void; security_definer=true; volatility=v
+06_function,"public.owner_set_employee_salary(p_employee_id uuid, p_hourly_rate numeric, p_effective_date date)",returns=boolean; security_definer=true; volatility=v
+06_function,"public.owner_set_payroll_status(p_payroll_period_id uuid, p_status text)",returns=boolean; security_definer=true; volatility=v
+06_function,"public.owner_supplement_attendance(p_schedule_id uuid, p_check_in_at timestamp with time zone, p_check_out_at timestamp with time zone, p_note text)",returns=jsonb; security_definer=true; volatility=v
+06_function,public.process_shift_registration_automation(),returns=jsonb; security_definer=true; volatility=v
+06_function,public.refresh_future_weekly_schedule_from_plan_v1(p_weeks_ahead integer),returns=jsonb; security_definer=true; volatility=v
+06_function,"public.register_for_shift(p_schedule_id uuid, p_note text)",returns=uuid; security_definer=true; volatility=v
+06_function,"public.registration_window_times(p_week_start date, p_open_weekday integer, p_open_time time without time zone, p_close_weekday integer, p_close_time time without time zone)","returns=TABLE(open_at timestamp with time zone, close_at timestamp with time zone); security_definer=false; volatility=i"
+06_function,"public.replace_employees_to_schedule_group(p_schedule_id uuid, p_employee_ids uuid[], p_note text)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.request_attendance_device(p_device_key text, p_device_name text, p_platform text, p_user_agent text)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.request_employee_profile_change(p_full_name text, p_phone text, p_address text, p_bank_name text, p_account_number text, p_account_holder text)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.request_leave(p_start_date date, p_end_date date, p_reason text)",returns=uuid; security_definer=true; volatility=v
+06_function,"public.request_shift_leave(p_schedule_id uuid, p_reason text)",returns=uuid; security_definer=true; volatility=v
+06_function,"public.resolve_missing_checkout(p_attendance_id uuid, p_checkout_at timestamp with time zone, p_note text)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.review_attendance_device(p_device_id uuid, p_action text, p_reason text)",returns=boolean; security_definer=true; volatility=v
+06_function,"public.review_leave(p_leave_id uuid, p_action text, p_reason text)",returns=boolean; security_definer=true; volatility=v
+06_function,"public.review_schedule_request(p_request_id uuid, p_action text, p_reason text)",returns=schedule_requests; security_definer=true; volatility=v
+06_function,"public.review_shift_registration(p_registration_id uuid, p_action text, p_reason text)",returns=boolean; security_definer=true; volatility=v
+06_function,"public.save_my_bank_details(p_bank_name text, p_account_holder text, p_account_number text, p_branch_name text)",returns=boolean; security_definer=true; volatility=v
+06_function,"public.save_shift_registration_recurring_rule(p_open_weekday integer, p_open_time time without time zone, p_close_weekday integer, p_close_time time without time zone)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.save_shift_registration_settings(p_open_weekday integer, p_open_time time without time zone, p_close_weekday integer, p_close_time time without time zone, p_auto_open boolean, p_auto_approve boolean)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.save_shift_registration_window(p_week_start date, p_open_at timestamp with time zone, p_close_at timestamp with time zone)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.save_shift_template(p_template_id uuid, p_name text, p_start_time time without time zone, p_end_time time without time zone, p_break_minutes integer, p_capacity integer, p_is_active boolean)",returns=uuid; security_definer=true; volatility=v
+06_function,"public.save_shift_template(p_template_id uuid, p_name text, p_start_time time without time zone, p_end_time time without time zone, p_break_minutes integer, p_capacity integer, p_is_active boolean, p_effective_date date)",returns=uuid; security_definer=true; volatility=v
+06_function,public.save_weekly_shift_plan(p_items jsonb),returns=jsonb; security_definer=true; volatility=v
+06_function,public.set_audit_store_id(),returns=trigger; security_definer=true; volatility=v
+06_function,public.set_updated_at(),returns=trigger; security_definer=false; volatility=v
+06_function,"public.submit_schedule_request(p_request_type text, p_schedule_id uuid, p_target_schedule_id uuid, p_note text)",returns=schedule_requests; security_definer=true; volatility=v
+06_function,public.switch_active_store(p_store_id uuid),returns=jsonb; security_definer=true; volatility=v
+06_function,public.sync_profile_store_membership(),returns=trigger; security_definer=true; volatility=v
+06_function,public.sync_shift_registration_automation(),returns=jsonb; security_definer=true; volatility=v
+06_function,public.sync_work_schedule_datetimes(),returns=trigger; security_definer=true; volatility=v
+06_function,"public.transfer_employee_branch(p_employee_id uuid, p_target_store_id uuid)",returns=jsonb; security_definer=true; volatility=v
+06_function,"public.unassign_employee_from_schedule(p_schedule_id uuid, p_reason text)",returns=boolean; security_definer=true; volatility=v
+06_function,"public.update_supplemental_schedule(p_schedule_id uuid, p_name text, p_start_time time without time zone, p_end_time time without time zone, p_note text)",returns=jsonb; security_definer=true; volatility=v
+06_function,public.withdraw_shift_registration(p_registration_id uuid),returns=boolean; security_definer=true; volatility=v
+07_trigger,public.attendance.trg_attendance_updated_at,CREATE TRIGGER trg_attendance_updated_at BEFORE UPDATE ON public.attendance FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+07_trigger,public.attendance.trg_enforce_manager_business_permission,CREATE TRIGGER trg_enforce_manager_business_permission BEFORE INSERT OR DELETE OR UPDATE ON public.attendance FOR EACH ROW EXECUTE FUNCTION enforce_manager_business_permission()
+07_trigger,public.attendance_events.trg_enforce_manager_business_permission,CREATE TRIGGER trg_enforce_manager_business_permission BEFORE INSERT OR DELETE OR UPDATE ON public.attendance_events FOR EACH ROW EXECUTE FUNCTION enforce_manager_business_permission()
+07_trigger,public.audit_logs.trg_audit_store_id,CREATE TRIGGER trg_audit_store_id BEFORE INSERT ON public.audit_logs FOR EACH ROW EXECUTE FUNCTION set_audit_store_id()
+07_trigger,public.devices.trg_devices_updated_at,CREATE TRIGGER trg_devices_updated_at BEFORE UPDATE ON public.devices FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+07_trigger,public.employee_bank_accounts.guard_employee_bank_self_update,CREATE TRIGGER guard_employee_bank_self_update BEFORE INSERT OR DELETE OR UPDATE ON public.employee_bank_accounts FOR EACH ROW EXECUTE FUNCTION guard_employee_bank_self_update()
+07_trigger,public.leave_requests.trg_enforce_manager_business_permission,CREATE TRIGGER trg_enforce_manager_business_permission BEFORE INSERT OR DELETE OR UPDATE ON public.leave_requests FOR EACH ROW EXECUTE FUNCTION enforce_manager_business_permission()
+07_trigger,public.leave_requests.trg_leave_requests_updated_at,CREATE TRIGGER trg_leave_requests_updated_at BEFORE UPDATE ON public.leave_requests FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+07_trigger,public.payroll_adjustments.trg_payroll_adjustments_updated_at,CREATE TRIGGER trg_payroll_adjustments_updated_at BEFORE UPDATE ON public.payroll_adjustments FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+07_trigger,public.payroll_periods.trg_payroll_periods_updated_at,CREATE TRIGGER trg_payroll_periods_updated_at BEFORE UPDATE ON public.payroll_periods FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+07_trigger,public.payroll_runs.trg_payroll_runs_updated_at,CREATE TRIGGER trg_payroll_runs_updated_at BEFORE UPDATE ON public.payroll_runs FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+07_trigger,public.profiles.guard_employee_profile_self_update,CREATE TRIGGER guard_employee_profile_self_update BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION guard_employee_profile_self_update()
+07_trigger,public.profiles.trg_enforce_manager_business_permission,CREATE TRIGGER trg_enforce_manager_business_permission BEFORE INSERT OR DELETE OR UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION enforce_manager_business_permission()
+07_trigger,public.profiles.trg_profile_store_membership,"CREATE TRIGGER trg_profile_store_membership AFTER INSERT OR UPDATE OF store_id, role ON public.profiles FOR EACH ROW EXECUTE FUNCTION sync_profile_store_membership()"
+07_trigger,public.profiles.trg_profiles_updated_at,CREATE TRIGGER trg_profiles_updated_at BEFORE UPDATE ON public.profiles FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+07_trigger,public.schedule_requests.trg_enforce_manager_business_permission,CREATE TRIGGER trg_enforce_manager_business_permission BEFORE INSERT OR DELETE OR UPDATE ON public.schedule_requests FOR EACH ROW EXECUTE FUNCTION enforce_manager_business_permission()
+07_trigger,public.shift_registration_recurring_rules.trg_enforce_manager_business_permission,CREATE TRIGGER trg_enforce_manager_business_permission BEFORE INSERT OR DELETE OR UPDATE ON public.shift_registration_recurring_rules FOR EACH ROW EXECUTE FUNCTION enforce_manager_business_permission()
+07_trigger,public.shift_registration_recurring_rules.trg_owner_registration_rules,CREATE TRIGGER trg_owner_registration_rules BEFORE INSERT OR DELETE OR UPDATE ON public.shift_registration_recurring_rules FOR EACH ROW EXECUTE FUNCTION guard_owner_schedule_configuration()
+07_trigger,public.shift_registration_windows.trg_enforce_manager_business_permission,CREATE TRIGGER trg_enforce_manager_business_permission BEFORE INSERT OR DELETE OR UPDATE ON public.shift_registration_windows FOR EACH ROW EXECUTE FUNCTION enforce_manager_business_permission()
+07_trigger,public.shift_registration_windows.trg_owner_registration_windows,CREATE TRIGGER trg_owner_registration_windows BEFORE INSERT OR DELETE OR UPDATE ON public.shift_registration_windows FOR EACH ROW EXECUTE FUNCTION guard_registration_window_write()
+07_trigger,public.shift_registrations.trg_enforce_manager_business_permission,CREATE TRIGGER trg_enforce_manager_business_permission BEFORE INSERT OR DELETE OR UPDATE ON public.shift_registrations FOR EACH ROW EXECUTE FUNCTION enforce_manager_business_permission()
+07_trigger,public.shift_registrations.trg_shift_registrations_updated_at,CREATE TRIGGER trg_shift_registrations_updated_at BEFORE UPDATE ON public.shift_registrations FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+07_trigger,public.shift_template_versions.trg_enforce_manager_business_permission,CREATE TRIGGER trg_enforce_manager_business_permission BEFORE INSERT OR DELETE OR UPDATE ON public.shift_template_versions FOR EACH ROW EXECUTE FUNCTION enforce_manager_business_permission()
+07_trigger,public.shift_templates.trg_enforce_manager_business_permission,CREATE TRIGGER trg_enforce_manager_business_permission BEFORE INSERT OR DELETE OR UPDATE ON public.shift_templates FOR EACH ROW EXECUTE FUNCTION enforce_manager_business_permission()
+07_trigger,public.shift_templates.trg_owner_shift_templates,CREATE TRIGGER trg_owner_shift_templates BEFORE INSERT OR DELETE OR UPDATE ON public.shift_templates FOR EACH ROW EXECUTE FUNCTION guard_owner_schedule_configuration()
+07_trigger,public.shift_templates.trg_shift_templates_updated_at,CREATE TRIGGER trg_shift_templates_updated_at BEFORE UPDATE ON public.shift_templates FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+07_trigger,public.store_memberships.trg_store_memberships_updated_at,CREATE TRIGGER trg_store_memberships_updated_at BEFORE UPDATE ON public.store_memberships FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+07_trigger,public.stores.trg_stores_updated_at,CREATE TRIGGER trg_stores_updated_at BEFORE UPDATE ON public.stores FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+07_trigger,public.weekly_shift_plan_items.trg_enforce_manager_business_permission,CREATE TRIGGER trg_enforce_manager_business_permission BEFORE INSERT OR DELETE OR UPDATE ON public.weekly_shift_plan_items FOR EACH ROW EXECUTE FUNCTION enforce_manager_business_permission()
+07_trigger,public.weekly_shift_plan_items.trg_owner_weekly_shift_plan,CREATE TRIGGER trg_owner_weekly_shift_plan BEFORE INSERT OR DELETE OR UPDATE ON public.weekly_shift_plan_items FOR EACH ROW EXECUTE FUNCTION guard_owner_schedule_configuration()
+07_trigger,public.weekly_shift_plan_items.trg_weekly_shift_plan_items_updated_at,CREATE TRIGGER trg_weekly_shift_plan_items_updated_at BEFORE UPDATE ON public.weekly_shift_plan_items FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+07_trigger,public.work_schedules.trg_enforce_manager_business_permission,CREATE TRIGGER trg_enforce_manager_business_permission BEFORE INSERT OR DELETE OR UPDATE ON public.work_schedules FOR EACH ROW EXECUTE FUNCTION enforce_manager_business_permission()
+07_trigger,public.work_schedules.trg_work_schedule_datetimes,"CREATE TRIGGER trg_work_schedule_datetimes BEFORE INSERT OR UPDATE OF store_id, work_date, start_time, end_time ON public.work_schedules FOR EACH ROW EXECUTE FUNCTION sync_work_schedule_datetimes()"
+07_trigger,public.work_schedules.trg_work_schedules_updated_at,CREATE TRIGGER trg_work_schedules_updated_at BEFORE UPDATE ON public.work_schedules FOR EACH ROW EXECUTE FUNCTION set_updated_at()
+08_enum,adjustment_status,rejected
+08_enum,adjustment_status,approved
+08_enum,adjustment_status,pending
+08_enum,adjustment_type,penalty
+08_enum,adjustment_type,bonus
+08_enum,adjustment_type,advance
+08_enum,attendance_status,valid
+08_enum,attendance_status,missing_checkout
+08_enum,attendance_status,manual
+08_enum,attendance_status,invalid
+08_enum,attendance_status,late
+08_enum,device_status,approved
+08_enum,device_status,rejected
+08_enum,device_status,revoked
+08_enum,device_status,pending
+08_enum,employment_status,inactive
+08_enum,employment_status,active
+08_enum,employment_status,invited
+08_enum,employment_status,terminated
+08_enum,leave_status,pending
+08_enum,leave_status,cancelled
+08_enum,leave_status,rejected
+08_enum,leave_status,approved
+08_enum,payroll_status,paid
+08_enum,payroll_status,locked
+08_enum,payroll_status,review
+08_enum,payroll_status,draft
+08_enum,registration_status,cancelled
+08_enum,registration_status,rejected
+08_enum,registration_status,approved
+08_enum,registration_status,pending
+08_enum,schedule_status,open
+08_enum,schedule_status,assigned
+08_enum,schedule_status,cancelled
+08_enum,schedule_status,completed
+08_enum,user_role,manager
+08_enum,user_role,employee
+08_enum,user_role,owner
+09_table_grant,public.attendance,anon:TRUNCATE
+09_table_grant,public.attendance,service_role:TRIGGER
+09_table_grant,public.attendance,service_role:REFERENCES
+09_table_grant,public.attendance,service_role:TRUNCATE
+09_table_grant,public.attendance,service_role:DELETE
+09_table_grant,public.attendance,service_role:UPDATE
+09_table_grant,public.attendance,service_role:SELECT
+09_table_grant,public.attendance,service_role:INSERT
+09_table_grant,public.attendance,authenticated:TRIGGER
+09_table_grant,public.attendance,authenticated:REFERENCES
+09_table_grant,public.attendance,authenticated:TRUNCATE
+09_table_grant,public.attendance,authenticated:DELETE
+09_table_grant,public.attendance,authenticated:UPDATE
+09_table_grant,public.attendance,authenticated:SELECT
+09_table_grant,public.attendance,authenticated:INSERT
+09_table_grant,public.attendance,anon:TRIGGER
+09_table_grant,public.attendance,anon:REFERENCES
+09_table_grant,public.attendance,anon:DELETE
+09_table_grant,public.attendance,anon:UPDATE
+09_table_grant,public.attendance,anon:SELECT
+09_table_grant,public.attendance,anon:INSERT
+09_table_grant,public.attendance,postgres:TRIGGER
+09_table_grant,public.attendance,postgres:REFERENCES
+09_table_grant,public.attendance,postgres:TRUNCATE
+09_table_grant,public.attendance,postgres:DELETE
+09_table_grant,public.attendance,postgres:UPDATE
+09_table_grant,public.attendance,postgres:SELECT
+09_table_grant,public.attendance,postgres:INSERT
+09_table_grant,public.attendance_events,anon:REFERENCES
+09_table_grant,public.attendance_events,service_role:TRUNCATE
+09_table_grant,public.attendance_events,service_role:DELETE
+09_table_grant,public.attendance_events,service_role:UPDATE
+09_table_grant,public.attendance_events,service_role:SELECT
+09_table_grant,public.attendance_events,service_role:INSERT
+09_table_grant,public.attendance_events,authenticated:TRIGGER
+09_table_grant,public.attendance_events,authenticated:REFERENCES
+09_table_grant,public.attendance_events,authenticated:TRUNCATE
+09_table_grant,public.attendance_events,authenticated:DELETE
+09_table_grant,public.attendance_events,authenticated:UPDATE
+09_table_grant,public.attendance_events,authenticated:SELECT
+09_table_grant,public.attendance_events,authenticated:INSERT
+09_table_grant,public.attendance_events,anon:TRIGGER
+09_table_grant,public.attendance_events,service_role:REFERENCES
+09_table_grant,public.attendance_events,anon:TRUNCATE
+09_table_grant,public.attendance_events,anon:DELETE
+09_table_grant,public.attendance_events,anon:UPDATE
+09_table_grant,public.attendance_events,anon:SELECT
+09_table_grant,public.attendance_events,anon:INSERT
+09_table_grant,public.attendance_events,postgres:TRIGGER
+09_table_grant,public.attendance_events,postgres:REFERENCES
+09_table_grant,public.attendance_events,postgres:TRUNCATE
+09_table_grant,public.attendance_events,postgres:DELETE
+09_table_grant,public.attendance_events,postgres:UPDATE
+09_table_grant,public.attendance_events,postgres:SELECT
+09_table_grant,public.attendance_events,postgres:INSERT
+09_table_grant,public.attendance_events,service_role:TRIGGER
+09_table_grant,public.audit_logs,postgres:INSERT
+09_table_grant,public.audit_logs,service_role:REFERENCES
+09_table_grant,public.audit_logs,service_role:TRUNCATE
+09_table_grant,public.audit_logs,service_role:DELETE
+09_table_grant,public.audit_logs,service_role:UPDATE
+09_table_grant,public.audit_logs,service_role:SELECT
+09_table_grant,public.audit_logs,service_role:INSERT
+09_table_grant,public.audit_logs,authenticated:TRIGGER
+09_table_grant,public.audit_logs,authenticated:REFERENCES
+09_table_grant,public.audit_logs,authenticated:TRUNCATE
+09_table_grant,public.audit_logs,authenticated:DELETE
+09_table_grant,public.audit_logs,authenticated:UPDATE
+09_table_grant,public.audit_logs,authenticated:SELECT
+09_table_grant,public.audit_logs,authenticated:INSERT
+09_table_grant,public.audit_logs,anon:TRIGGER
+09_table_grant,public.audit_logs,anon:REFERENCES
+09_table_grant,public.audit_logs,service_role:TRIGGER
+09_table_grant,public.audit_logs,anon:TRUNCATE
+09_table_grant,public.audit_logs,anon:DELETE
+09_table_grant,public.audit_logs,anon:UPDATE
+09_table_grant,public.audit_logs,anon:SELECT
+09_table_grant,public.audit_logs,anon:INSERT
+09_table_grant,public.audit_logs,postgres:TRIGGER
+09_table_grant,public.audit_logs,postgres:REFERENCES
+09_table_grant,public.audit_logs,postgres:TRUNCATE
+09_table_grant,public.audit_logs,postgres:DELETE
+09_table_grant,public.audit_logs,postgres:UPDATE
+09_table_grant,public.audit_logs,postgres:SELECT
+09_table_grant,public.devices,service_role:TRUNCATE
+09_table_grant,public.devices,postgres:INSERT
+09_table_grant,public.devices,postgres:SELECT
+09_table_grant,public.devices,postgres:UPDATE
+09_table_grant,public.devices,postgres:DELETE
+09_table_grant,public.devices,postgres:TRUNCATE
+09_table_grant,public.devices,postgres:REFERENCES
+09_table_grant,public.devices,postgres:TRIGGER
+09_table_grant,public.devices,anon:INSERT
+09_table_grant,public.devices,anon:SELECT
+09_table_grant,public.devices,anon:UPDATE
+09_table_grant,public.devices,anon:DELETE
+09_table_grant,public.devices,anon:TRUNCATE
+09_table_grant,public.devices,anon:REFERENCES
+09_table_grant,public.devices,anon:TRIGGER
+09_table_grant,public.devices,authenticated:INSERT
+09_table_grant,public.devices,authenticated:SELECT
+09_table_grant,public.devices,authenticated:UPDATE
+09_table_grant,public.devices,authenticated:DELETE
+09_table_grant,public.devices,authenticated:TRUNCATE
+09_table_grant,public.devices,authenticated:REFERENCES
+09_table_grant,public.devices,authenticated:TRIGGER
+09_table_grant,public.devices,service_role:INSERT
+09_table_grant,public.devices,service_role:SELECT
+09_table_grant,public.devices,service_role:UPDATE
+09_table_grant,public.devices,service_role:DELETE
+09_table_grant,public.devices,service_role:REFERENCES
+09_table_grant,public.devices,service_role:TRIGGER
+09_table_grant,public.employee_bank_accounts,authenticated:INSERT
+09_table_grant,public.employee_bank_accounts,anon:TRIGGER
+09_table_grant,public.employee_bank_accounts,anon:REFERENCES
+09_table_grant,public.employee_bank_accounts,anon:TRUNCATE
+09_table_grant,public.employee_bank_accounts,anon:DELETE
+09_table_grant,public.employee_bank_accounts,anon:UPDATE
+09_table_grant,public.employee_bank_accounts,anon:SELECT
+09_table_grant,public.employee_bank_accounts,anon:INSERT
+09_table_grant,public.employee_bank_accounts,postgres:TRIGGER
+09_table_grant,public.employee_bank_accounts,postgres:REFERENCES
+09_table_grant,public.employee_bank_accounts,postgres:TRUNCATE
+09_table_grant,public.employee_bank_accounts,postgres:DELETE
+09_table_grant,public.employee_bank_accounts,postgres:UPDATE
+09_table_grant,public.employee_bank_accounts,postgres:SELECT
+09_table_grant,public.employee_bank_accounts,service_role:TRIGGER
+09_table_grant,public.employee_bank_accounts,service_role:TRUNCATE
+09_table_grant,public.employee_bank_accounts,service_role:DELETE
+09_table_grant,public.employee_bank_accounts,service_role:UPDATE
+09_table_grant,public.employee_bank_accounts,service_role:SELECT
+09_table_grant,public.employee_bank_accounts,service_role:INSERT
+09_table_grant,public.employee_bank_accounts,authenticated:TRIGGER
+09_table_grant,public.employee_bank_accounts,authenticated:REFERENCES
+09_table_grant,public.employee_bank_accounts,authenticated:TRUNCATE
+09_table_grant,public.employee_bank_accounts,authenticated:DELETE
+09_table_grant,public.employee_bank_accounts,authenticated:UPDATE
+09_table_grant,public.employee_bank_accounts,authenticated:SELECT
+09_table_grant,public.employee_bank_accounts,service_role:REFERENCES
+09_table_grant,public.employee_bank_accounts,postgres:INSERT
+09_table_grant,public.employee_bank_details,postgres:SELECT
+09_table_grant,public.employee_bank_details,postgres:INSERT
+09_table_grant,public.employee_bank_details,postgres:UPDATE
+09_table_grant,public.employee_bank_details,postgres:DELETE
+09_table_grant,public.employee_bank_details,postgres:TRUNCATE
+09_table_grant,public.employee_bank_details,postgres:REFERENCES
+09_table_grant,public.employee_bank_details,postgres:TRIGGER
+09_table_grant,public.employee_bank_details,service_role:INSERT
+09_table_grant,public.employee_bank_details,service_role:SELECT
+09_table_grant,public.employee_bank_details,service_role:UPDATE
+09_table_grant,public.employee_bank_details,service_role:DELETE
+09_table_grant,public.employee_bank_details,service_role:TRUNCATE
+09_table_grant,public.employee_bank_details,service_role:REFERENCES
+09_table_grant,public.employee_bank_details,service_role:TRIGGER
+09_table_grant,public.employee_profile_change_requests,service_role:TRIGGER
+09_table_grant,public.employee_profile_change_requests,postgres:INSERT
+09_table_grant,public.employee_profile_change_requests,postgres:SELECT
+09_table_grant,public.employee_profile_change_requests,postgres:UPDATE
+09_table_grant,public.employee_profile_change_requests,postgres:DELETE
+09_table_grant,public.employee_profile_change_requests,postgres:TRUNCATE
+09_table_grant,public.employee_profile_change_requests,authenticated:SELECT
+09_table_grant,public.employee_profile_change_requests,postgres:REFERENCES
+09_table_grant,public.employee_profile_change_requests,postgres:TRIGGER
+09_table_grant,public.employee_profile_change_requests,service_role:INSERT
+09_table_grant,public.employee_profile_change_requests,service_role:SELECT
+09_table_grant,public.employee_profile_change_requests,service_role:UPDATE
+09_table_grant,public.employee_profile_change_requests,service_role:DELETE
+09_table_grant,public.employee_profile_change_requests,service_role:TRUNCATE
+09_table_grant,public.employee_profile_change_requests,service_role:REFERENCES
+09_table_grant,public.employee_salary_versions,service_role:INSERT
+09_table_grant,public.employee_salary_versions,service_role:TRIGGER
+09_table_grant,public.employee_salary_versions,service_role:REFERENCES
+09_table_grant,public.employee_salary_versions,service_role:TRUNCATE
+09_table_grant,public.employee_salary_versions,service_role:DELETE
+09_table_grant,public.employee_salary_versions,service_role:UPDATE
+09_table_grant,public.employee_salary_versions,service_role:SELECT
+09_table_grant,public.employee_salary_versions,authenticated:TRIGGER
+09_table_grant,public.employee_salary_versions,authenticated:REFERENCES
+09_table_grant,public.employee_salary_versions,authenticated:TRUNCATE
+09_table_grant,public.employee_salary_versions,authenticated:DELETE
+09_table_grant,public.employee_salary_versions,authenticated:UPDATE
+09_table_grant,public.employee_salary_versions,authenticated:SELECT
+09_table_grant,public.employee_salary_versions,authenticated:INSERT
+09_table_grant,public.employee_salary_versions,anon:TRIGGER
+09_table_grant,public.employee_salary_versions,anon:REFERENCES
+09_table_grant,public.employee_salary_versions,anon:TRUNCATE
+09_table_grant,public.employee_salary_versions,anon:DELETE
+09_table_grant,public.employee_salary_versions,anon:UPDATE
+09_table_grant,public.employee_salary_versions,anon:SELECT
+09_table_grant,public.employee_salary_versions,anon:INSERT
+09_table_grant,public.employee_salary_versions,postgres:TRIGGER
+09_table_grant,public.employee_salary_versions,postgres:REFERENCES
+09_table_grant,public.employee_salary_versions,postgres:TRUNCATE
+09_table_grant,public.employee_salary_versions,postgres:DELETE
+09_table_grant,public.employee_salary_versions,postgres:UPDATE
+09_table_grant,public.employee_salary_versions,postgres:SELECT
+09_table_grant,public.employee_salary_versions,postgres:INSERT
+09_table_grant,public.leave_requests,service_role:TRUNCATE
+09_table_grant,public.leave_requests,service_role:DELETE
+09_table_grant,public.leave_requests,service_role:UPDATE
+09_table_grant,public.leave_requests,service_role:SELECT
+09_table_grant,public.leave_requests,service_role:INSERT
+09_table_grant,public.leave_requests,authenticated:TRIGGER
+09_table_grant,public.leave_requests,authenticated:REFERENCES
+09_table_grant,public.leave_requests,authenticated:TRUNCATE
+09_table_grant,public.leave_requests,authenticated:DELETE
+09_table_grant,public.leave_requests,authenticated:UPDATE
+09_table_grant,public.leave_requests,authenticated:SELECT
+09_table_grant,public.leave_requests,authenticated:INSERT
+09_table_grant,public.leave_requests,anon:TRIGGER
+09_table_grant,public.leave_requests,anon:REFERENCES
+09_table_grant,public.leave_requests,anon:TRUNCATE
+09_table_grant,public.leave_requests,anon:DELETE
+09_table_grant,public.leave_requests,anon:UPDATE
+09_table_grant,public.leave_requests,anon:SELECT
+09_table_grant,public.leave_requests,anon:INSERT
+09_table_grant,public.leave_requests,postgres:TRIGGER
+09_table_grant,public.leave_requests,postgres:REFERENCES
+09_table_grant,public.leave_requests,postgres:TRUNCATE
+09_table_grant,public.leave_requests,postgres:DELETE
+09_table_grant,public.leave_requests,postgres:UPDATE
+09_table_grant,public.leave_requests,postgres:SELECT
+09_table_grant,public.leave_requests,postgres:INSERT
+09_table_grant,public.leave_requests,service_role:REFERENCES
+09_table_grant,public.leave_requests,service_role:TRIGGER
+09_table_grant,public.manager_permissions,service_role:SELECT
+09_table_grant,public.manager_permissions,postgres:INSERT
+09_table_grant,public.manager_permissions,postgres:SELECT
+09_table_grant,public.manager_permissions,postgres:UPDATE
+09_table_grant,public.manager_permissions,postgres:DELETE
+09_table_grant,public.manager_permissions,postgres:TRUNCATE
+09_table_grant,public.manager_permissions,postgres:REFERENCES
+09_table_grant,public.manager_permissions,postgres:TRIGGER
+09_table_grant,public.manager_permissions,anon:INSERT
+09_table_grant,public.manager_permissions,anon:SELECT
+09_table_grant,public.manager_permissions,anon:UPDATE
+09_table_grant,public.manager_permissions,anon:DELETE
+09_table_grant,public.manager_permissions,anon:TRUNCATE
+09_table_grant,public.manager_permissions,anon:REFERENCES
+09_table_grant,public.manager_permissions,anon:TRIGGER
+09_table_grant,public.manager_permissions,authenticated:INSERT
+09_table_grant,public.manager_permissions,service_role:TRIGGER
+09_table_grant,public.manager_permissions,service_role:REFERENCES
+09_table_grant,public.manager_permissions,service_role:TRUNCATE
+09_table_grant,public.manager_permissions,service_role:DELETE
+09_table_grant,public.manager_permissions,service_role:UPDATE
+09_table_grant,public.manager_permissions,authenticated:SELECT
+09_table_grant,public.manager_permissions,service_role:INSERT
+09_table_grant,public.manager_permissions,authenticated:TRIGGER
+09_table_grant,public.manager_permissions,authenticated:REFERENCES
+09_table_grant,public.manager_permissions,authenticated:TRUNCATE
+09_table_grant,public.manager_permissions,authenticated:DELETE
+09_table_grant,public.manager_permissions,authenticated:UPDATE
+09_table_grant,public.payroll_adjustments,service_role:REFERENCES
+09_table_grant,public.payroll_adjustments,service_role:TRIGGER
+09_table_grant,public.payroll_adjustments,postgres:INSERT
+09_table_grant,public.payroll_adjustments,postgres:SELECT
+09_table_grant,public.payroll_adjustments,postgres:UPDATE
+09_table_grant,public.payroll_adjustments,postgres:DELETE
+09_table_grant,public.payroll_adjustments,postgres:TRUNCATE
+09_table_grant,public.payroll_adjustments,postgres:REFERENCES
+09_table_grant,public.payroll_adjustments,postgres:TRIGGER
+09_table_grant,public.payroll_adjustments,anon:INSERT
+09_table_grant,public.payroll_adjustments,anon:SELECT
+09_table_grant,public.payroll_adjustments,anon:UPDATE
+09_table_grant,public.payroll_adjustments,anon:DELETE
+09_table_grant,public.payroll_adjustments,anon:TRUNCATE
+09_table_grant,public.payroll_adjustments,anon:REFERENCES
+09_table_grant,public.payroll_adjustments,anon:TRIGGER
+09_table_grant,public.payroll_adjustments,authenticated:INSERT
+09_table_grant,public.payroll_adjustments,authenticated:SELECT
+09_table_grant,public.payroll_adjustments,authenticated:UPDATE
+09_table_grant,public.payroll_adjustments,authenticated:DELETE
+09_table_grant,public.payroll_adjustments,authenticated:TRUNCATE
+09_table_grant,public.payroll_adjustments,authenticated:REFERENCES
+09_table_grant,public.payroll_adjustments,authenticated:TRIGGER
+09_table_grant,public.payroll_adjustments,service_role:INSERT
+09_table_grant,public.payroll_adjustments,service_role:SELECT
+09_table_grant,public.payroll_adjustments,service_role:UPDATE
+09_table_grant,public.payroll_adjustments,service_role:DELETE
+09_table_grant,public.payroll_adjustments,service_role:TRUNCATE
+09_table_grant,public.payroll_full_day_bonus_rules,service_role:REFERENCES
+09_table_grant,public.payroll_full_day_bonus_rules,service_role:DELETE
+09_table_grant,public.payroll_full_day_bonus_rules,service_role:UPDATE
+09_table_grant,public.payroll_full_day_bonus_rules,service_role:SELECT
+09_table_grant,public.payroll_full_day_bonus_rules,service_role:INSERT
+09_table_grant,public.payroll_full_day_bonus_rules,postgres:TRIGGER
+09_table_grant,public.payroll_full_day_bonus_rules,postgres:REFERENCES
+09_table_grant,public.payroll_full_day_bonus_rules,postgres:TRUNCATE
+09_table_grant,public.payroll_full_day_bonus_rules,postgres:DELETE
+09_table_grant,public.payroll_full_day_bonus_rules,postgres:UPDATE
+09_table_grant,public.payroll_full_day_bonus_rules,postgres:SELECT
+09_table_grant,public.payroll_full_day_bonus_rules,postgres:INSERT
+09_table_grant,public.payroll_full_day_bonus_rules,service_role:TRIGGER
+09_table_grant,public.payroll_full_day_bonus_rules,service_role:TRUNCATE
+09_table_grant,public.payroll_holiday_pay_rules,postgres:SELECT
+09_table_grant,public.payroll_holiday_pay_rules,service_role:TRIGGER
+09_table_grant,public.payroll_holiday_pay_rules,postgres:INSERT
+09_table_grant,public.payroll_holiday_pay_rules,service_role:REFERENCES
+09_table_grant,public.payroll_holiday_pay_rules,service_role:TRUNCATE
+09_table_grant,public.payroll_holiday_pay_rules,service_role:DELETE
+09_table_grant,public.payroll_holiday_pay_rules,service_role:UPDATE
+09_table_grant,public.payroll_holiday_pay_rules,service_role:SELECT
+09_table_grant,public.payroll_holiday_pay_rules,service_role:INSERT
+09_table_grant,public.payroll_holiday_pay_rules,postgres:TRIGGER
+09_table_grant,public.payroll_holiday_pay_rules,postgres:REFERENCES
+09_table_grant,public.payroll_holiday_pay_rules,postgres:TRUNCATE
+09_table_grant,public.payroll_holiday_pay_rules,postgres:DELETE
+09_table_grant,public.payroll_holiday_pay_rules,postgres:UPDATE
+09_table_grant,public.payroll_penalty_rules,postgres:INSERT
+09_table_grant,public.payroll_penalty_rules,service_role:TRIGGER
+09_table_grant,public.payroll_penalty_rules,service_role:REFERENCES
+09_table_grant,public.payroll_penalty_rules,service_role:TRUNCATE
+09_table_grant,public.payroll_penalty_rules,service_role:DELETE
+09_table_grant,public.payroll_penalty_rules,service_role:UPDATE
+09_table_grant,public.payroll_penalty_rules,service_role:SELECT
+09_table_grant,public.payroll_penalty_rules,service_role:INSERT
+09_table_grant,public.payroll_penalty_rules,authenticated:TRIGGER
+09_table_grant,public.payroll_penalty_rules,authenticated:REFERENCES
+09_table_grant,public.payroll_penalty_rules,authenticated:TRUNCATE
+09_table_grant,public.payroll_penalty_rules,authenticated:DELETE
+09_table_grant,public.payroll_penalty_rules,authenticated:UPDATE
+09_table_grant,public.payroll_penalty_rules,authenticated:SELECT
+09_table_grant,public.payroll_penalty_rules,authenticated:INSERT
+09_table_grant,public.payroll_penalty_rules,anon:TRIGGER
+09_table_grant,public.payroll_penalty_rules,anon:REFERENCES
+09_table_grant,public.payroll_penalty_rules,anon:TRUNCATE
+09_table_grant,public.payroll_penalty_rules,anon:DELETE
+09_table_grant,public.payroll_penalty_rules,anon:UPDATE
+09_table_grant,public.payroll_penalty_rules,anon:SELECT
+09_table_grant,public.payroll_penalty_rules,anon:INSERT
+09_table_grant,public.payroll_penalty_rules,postgres:TRIGGER
+09_table_grant,public.payroll_penalty_rules,postgres:REFERENCES
+09_table_grant,public.payroll_penalty_rules,postgres:TRUNCATE
+09_table_grant,public.payroll_penalty_rules,postgres:DELETE
+09_table_grant,public.payroll_penalty_rules,postgres:UPDATE
+09_table_grant,public.payroll_penalty_rules,postgres:SELECT
+09_table_grant,public.payroll_periods,authenticated:UPDATE
+09_table_grant,public.payroll_periods,authenticated:DELETE
+09_table_grant,public.payroll_periods,authenticated:TRUNCATE
+09_table_grant,public.payroll_periods,authenticated:REFERENCES
+09_table_grant,public.payroll_periods,authenticated:TRIGGER
+09_table_grant,public.payroll_periods,service_role:INSERT
+09_table_grant,public.payroll_periods,service_role:SELECT
+09_table_grant,public.payroll_periods,service_role:UPDATE
+09_table_grant,public.payroll_periods,service_role:DELETE
+09_table_grant,public.payroll_periods,service_role:TRUNCATE
+09_table_grant,public.payroll_periods,service_role:REFERENCES
+09_table_grant,public.payroll_periods,service_role:TRIGGER
+09_table_grant,public.payroll_periods,postgres:INSERT
+09_table_grant,public.payroll_periods,postgres:SELECT
+09_table_grant,public.payroll_periods,postgres:UPDATE
+09_table_grant,public.payroll_periods,postgres:DELETE
+09_table_grant,public.payroll_periods,postgres:TRUNCATE
+09_table_grant,public.payroll_periods,postgres:REFERENCES
+09_table_grant,public.payroll_periods,postgres:TRIGGER
+09_table_grant,public.payroll_periods,anon:INSERT
+09_table_grant,public.payroll_periods,anon:SELECT
+09_table_grant,public.payroll_periods,anon:UPDATE
+09_table_grant,public.payroll_periods,anon:DELETE
+09_table_grant,public.payroll_periods,anon:TRUNCATE
+09_table_grant,public.payroll_periods,anon:REFERENCES
+09_table_grant,public.payroll_periods,anon:TRIGGER
+09_table_grant,public.payroll_periods,authenticated:INSERT
+09_table_grant,public.payroll_periods,authenticated:SELECT
+09_table_grant,public.payroll_run_items,postgres:SELECT
+09_table_grant,public.payroll_run_items,anon:DELETE
+09_table_grant,public.payroll_run_items,anon:UPDATE
+09_table_grant,public.payroll_run_items,anon:SELECT
+09_table_grant,public.payroll_run_items,anon:INSERT
+09_table_grant,public.payroll_run_items,postgres:TRIGGER
+09_table_grant,public.payroll_run_items,postgres:REFERENCES
+09_table_grant,public.payroll_run_items,postgres:TRUNCATE
+09_table_grant,public.payroll_run_items,postgres:DELETE
+09_table_grant,public.payroll_run_items,postgres:UPDATE
+09_table_grant,public.payroll_run_items,anon:TRUNCATE
+09_table_grant,public.payroll_run_items,postgres:INSERT
+09_table_grant,public.payroll_run_items,service_role:TRIGGER
+09_table_grant,public.payroll_run_items,service_role:REFERENCES
+09_table_grant,public.payroll_run_items,service_role:TRUNCATE
+09_table_grant,public.payroll_run_items,service_role:DELETE
+09_table_grant,public.payroll_run_items,service_role:UPDATE
+09_table_grant,public.payroll_run_items,service_role:SELECT
+09_table_grant,public.payroll_run_items,service_role:INSERT
+09_table_grant,public.payroll_run_items,authenticated:TRIGGER
+09_table_grant,public.payroll_run_items,authenticated:REFERENCES
+09_table_grant,public.payroll_run_items,authenticated:TRUNCATE
+09_table_grant,public.payroll_run_items,authenticated:DELETE
+09_table_grant,public.payroll_run_items,authenticated:UPDATE
+09_table_grant,public.payroll_run_items,authenticated:SELECT
+09_table_grant,public.payroll_run_items,authenticated:INSERT
+09_table_grant,public.payroll_run_items,anon:TRIGGER
+09_table_grant,public.payroll_run_items,anon:REFERENCES
+09_table_grant,public.payroll_runs,authenticated:UPDATE
+09_table_grant,public.payroll_runs,authenticated:DELETE
+09_table_grant,public.payroll_runs,authenticated:TRUNCATE
+09_table_grant,public.payroll_runs,authenticated:REFERENCES
+09_table_grant,public.payroll_runs,authenticated:TRIGGER
+09_table_grant,public.payroll_runs,service_role:INSERT
+09_table_grant,public.payroll_runs,service_role:SELECT
+09_table_grant,public.payroll_runs,service_role:UPDATE
+09_table_grant,public.payroll_runs,service_role:DELETE
+09_table_grant,public.payroll_runs,service_role:TRUNCATE
+09_table_grant,public.payroll_runs,service_role:REFERENCES
+09_table_grant,public.payroll_runs,service_role:TRIGGER
+09_table_grant,public.payroll_runs,anon:TRIGGER
+09_table_grant,public.payroll_runs,anon:REFERENCES
+09_table_grant,public.payroll_runs,anon:TRUNCATE
+09_table_grant,public.payroll_runs,anon:DELETE
+09_table_grant,public.payroll_runs,anon:UPDATE
+09_table_grant,public.payroll_runs,anon:SELECT
+09_table_grant,public.payroll_runs,anon:INSERT
+09_table_grant,public.payroll_runs,postgres:TRIGGER
+09_table_grant,public.payroll_runs,postgres:REFERENCES
+09_table_grant,public.payroll_runs,postgres:TRUNCATE
+09_table_grant,public.payroll_runs,postgres:DELETE
+09_table_grant,public.payroll_runs,postgres:UPDATE
+09_table_grant,public.payroll_runs,postgres:SELECT
+09_table_grant,public.payroll_runs,postgres:INSERT
+09_table_grant,public.payroll_runs,authenticated:INSERT
+09_table_grant,public.payroll_runs,authenticated:SELECT
+09_table_grant,public.profiles,postgres:SELECT
+09_table_grant,public.profiles,postgres:DELETE
+09_table_grant,public.profiles,postgres:TRUNCATE
+09_table_grant,public.profiles,postgres:REFERENCES
+09_table_grant,public.profiles,postgres:TRIGGER
+09_table_grant,public.profiles,anon:INSERT
+09_table_grant,public.profiles,anon:SELECT
+09_table_grant,public.profiles,anon:UPDATE
+09_table_grant,public.profiles,anon:DELETE
+09_table_grant,public.profiles,anon:TRUNCATE
+09_table_grant,public.profiles,anon:REFERENCES
+09_table_grant,public.profiles,anon:TRIGGER
+09_table_grant,public.profiles,service_role:TRIGGER
+09_table_grant,public.profiles,service_role:REFERENCES
+09_table_grant,public.profiles,service_role:TRUNCATE
+09_table_grant,public.profiles,service_role:DELETE
+09_table_grant,public.profiles,service_role:UPDATE
+09_table_grant,public.profiles,service_role:SELECT
+09_table_grant,public.profiles,service_role:INSERT
+09_table_grant,public.profiles,authenticated:TRIGGER
+09_table_grant,public.profiles,authenticated:REFERENCES
+09_table_grant,public.profiles,authenticated:TRUNCATE
+09_table_grant,public.profiles,authenticated:DELETE
+09_table_grant,public.profiles,authenticated:UPDATE
+09_table_grant,public.profiles,authenticated:SELECT
+09_table_grant,public.profiles,authenticated:INSERT
+09_table_grant,public.profiles,postgres:INSERT
+09_table_grant,public.profiles,postgres:UPDATE
+09_table_grant,public.schedule_requests,postgres:SELECT
+09_table_grant,public.schedule_requests,anon:DELETE
+09_table_grant,public.schedule_requests,anon:UPDATE
+09_table_grant,public.schedule_requests,anon:SELECT
+09_table_grant,public.schedule_requests,anon:INSERT
+09_table_grant,public.schedule_requests,postgres:TRIGGER
+09_table_grant,public.schedule_requests,postgres:REFERENCES
+09_table_grant,public.schedule_requests,postgres:TRUNCATE
+09_table_grant,public.schedule_requests,postgres:DELETE
+09_table_grant,public.schedule_requests,postgres:UPDATE
+09_table_grant,public.schedule_requests,anon:TRIGGER
+09_table_grant,public.schedule_requests,authenticated:SELECT
+09_table_grant,public.schedule_requests,authenticated:UPDATE
+09_table_grant,public.schedule_requests,authenticated:DELETE
+09_table_grant,public.schedule_requests,authenticated:TRUNCATE
+09_table_grant,public.schedule_requests,authenticated:REFERENCES
+09_table_grant,public.schedule_requests,authenticated:TRIGGER
+09_table_grant,public.schedule_requests,service_role:INSERT
+09_table_grant,public.schedule_requests,service_role:SELECT
+09_table_grant,public.schedule_requests,service_role:UPDATE
+09_table_grant,public.schedule_requests,service_role:DELETE
+09_table_grant,public.schedule_requests,service_role:TRUNCATE
+09_table_grant,public.schedule_requests,service_role:REFERENCES
+09_table_grant,public.schedule_requests,service_role:TRIGGER
+09_table_grant,public.schedule_requests,postgres:INSERT
+09_table_grant,public.schedule_requests,anon:TRUNCATE
+09_table_grant,public.schedule_requests,anon:REFERENCES
+09_table_grant,public.shift_registration_recurring_rules,postgres:REFERENCES
+09_table_grant,public.shift_registration_recurring_rules,service_role:INSERT
+09_table_grant,public.shift_registration_recurring_rules,postgres:SELECT
+09_table_grant,public.shift_registration_recurring_rules,postgres:INSERT
+09_table_grant,public.shift_registration_recurring_rules,service_role:SELECT
+09_table_grant,public.shift_registration_recurring_rules,service_role:UPDATE
+09_table_grant,public.shift_registration_recurring_rules,service_role:DELETE
+09_table_grant,public.shift_registration_recurring_rules,service_role:TRUNCATE
+09_table_grant,public.shift_registration_recurring_rules,service_role:REFERENCES
+09_table_grant,public.shift_registration_recurring_rules,service_role:TRIGGER
+09_table_grant,public.shift_registration_recurring_rules,authenticated:DELETE
+09_table_grant,public.shift_registration_recurring_rules,authenticated:TRUNCATE
+09_table_grant,public.shift_registration_recurring_rules,authenticated:REFERENCES
+09_table_grant,public.shift_registration_recurring_rules,postgres:UPDATE
+09_table_grant,public.shift_registration_recurring_rules,authenticated:UPDATE
+09_table_grant,public.shift_registration_recurring_rules,authenticated:TRIGGER
+09_table_grant,public.shift_registration_recurring_rules,postgres:TRUNCATE
+09_table_grant,public.shift_registration_recurring_rules,postgres:DELETE
+09_table_grant,public.shift_registration_recurring_rules,authenticated:SELECT
+09_table_grant,public.shift_registration_recurring_rules,authenticated:INSERT
+09_table_grant,public.shift_registration_recurring_rules,anon:TRIGGER
+09_table_grant,public.shift_registration_recurring_rules,anon:REFERENCES
+09_table_grant,public.shift_registration_recurring_rules,anon:TRUNCATE
+09_table_grant,public.shift_registration_recurring_rules,anon:DELETE
+09_table_grant,public.shift_registration_recurring_rules,anon:UPDATE
+09_table_grant,public.shift_registration_recurring_rules,anon:SELECT
+09_table_grant,public.shift_registration_recurring_rules,anon:INSERT
+09_table_grant,public.shift_registration_recurring_rules,postgres:TRIGGER
+09_table_grant,public.shift_registration_windows,anon:TRIGGER
+09_table_grant,public.shift_registration_windows,service_role:TRIGGER
+09_table_grant,public.shift_registration_windows,service_role:REFERENCES
+09_table_grant,public.shift_registration_windows,service_role:TRUNCATE
+09_table_grant,public.shift_registration_windows,service_role:DELETE
+09_table_grant,public.shift_registration_windows,service_role:UPDATE
+09_table_grant,public.shift_registration_windows,service_role:SELECT
+09_table_grant,public.shift_registration_windows,service_role:INSERT
+09_table_grant,public.shift_registration_windows,authenticated:TRIGGER
+09_table_grant,public.shift_registration_windows,authenticated:REFERENCES
+09_table_grant,public.shift_registration_windows,authenticated:TRUNCATE
+09_table_grant,public.shift_registration_windows,authenticated:DELETE
+09_table_grant,public.shift_registration_windows,authenticated:UPDATE
+09_table_grant,public.shift_registration_windows,authenticated:SELECT
+09_table_grant,public.shift_registration_windows,authenticated:INSERT
+09_table_grant,public.shift_registration_windows,anon:REFERENCES
+09_table_grant,public.shift_registration_windows,anon:TRUNCATE
+09_table_grant,public.shift_registration_windows,anon:DELETE
+09_table_grant,public.shift_registration_windows,anon:UPDATE
+09_table_grant,public.shift_registration_windows,anon:SELECT
+09_table_grant,public.shift_registration_windows,anon:INSERT
+09_table_grant,public.shift_registration_windows,postgres:TRIGGER
+09_table_grant,public.shift_registration_windows,postgres:REFERENCES
+09_table_grant,public.shift_registration_windows,postgres:TRUNCATE
+09_table_grant,public.shift_registration_windows,postgres:DELETE
+09_table_grant,public.shift_registration_windows,postgres:UPDATE
+09_table_grant,public.shift_registration_windows,postgres:SELECT
+09_table_grant,public.shift_registration_windows,postgres:INSERT
+09_table_grant,public.shift_registrations,authenticated:SELECT
+09_table_grant,public.shift_registrations,anon:TRIGGER
+09_table_grant,public.shift_registrations,anon:REFERENCES
+09_table_grant,public.shift_registrations,anon:TRUNCATE
+09_table_grant,public.shift_registrations,anon:DELETE
+09_table_grant,public.shift_registrations,authenticated:UPDATE
+09_table_grant,public.shift_registrations,anon:UPDATE
+09_table_grant,public.shift_registrations,anon:SELECT
+09_table_grant,public.shift_registrations,anon:INSERT
+09_table_grant,public.shift_registrations,postgres:TRIGGER
+09_table_grant,public.shift_registrations,postgres:REFERENCES
+09_table_grant,public.shift_registrations,postgres:TRUNCATE
+09_table_grant,public.shift_registrations,postgres:DELETE
+09_table_grant,public.shift_registrations,postgres:UPDATE
+09_table_grant,public.shift_registrations,postgres:SELECT
+09_table_grant,public.shift_registrations,postgres:INSERT
+09_table_grant,public.shift_registrations,authenticated:DELETE
+09_table_grant,public.shift_registrations,authenticated:TRUNCATE
+09_table_grant,public.shift_registrations,authenticated:REFERENCES
+09_table_grant,public.shift_registrations,authenticated:TRIGGER
+09_table_grant,public.shift_registrations,service_role:INSERT
+09_table_grant,public.shift_registrations,service_role:SELECT
+09_table_grant,public.shift_registrations,service_role:UPDATE
+09_table_grant,public.shift_registrations,service_role:DELETE
+09_table_grant,public.shift_registrations,service_role:TRUNCATE
+09_table_grant,public.shift_registrations,service_role:REFERENCES
+09_table_grant,public.shift_registrations,service_role:TRIGGER
+09_table_grant,public.shift_template_versions,service_role:UPDATE
+09_table_grant,public.shift_template_versions,postgres:INSERT
+09_table_grant,public.shift_template_versions,postgres:SELECT
+09_table_grant,public.shift_template_versions,postgres:UPDATE
+09_table_grant,public.shift_template_versions,postgres:DELETE
+09_table_grant,public.shift_template_versions,postgres:TRUNCATE
+09_table_grant,public.shift_template_versions,postgres:REFERENCES
+09_table_grant,public.shift_template_versions,postgres:TRIGGER
+09_table_grant,public.shift_template_versions,anon:INSERT
+09_table_grant,public.shift_template_versions,anon:SELECT
+09_table_grant,public.shift_template_versions,anon:UPDATE
+09_table_grant,public.shift_template_versions,anon:DELETE
+09_table_grant,public.shift_template_versions,anon:TRUNCATE
+09_table_grant,public.shift_template_versions,anon:REFERENCES
+09_table_grant,public.shift_template_versions,anon:TRIGGER
+09_table_grant,public.shift_template_versions,authenticated:INSERT
+09_table_grant,public.shift_template_versions,authenticated:SELECT
+09_table_grant,public.shift_template_versions,authenticated:UPDATE
+09_table_grant,public.shift_template_versions,authenticated:DELETE
+09_table_grant,public.shift_template_versions,authenticated:TRUNCATE
+09_table_grant,public.shift_template_versions,authenticated:REFERENCES
+09_table_grant,public.shift_template_versions,authenticated:TRIGGER
+09_table_grant,public.shift_template_versions,service_role:INSERT
+09_table_grant,public.shift_template_versions,service_role:SELECT
+09_table_grant,public.shift_template_versions,service_role:DELETE
+09_table_grant,public.shift_template_versions,service_role:TRUNCATE
+09_table_grant,public.shift_template_versions,service_role:REFERENCES
+09_table_grant,public.shift_template_versions,service_role:TRIGGER
+09_table_grant,public.shift_templates,authenticated:INSERT
+09_table_grant,public.shift_templates,anon:TRIGGER
+09_table_grant,public.shift_templates,anon:REFERENCES
+09_table_grant,public.shift_templates,anon:TRUNCATE
+09_table_grant,public.shift_templates,anon:DELETE
+09_table_grant,public.shift_templates,anon:UPDATE
+09_table_grant,public.shift_templates,anon:SELECT
+09_table_grant,public.shift_templates,anon:INSERT
+09_table_grant,public.shift_templates,postgres:TRIGGER
+09_table_grant,public.shift_templates,postgres:REFERENCES
+09_table_grant,public.shift_templates,postgres:TRUNCATE
+09_table_grant,public.shift_templates,postgres:DELETE
+09_table_grant,public.shift_templates,postgres:UPDATE
+09_table_grant,public.shift_templates,postgres:SELECT
+09_table_grant,public.shift_templates,postgres:INSERT
+09_table_grant,public.shift_templates,authenticated:SELECT
+09_table_grant,public.shift_templates,authenticated:UPDATE
+09_table_grant,public.shift_templates,authenticated:DELETE
+09_table_grant,public.shift_templates,authenticated:TRUNCATE
+09_table_grant,public.shift_templates,authenticated:REFERENCES
+09_table_grant,public.shift_templates,authenticated:TRIGGER
+09_table_grant,public.shift_templates,service_role:INSERT
+09_table_grant,public.shift_templates,service_role:SELECT
+09_table_grant,public.shift_templates,service_role:UPDATE
+09_table_grant,public.shift_templates,service_role:DELETE
+09_table_grant,public.shift_templates,service_role:TRUNCATE
+09_table_grant,public.shift_templates,service_role:REFERENCES
+09_table_grant,public.shift_templates,service_role:TRIGGER
+09_table_grant,public.store_memberships,authenticated:SELECT
+09_table_grant,public.store_memberships,authenticated:UPDATE
+09_table_grant,public.store_memberships,authenticated:DELETE
+09_table_grant,public.store_memberships,authenticated:TRUNCATE
+09_table_grant,public.store_memberships,authenticated:REFERENCES
+09_table_grant,public.store_memberships,authenticated:TRIGGER
+09_table_grant,public.store_memberships,service_role:INSERT
+09_table_grant,public.store_memberships,service_role:SELECT
+09_table_grant,public.store_memberships,service_role:UPDATE
+09_table_grant,public.store_memberships,service_role:DELETE
+09_table_grant,public.store_memberships,service_role:TRUNCATE
+09_table_grant,public.store_memberships,service_role:REFERENCES
+09_table_grant,public.store_memberships,service_role:TRIGGER
+09_table_grant,public.store_memberships,anon:TRIGGER
+09_table_grant,public.store_memberships,anon:REFERENCES
+09_table_grant,public.store_memberships,anon:TRUNCATE
+09_table_grant,public.store_memberships,anon:DELETE
+09_table_grant,public.store_memberships,anon:UPDATE
+09_table_grant,public.store_memberships,anon:SELECT
+09_table_grant,public.store_memberships,anon:INSERT
+09_table_grant,public.store_memberships,postgres:TRIGGER
+09_table_grant,public.store_memberships,postgres:REFERENCES
+09_table_grant,public.store_memberships,authenticated:INSERT
+09_table_grant,public.store_memberships,postgres:TRUNCATE
+09_table_grant,public.store_memberships,postgres:DELETE
+09_table_grant,public.store_memberships,postgres:UPDATE
+09_table_grant,public.store_memberships,postgres:SELECT
+09_table_grant,public.store_memberships,postgres:INSERT
+09_table_grant,public.stores,postgres:INSERT
+09_table_grant,public.stores,service_role:TRIGGER
+09_table_grant,public.stores,service_role:REFERENCES
+09_table_grant,public.stores,service_role:TRUNCATE
+09_table_grant,public.stores,service_role:DELETE
+09_table_grant,public.stores,service_role:UPDATE
+09_table_grant,public.stores,service_role:SELECT
+09_table_grant,public.stores,service_role:INSERT
+09_table_grant,public.stores,authenticated:TRIGGER
+09_table_grant,public.stores,authenticated:REFERENCES
+09_table_grant,public.stores,authenticated:TRUNCATE
+09_table_grant,public.stores,authenticated:DELETE
+09_table_grant,public.stores,authenticated:UPDATE
+09_table_grant,public.stores,authenticated:SELECT
+09_table_grant,public.stores,authenticated:INSERT
+09_table_grant,public.stores,anon:TRIGGER
+09_table_grant,public.stores,anon:REFERENCES
+09_table_grant,public.stores,anon:TRUNCATE
+09_table_grant,public.stores,anon:DELETE
+09_table_grant,public.stores,anon:UPDATE
+09_table_grant,public.stores,anon:SELECT
+09_table_grant,public.stores,anon:INSERT
+09_table_grant,public.stores,postgres:TRIGGER
+09_table_grant,public.stores,postgres:REFERENCES
+09_table_grant,public.stores,postgres:TRUNCATE
+09_table_grant,public.stores,postgres:DELETE
+09_table_grant,public.stores,postgres:UPDATE
+09_table_grant,public.stores,postgres:SELECT
+09_table_grant,public.weekly_shift_plan_items,postgres:INSERT
+09_table_grant,public.weekly_shift_plan_items,service_role:TRIGGER
+09_table_grant,public.weekly_shift_plan_items,service_role:REFERENCES
+09_table_grant,public.weekly_shift_plan_items,service_role:TRUNCATE
+09_table_grant,public.weekly_shift_plan_items,service_role:DELETE
+09_table_grant,public.weekly_shift_plan_items,service_role:UPDATE
+09_table_grant,public.weekly_shift_plan_items,service_role:SELECT
+09_table_grant,public.weekly_shift_plan_items,service_role:INSERT
+09_table_grant,public.weekly_shift_plan_items,authenticated:TRIGGER
+09_table_grant,public.weekly_shift_plan_items,authenticated:REFERENCES
+09_table_grant,public.weekly_shift_plan_items,authenticated:TRUNCATE
+09_table_grant,public.weekly_shift_plan_items,authenticated:DELETE
+09_table_grant,public.weekly_shift_plan_items,authenticated:UPDATE
+09_table_grant,public.weekly_shift_plan_items,authenticated:SELECT
+09_table_grant,public.weekly_shift_plan_items,authenticated:INSERT
+09_table_grant,public.weekly_shift_plan_items,anon:TRIGGER
+09_table_grant,public.weekly_shift_plan_items,anon:REFERENCES
+09_table_grant,public.weekly_shift_plan_items,anon:TRUNCATE
+09_table_grant,public.weekly_shift_plan_items,anon:DELETE
+09_table_grant,public.weekly_shift_plan_items,anon:UPDATE
+09_table_grant,public.weekly_shift_plan_items,anon:SELECT
+09_table_grant,public.weekly_shift_plan_items,anon:INSERT
+09_table_grant,public.weekly_shift_plan_items,postgres:TRIGGER
+09_table_grant,public.weekly_shift_plan_items,postgres:REFERENCES
+09_table_grant,public.weekly_shift_plan_items,postgres:TRUNCATE
+09_table_grant,public.weekly_shift_plan_items,postgres:DELETE
+09_table_grant,public.weekly_shift_plan_items,postgres:UPDATE
+09_table_grant,public.weekly_shift_plan_items,postgres:SELECT
+09_table_grant,public.work_schedules,postgres:REFERENCES
+09_table_grant,public.work_schedules,service_role:TRIGGER
+09_table_grant,public.work_schedules,service_role:REFERENCES
+09_table_grant,public.work_schedules,service_role:TRUNCATE
+09_table_grant,public.work_schedules,service_role:DELETE
+09_table_grant,public.work_schedules,service_role:UPDATE
+09_table_grant,public.work_schedules,service_role:SELECT
+09_table_grant,public.work_schedules,service_role:INSERT
+09_table_grant,public.work_schedules,authenticated:TRIGGER
+09_table_grant,public.work_schedules,authenticated:REFERENCES
+09_table_grant,public.work_schedules,authenticated:TRUNCATE
+09_table_grant,public.work_schedules,authenticated:DELETE
+09_table_grant,public.work_schedules,authenticated:UPDATE
+09_table_grant,public.work_schedules,authenticated:SELECT
+09_table_grant,public.work_schedules,authenticated:INSERT
+09_table_grant,public.work_schedules,anon:TRIGGER
+09_table_grant,public.work_schedules,anon:REFERENCES
+09_table_grant,public.work_schedules,anon:TRUNCATE
+09_table_grant,public.work_schedules,anon:DELETE
+09_table_grant,public.work_schedules,anon:UPDATE
+09_table_grant,public.work_schedules,anon:SELECT
+09_table_grant,public.work_schedules,anon:INSERT
+09_table_grant,public.work_schedules,postgres:TRIGGER
+09_table_grant,public.work_schedules,postgres:TRUNCATE
+09_table_grant,public.work_schedules,postgres:DELETE
+09_table_grant,public.work_schedules,postgres:UPDATE
+09_table_grant,public.work_schedules,postgres:SELECT
+09_table_grant,public.work_schedules,postgres:INSERT
+10_function_grant,public.activate_my_employee,service_role:EXECUTE
+10_function_grant,public.activate_my_employee,postgres:EXECUTE
+10_function_grant,public.activate_my_employee,anon:EXECUTE
+10_function_grant,public.activate_my_employee,authenticated:EXECUTE
+10_function_grant,public.add_template_schedules_to_date,anon:EXECUTE
+10_function_grant,public.add_template_schedules_to_date,authenticated:EXECUTE
+10_function_grant,public.add_template_schedules_to_date,service_role:EXECUTE
+10_function_grant,public.add_template_schedules_to_date,postgres:EXECUTE
+10_function_grant,public.assign_employee_to_schedule,service_role:EXECUTE
+10_function_grant,public.assign_employee_to_schedule,authenticated:EXECUTE
+10_function_grant,public.assign_employee_to_schedule,anon:EXECUTE
+10_function_grant,public.assign_employee_to_schedule,postgres:EXECUTE
+10_function_grant,public.assign_employees_to_schedule_group,anon:EXECUTE
+10_function_grant,public.assign_employees_to_schedule_group,authenticated:EXECUTE
+10_function_grant,public.assign_employees_to_schedule_group,service_role:EXECUTE
+10_function_grant,public.assign_employees_to_schedule_group,postgres:EXECUTE
+10_function_grant,public.attendance_punch,authenticated:EXECUTE
+10_function_grant,public.attendance_punch,anon:EXECUTE
+10_function_grant,public.attendance_punch,postgres:EXECUTE
+10_function_grant,public.attendance_punch,service_role:EXECUTE
+10_function_grant,public.auto_finalize_due_shift_registrations,authenticated:EXECUTE
+10_function_grant,public.auto_finalize_due_shift_registrations,anon:EXECUTE
+10_function_grant,public.auto_finalize_due_shift_registrations,postgres:EXECUTE
+10_function_grant,public.auto_finalize_due_shift_registrations,service_role:EXECUTE
+10_function_grant,public.auto_generate_weekly_schedule_from_plan,postgres:EXECUTE
+10_function_grant,public.auto_generate_weekly_schedule_from_plan,authenticated:EXECUTE
+10_function_grant,public.auto_generate_weekly_schedule_from_plan,service_role:EXECUTE
+10_function_grant,public.auto_generate_weekly_schedule_from_plan,anon:EXECUTE
+10_function_grant,public.can_manager_view_employee_payroll,service_role:EXECUTE
+10_function_grant,public.can_manager_view_employee_payroll,authenticated:EXECUTE
+10_function_grant,public.can_manager_view_employee_payroll,postgres:EXECUTE
+10_function_grant,public.can_manager_view_payroll_run,service_role:EXECUTE
+10_function_grant,public.can_manager_view_payroll_run,authenticated:EXECUTE
+10_function_grant,public.can_manager_view_payroll_run,postgres:EXECUTE
+10_function_grant,public.can_owner_manage_payroll_run,service_role:EXECUTE
+10_function_grant,public.can_owner_manage_payroll_run,postgres:EXECUTE
+10_function_grant,public.can_owner_manage_payroll_run,authenticated:EXECUTE
+10_function_grant,public.cancel_work_schedule,authenticated:EXECUTE
+10_function_grant,public.cancel_work_schedule,postgres:EXECUTE
+10_function_grant,public.cancel_work_schedule,anon:EXECUTE
+10_function_grant,public.cancel_work_schedule,service_role:EXECUTE
+10_function_grant,public.close_shift_registration_window,anon:EXECUTE
+10_function_grant,public.close_shift_registration_window,authenticated:EXECUTE
+10_function_grant,public.close_shift_registration_window,service_role:EXECUTE
+10_function_grant,public.close_shift_registration_window,postgres:EXECUTE
+10_function_grant,public.complete_my_employee_profile,authenticated:EXECUTE
+10_function_grant,public.complete_my_employee_profile,postgres:EXECUTE
+10_function_grant,public.complete_my_employee_profile,service_role:EXECUTE
+10_function_grant,public.confirm_late_checkin,authenticated:EXECUTE
+10_function_grant,public.confirm_late_checkin,service_role:EXECUTE
+10_function_grant,public.confirm_late_checkin,postgres:EXECUTE
+10_function_grant,public.confirm_late_checkin,anon:EXECUTE
+10_function_grant,public.create_branch,postgres:EXECUTE
+10_function_grant,public.create_branch,authenticated:EXECUTE
+10_function_grant,public.create_branch,service_role:EXECUTE
+10_function_grant,public.create_branch,anon:EXECUTE
+10_function_grant,public.create_schedule_slots,authenticated:EXECUTE
+10_function_grant,public.create_schedule_slots,anon:EXECUTE
+10_function_grant,public.create_schedule_slots,postgres:EXECUTE
+10_function_grant,public.create_schedule_slots,service_role:EXECUTE
+10_function_grant,public.create_supplemental_schedule,anon:EXECUTE
+10_function_grant,public.create_supplemental_schedule,postgres:EXECUTE
+10_function_grant,public.create_supplemental_schedule,authenticated:EXECUTE
+10_function_grant,public.create_supplemental_schedule,service_role:EXECUTE
+10_function_grant,public.current_user_has_manager_permission,authenticated:EXECUTE
+10_function_grant,public.current_user_has_manager_permission,service_role:EXECUTE
+10_function_grant,public.current_user_has_manager_permission,postgres:EXECUTE
+10_function_grant,public.delete_supplemental_schedule,anon:EXECUTE
+10_function_grant,public.delete_supplemental_schedule,authenticated:EXECUTE
+10_function_grant,public.delete_supplemental_schedule,service_role:EXECUTE
+10_function_grant,public.delete_supplemental_schedule,postgres:EXECUTE
+10_function_grant,public.employee_get_payroll_advance_limit,postgres:EXECUTE
+10_function_grant,public.employee_get_payroll_advance_limit,authenticated:EXECUTE
+10_function_grant,public.employee_get_payroll_advance_limit,service_role:EXECUTE
+10_function_grant,public.employee_request_payroll_advance,authenticated:EXECUTE
+10_function_grant,public.employee_request_payroll_advance,service_role:EXECUTE
+10_function_grant,public.employee_request_payroll_advance,postgres:EXECUTE
+10_function_grant,public.employee_schedule_conflict,service_role:EXECUTE
+10_function_grant,public.employee_schedule_conflict,postgres:EXECUTE
+10_function_grant,public.enforce_manager_business_permission,postgres:EXECUTE
+10_function_grant,public.enforce_manager_business_permission,service_role:EXECUTE
+10_function_grant,public.ensure_recurring_shift_registration_windows,authenticated:EXECUTE
+10_function_grant,public.ensure_recurring_shift_registration_windows,postgres:EXECUTE
+10_function_grant,public.ensure_recurring_shift_registration_windows,service_role:EXECUTE
+10_function_grant,public.ensure_recurring_shift_registration_windows,anon:EXECUTE
+10_function_grant,public.ensure_shift_registration_window,postgres:EXECUTE
+10_function_grant,public.ensure_shift_registration_window,authenticated:EXECUTE
+10_function_grant,public.ensure_shift_registration_window,service_role:EXECUTE
+10_function_grant,public.ensure_shift_registration_window,anon:EXECUTE
+10_function_grant,public.finalize_shift_registrations,postgres:EXECUTE
+10_function_grant,public.finalize_shift_registrations,authenticated:EXECUTE
+10_function_grant,public.finalize_shift_registrations,service_role:EXECUTE
+10_function_grant,public.finalize_shift_registrations,anon:EXECUTE
+10_function_grant,public.generate_weekly_schedule_from_plan,anon:EXECUTE
+10_function_grant,public.generate_weekly_schedule_from_plan,service_role:EXECUTE
+10_function_grant,public.generate_weekly_schedule_from_plan,authenticated:EXECUTE
+10_function_grant,public.generate_weekly_schedule_from_plan,postgres:EXECUTE
+10_function_grant,public.get_employee_hourly_rate,service_role:EXECUTE
+10_function_grant,public.get_employee_hourly_rate,postgres:EXECUTE
+10_function_grant,public.get_employee_schedule_overview,authenticated:EXECUTE
+10_function_grant,public.get_employee_schedule_overview,postgres:EXECUTE
+10_function_grant,public.get_employee_schedule_overview,anon:EXECUTE
+10_function_grant,public.get_employee_schedule_overview,service_role:EXECUTE
+10_function_grant,public.get_employee_shift_capacity,service_role:EXECUTE
+10_function_grant,public.get_employee_shift_capacity,postgres:EXECUTE
+10_function_grant,public.get_employee_shift_capacity,anon:EXECUTE
+10_function_grant,public.get_employee_shift_capacity,authenticated:EXECUTE
+10_function_grant,public.get_employee_shift_registrants,postgres:EXECUTE
+10_function_grant,public.get_employee_shift_registrants,authenticated:EXECUTE
+10_function_grant,public.get_employee_shift_registrants,service_role:EXECUTE
+10_function_grant,public.get_employee_shift_registrants,anon:EXECUTE
+10_function_grant,public.get_my_active_store_id,postgres:EXECUTE
+10_function_grant,public.get_my_active_store_id,service_role:EXECUTE
+10_function_grant,public.get_my_active_store_id,authenticated:EXECUTE
+10_function_grant,public.get_my_active_store_id,anon:EXECUTE
+10_function_grant,public.get_my_bank_details,authenticated:EXECUTE
+10_function_grant,public.get_my_bank_details,service_role:EXECUTE
+10_function_grant,public.get_my_bank_details,postgres:EXECUTE
+10_function_grant,public.get_my_manager_permissions,authenticated:EXECUTE
+10_function_grant,public.get_my_manager_permissions,service_role:EXECUTE
+10_function_grant,public.get_my_manager_permissions,postgres:EXECUTE
+10_function_grant,public.get_my_manager_permissions,anon:EXECUTE
+10_function_grant,public.get_my_payroll_slips,postgres:EXECUTE
+10_function_grant,public.get_my_payroll_slips,service_role:EXECUTE
+10_function_grant,public.get_my_payroll_slips,authenticated:EXECUTE
+10_function_grant,public.get_my_work_state,anon:EXECUTE
+10_function_grant,public.get_my_work_state,authenticated:EXECUTE
+10_function_grant,public.get_my_work_state,service_role:EXECUTE
+10_function_grant,public.get_my_work_state,postgres:EXECUTE
+10_function_grant,public.get_shift_registration_recurring_rule,anon:EXECUTE
+10_function_grant,public.get_shift_registration_recurring_rule,postgres:EXECUTE
+10_function_grant,public.get_shift_registration_recurring_rule,authenticated:EXECUTE
+10_function_grant,public.get_shift_registration_recurring_rule,service_role:EXECUTE
+10_function_grant,public.get_shift_registration_window,postgres:EXECUTE
+10_function_grant,public.get_shift_registration_window,authenticated:EXECUTE
+10_function_grant,public.get_shift_registration_window,service_role:EXECUTE
+10_function_grant,public.get_shift_registration_window,anon:EXECUTE
+10_function_grant,public.get_shift_template_version,anon:EXECUTE
+10_function_grant,public.get_shift_template_version,service_role:EXECUTE
+10_function_grant,public.get_shift_template_version,authenticated:EXECUTE
+10_function_grant,public.get_shift_template_version,PUBLIC:EXECUTE
+10_function_grant,public.get_shift_template_version,postgres:EXECUTE
+10_function_grant,public.gps_distance_m,postgres:EXECUTE
+10_function_grant,public.gps_distance_m,authenticated:EXECUTE
+10_function_grant,public.gps_distance_m,anon:EXECUTE
+10_function_grant,public.gps_distance_m,service_role:EXECUTE
+10_function_grant,public.guard_employee_bank_self_update,postgres:EXECUTE
+10_function_grant,public.guard_employee_bank_self_update,anon:EXECUTE
+10_function_grant,public.guard_employee_bank_self_update,authenticated:EXECUTE
+10_function_grant,public.guard_employee_bank_self_update,service_role:EXECUTE
+10_function_grant,public.guard_employee_bank_self_update,PUBLIC:EXECUTE
+10_function_grant,public.guard_employee_profile_self_update,anon:EXECUTE
+10_function_grant,public.guard_employee_profile_self_update,PUBLIC:EXECUTE
+10_function_grant,public.guard_employee_profile_self_update,postgres:EXECUTE
+10_function_grant,public.guard_employee_profile_self_update,authenticated:EXECUTE
+10_function_grant,public.guard_employee_profile_self_update,service_role:EXECUTE
+10_function_grant,public.guard_owner_schedule_configuration,postgres:EXECUTE
+10_function_grant,public.guard_owner_schedule_configuration,service_role:EXECUTE
+10_function_grant,public.guard_owner_schedule_configuration,anon:EXECUTE
+10_function_grant,public.guard_owner_schedule_configuration,PUBLIC:EXECUTE
+10_function_grant,public.guard_owner_schedule_configuration,authenticated:EXECUTE
+10_function_grant,public.guard_registration_window_write,anon:EXECUTE
+10_function_grant,public.guard_registration_window_write,postgres:EXECUTE
+10_function_grant,public.guard_registration_window_write,PUBLIC:EXECUTE
+10_function_grant,public.guard_registration_window_write,service_role:EXECUTE
+10_function_grant,public.guard_registration_window_write,authenticated:EXECUTE
+10_function_grant,public.handle_new_user,service_role:EXECUTE
+10_function_grant,public.handle_new_user,authenticated:EXECUTE
+10_function_grant,public.handle_new_user,anon:EXECUTE
+10_function_grant,public.handle_new_user,PUBLIC:EXECUTE
+10_function_grant,public.handle_new_user,postgres:EXECUTE
+10_function_grant,public.is_manager_or_owner,service_role:EXECUTE
+10_function_grant,public.is_manager_or_owner,PUBLIC:EXECUTE
+10_function_grant,public.is_manager_or_owner,postgres:EXECUTE
+10_function_grant,public.is_manager_or_owner,anon:EXECUTE
+10_function_grant,public.is_manager_or_owner,authenticated:EXECUTE
+10_function_grant,public.is_owner,postgres:EXECUTE
+10_function_grant,public.is_owner,PUBLIC:EXECUTE
+10_function_grant,public.is_owner,service_role:EXECUTE
+10_function_grant,public.is_owner,authenticated:EXECUTE
+10_function_grant,public.is_owner,anon:EXECUTE
+10_function_grant,public.is_store_member,authenticated:EXECUTE
+10_function_grant,public.is_store_member,anon:EXECUTE
+10_function_grant,public.is_store_member,postgres:EXECUTE
+10_function_grant,public.is_store_member,service_role:EXECUTE
+10_function_grant,public.is_store_owner,anon:EXECUTE
+10_function_grant,public.is_store_owner,service_role:EXECUTE
+10_function_grant,public.is_store_owner,postgres:EXECUTE
+10_function_grant,public.is_store_owner,authenticated:EXECUTE
+10_function_grant,public.manager_list_payroll_advance_requests,postgres:EXECUTE
+10_function_grant,public.manager_list_payroll_advance_requests,authenticated:EXECUTE
+10_function_grant,public.manager_list_payroll_advance_requests,service_role:EXECUTE
+10_function_grant,public.manager_owner_add_bonus_standalone_v1,authenticated:EXECUTE
+10_function_grant,public.manager_owner_add_bonus_standalone_v1,service_role:EXECUTE
+10_function_grant,public.manager_owner_add_bonus_standalone_v1,postgres:EXECUTE
+10_function_grant,public.manager_owner_add_penalty_standalone_v85,postgres:EXECUTE
+10_function_grant,public.manager_owner_add_penalty_standalone_v85,authenticated:EXECUTE
+10_function_grant,public.manager_owner_add_penalty_standalone_v85,service_role:EXECUTE
+10_function_grant,public.manager_owner_bonus_context_v1,service_role:EXECUTE
+10_function_grant,public.manager_owner_bonus_context_v1,postgres:EXECUTE
+10_function_grant,public.manager_owner_bonus_context_v1,authenticated:EXECUTE
+10_function_grant,public.manager_owner_list_bonus_vouchers_v1,service_role:EXECUTE
+10_function_grant,public.manager_owner_list_bonus_vouchers_v1,postgres:EXECUTE
+10_function_grant,public.manager_owner_list_bonus_vouchers_v1,authenticated:EXECUTE
+10_function_grant,public.manager_owner_list_penalties_v85,authenticated:EXECUTE
+10_function_grant,public.manager_owner_list_penalties_v85,postgres:EXECUTE
+10_function_grant,public.manager_owner_list_penalties_v85,service_role:EXECUTE
+10_function_grant,public.manager_owner_penalty_context_v85,postgres:EXECUTE
+10_function_grant,public.manager_owner_penalty_context_v85,service_role:EXECUTE
+10_function_grant,public.manager_owner_penalty_context_v85,authenticated:EXECUTE
+10_function_grant,public.manager_owner_review_bonus_v1,authenticated:EXECUTE
+10_function_grant,public.manager_owner_review_bonus_v1,service_role:EXECUTE
+10_function_grant,public.manager_owner_review_bonus_v1,postgres:EXECUTE
+10_function_grant,public.manager_owner_review_penalty_v85,authenticated:EXECUTE
+10_function_grant,public.manager_owner_review_penalty_v85,service_role:EXECUTE
+10_function_grant,public.manager_owner_review_penalty_v85,postgres:EXECUTE
+10_function_grant,public.manager_owner_save_full_day_bonus_rule_v1,authenticated:EXECUTE
+10_function_grant,public.manager_owner_save_full_day_bonus_rule_v1,service_role:EXECUTE
+10_function_grant,public.manager_owner_save_full_day_bonus_rule_v1,postgres:EXECUTE
+10_function_grant,public.manager_owner_save_holiday_pay_rule_v1,postgres:EXECUTE
+10_function_grant,public.manager_owner_save_holiday_pay_rule_v1,authenticated:EXECUTE
+10_function_grant,public.manager_owner_save_holiday_pay_rule_v1,service_role:EXECUTE
+10_function_grant,public.manager_review_payroll_advance,service_role:EXECUTE
+10_function_grant,public.manager_review_payroll_advance,authenticated:EXECUTE
+10_function_grant,public.manager_review_payroll_advance,postgres:EXECUTE
+10_function_grant,public.manager_update_employee_contact,service_role:EXECUTE
+10_function_grant,public.manager_update_employee_contact,postgres:EXECUTE
+10_function_grant,public.materialize_future_weekly_schedule_horizon_v1,postgres:EXECUTE
+10_function_grant,public.materialize_future_weekly_schedule_horizon_v1,service_role:EXECUTE
+10_function_grant,public.materialize_plan_week_internal_v1,service_role:EXECUTE
+10_function_grant,public.materialize_plan_week_internal_v1,postgres:EXECUTE
+10_function_grant,public.materialize_weekly_registration_slots,anon:EXECUTE
+10_function_grant,public.materialize_weekly_registration_slots,authenticated:EXECUTE
+10_function_grant,public.materialize_weekly_registration_slots,service_role:EXECUTE
+10_function_grant,public.materialize_weekly_registration_slots,postgres:EXECUTE
+10_function_grant,public.materialize_weekly_schedule_from_saved_plan_v1,authenticated:EXECUTE
+10_function_grant,public.materialize_weekly_schedule_from_saved_plan_v1,service_role:EXECUTE
+10_function_grant,public.materialize_weekly_schedule_from_saved_plan_v1,postgres:EXECUTE
+10_function_grant,public.my_role,authenticated:EXECUTE
+10_function_grant,public.my_role,postgres:EXECUTE
+10_function_grant,public.my_role,service_role:EXECUTE
+10_function_grant,public.my_role,PUBLIC:EXECUTE
+10_function_grant,public.my_role,anon:EXECUTE
+10_function_grant,public.open_shift_registration_window,service_role:EXECUTE
+10_function_grant,public.open_shift_registration_window,authenticated:EXECUTE
+10_function_grant,public.open_shift_registration_window,anon:EXECUTE
+10_function_grant,public.open_shift_registration_window,postgres:EXECUTE
+10_function_grant,public.owner_add_payroll_adjustment,anon:EXECUTE
+10_function_grant,public.owner_add_payroll_adjustment,authenticated:EXECUTE
+10_function_grant,public.owner_add_payroll_adjustment,service_role:EXECUTE
+10_function_grant,public.owner_add_payroll_adjustment,postgres:EXECUTE
+10_function_grant,public.owner_assign_queued_payroll_advances,service_role:EXECUTE
+10_function_grant,public.owner_assign_queued_payroll_advances,authenticated:EXECUTE
+10_function_grant,public.owner_assign_queued_payroll_advances,postgres:EXECUTE
+10_function_grant,public.owner_assign_standalone_payroll_adjustments,service_role:EXECUTE
+10_function_grant,public.owner_assign_standalone_payroll_adjustments,authenticated:EXECUTE
+10_function_grant,public.owner_assign_standalone_payroll_adjustments,postgres:EXECUTE
+10_function_grant,public.owner_calculate_payroll,postgres:EXECUTE
+10_function_grant,public.owner_calculate_payroll,authenticated:EXECUTE
+10_function_grant,public.owner_calculate_payroll,anon:EXECUTE
+10_function_grant,public.owner_calculate_payroll,service_role:EXECUTE
+10_function_grant,public.owner_create_payroll_period,service_role:EXECUTE
+10_function_grant,public.owner_create_payroll_period,postgres:EXECUTE
+10_function_grant,public.owner_create_payroll_period,authenticated:EXECUTE
+10_function_grant,public.owner_delete_inactive_attendance_device,service_role:EXECUTE
+10_function_grant,public.owner_delete_inactive_attendance_device,postgres:EXECUTE
+10_function_grant,public.owner_delete_inactive_attendance_device,authenticated:EXECUTE
+10_function_grant,public.owner_generate_payroll_penalties,service_role:EXECUTE
+10_function_grant,public.owner_generate_payroll_penalties,authenticated:EXECUTE
+10_function_grant,public.owner_generate_payroll_penalties,postgres:EXECUTE
+10_function_grant,public.owner_get_employee_bank_details,postgres:EXECUTE
+10_function_grant,public.owner_get_employee_bank_details,service_role:EXECUTE
+10_function_grant,public.owner_get_employee_bank_details,authenticated:EXECUTE
+10_function_grant,public.owner_get_manager_permissions,service_role:EXECUTE
+10_function_grant,public.owner_get_manager_permissions,postgres:EXECUTE
+10_function_grant,public.owner_get_manager_permissions,anon:EXECUTE
+10_function_grant,public.owner_get_manager_permissions,authenticated:EXECUTE
+10_function_grant,public.owner_prepare_payroll_bonuses_v1,service_role:EXECUTE
+10_function_grant,public.owner_prepare_payroll_bonuses_v1,postgres:EXECUTE
+10_function_grant,public.owner_prepare_payroll_bonuses_v1,authenticated:EXECUTE
+10_function_grant,public.owner_review_employee_profile_change,authenticated:EXECUTE
+10_function_grant,public.owner_review_employee_profile_change,postgres:EXECUTE
+10_function_grant,public.owner_review_employee_profile_change,service_role:EXECUTE
+10_function_grant,public.owner_review_payroll_adjustment,service_role:EXECUTE
+10_function_grant,public.owner_review_payroll_adjustment,postgres:EXECUTE
+10_function_grant,public.owner_review_payroll_adjustment,authenticated:EXECUTE
+10_function_grant,public.owner_review_payroll_adjustment,anon:EXECUTE
+10_function_grant,public.owner_review_payroll_adjustment_guarded,authenticated:EXECUTE
+10_function_grant,public.owner_review_payroll_adjustment_guarded,postgres:EXECUTE
+10_function_grant,public.owner_review_payroll_adjustment_guarded,service_role:EXECUTE
+10_function_grant,public.owner_save_employee_bank_details,postgres:EXECUTE
+10_function_grant,public.owner_save_employee_bank_details,authenticated:EXECUTE
+10_function_grant,public.owner_save_employee_bank_details,service_role:EXECUTE
+10_function_grant,public.owner_save_manager_permissions,service_role:EXECUTE
+10_function_grant,public.owner_save_manager_permissions,authenticated:EXECUTE
+10_function_grant,public.owner_save_manager_permissions,anon:EXECUTE
+10_function_grant,public.owner_save_manager_permissions,postgres:EXECUTE
+10_function_grant,public.owner_save_manager_permissions_v2,postgres:EXECUTE
+10_function_grant,public.owner_save_manager_permissions_v2,service_role:EXECUTE
+10_function_grant,public.owner_save_manager_permissions_v2,authenticated:EXECUTE
+10_function_grant,public.owner_set_employee_salary,postgres:EXECUTE
+10_function_grant,public.owner_set_employee_salary,anon:EXECUTE
+10_function_grant,public.owner_set_employee_salary,authenticated:EXECUTE
+10_function_grant,public.owner_set_employee_salary,service_role:EXECUTE
+10_function_grant,public.owner_set_payroll_status,postgres:EXECUTE
+10_function_grant,public.owner_set_payroll_status,anon:EXECUTE
+10_function_grant,public.owner_set_payroll_status,authenticated:EXECUTE
+10_function_grant,public.owner_set_payroll_status,service_role:EXECUTE
+10_function_grant,public.owner_supplement_attendance,service_role:EXECUTE
+10_function_grant,public.owner_supplement_attendance,postgres:EXECUTE
+10_function_grant,public.owner_supplement_attendance,anon:EXECUTE
+10_function_grant,public.owner_supplement_attendance,authenticated:EXECUTE
+10_function_grant,public.process_shift_registration_automation,service_role:EXECUTE
+10_function_grant,public.process_shift_registration_automation,authenticated:EXECUTE
+10_function_grant,public.process_shift_registration_automation,anon:EXECUTE
+10_function_grant,public.process_shift_registration_automation,postgres:EXECUTE
+10_function_grant,public.refresh_future_weekly_schedule_from_plan_v1,postgres:EXECUTE
+10_function_grant,public.refresh_future_weekly_schedule_from_plan_v1,authenticated:EXECUTE
+10_function_grant,public.refresh_future_weekly_schedule_from_plan_v1,service_role:EXECUTE
+10_function_grant,public.register_for_shift,authenticated:EXECUTE
+10_function_grant,public.register_for_shift,postgres:EXECUTE
+10_function_grant,public.register_for_shift,service_role:EXECUTE
+10_function_grant,public.register_for_shift,anon:EXECUTE
+10_function_grant,public.registration_window_times,authenticated:EXECUTE
+10_function_grant,public.registration_window_times,anon:EXECUTE
+10_function_grant,public.registration_window_times,postgres:EXECUTE
+10_function_grant,public.registration_window_times,service_role:EXECUTE
+10_function_grant,public.replace_employees_to_schedule_group,postgres:EXECUTE
+10_function_grant,public.replace_employees_to_schedule_group,authenticated:EXECUTE
+10_function_grant,public.replace_employees_to_schedule_group,service_role:EXECUTE
+10_function_grant,public.replace_employees_to_schedule_group,anon:EXECUTE
+10_function_grant,public.request_attendance_device,anon:EXECUTE
+10_function_grant,public.request_attendance_device,service_role:EXECUTE
+10_function_grant,public.request_attendance_device,authenticated:EXECUTE
+10_function_grant,public.request_attendance_device,postgres:EXECUTE
+10_function_grant,public.request_employee_profile_change,authenticated:EXECUTE
+10_function_grant,public.request_employee_profile_change,postgres:EXECUTE
+10_function_grant,public.request_employee_profile_change,service_role:EXECUTE
+10_function_grant,public.request_leave,service_role:EXECUTE
+10_function_grant,public.request_leave,postgres:EXECUTE
+10_function_grant,public.request_leave,anon:EXECUTE
+10_function_grant,public.request_leave,authenticated:EXECUTE
+10_function_grant,public.request_shift_leave,authenticated:EXECUTE
+10_function_grant,public.request_shift_leave,service_role:EXECUTE
+10_function_grant,public.request_shift_leave,postgres:EXECUTE
+10_function_grant,public.resolve_missing_checkout,service_role:EXECUTE
+10_function_grant,public.resolve_missing_checkout,authenticated:EXECUTE
+10_function_grant,public.resolve_missing_checkout,postgres:EXECUTE
+10_function_grant,public.review_attendance_device,anon:EXECUTE
+10_function_grant,public.review_attendance_device,service_role:EXECUTE
+10_function_grant,public.review_attendance_device,postgres:EXECUTE
+10_function_grant,public.review_attendance_device,authenticated:EXECUTE
+10_function_grant,public.review_leave,postgres:EXECUTE
+10_function_grant,public.review_leave,service_role:EXECUTE
+10_function_grant,public.review_leave,authenticated:EXECUTE
+10_function_grant,public.review_schedule_request,postgres:EXECUTE
+10_function_grant,public.review_schedule_request,anon:EXECUTE
+10_function_grant,public.review_schedule_request,authenticated:EXECUTE
+10_function_grant,public.review_schedule_request,service_role:EXECUTE
+10_function_grant,public.review_shift_registration,anon:EXECUTE
+10_function_grant,public.review_shift_registration,authenticated:EXECUTE
+10_function_grant,public.review_shift_registration,service_role:EXECUTE
+10_function_grant,public.review_shift_registration,postgres:EXECUTE
+10_function_grant,public.save_my_bank_details,service_role:EXECUTE
+10_function_grant,public.save_my_bank_details,authenticated:EXECUTE
+10_function_grant,public.save_my_bank_details,postgres:EXECUTE
+10_function_grant,public.save_shift_registration_recurring_rule,postgres:EXECUTE
+10_function_grant,public.save_shift_registration_recurring_rule,anon:EXECUTE
+10_function_grant,public.save_shift_registration_recurring_rule,authenticated:EXECUTE
+10_function_grant,public.save_shift_registration_recurring_rule,service_role:EXECUTE
+10_function_grant,public.save_shift_registration_settings,postgres:EXECUTE
+10_function_grant,public.save_shift_registration_settings,authenticated:EXECUTE
+10_function_grant,public.save_shift_registration_settings,service_role:EXECUTE
+10_function_grant,public.save_shift_registration_settings,anon:EXECUTE
+10_function_grant,public.save_shift_registration_window,service_role:EXECUTE
+10_function_grant,public.save_shift_registration_window,postgres:EXECUTE
+10_function_grant,public.save_shift_registration_window,authenticated:EXECUTE
+10_function_grant,public.save_shift_registration_window,anon:EXECUTE
+10_function_grant,public.save_shift_template,postgres:EXECUTE
+10_function_grant,public.save_shift_template,authenticated:EXECUTE
+10_function_grant,public.save_shift_template,authenticated:EXECUTE
+10_function_grant,public.save_shift_template,service_role:EXECUTE
+10_function_grant,public.save_shift_template,anon:EXECUTE
+10_function_grant,public.save_shift_template,anon:EXECUTE
+10_function_grant,public.save_shift_template,postgres:EXECUTE
+10_function_grant,public.save_shift_template,service_role:EXECUTE
+10_function_grant,public.save_weekly_shift_plan,anon:EXECUTE
+10_function_grant,public.save_weekly_shift_plan,postgres:EXECUTE
+10_function_grant,public.save_weekly_shift_plan,service_role:EXECUTE
+10_function_grant,public.save_weekly_shift_plan,authenticated:EXECUTE
+10_function_grant,public.set_audit_store_id,authenticated:EXECUTE
+10_function_grant,public.set_audit_store_id,postgres:EXECUTE
+10_function_grant,public.set_audit_store_id,PUBLIC:EXECUTE
+10_function_grant,public.set_audit_store_id,anon:EXECUTE
+10_function_grant,public.set_audit_store_id,service_role:EXECUTE
+10_function_grant,public.set_updated_at,PUBLIC:EXECUTE
+10_function_grant,public.set_updated_at,anon:EXECUTE
+10_function_grant,public.set_updated_at,postgres:EXECUTE
+10_function_grant,public.set_updated_at,service_role:EXECUTE
+10_function_grant,public.set_updated_at,authenticated:EXECUTE
+10_function_grant,public.submit_schedule_request,anon:EXECUTE
+10_function_grant,public.submit_schedule_request,service_role:EXECUTE
+10_function_grant,public.submit_schedule_request,postgres:EXECUTE
+10_function_grant,public.submit_schedule_request,authenticated:EXECUTE
+10_function_grant,public.switch_active_store,anon:EXECUTE
+10_function_grant,public.switch_active_store,postgres:EXECUTE
+10_function_grant,public.switch_active_store,service_role:EXECUTE
+10_function_grant,public.switch_active_store,authenticated:EXECUTE
+10_function_grant,public.sync_profile_store_membership,service_role:EXECUTE
+10_function_grant,public.sync_profile_store_membership,PUBLIC:EXECUTE
+10_function_grant,public.sync_profile_store_membership,authenticated:EXECUTE
+10_function_grant,public.sync_profile_store_membership,anon:EXECUTE
+10_function_grant,public.sync_profile_store_membership,postgres:EXECUTE
+10_function_grant,public.sync_shift_registration_automation,authenticated:EXECUTE
+10_function_grant,public.sync_shift_registration_automation,anon:EXECUTE
+10_function_grant,public.sync_shift_registration_automation,postgres:EXECUTE
+10_function_grant,public.sync_shift_registration_automation,service_role:EXECUTE
+10_function_grant,public.sync_work_schedule_datetimes,anon:EXECUTE
+10_function_grant,public.sync_work_schedule_datetimes,postgres:EXECUTE
+10_function_grant,public.sync_work_schedule_datetimes,authenticated:EXECUTE
+10_function_grant,public.sync_work_schedule_datetimes,service_role:EXECUTE
+10_function_grant,public.sync_work_schedule_datetimes,PUBLIC:EXECUTE
+10_function_grant,public.transfer_employee_branch,postgres:EXECUTE
+10_function_grant,public.transfer_employee_branch,anon:EXECUTE
+10_function_grant,public.transfer_employee_branch,authenticated:EXECUTE
+10_function_grant,public.transfer_employee_branch,service_role:EXECUTE
+10_function_grant,public.unassign_employee_from_schedule,authenticated:EXECUTE
+10_function_grant,public.unassign_employee_from_schedule,service_role:EXECUTE
+10_function_grant,public.unassign_employee_from_schedule,postgres:EXECUTE
+10_function_grant,public.unassign_employee_from_schedule,anon:EXECUTE
+10_function_grant,public.update_supplemental_schedule,authenticated:EXECUTE
+10_function_grant,public.update_supplemental_schedule,service_role:EXECUTE
+10_function_grant,public.update_supplemental_schedule,anon:EXECUTE
+10_function_grant,public.update_supplemental_schedule,postgres:EXECUTE
+10_function_grant,public.withdraw_shift_registration,service_role:EXECUTE
+10_function_grant,public.withdraw_shift_registration,authenticated:EXECUTE
+10_function_grant,public.withdraw_shift_registration,anon:EXECUTE
+10_function_grant,public.withdraw_shift_registration,postgres:EXECUTE
+11_extension,pg_cron,1.6.4
+11_extension,pg_stat_statements,1.11
+11_extension,pgcrypto,1.3
+11_extension,plpgsql,1.0
+11_extension,supabase_vault,0.3.1
+11_extension,uuid-ossp,1.1
+12_realtime_table,public.attendance,published
+12_realtime_table,public.shift_registration_recurring_rules,published
+12_realtime_table,public.shift_registration_windows,published
+12_realtime_table,public.shift_registrations,published
+12_realtime_table,public.shift_template_versions,published
+12_realtime_table,public.shift_templates,published
+12_realtime_table,public.work_schedules,published
