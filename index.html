@@ -4964,9 +4964,12 @@ async function saveStore(){
  if(profile.role==='manager'){
    if(!hasManagerPermission('branch_gps')){alert('Bạn chưa được cấp quyền sửa vị trí chi nhánh.');return}
    const address=(document.getElementById('storeAddress').value||'').trim();
-   const lat=Number(document.getElementById('storeLat').value);
-   const lng=Number(document.getElementById('storeLng').value);
-   const radius=Number(document.getElementById('storeRadius').value);
+   const latRaw=(document.getElementById('storeLat').value||'').trim();
+   const lngRaw=(document.getElementById('storeLng').value||'').trim();
+   const radiusRaw=(document.getElementById('storeRadius').value||'').trim();
+   const lat=latRaw===''?null:Number(latRaw);
+   const lng=lngRaw===''?null:Number(lngRaw);
+   const radius=radiusRaw===''?null:Number(radiusRaw);
    const {error}=await sb.rpc('manager_update_branch_gps',{p_address:address,p_latitude:Number.isFinite(lat)?lat:null,p_longitude:Number.isFinite(lng)?lng:null,p_gps_radius_m:Number.isFinite(radius)?Math.round(radius):null});
    const map={'MANAGER_PERMISSION_DENIED':'Bạn chưa được cấp quyền sửa vị trí chi nhánh.','TOA_DO_KHONG_HOP_LE':'Tọa độ không hợp lệ.','BAN_KINH_KHONG_HOP_LE':'Bán kính phải từ 20 đến 1000 mét.','STORE_NOT_FOUND':'Tài khoản chưa được gắn với chi nhánh.'};
    document.getElementById('storeMsg').innerHTML=error?`<div class="notice warn">${escapeHtml(map[String(error.message||'')]||'Không lưu được vị trí chi nhánh.')}</div>`:'<div class="notice ok">Đã lưu vị trí chi nhánh.</div>';

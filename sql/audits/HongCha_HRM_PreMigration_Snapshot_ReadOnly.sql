@@ -38,7 +38,10 @@ funcs as (
       'get_my_manager_permissions',
       'switch_active_store',
       'enforce_manager_business_permission',
-      'owner_set_manager_branches'
+      'owner_set_manager_branches',
+      'owner_save_manager_permissions_v2',
+      'owner_get_manager_permissions',
+      'review_attendance_device'
     )
 )
 select section, object_name, detail from counts
