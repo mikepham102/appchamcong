@@ -83,6 +83,8 @@ Ba migration trong `sql/migrations/`:
 
 ## Tính năng đã gỡ khỏi repo (vẫn khôi phục được bằng git)
 - `HongCha_HRM_V59_Native_App_Icon.html` — bản app V59 (347 KB), không còn được dùng. Khôi phục:
+  `git log --oneline -- HongCha_HRM_V59_Native_App_Icon.html` rồi `git show <commit>:<file> > /tmp/v59.html`
+
 ---
 
 ## Sau V84.30 — Dọn dẹp & ổn định (30/10/2026)
@@ -96,4 +98,18 @@ Không thay đổi nghiệp vụ, không thay đổi giao diện.
 - Sửa lỗi cú pháp CSS: bỏ 1 dấu `}` thừa ở cuối rule `.app-brand-center .brand-mark` (dòng 985). Gradient logo `#e50000 → #216345` **giữ nguyên** theo ý chủ dự án.
 - Kiểm tra sau sửa: JS `node --check` PASS; các block CSS cân bằng ngoặc; `index.html` chỉ đổi đúng 1 ký tự.
 
-  `git log --oneline -- HongCha_HRM_V59_Native_App_Icon.html` rồi `git show <commit>:<file> > /tmp/v59.html`
+---
+
+## V84.31 HOTFIX — Đổi mật khẩu nhân viên luôn báo PASSWORD_TOO_SHORT (30/10/2026)
+
+**Hiện tượng:** Owner vào Nhân viên → Sửa nhân viên → đổi mật khẩu, nhập mật khẩu dài bao nhiêu cũng báo `PASSWORD_TOO_SHORT`.
+
+**Nguyên nhân:** Edge Function `change-employee-password` đọc `body["password"]`, nhưng app gửi `{ employee_id, new_password }`. Giá trị nhận được luôn là chuỗi rỗng → `length 0 < 8` → luôn báo lỗi.
+
+**Sửa:**
+- Đọc `body.new_password ?? body.password` (tương thích ngược cả 2 tên trường).
+- Ghi `audit_logs` thất bại **không còn** làm API trả lỗi sau khi mật khẩu đã đổi thành công.
+- Trả thêm `min_length` / `max_length` khi báo lỗi độ dài.
+
+**File nguồn (lần đầu được đưa vào git):** `supabase/functions/change-employee-password/index.ts`
+**Không cần sửa `index.html`** — chỉ deploy lại Edge Function.
