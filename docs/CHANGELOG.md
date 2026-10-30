@@ -184,5 +184,27 @@ Chỉ giao diện. Không đổi nghiệp vụ, không đổi dữ liệu, khôn
 - `.settings-toggle-card` đổi cột đầu 18px → 52px để chứa công tắc.
 - Kiểm tra: JS `node --check` PASS; block CSS cân bằng ngoặc (605/605).
 
+---
+
+## V84.36 — Đặt mật khẩu lần đầu + gọn màn hình đăng nhập (30/10/2026)
+
+### 1. Nhân viên nhận email mời phải đặt mật khẩu lần đầu
+- Trước: bấm link mời → tài khoản được kích hoạt nhưng **không có mật khẩu** → lần sau phải dùng "Quên mật khẩu" hoặc nhờ Owner đặt lại.
+- Nay: sau khi bấm link, app hiện màn hình **"Đặt mật khẩu lần đầu"** (2 ô: mật khẩu + nhập lại, tối thiểu 8 ký tự), chỉ vào app sau khi lưu thành công.
+- Nhận biết link mời theo 2 lớp:
+  1. Đọc `type=invite` trên URL **trước khi** supabase-js xoá hash.
+  2. Dự phòng: nếu hồ sơ còn `employment_status = 'invited'` thì vẫn buộc đặt mật khẩu (áp dụng cả khi đăng nhập bằng link email).
+- Cờ chờ đặt mật khẩu lưu theo `user_id` trong `localStorage` → **refresh giữa chừng vẫn không vào được app**.
+- Cờ tự xoá khi: đặt mật khẩu thành công, đổi mật khẩu trong app, hoặc đặt lại qua email khôi phục.
+- Nút "Đăng xuất" ngay trên màn hình đó để đổi tài khoản.
+
+### 2. Màn hình đăng nhập gọn hơn
+- Bỏ ô Email trùng lặp: trước đây tab "Mật khẩu" và tab "Email" mỗi bên có một ô email riêng.
+- Nay **một ô Email duy nhất** dùng cho cả hai cách đăng nhập (mật khẩu / link email).
+- Xoá toàn bộ tham chiếu tới `loginEmailOtp` (input, `initLoginPreference`, `setLoginMode`, `sendMagicLink`).
+
+**Không đổi:** cơ chế xác thực, quyền, dữ liệu. Chỉ giao diện + luồng đặt mật khẩu lần đầu.
+
+
 
 

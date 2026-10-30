@@ -63,8 +63,8 @@ input.hc-switch[type="checkbox"]:disabled{opacity:.45;cursor:not-allowed}
 .hc-switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer}
 
 /* ---------- App shell ---------- */
-#bootScreen,#loginScreen{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
-#bootScreen.hidden,#loginScreen.hidden{display:none}
+#bootScreen,#loginScreen,#firstPasswordScreen{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
+#bootScreen.hidden,#loginScreen.hidden,#firstPasswordScreen.hidden{display:none}
 .app{position:relative;min-height:100svh;width:100%;background:var(--bg);padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom));overflow-x:clip}
 .app-topbar{position:sticky;top:0;z-index:40;height:68px;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(18px);-webkit-backdrop-filter:saturate(180%) blur(18px);border-bottom:1px solid rgba(231,227,221,.92)}
 .app-topbar-inner{height:100%;max-width:960px;margin:auto;padding:0 20px;display:flex;align-items:center;gap:11px;min-width:0}
@@ -2671,7 +2671,7 @@ input:focus,select:focus,textarea:focus{
   #staffAttendanceContent #adminAttendanceSummary .attendance-compact-row span{font-size:6.5px}
 }
 </style>
-</head><body><div id="bootScreen"><div class="auth-card ui-center"><div class="auth-logo ui-auto">H</div><div class="ui-boot-title">HongCha HRM</div><div class="muted ui-boot-sub">Đang mở ứng dụng…</div></div></div><div class="hidden" id="loginScreen"><div class="auth-card v33-auth"><div class="auth-brand"><div class="auth-logo">H</div><div><div class="ui-brand-title">HongCha HRM</div><div class="muted ui-brand-foot">Quản lý nhân sự &amp; chấm công</div></div></div><h1>Chào mừng trở lại</h1><div class="desc">Đăng nhập để chấm công, xem lịch làm việc và theo dõi giờ công.</div><div class="login-toggle"><button class="active" id="loginModePassword" onclick="setLoginMode('password')">Mật khẩu</button><button id="loginModeOtp" onclick="setLoginMode('otp')">Email</button></div><div class="stack" id="passwordLoginFields"><div class="field"><label>Email</label><input autocomplete="username" id="loginEmail" placeholder="email của bạn" type="email"/></div><div class="field"><label>Mật khẩu</label><input autocomplete="current-password" id="loginPassword" placeholder="Mật khẩu" type="password"/></div><label class="remember-login"><input checked="" id="rememberLogin" type="checkbox"/><span><b>Lưu đăng nhập</b><small>Giữ phiên đăng nhập trên thiết bị này</small></span></label><button class="btn primary ui-w-full" onclick="signIn()">Đăng nhập</button><button class="btn light ui-w-full" onclick="sendResetPassword()">Quên mật khẩu</button></div><div class="stack ui-hidden" id="otpLoginFields"><div class="field"><label>Email</label><input autocomplete="email" id="loginEmailOtp" placeholder="email của bạn" type="email"/></div><button class="btn primary ui-w-full" onclick="sendMagicLink()">Gửi link đăng nhập</button><div class="notice info">Mở email và bấm link để đăng nhập nhanh. Không cần nhập mật khẩu.</div></div><div class="auth-msg" id="loginMsg"></div><div class="auth-foot">Tài khoản nhân viên chỉ sử dụng được trên thiết bị đã được cửa hàng phê duyệt.</div></div></div>
+</head><body><div id="bootScreen"><div class="auth-card ui-center"><div class="auth-logo ui-auto">H</div><div class="ui-boot-title">HongCha HRM</div><div class="muted ui-boot-sub">Đang mở ứng dụng…</div></div></div><div class="hidden" id="loginScreen"><div class="auth-card v33-auth"><div class="auth-brand"><div class="auth-logo">H</div><div><div class="ui-brand-title">HongCha HRM</div><div class="muted ui-brand-foot">Quản lý nhân sự &amp; chấm công</div></div></div><h1>Chào mừng trở lại</h1><div class="desc">Đăng nhập để chấm công, xem lịch làm việc và theo dõi giờ công.</div><div class="login-toggle"><button class="active" id="loginModePassword" onclick="setLoginMode('password')">Mật khẩu</button><button id="loginModeOtp" onclick="setLoginMode('otp')">Email</button></div><div class="field"><label>Email</label><input autocomplete="username" id="loginEmail" placeholder="email của bạn" type="email"/></div><div class="stack" id="passwordLoginFields"><div class="field"><label>Mật khẩu</label><input autocomplete="current-password" id="loginPassword" placeholder="Mật khẩu" type="password"/></div><label class="remember-login"><input checked="" id="rememberLogin" type="checkbox"/><span><b>Lưu đăng nhập</b><small>Giữ phiên đăng nhập trên thiết bị này</small></span></label><button class="btn primary ui-w-full" onclick="signIn()">Đăng nhập</button><button class="btn light ui-w-full" onclick="sendResetPassword()">Quên mật khẩu</button></div><div class="stack ui-hidden" id="otpLoginFields"><button class="btn primary ui-w-full" onclick="sendMagicLink()">Gửi link đăng nhập</button><div class="notice info">Mở email và bấm link để đăng nhập nhanh. Không cần nhập mật khẩu.</div></div><div class="auth-msg" id="loginMsg"></div><div class="auth-foot">Tài khoản nhân viên chỉ sử dụng được trên thiết bị đã được cửa hàng phê duyệt.</div></div></div><div class="hidden" id="firstPasswordScreen"><div class="auth-card v33-auth"><div class="auth-brand"><div class="auth-logo">H</div><div><div class="ui-brand-title">HongCha HRM</div><div class="muted ui-brand-foot">Thiết lập mật khẩu</div></div></div><h1>Đặt mật khẩu lần đầu</h1><div class="desc">Tài khoản của bạn đã được kích hoạt. Hãy đặt mật khẩu để đăng nhập trên thiết bị này và các lần sau.</div><div class="notice info" id="firstPasswordEmail" style="margin-bottom:12px">—</div><div class="stack"><div class="field"><label>Mật khẩu mới (tối thiểu 8 ký tự)</label><input autocomplete="new-password" id="firstPassword" type="password"/></div><div class="field"><label>Nhập lại mật khẩu</label><input autocomplete="new-password" id="firstPassword2" type="password"/></div><button class="btn primary ui-w-full" onclick="submitFirstPassword()">Lưu mật khẩu và tiếp tục</button><button class="btn light ui-w-full" onclick="signOut()">Đăng xuất</button><div id="firstPasswordMsg"></div></div><div class="auth-foot">Bạn có thể đổi mật khẩu bất cứ lúc nào trong mục Tài khoản.</div></div></div>
 <div class="app" id="app">
 <header class="app-topbar"><div class="app-topbar-inner"><div class="app-brand-center"><div class="brand-mark">H</div><div class="app-brand-copy"><div class="brand">HongCha HRM</div><button class="topbar-branch-action hidden" id="branchTopAction" onclick="openBranchSwitcher()" type="button"><span class="branch-top-dot">●</span><span class="branch-top-name" id="branchTopName">Chi nhánh</span><span class="branch-top-chevron">⌄</span></button><div class="sub" id="roleLabel" aria-hidden="true">—</div></div></div><div class="topbar-actions"><button class="topbar-admin-action" id="adminTopAction" onclick="openAdminHome()" type="button"><span>Quản trị</span></button></div></div></header>
 <main>
@@ -2864,6 +2864,11 @@ function isBranchAdmin(){return profile?.role==='manager'}
 function isStaffAdmin(){return ['owner','manager'].includes(profile?.role)}
 const UI_STATE_KEY='hongcha_hrm_ui_state_v21_3';
 let appHydratedUserId=null;
+// Loại link xác thực trong URL (#type=invite / recovery / signup). Phải đọc TRƯỚC
+// khi supabase-js xử lý và xoá hash khỏi địa chỉ.
+const AUTH_LINK_TYPE=(()=>{try{const raw=(location.hash||'')+'&'+(location.search||'');const m=raw.match(/[#&?]type=([a-z_]+)/i);return m?String(m[1]).toLowerCase():''}catch(_){return ''}})();
+const FIRST_PASSWORD_KEY='hongcha_first_password_pending';
+let skipInvitedPasswordGate=false;
 const DEFAULT_SUPABASE_URL='https://qwrcjxicudxlspxqfjkj.supabase.co';
 const DEFAULT_SUPABASE_KEY='sb_publishable_YH3fxd3AUJu2p_ADijIpLQ_iuFvEKGk';
 const ROLE_LABEL={owner:'Chủ quán',manager:'Quản lý',employee:'Nhân viên'};
@@ -3008,7 +3013,6 @@ function initLoginPreference(){
   const c=el('rememberLogin');if(c)c.checked=rememberLoginEnabled();
   const saved=localStorage.getItem(REMEMBER_EMAIL_KEY)||'';
   if(saved&&el('loginEmail'))el('loginEmail').value=saved;
-  if(saved&&el('loginEmailOtp'))el('loginEmailOtp').value=saved;
 }
 function saveLoginPreference(){
   const c=el('rememberLogin'),enabled=!!c?.checked;
@@ -3018,8 +3022,37 @@ function saveLoginPreference(){
   return enabled;
 }
 function setLoginMessage(type,msg){const x=el('loginMsg');x.innerHTML=msg?`<div class="notice ${type||'info'}">${escapeHtml(msg)}</div>`:''}
-function setLoginMode(mode){loginMode=mode;el('loginModePassword').classList.toggle('active',mode==='password');el('loginModeOtp').classList.toggle('active',mode==='otp');el('passwordLoginFields').style.display=mode==='password'?'grid':'none';el('otpLoginFields').style.display=mode==='otp'?'grid':'none';el('loginMsg').innerHTML='';if(mode==='otp')el('loginEmailOtp').value=el('loginEmail').value||''}
-function showLogin(message=''){employeeAccessRestricted=false;employeeDeviceAccessState=null;document.body.classList.remove('employee-device-restricted');el('app').classList.remove('ready');el('app').style.display='none';el('deviceGate').classList.remove('active');el('loginScreen').classList.remove('hidden');el('bootScreen').classList.add('hidden');if(message)setLoginMessage('warn',message)}
+function setLoginMode(mode){loginMode=mode;el('loginModePassword').classList.toggle('active',mode==='password');el('loginModeOtp').classList.toggle('active',mode==='otp');el('passwordLoginFields').style.display=mode==='password'?'grid':'none';el('otpLoginFields').style.display=mode==='otp'?'grid':'none';el('loginMsg').innerHTML=''}
+function showLogin(message=''){employeeAccessRestricted=false;employeeDeviceAccessState=null;skipInvitedPasswordGate=false;document.body.classList.remove('employee-device-restricted');el('app').classList.remove('ready');el('app').style.display='none';el('deviceGate').classList.remove('active');el('firstPasswordScreen')?.classList.add('hidden');el('loginScreen').classList.remove('hidden');el('bootScreen').classList.add('hidden');if(message)setLoginMessage('warn',message)}
+function showFirstPassword(){
+  el('bootScreen')?.classList.add('hidden');
+  el('loginScreen')?.classList.add('hidden');
+  el('deviceGate')?.classList.remove('active');
+  if(el('app')){el('app').classList.remove('ready');el('app').style.display='none'}
+  const screen=el('firstPasswordScreen');if(!screen)return;
+  screen.classList.remove('hidden');
+  const who=el('firstPasswordEmail');if(who)who.textContent=session?.user?.email||'Tài khoản của bạn';
+  el('firstPassword').value='';el('firstPassword2').value='';el('firstPasswordMsg').innerHTML='';
+  setTimeout(()=>{try{el('firstPassword')?.focus()}catch(_){}},80);
+}
+function hideFirstPassword(){el('firstPasswordScreen')?.classList.add('hidden')}
+async function submitFirstPassword(){
+  const msg=el('firstPasswordMsg');
+  if(!sb||!session){msg.innerHTML='<div class="notice warn">Phiên đăng nhập chưa sẵn sàng. Hãy mở lại link trong email.</div>';return}
+  const p1=el('firstPassword').value,p2=el('firstPassword2').value;
+  if(p1.length<8){msg.innerHTML='<div class="notice warn">Mật khẩu phải có ít nhất 8 ký tự.</div>';return}
+  if(p1!==p2){msg.innerHTML='<div class="notice warn">Hai mật khẩu không giống nhau.</div>';return}
+  msg.innerHTML='<div class="notice info">Đang lưu mật khẩu…</div>';
+  const {error}=await sb.auth.updateUser({password:p1});
+  if(error){msg.innerHTML='<div class="notice warn">Không lưu được mật khẩu: '+escapeHtml(error.message||'')+'</div>';return}
+  try{localStorage.removeItem(FIRST_PASSWORD_KEY)}catch(_){}
+  try{history.replaceState(null,'',location.pathname+location.search)}catch(_){}
+  hideFirstPassword();
+  msg.innerHTML='';
+  skipInvitedPasswordGate=true;
+  await loadApp();
+  toast('Đã thiết lập mật khẩu. Chào mừng bạn!');
+}
 function hideLogin(){el('loginScreen').classList.add('hidden');el('bootScreen').classList.add('hidden');el('app').classList.add('ready');el('app').style.display='block'}
 let bootStarted=false, bootInFlight=null;
 function showLoginReady(message=''){
@@ -3268,7 +3301,7 @@ async function signIn(){
  }catch(e){console.error('[HongCha Login] sign-in request failed:',e);setLoginMessage('warn','Không thể kết nối dịch vụ đăng nhập. Vui lòng thử lại.');}
  finally{appBusy=false;setBusyButton(b,false,'Đăng nhập')}
 }
-async function sendMagicLink(){if(appBusy||!sb)return;const email=(el('loginEmailOtp').value||el('loginEmail').value).trim().toLowerCase();if(!email){setLoginMessage('warn','Nhập email trước.');return}if(el('loginEmail'))el('loginEmail').value=email;saveLoginPreference();appBusy=true;const b=document.querySelector('#otpLoginFields .btn.primary');setBusyButton(b,true);setLoginMessage('info','Đang gửi email…');try{const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.href.split('#')[0]}});setLoginMessage(error?'warn':'ok',error?'Không thể gửi email. Vui lòng thử lại.':'Đã gửi email. Hãy mở email để tiếp tục.')}finally{appBusy=false;setBusyButton(b,false,'Gửi link đăng nhập')}}
+async function sendMagicLink(){if(appBusy||!sb)return;const email=el('loginEmail').value.trim().toLowerCase();if(!email){setLoginMessage('warn','Nhập email trước.');return}saveLoginPreference();appBusy=true;const b=document.querySelector('#otpLoginFields .btn.primary');setBusyButton(b,true);setLoginMessage('info','Đang gửi email…');try{const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.href.split('#')[0]}});setLoginMessage(error?'warn':'ok',error?'Không thể gửi email. Vui lòng thử lại.':'Đã gửi email. Hãy mở email để tiếp tục.')}finally{appBusy=false;setBusyButton(b,false,'Gửi link đăng nhập')}}
 async function sendResetPassword(){if(appBusy||!sb)return;const email=el('loginEmail').value.trim().toLowerCase();if(!email){setLoginMessage('warn','Nhập email trước.');return}appBusy=true;const b=document.querySelector('#passwordLoginFields .btn.light');setBusyButton(b,true);setLoginMessage('info','Đang gửi email đặt lại mật khẩu…');try{const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.href.split('#')[0]});setLoginMessage(error?'warn':'ok',error?'Không thể gửi email đặt lại mật khẩu. Vui lòng thử lại.':'Đã gửi email đặt lại mật khẩu. Hãy mở email để tiếp tục.')}catch(e){setLoginMessage('warn','Không thể gửi email đặt lại mật khẩu. Vui lòng thử lại.')}finally{appBusy=false;setBusyButton(b,false,'Quên mật khẩu')}}
 let passwordRecoveryMode=false;
 function openPasswordModal(recovery=false){
@@ -3280,6 +3313,7 @@ function openPasswordModal(recovery=false){
   const current=el('currentPasswordField'),note=el('passwordRecoveryNote');
   if(current)current.style.display=passwordRecoveryMode?'none':'grid';
   if(note)note.style.display=passwordRecoveryMode?'block':'none';
+  if(passwordRecoveryMode){try{localStorage.removeItem(FIRST_PASSWORD_KEY)}catch(_){}}
   el('passwordModal').classList.add('open');
 }
 function closePasswordModal(){el('passwordModal').classList.remove('open');passwordRecoveryMode=false}
@@ -3298,6 +3332,7 @@ async function setNewPassword(){
   if(p1!==p2){msg.innerHTML='<div class="notice warn">Hai mật khẩu mới không giống nhau.</div>';return}
   const {error}=await sb.auth.updateUser({password:p1});
   msg.innerHTML=error?'<div class="notice warn">Không thể cập nhật mật khẩu.</div>':'<div class="notice ok">Đã đổi mật khẩu thành công.</div>';
+  if(!error){try{localStorage.removeItem(FIRST_PASSWORD_KEY)}catch(_){}}
   if(!error)setTimeout(closePasswordModal,700);
 }
 function syncProfileSaveState(){
@@ -5151,6 +5186,11 @@ async function stopRealtime(){
 }
 async function loadApp(){
   if(!session||!sb)return;
+  // Link mời: bắt buộc đặt mật khẩu lần đầu trước khi vào ứng dụng.
+  if(AUTH_LINK_TYPE==='invite'&&session?.user?.id){try{localStorage.setItem(FIRST_PASSWORD_KEY,session.user.id)}catch(_){}}
+  let needFirstPassword=false;
+  try{needFirstPassword=localStorage.getItem(FIRST_PASSWORD_KEY)===session.user.id}catch(_){}
+  if(needFirstPassword){showFirstPassword();return}
   if(appHydratedUserId===session.user.id && el('app')?.classList.contains('ready'))return;
   if(bootInFlight)return bootInFlight;
   bootInFlight=(async()=>{
@@ -5160,6 +5200,13 @@ async function loadApp(){
     const {data,error}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
     if(error||!data){showLogin('Tài khoản chưa có hồ sơ nhân sự.');return}
     let p=data;
+    // Nhân viên chưa kích hoạt: bắt buộc đặt mật khẩu lần đầu (áp dụng cho mọi
+    // loại link mời, kể cả khi Supabase không gắn #type=invite trên URL).
+    if(p.role==='employee'&&p.employment_status==='invited'&&!skipInvitedPasswordGate){
+      try{localStorage.setItem(FIRST_PASSWORD_KEY,session.user.id)}catch(_){}
+      showFirstPassword();
+      return;
+    }
     if(p.role==='employee'&&p.employment_status==='invited'){
       const act=await sb.rpc('activate_my_employee');
       if(!act.error){const r=await sb.from('profiles').select('*').eq('id',session.user.id).single();if(r.data)p=r.data}
