@@ -435,7 +435,7 @@ begin
     'capped_at_end', v_now > v_schedule.end_at
   );
 end;
-$function$
+$function$;
 
 
 COMMIT;
