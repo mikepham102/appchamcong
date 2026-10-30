@@ -323,4 +323,30 @@ Bọc cột trong `coalesce()` khiến PostgreSQL **không dùng được index*
 
 **Lưu ý:** đây là **lỗi hiển thị**, không phải tốc độ. Việc tăng tốc thật nằm ở V84.41 (bỏ `coalesce` + thêm index).
 
+---
+
+## V84.43 — 4 lỗi ở tài khoản Quản lý (30/10/2026)
+
+### 1. Manager không thấy mức lương hiện tại của nhân viên
+- `loadEmployees()` chỉ lấy cột `hourly_rate` khi người xem là Owner → Manager thấy ô lương trống/0.
+- Nay: Manager có quyền `payroll_view` **thấy** mức lương (chỉ đọc; ô nhập vẫn bị khoá như trước).
+
+### 2. Manager không có cấu hình phạt tự động
+- `payroll_penalty_rules` chỉ có policy **owner-only** → Manager bị chặn cả đọc lẫn ghi; panel quy tắc bị ẩn.
+- **DB (V84.43):** thêm policy `payroll_penalty_rules_manager_manage` — Manager cùng chi nhánh, có `payroll_adjust` **hoặc** `leave_manage`.
+- **Frontend:** cho Manager xem/lưu/bật-tắt quy tắc phạt; **ẩn nút "Tạo phiếu phạt tự động"** (việc đó gắn với kỳ lương do Owner tính).
+
+### 3. Manager thấy "Đăng ký ca: Chưa cài" dù Owner đã cấu hình và đang mở
+- `loadRegistrationWindow()` mở đầu bằng `if(profile?.role!=='owner')return;` → Manager thoát ngay, giao diện giữ nguyên chữ mặc định "Chưa cài".
+- Nay: Manager có `schedule_manage` **xem được** cấu hình + trạng thái tuần; các nút thao tác (Lưu / Mở đăng ký) **ẩn** với Manager.
+
+### 4. Thưởng +20k đủ 8h/ngày không hiện ở màn lương nhân viên
+- Màn "Lương của tôi" chỉ tính `giờ công × đơn giá` từ bảng chấm công, **không hề đọc** `payroll_adjustments` → mọi khoản thưởng/phạt/tạm ứng đều không hiện.
+- Nay bổ sung:
+  - Truy vấn khoản thưởng/phạt/tạm ứng **của chính nhân viên** trong tháng (RLS `payroll_adjustments_employee_read_own` cho phép).
+  - Khối "Thưởng đã duyệt / Phạt đã duyệt / Tạm ứng đã duyệt" + **Thực nhận tạm tính**.
+  - Danh sách chi tiết từng khoản (lý do, ngày áp dụng, trạng thái).
+- Lưu ý: khoản thưởng đủ giờ **chỉ được tạo thành phiếu khi Owner tính kỳ lương** (`owner_prepare_payroll_bonuses_v1`). Trước thời điểm đó chưa có dòng nào để hiển thị.
+
+
 
