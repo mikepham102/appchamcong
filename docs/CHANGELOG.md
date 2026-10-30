@@ -205,6 +205,37 @@ Chỉ giao diện. Không đổi nghiệp vụ, không đổi dữ liệu, khôn
 
 **Không đổi:** cơ chế xác thực, quyền, dữ liệu. Chỉ giao diện + luồng đặt mật khẩu lần đầu.
 
+---
+
+## V84.37 — Chi nhánh, phân quyền hiển thị, danh sách nhân viên, Excel (30/10/2026)
+
+### 1. Đổi "Tên quán" → "Chi nhánh" + tiêu đề tab theo chi nhánh
+- Nhãn cài đặt: `Tên quán` → **`Tên chi nhánh`**; tiêu đề khung: `Cửa hàng & chấm công` → **`Chi nhánh & chấm công`**.
+- Nhóm menu Quản trị: `Cửa hàng & hệ thống` → **`Chi nhánh & hệ thống`**, mục `Cửa hàng` → **`Chi nhánh`**.
+- **Tiêu đề tab trình duyệt** tự đổi theo chi nhánh đang chọn: `HongCha HRM - CN <tên chi nhánh>`; không có chi nhánh thì `HongCha HRM`.
+  - Owner/Manager: cập nhật trong `syncBranchUI()` (đổi chi nhánh là đổi tiêu đề ngay).
+  - Nhân viên: lấy tên chi nhánh 1 lần khi đăng nhập (có cache, không gọi lại).
+  - Đồng bộ cả `apple-mobile-web-app-title` (tên khi thêm vào màn hình chính).
+
+### 2. Manager không thấy tài khoản Owner
+- **DB (V84.37 migration):** policy `profiles_staff_read_branch` thêm điều kiện
+  `my_role()='owner' OR role <> 'owner'` → Manager không đọc được hồ sơ Owner kể cả khi gọi API trực tiếp.
+- **Giao diện:** danh sách nhân viên lọc bỏ dòng `role='owner'` khi người xem không phải Owner.
+
+### 3. Danh sách nhân viên trong Quản trị (giao diện mới)
+- Bỏ bảng 5 cột cũ → **danh sách thẻ** dễ đọc:
+  - Avatar chữ cái đầu · Tên · nhãn Vai trò · nhãn Trạng thái.
+  - Dòng phụ 1: email · số điện thoại.
+  - Dòng phụ 2 (chỉ Owner): lương/giờ · ngân hàng + số tài khoản.
+  - Nút **Sửa** tách riêng bên phải.
+- Mobile (≤560px): tự xuống 2 dòng, nút Sửa nằm dưới — không bị bóp cột.
+
+### 4. Excel báo cáo lương tháng có cột ngân hàng
+- `exportOwnerMonthlyPayroll` (báo cáo tháng, truy vấn trực tiếp) thêm 3 cột đầu: **Ngân hàng · Số tài khoản · Chủ tài khoản**.
+- Nguồn: `employee_bank_accounts`, lấy 1 lượt cho các nhân viên trong báo cáo; số tài khoản giữ dạng text (không mất số 0 đầu).
+- Báo cáo kỳ lương (`exportPayrollReportExcel`) vốn đã có 3 cột này — không đổi.
+
+
 
 
 
