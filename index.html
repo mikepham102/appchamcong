@@ -3517,7 +3517,7 @@ function prefetchAdminFinancePanels(){
      hcRpc('bonus:ctx:'+storeId,300000,()=>sb.rpc('manager_owner_bonus_context_v1')).catch(()=>{});
      hcRpc('adv:list:'+storeId,45000,()=>sb.rpc('manager_list_payroll_advance_requests')).catch(()=>{});
    }catch(_){}
- },900);
+ },350);
 }
 function navigate(id,opts={}){
  const s=session,p=profile;if(!s||!p){showLogin('Vui lòng đăng nhập để tiếp tục.');return}
@@ -3563,6 +3563,7 @@ function navigate(id,opts={}){
    closeAdminPane();
    document.querySelectorAll('#admin .admin-pane').forEach(x=>x.classList.remove('active'));
    document.querySelectorAll('#admin .admin-group-item').forEach(x=>x.classList.remove('active'));
+   prefetchAdminFinancePanels();
  }
  if(id==='profile')el('profileMsg').innerHTML='';
  saveUiState();
