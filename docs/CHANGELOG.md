@@ -128,3 +128,18 @@ Không thay đổi nghiệp vụ, không thay đổi giao diện.
 ### B. Cron trùng lặp
 - `sql/maintenance/HongCha_HRM_V84.32_Remove_Duplicate_Cron_Job.sql` — bỏ job 10 (trùng job 9), có kiểm tra trước khi xóa.
 - Xác nhận an toàn: `shift_registration_windows` có `UNIQUE (store_id, week_start)` nên chạy trùng không thể sinh dữ liệu trùng.
+
+---
+
+## V84.33 — Manager được tạo nhân viên + chốt mô hình phân quyền (30/10/2026)
+
+### Sửa lỗi
+- Edge Function `create-employee` chặn cứng `caller.role !== "owner"` → Manager dù có quyền `employee_create` vẫn nhận `FORBIDDEN`.
+- Nay: Owner tạo được; **Manager tạo được khi** (a) `profiles.role = manager`, `employment_status = active`, có `store_id`; (b) có `store_memberships` manager active tại chi nhánh đó; (c) `manager_permissions.employee_create = true` tại chi nhánh đó.
+- Nhân viên mới luôn thuộc chi nhánh của người tạo (client không gửi `store_id`).
+- `audit_logs` ghi kèm `store_id` + `created_by_role`.
+- Giữ nguyên: email mời, hoàn tác khi tạo hồ sơ lỗi, hoàn tác khi ghi audit lỗi.
+
+### Tài liệu
+- Thêm `docs/PERMISSIONS.md`: mô hình 3 tầng, 12 khoá quyền, danh sách chỉ-Owner, preset, lộ trình P1–P4.
+
