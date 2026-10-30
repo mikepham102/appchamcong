@@ -14,6 +14,7 @@ Database đang chạy thật. Đọc `docs/DEPLOY.md` mục 5 trước khi chạ
 | 6 | `HongCha_HRM_V84.34_Manager_P2_Permissions.sql` | 4 quyền vận hành mới cho Manager (`employee_edit`, `device_manage`, `payroll_adjust`, `branch_gps`) + RPC mới + trigger chặn phiếu phạt/cộng |
 | 7 | `HongCha_HRM_V84.37_Hide_Owner_From_Manager.sql` | Manager không đọc được hồ sơ tài khoản Owner (sửa policy `profiles_staff_read_branch`) |
 | 8 | `HongCha_HRM_V84.40_Attendance_Rounding.sql` | Làm tròn phút khi chấm công: vào làm tròn LÊN, ra làm tròn XUỐNG; giờ công/trễ/về sớm tính theo giờ đã làm tròn |
+| 9 | `HongCha_HRM_V84.41_Finance_RPC_Index.sql` | Tăng tốc Phiếu phạt / Phiếu cộng / Ứng lương: bỏ `coalesce()` trong điều kiện lọc để dùng được index + thêm 4 index; Manager dùng `payroll_adjust` **hoặc** `leave_manage` |
 
 Thứ tự 1→2→3→4 là thứ tự đã áp dụng theo thời gian (15/10 → 18/10). Cả 4 file đều **additive** và có `BEGIN/COMMIT` + block `preflight`.
 

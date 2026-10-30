@@ -280,3 +280,31 @@ Chỉ giao diện. Không đổi nghiệp vụ, không đổi dữ liệu, khôn
 - **Không sửa dữ liệu chấm công đã có** — bản ghi 4h29 cũ giữ nguyên.
 - Migration tạo từ **đúng bản hàm đang chạy** (`sql/snapshots/attendance_punch_live.csv`), không dùng bản dump cũ.
 - File: `sql/migrations/HongCha_HRM_V84.40_Attendance_Rounding.sql` · rollback: `sql/rollback/HongCha_HRM_V84.40_Rollback.sql`
+
+---
+
+## V84.41 — Tăng tốc Phiếu phạt / Phiếu cộng / Ứng lương (30/10/2026)
+
+**Nguyên nhân gốc (tìm ra sau khi đọc 5 hàm production):**
+
+```sql
+-- manager_owner_list_penalties_v85
+AND coalesce(a.origin_store_id, pp.store_id) = v_store
+-- manager_owner_list_bonus_vouchers_v1
+AND COALESCE(a.origin_store_id, pp.store_id, e.store_id) = v_store
+```
+
+Bọc cột trong `coalesce()` khiến PostgreSQL **không dùng được index** trên `origin_store_id` → phải **quét toàn bộ `payroll_adjustments` của mọi chi nhánh**, join rồi mới sắp xếp + `LIMIT 100`.
+
+**Đã sửa:**
+- Viết lại điều kiện lọc thành so sánh trực tiếp, **giữ nguyên kết quả trả về** (đã kiểm chứng từng nhánh `origin_store_id` có/không có, `payroll_period` có/không có).
+- Thêm 4 index:
+  - `payroll_adjustments_penalty_store_created_idx` — phiếu phạt **đã xếp kỳ** (index cũ chỉ phủ phiếu chưa xếp kỳ).
+  - `payroll_adjustments_penalty_null_origin_idx` — phiếu phạt thiếu `origin_store_id`.
+  - `payroll_adjustments_bonus_null_origin_idx` — phiếu cộng thiếu `origin_store_id`.
+  - `payroll_adjustments_advance_emp_created_idx` — phiếu tạm ứng.
+- Quyền Manager cho 4 hàm: chấp nhận `payroll_adjust` **hoặc** `leave_manage` (giao diện đã chuyển sang `payroll_adjust` từ V84.34; giữ `leave_manage` để tương thích cấu hình cũ).
+- Không đổi cột trả về, không đổi dữ liệu.
+
+**Files:** `sql/migrations/HongCha_HRM_V84.41_Finance_RPC_Index.sql` · `sql/rollback/HongCha_HRM_V84.41_Rollback.sql`
+
