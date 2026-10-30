@@ -235,6 +235,17 @@ Chỉ giao diện. Không đổi nghiệp vụ, không đổi dữ liệu, khôn
 - Nguồn: `employee_bank_accounts`, lấy 1 lượt cho các nhân viên trong báo cáo; số tài khoản giữ dạng text (không mất số 0 đầu).
 - Báo cáo kỳ lương (`exportPayrollReportExcel`) vốn đã có 3 cột này — không đổi.
 
+---
+
+## V84.38 — Bỏ hẳn 2 tab đăng nhập (30/10/2026)
+
+- Xoá khối chuyển chế độ **"Mật khẩu / Email"** ở màn hình đăng nhập → chỉ còn **một form duy nhất**: Email → Mật khẩu → Đăng nhập → Quên mật khẩu.
+- Xoá khối **"Gửi link đăng nhập"** (magic link) khỏi giao diện.
+- Xoá code liên quan: biến `loginMode`, hàm `setLoginMode()`, hàm `sendMagicLink()` và mọi tham chiếu tới `loginModePassword`, `loginModeOtp`, `otpLoginFields`.
+- Vẫn giữ: "Lưu đăng nhập", "Quên mật khẩu" (gửi email đặt lại), và màn hình "Đặt mật khẩu lần đầu" sau link mời.
+- Kiểm tra: `grep` xác nhận 0 tham chiếu còn lại; `node --check` PASS.
+
+
 
 
 
