@@ -5608,7 +5608,7 @@ async function loadEmployeeSalaryMonth(month){
  const [{data:profRow,error:profErr},{data:storeRow,error:storeErr},{data:adjRows},{data:atts,error:attErr}]=await Promise.all([
    sb.from('profiles').select('hourly_rate').eq('id',s.user.id).single(),
    sb.from('stores').select('hourly_default_rate').eq('id',p.store_id).single(),
-   sb.from('payroll_adjustments').select('id,adjustment_type,amount,reason,status,effective_date').eq('employee_id',s.user.id).gte('effective_date',range.start).lt('effective_date',range.end).in('status',['approved','pending']).order('effective_date',{ascending:false}),
+   sb.from('payroll_adjustments').select('id,adjustment_type,amount,reason,status,effective_date,created_at').eq('employee_id',s.user.id).in('status',['approved','pending']).or(`and(effective_date.gte.${range.start},effective_date.lt.${range.end}),and(effective_date.is.null,created_at.gte.${range.start},created_at.lt.${range.end})`).order('effective_date',{ascending:false}),
    sb.from('attendance').select('id,check_in,check_out,worked_minutes,work_schedules:schedule_id!inner(work_date,start_time,end_time,status,store_id)').eq('employee_id',s.user.id).eq('work_schedules.store_id',p.store_id).gte('work_schedules.work_date',range.start).lt('work_schedules.work_date',range.end).neq('work_schedules.status','cancelled').not('check_out','is',null).order('work_schedules(work_date)',{ascending:false})
  ]);
  if(token!==salaryLoadToken||session!==s||profile!==p)return;
@@ -5634,6 +5634,21 @@ async function loadEmployeeSalaryMonth(month){
  const totalAmount=days.reduce((sum,[,day])=>sum+day.amount,0);
  // Thưởng / phạt / tạm ứng của chính nhân viên trong tháng (RLS cho phép đọc của mình).
  const adjAll=Array.isArray(adjRows)?adjRows:[];
+ // Gom theo ngày để hiện thưởng/phạt ngay trong từng dòng ngày.
+ const adjByDate=new Map();
+ adjAll.forEach(x=>{
+   const d=x.effective_date||(x.created_at?String(x.created_at).slice(0,10):null);
+   if(!d)return;
+   if(!adjByDate.has(d))adjByDate.set(d,{bonus:0,penalty:0,pending:0});
+   const r=adjByDate.get(d);
+   if(x.status==='approved'){
+     if(x.adjustment_type==='bonus')r.bonus+=Number(x.amount||0);
+     else if(x.adjustment_type==='penalty')r.penalty+=Number(x.amount||0);
+   }else if(x.status==='pending')r.pending+=Number(x.amount||0);
+ });
+ // Ngày chỉ có thưởng/phạt (không có ca) vẫn phải hiện.
+ adjByDate.forEach((v,d)=>{if(!byDate.has(d))days.push([d,{minutes:0,amount:0,shifts:[]}])});
+ if(adjByDate.size)days.sort(([a],[b])=>b.localeCompare(a));
  const sumAdj=(type,status)=>adjAll.filter(x=>x.adjustment_type===type&&x.status===status).reduce((n,x)=>n+Number(x.amount||0),0);
  const bonusSum=sumAdj('bonus','approved'),penaltySum=sumAdj('penalty','approved'),advanceSum=sumAdj('advance','approved');
  const netEstimate=totalAmount+bonusSum-penaltySum-advanceSum;
@@ -5656,7 +5671,13 @@ async function loadEmployeeSalaryMonth(month){
  if(dailyRoot)dailyRoot.innerHTML=days.length?days.map(([date,day])=>{
    const dateLabel=new Date(date+'T12:00:00').toLocaleDateString('vi-VN',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'});
    const shifts=day.shifts.map(({shift,minutes})=>`${escapeHtml(String(shift.start_time||'').slice(0,5))}–${escapeHtml(String(shift.end_time||'').slice(0,5))} · ${(minutes/60).toLocaleString('vi-VN',{maximumFractionDigits:2})} giờ`).join('<br>');
-   return `<div class="item"><div class="row"><div><b>${escapeHtml(dateLabel)}</b><div class="muted">${shifts}</div><div class="muted">${money(rate)}/giờ</div></div><div class="amount">${money(day.amount)}<small>LƯƠNG NGÀY</small></div></div></div>`;
+   const adj=adjByDate.get(date)||{bonus:0,penalty:0,pending:0};
+   const net=Number(day.amount||0)+Number(adj.bonus||0)-Number(adj.penalty||0);
+   const chips=[];
+   if(adj.bonus)chips.push(`<span class="badge ok">+ Thưởng ${money(adj.bonus)}</span>`);
+   if(adj.penalty)chips.push(`<span class="badge bad">− Phạt ${money(adj.penalty)}</span>`);
+   if(adj.pending)chips.push(`<span class="badge wait">Chờ duyệt ${money(adj.pending)}</span>`);
+   return `<div class="item"><div class="row"><div><b>${escapeHtml(dateLabel)}</b><div class="muted">${shifts||'Không có ca'}</div><div class="muted">${money(rate)}/giờ</div>${chips.length?`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${chips.join('')}</div>`:''}</div><div class="amount">${money(net)}<small>${chips.length?'THỰC NHẬN NGÀY':'LƯƠNG NGÀY'}</small></div></div></div>`;
  }).join(''):'<div class="empty">Tháng này chưa có giờ công được ghi nhận cho tài khoản của bạn.</div>';
  await loadEmployeeAdvanceRequests();
 }
@@ -6296,7 +6317,7 @@ function exportOwnerMonthlyPayroll(){
  const money=n=>Math.round(Number(n||0));
  const summary=[['BÁO CÁO LƯƠNG HONGCHA'],['Tháng',report.month],['Phạm vi','Truy vấn trực tiếp · không tạo kỳ lương'],['Tổng lương dự kiến',report.rows.reduce((n,x)=>n+Number(x.amount||0),0)],['Tổng giờ công',report.rows.reduce((n,x)=>n+Number(x.minutes||0),0)/60],['Tổng số ca',report.rows.reduce((n,x)=>n+Number(x.shifts||0),0)],[],['Ghi chú','Lương giờ công + thưởng đã duyệt − phạt đã duyệt − tạm ứng đã duyệt. Chỉ gồm các khoản điều chỉnh đã ghi nhận trong tháng.']];
  const emp=[['Nhân viên','Ngân hàng','Số tài khoản','Chủ tài khoản','Số ca checkout','Giờ công','Đơn giá/giờ','Lương giờ công','Thưởng đã duyệt','Phạt đã duyệt','Ứng lương đã duyệt','Tổng dự kiến'],...report.rows.map(x=>[x.name,x.bank_name||'',x.bank_number||'',x.bank_holder||'',x.shifts,x.minutes/60,x.rate,money(x.gross),money(x.bonus),money(x.penalty),money(x.advance),money(x.amount)])];
- const daily=[['Ngày','Số ca','Giờ công','Tiền công'],...report.days.map(([date,x])=>[date,x.shifts,x.minutes/60,money(x.amount)])];
+ const daily=[['Ngày','Số ca','Giờ công','Tiền công','Thưởng','Phạt','Thực nhận ngày'],...report.days.map(([date,x])=>[date,x.shifts,x.minutes/60,money(x.amount),money(x.bonus||0),money(x.penalty||0),money(Number(x.amount||0)+Number(x.bonus||0)-Number(x.penalty||0))])];
  const ad=[['Nhân viên','Loại','Số tiền','Lý do','Ngày áp dụng'],...report.adjustments.map(x=>[x.employee_name,({bonus:'Thưởng',penalty:'Phạt',advance:'Tạm ứng'}[x.adjustment_type]||x.adjustment_type),money(x.amount),x.reason||'',x.effective_date||''])];
  const blob=makeXlsxFile([buildXlsxSheet('Tổng quan',summary),buildXlsxSheet('Theo nhân viên',emp),buildXlsxSheet('Theo ngày',daily),buildXlsxSheet('Điều chỉnh',ad)]);
  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='HongCha_BaoCaoLuong_'+report.month+'.xlsx';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Đã xuất file Excel báo cáo tháng.');
@@ -6312,7 +6333,7 @@ async function loadOwnerPayrollMonth(month){
    sb.from('profiles').select('id,full_name,hourly_rate').eq('store_id',storeId).eq('role','employee').order('full_name'),
    sb.from('stores').select('hourly_default_rate').eq('id',storeId).single(),
    sb.from('attendance').select('id,employee_id,worked_minutes,check_in,check_out,profiles:employee_id(full_name,hourly_rate),work_schedules:schedule_id!inner(work_date,start_time,end_time,status,store_id)').eq('work_schedules.store_id',storeId).gte('work_schedules.work_date',range.start).lt('work_schedules.work_date',range.end).neq('work_schedules.status','cancelled').not('check_out','is',null).order('work_schedules(work_date)',{ascending:true}),
-   sb.from('payroll_adjustments').select('id,employee_id,amount,adjustment_type,reason,created_at,effective_date,profiles:employee_id(full_name)').eq('origin_store_id',storeId).gte('effective_date',range.start).lt('effective_date',range.end).eq('status','approved')
+   sb.from('payroll_adjustments').select('id,employee_id,amount,adjustment_type,reason,created_at,effective_date,profiles:employee_id(full_name)').eq('origin_store_id',storeId).eq('status','approved').or(`and(effective_date.gte.${range.start},effective_date.lt.${range.end}),and(effective_date.is.null,created_at.gte.${range.start},created_at.lt.${range.end})`)
  ]);
  if(token!==ownerPayrollMonthLoadToken)return;
  if(employeeError||storeError||attendanceError||adjErr){
@@ -6336,7 +6357,7 @@ async function loadOwnerPayrollMonth(month){
    if(!employee){const person=row.profiles||{};employee={id:row.employee_id,name:person.full_name||'Nhân viên',rate:Number(person.hourly_rate??fallbackRate),minutes:0,gross:0,amount:0,bonus:0,penalty:0,advance:0,shifts:0};employeeMap.set(row.employee_id,employee)}
    const minutes=Math.max(0,Number(row.worked_minutes||0)),amount=Math.round(minutes/60*employee.rate);
    employee.minutes+=minutes;employee.gross+=amount;employee.amount+=amount;employee.shifts++;
-   if(!dailyMap.has(date))dailyMap.set(date,{minutes:0,amount:0,shifts:0});
+   if(!dailyMap.has(date))dailyMap.set(date,{minutes:0,amount:0,shifts:0,bonus:0,penalty:0,advance:0});
    const day=dailyMap.get(date);day.minutes+=minutes;day.amount+=amount;day.shifts++;
  });
  const adjustmentRows=[];
@@ -6347,6 +6368,15 @@ async function loadOwnerPayrollMonth(month){
    if(ad.adjustment_type==='bonus'){emp.bonus+=amount;emp.amount+=amount}
    else if(ad.adjustment_type==='penalty'){emp.penalty+=amount;emp.amount-=amount}
    else if(ad.adjustment_type==='advance'){emp.advance+=amount;emp.amount-=amount}
+   // Cộng vào đúng ngày: ưu tiên ngày áp dụng, không có thì dùng ngày tạo phiếu.
+   const adDate=ad.effective_date||(ad.created_at?String(ad.created_at).slice(0,10):null);
+   if(adDate&&adDate>=range.start&&adDate<range.end){
+     if(!dailyMap.has(adDate))dailyMap.set(adDate,{minutes:0,amount:0,shifts:0,bonus:0,penalty:0,advance:0});
+     const dRec=dailyMap.get(adDate);
+     if(ad.adjustment_type==='bonus')dRec.bonus+=amount;
+     else if(ad.adjustment_type==='penalty')dRec.penalty+=amount;
+     else if(ad.adjustment_type==='advance')dRec.advance+=amount;
+   }
  adjustmentRows.push({employee_id:ad.employee_id,employee_name:emp.name,adjustment_type:ad.adjustment_type,amount,reason:ad.reason,created_at:ad.created_at,effective_date:ad.effective_date});
  });
  const rows=[...employeeMap.values()].sort((a,b)=>b.amount-a.amount),days=[...dailyMap.entries()].sort(([a],[b])=>a.localeCompare(b));
@@ -6354,7 +6384,7 @@ async function loadOwnerPayrollMonth(month){
  ownerMonthlyPayrollExport={month,rows,days,adjustments:adjustmentRows};
  rows.forEach(r=>{const b=bankMap.get(r.id)||{};r.bank_name=b.bank_name||'';r.bank_number=b.account_number||'';r.bank_holder=b.account_holder||''});
  const adjLabel={bonus:'Thưởng',penalty:'Phạt',advance:'Tạm ứng'};
- target.innerHTML=`<div class="notice info"><b>Báo cáo truy vấn · chỉ đọc.</b> Tháng ${escapeHtml(month)} được tổng hợp trực tiếp từ giờ công đã checkout và các khoản cộng/trừ đã duyệt theo ngày áp dụng. Không tạo kỳ lương, không chốt lương, không phát sinh phiếu. Các khoản thưởng tự động chỉ hiện khi đã được ghi nhận thành phiếu.</div><div class="payroll-kpis"><div class="payroll-kpi"><b>${money(totalAmount)}</b><span>TỔNG LƯƠNG DỰ KIẾN SAU CỘNG/TRỪ</span></div><div class="payroll-kpi"><b>${hours(totalMinutes)}</b><span>TỔNG GIỜ CÔNG</span></div><div class="payroll-kpi"><b>${totalShifts}</b><span>SỐ CA ĐÃ CHECKOUT</span></div></div><details class="detail-card payroll-collapsible"><summary><b>Bảng lương dự kiến theo nhân viên</b><span>Mở danh sách nhân viên</span></summary><div class="stack ui-mt-10">${rows.length?rows.map(x=>`<div class="payroll-run"><div><div class="name">${escapeHtml(x.name)}</div><div class="meta">${x.shifts} ca · ${hours(x.minutes)} · ${money(x.rate)}/giờ<br>Lương công ${money(x.gross)} · Thưởng +${money(x.bonus)} · Phạt −${money(x.penalty)} · Ứng −${money(x.advance)}</div></div><div class="amount">${money(x.amount)}<small>DỰ KIẾN</small></div></div>`).join(''):'<div class="empty">Chưa có nhân viên trong cửa hàng.</div>'}</div></details><details class="detail-card payroll-collapsible"><summary><b>Tiền công theo ngày</b><span>Mở chi tiết theo ngày</span></summary><div class="stack ui-mt-10">${days.length?days.map(([date,x])=>`<div class="detail-row"><span>${escapeHtml(payrollDateLabel(date))}<br>${x.shifts} ca · ${hours(x.minutes)}</span><b>${money(x.amount)}</b></div>`).join(''):'<div class="empty">Tháng này chưa có ca đã checkout.</div>'}</div></details><div class="detail-card"><b>Các khoản điều chỉnh đã duyệt</b><div class="stack ui-mt-10">${adjustmentRows.length?adjustmentRows.map(x=>`<div class="detail-row"><span>${escapeHtml(x.employee_name)}<br>${escapeHtml(adjLabel[x.adjustment_type]||x.adjustment_type)} · ${escapeHtml(x.reason||'Không có lý do')}<br><small>${escapeHtml(x.effective_date||'')}</small></span><b>${x.adjustment_type==='bonus'?'+':'−'}${money(x.amount)}</b></div>`).join(''):'<div class="empty">Không có khoản thưởng, phạt hoặc tạm ứng đã duyệt được ghi nhận trong tháng này.</div>'}</div></div><button class="btn primary ui-w-full" type="button" onclick="exportOwnerMonthlyPayroll()">↧ Xuất báo cáo tháng (Excel)</button><div class="muted ui-mt-4">Tệp Excel chứa tổng quan, bảng nhân viên, tiền công theo ngày và khoản điều chỉnh. Mỗi lần đổi tháng, dữ liệu được truy vấn lại; không cần tạo/lưu kỳ lương.</div>`;
+ target.innerHTML=`<div class="notice info"><b>Báo cáo truy vấn · chỉ đọc.</b> Tháng ${escapeHtml(month)} được tổng hợp trực tiếp từ giờ công đã checkout và các khoản cộng/trừ đã duyệt theo ngày áp dụng. Không tạo kỳ lương, không chốt lương, không phát sinh phiếu. Các khoản thưởng tự động chỉ hiện khi đã được ghi nhận thành phiếu.</div><div class="payroll-kpis"><div class="payroll-kpi"><b>${money(totalAmount)}</b><span>TỔNG LƯƠNG DỰ KIẾN SAU CỘNG/TRỪ</span></div><div class="payroll-kpi"><b>${hours(totalMinutes)}</b><span>TỔNG GIỜ CÔNG</span></div><div class="payroll-kpi"><b>${totalShifts}</b><span>SỐ CA ĐÃ CHECKOUT</span></div></div><details class="detail-card payroll-collapsible"><summary><b>Bảng lương dự kiến theo nhân viên</b><span>Mở danh sách nhân viên</span></summary><div class="stack ui-mt-10">${rows.length?rows.map(x=>`<div class="payroll-run"><div><div class="name">${escapeHtml(x.name)}</div><div class="meta">${x.shifts} ca · ${hours(x.minutes)} · ${money(x.rate)}/giờ<br>Lương công ${money(x.gross)} · Thưởng +${money(x.bonus)} · Phạt −${money(x.penalty)} · Ứng −${money(x.advance)}</div></div><div class="amount">${money(x.amount)}<small>DỰ KIẾN</small></div></div>`).join(''):'<div class="empty">Chưa có nhân viên trong cửa hàng.</div>'}</div></details><details class="detail-card payroll-collapsible"><summary><b>Tiền công theo ngày</b><span>Mở chi tiết theo ngày</span></summary><div class="stack ui-mt-10">${days.length?days.map(([date,x])=>{const b=Number(x.bonus||0),pn=Number(x.penalty||0),net=Number(x.amount||0)+b-pn;const extra=[];if(b)extra.push(`<small style="color:var(--success)">+ Thưởng ${money(b)}</small>`);if(pn)extra.push(`<small style="color:var(--danger)">− Phạt ${money(pn)}</small>`);return `<div class="detail-row"><span>${escapeHtml(payrollDateLabel(date))}<br>${x.shifts} ca · ${hours(x.minutes)}${extra.length?'<br>'+extra.join(' · '):''}</span><b>${money(net)}${extra.length?`<small>công ${money(x.amount)}</small>`:''}</b></div>`}).join(''):'<div class="empty">Tháng này chưa có ca đã checkout.</div>'}</div></details><div class="detail-card"><b>Các khoản điều chỉnh đã duyệt</b><div class="stack ui-mt-10">${adjustmentRows.length?adjustmentRows.map(x=>`<div class="detail-row"><span>${escapeHtml(x.employee_name)}<br>${escapeHtml(adjLabel[x.adjustment_type]||x.adjustment_type)} · ${escapeHtml(x.reason||'Không có lý do')}<br><small>${escapeHtml(x.effective_date||'')}</small></span><b>${x.adjustment_type==='bonus'?'+':'−'}${money(x.amount)}</b></div>`).join(''):'<div class="empty">Không có khoản thưởng, phạt hoặc tạm ứng đã duyệt được ghi nhận trong tháng này.</div>'}</div></div><button class="btn primary ui-w-full" type="button" onclick="exportOwnerMonthlyPayroll()">↧ Xuất báo cáo tháng (Excel)</button><div class="muted ui-mt-4">Tệp Excel chứa tổng quan, bảng nhân viên, tiền công theo ngày và khoản điều chỉnh. Mỗi lần đổi tháng, dữ liệu được truy vấn lại; không cần tạo/lưu kỳ lương.</div>`;
 }
 async function createPayrollPeriod(){
  if(profile?.role!=='owner'){toast('Chỉ Owner được quản lý kỳ lương.');return}

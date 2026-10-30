@@ -348,5 +348,30 @@ Bọc cột trong `coalesce()` khiến PostgreSQL **không dùng được index*
   - Danh sách chi tiết từng khoản (lý do, ngày áp dụng, trạng thái).
 - Lưu ý: khoản thưởng đủ giờ **chỉ được tạo thành phiếu khi Owner tính kỳ lương** (`owner_prepare_payroll_bonuses_v1`). Trước thời điểm đó chưa có dòng nào để hiển thị.
 
+---
+
+## V84.44 — Thưởng/phạt hiển thị theo từng ngày (30/10/2026)
+
+**Mục tiêu:** mọi phiếu thưởng (đủ giờ, ngày lễ, thủ công…) và phiếu phạt đều nhìn thấy được **ngay trong lương từng ngày**, cho cả NV — Manager — Owner.
+
+### Nhân viên (`loadEmployeeSalaryMonth`)
+- Truy vấn thêm `payroll_adjustments` của chính mình (RLS `payroll_adjustments_employee_read_own`).
+- Mỗi ngày hiện chip: `+ Thưởng`, `− Phạt`, `Chờ duyệt`.
+- Cột phải = **Thực nhận ngày** = lương công + thưởng − phạt (thay vì chỉ lương công).
+- Ngày **chỉ có thưởng/phạt** (không có ca) vẫn hiện trong danh sách.
+- Khối tổng: Thưởng/Phạt/Tạm ứng đã duyệt + Thực nhận tạm tính (V84.43).
+
+### Owner / Manager (báo cáo tháng)
+- Mỗi ngày hiện thêm dòng thưởng/phạt và **số thực nhận của ngày**; vẫn hiện "công …" để đối chiếu.
+- Excel sheet **"Theo ngày"** thêm 3 cột: Thưởng · Phạt · Thực nhận ngày.
+
+### Quy tắc xác định "ngày" của phiếu
+`effective_date` → nếu trống thì dùng **ngày tạo phiếu** (`created_at`).
+Truy vấn dùng `effective_date` trong khoảng HOẶC (`effective_date` trống VÀ `created_at` trong khoảng) — để phiếu cũ không có ngày áp dụng **không bị rơi khỏi báo cáo**.
+
+### Tài liệu
+- Thêm `docs/PAYROLL_WORKFLOW.md`: quy trình lương chuẩn HRM 7 bước, đối chiếu hiện trạng, 5 khoảng trống (P1 phiếu lương NV · P2 chốt công · P3 làm rõ 2 màn báo cáo · P4 Manager xem kỳ · P5 audit lần tính lương).
+
+
 
 
