@@ -167,4 +167,22 @@ Không thay đổi nghiệp vụ, không thay đổi giao diện.
 
 **Không thay đổi:** đặt mức lương, sửa STK ngân hàng, tính/chốt kỳ lương, tạo/xóa chi nhánh, phân quyền, đổi vai trò.
 
+---
+
+## V84.35 — Công tắc bật/tắt dùng chung (30/10/2026)
+
+Chỉ giao diện. Không đổi nghiệp vụ, không đổi dữ liệu, không cần deploy SQL.
+
+- Thêm thành phần công tắc `.hc-switch` (thuần CSS, dùng `appearance:none`), tôn trọng `role="switch"` và trạng thái `disabled`.
+- Áp dụng cho:
+  - 12 quyền Manager (màn Quản trị → Quyền Manager)
+  - Gán chi nhánh cho từng Manager
+  - Cài đặt đăng ký ca: tự mở, tự duyệt
+  - Quy tắc thưởng đủ giờ (`bonusDailyActive`)
+  - Trạng thái mẫu ca (`tplActive`) — đổi từ dropdown 2 lựa chọn sang công tắc
+- `tplActive` chuyển sang boolean: cập nhật 4 chỗ đọc/ghi (`openCreateTemplate`, `openEditTemplate`, `saveTemplate`, `toggleTemplateActive`).
+- `.settings-toggle-card` đổi cột đầu 18px → 52px để chứa công tắc.
+- Kiểm tra: JS `node --check` PASS; block CSS cân bằng ngoặc (605/605).
+
+
 

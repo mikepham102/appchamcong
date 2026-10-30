@@ -1,0 +1,501 @@
+section,object_name,detail
+01_rowcount,public.attendance,150
+01_rowcount,public.attendance_events,278
+01_rowcount,public.audit_logs,933
+01_rowcount,public.devices,12
+01_rowcount,public.employee_bank_accounts,6
+01_rowcount,public.employee_bank_details,0
+01_rowcount,public.employee_profile_change_requests,0
+01_rowcount,public.employee_salary_versions,5
+01_rowcount,public.leave_requests,1
+01_rowcount,public.manager_permissions,15
+01_rowcount,public.payroll_adjustments,0
+01_rowcount,public.payroll_full_day_bonus_rules,1
+01_rowcount,public.payroll_holiday_pay_rules,0
+01_rowcount,public.payroll_penalty_rules,0
+01_rowcount,public.payroll_periods,6
+01_rowcount,public.payroll_run_items,0
+01_rowcount,public.payroll_runs,16
+01_rowcount,public.profiles,10
+01_rowcount,public.schedule_requests,0
+01_rowcount,public.shift_registration_recurring_rules,2
+01_rowcount,public.shift_registration_windows,33
+01_rowcount,public.shift_registrations,256
+01_rowcount,public.shift_template_versions,12
+01_rowcount,public.shift_templates,5
+01_rowcount,public.store_memberships,11
+01_rowcount,public.stores,2
+01_rowcount,public.weekly_shift_plan_items,30
+01_rowcount,public.work_schedules,1330
+02_function_def,public.current_user_has_manager_permission(p_permission_key text),"CREATE OR REPLACE FUNCTION public.current_user_has_manager_permission(p_permission_key text)
+ RETURNS boolean
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  v_role text;
+  v_store uuid;
+  v_enabled boolean;
+BEGIN
+  SELECT p.role::text, p.store_id
+    INTO v_role, v_store
+  FROM public.profiles p
+  WHERE p.id = auth.uid()
+    AND p.employment_status = 'active';
+
+  IF v_role = 'owner' THEN
+    RETURN true;
+  END IF;
+  IF v_role <> 'manager' OR v_store IS NULL OR p_permission_key IS NULL THEN
+    RETURN false;
+  END IF;
+
+  -- A manager's active branch pointer is accepted only while that manager
+  -- has an active manager membership in the same branch.
+  IF NOT EXISTS (
+    SELECT 1
+    FROM public.store_memberships sm
+    WHERE sm.user_id = auth.uid()
+      AND sm.store_id = v_store
+      AND sm.role = 'manager'::public.user_role
+      AND sm.is_active = true
+  ) THEN
+    RETURN false;
+  END IF;
+
+  SELECT mp.enabled INTO v_enabled
+  FROM public.manager_permissions mp
+  WHERE mp.store_id = v_store
+    AND mp.permission_key = p_permission_key;
+  RETURN coalesce(v_enabled, false);
+END;
+$function$
+"
+02_function_def,public.enforce_manager_business_permission(),"CREATE OR REPLACE FUNCTION public.enforce_manager_business_permission()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+declare
+  v_permission text;
+begin
+  if auth.uid() is null then
+    if tg_op='DELETE' then return old; end if;
+    return new;
+  end if;
+
+  if not exists(
+    select 1 from public.profiles
+    where id=auth.uid() and role='manager' and employment_status='active'
+  ) then
+    if tg_op='DELETE' then return old; end if;
+    return new;
+  end if;
+
+  if tg_table_name='profiles' then
+    if tg_op<>'UPDATE' or old.id is distinct from auth.uid() then
+      raise exception 'MANAGER_PROFILE_FIELD_FORBIDDEN';
+    end if;
+    if (to_jsonb(new)-array['full_name','phone','address','updated_at','store_id'])
+       is distinct from
+       (to_jsonb(old)-array['full_name','phone','address','updated_at','store_id']) then
+      raise exception 'MANAGER_PROFILE_FIELD_FORBIDDEN';
+    end if;
+    -- V84.31: đổi chi nhánh chỉ hợp lệ khi đã được gán quyền quản lý tại chi nhánh đích.
+    if new.store_id is distinct from old.store_id then
+      if new.store_id is null
+         or not exists (
+           select 1 from public.store_memberships m
+           where m.user_id = auth.uid()
+             and m.store_id = new.store_id
+             and m.role = 'manager'::public.user_role
+             and m.is_active = true
+         ) then
+        raise exception 'MANAGER_BRANCH_NOT_ASSIGNED';
+      end if;
+    end if;
+    return new;
+  end if;
+
+  v_permission:=case tg_table_name
+    when 'attendance' then 'attendance_process'
+    when 'attendance_events' then 'attendance_process'
+    when 'work_schedules' then 'schedule_manage'
+    when 'shift_templates' then 'schedule_manage'
+    when 'shift_template_versions' then 'schedule_manage'
+    when 'weekly_shift_plan_items' then 'schedule_manage'
+    when 'shift_registration_windows' then 'schedule_manage'
+    when 'shift_registration_recurring_rules' then 'schedule_manage'
+    when 'shift_registrations' then 'shift_registration'
+    when 'leave_requests' then 'leave_manage'
+    when 'schedule_requests' then 'leave_manage'
+    else null
+  end;
+
+  if v_permission is null or not public.current_user_has_manager_permission(v_permission) then
+    raise exception 'MANAGER_PERMISSION_DENIED';
+  end if;
+
+  if tg_op='DELETE' then return old; end if;
+  return new;
+end;
+$function$
+"
+02_function_def,public.get_my_manager_permissions(),"CREATE OR REPLACE FUNCTION public.get_my_manager_permissions()
+ RETURNS TABLE(permission_key text, enabled boolean)
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  v_role text;
+  v_store uuid;
+BEGIN
+  SELECT p.role::text, p.store_id INTO v_role, v_store
+  FROM public.profiles p
+  WHERE p.id = auth.uid() AND p.employment_status = 'active';
+
+  IF v_role <> 'manager' OR v_store IS NULL
+     OR NOT EXISTS (
+       SELECT 1 FROM public.store_memberships sm
+       WHERE sm.user_id = auth.uid()
+         AND sm.store_id = v_store
+         AND sm.role = 'manager'::public.user_role
+         AND sm.is_active = true
+     ) THEN
+    RAISE EXCEPTION 'FORBIDDEN';
+  END IF;
+
+  RETURN QUERY
+  SELECT mp.permission_key, mp.enabled
+  FROM public.manager_permissions mp
+  WHERE mp.store_id = v_store
+  ORDER BY mp.permission_key;
+END;
+$function$
+"
+02_function_def,public.owner_get_manager_permissions(),"CREATE OR REPLACE FUNCTION public.owner_get_manager_permissions()
+ RETURNS TABLE(permission_key text, enabled boolean)
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+#variable_conflict use_column
+declare
+  v_store uuid;
+begin
+  if public.my_role() <> 'owner' then
+    raise exception 'FORBIDDEN';
+  end if;
+
+  select p.store_id into v_store
+  from public.profiles p
+  where p.id = auth.uid()
+    and p.employment_status = 'active';
+
+  if v_store is null then
+    raise exception 'STORE_NOT_FOUND';
+  end if;
+
+  insert into public.manager_permissions(store_id, permission_key, enabled)
+  select v_store, defaults.permission_key, defaults.enabled
+  from (
+    values
+      ('attendance_process', true),
+      ('schedule_manage', true),
+      ('shift_registration', true),
+      ('leave_manage', true),
+      ('employee_basic', true),
+      ('employee_create', false),
+      ('audit_view', true),
+      ('payroll_view', false)
+  ) as defaults(permission_key, enabled)
+  on conflict (store_id, permission_key) do nothing;
+
+  return query
+  select mp.permission_key, mp.enabled
+  from public.manager_permissions mp
+  where mp.store_id = v_store
+  order by mp.permission_key;
+end;
+$function$
+"
+02_function_def,public.owner_save_manager_permissions_v2(p_permissions jsonb),"CREATE OR REPLACE FUNCTION public.owner_save_manager_permissions_v2(p_permissions jsonb)
+ RETURNS void
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO ''
+ SET row_security TO 'off'
+AS $function$
+DECLARE
+  v_store uuid;
+BEGIN
+  IF public.my_role() <> 'owner' THEN
+    RAISE EXCEPTION 'FORBIDDEN';
+  END IF;
+
+  SELECT p.store_id
+  INTO v_store
+  FROM public.profiles p
+  WHERE p.id = auth.uid()
+    AND p.employment_status = 'active';
+
+  IF v_store IS NULL THEN
+    RAISE EXCEPTION 'STORE_NOT_FOUND';
+  END IF;
+
+  IF p_permissions IS NULL OR jsonb_typeof(p_permissions) <> 'array' THEN
+    RAISE EXCEPTION 'QUYEN_KHONG_HOP_LE';
+  END IF;
+
+  IF EXISTS (
+    SELECT 1
+    FROM jsonb_array_elements(p_permissions) AS item(value)
+    WHERE jsonb_typeof(item.value->'permission_key') IS DISTINCT FROM 'string'
+       OR jsonb_typeof(item.value->'enabled') IS DISTINCT FROM 'boolean'
+       OR item.value->>'permission_key' NOT IN (
+         'attendance_process',
+         'schedule_manage',
+         'shift_registration',
+         'leave_manage',
+         'employee_basic',
+         'employee_create',
+         'audit_view',
+         'payroll_view'
+       )
+  ) THEN
+    RAISE EXCEPTION 'QUYEN_KHONG_HOP_LE';
+  END IF;
+
+  IF EXISTS (
+    SELECT item.value->>'permission_key'
+    FROM jsonb_array_elements(p_permissions) AS item(value)
+    GROUP BY item.value->>'permission_key'
+    HAVING count(*) > 1
+  ) THEN
+    RAISE EXCEPTION 'QUYEN_BI_TRUNG';
+  END IF;
+
+  INSERT INTO public.manager_permissions AS mp (store_id, permission_key, enabled)
+  SELECT
+    v_store,
+    permissions.permission_key,
+    permissions.enabled
+  FROM jsonb_to_recordset(p_permissions)
+    AS permissions(permission_key text, enabled boolean)
+  ON CONFLICT (store_id, permission_key)
+  DO UPDATE SET enabled = EXCLUDED.enabled;
+END;
+$function$
+"
+02_function_def,"public.owner_set_manager_branches(p_manager_id uuid, p_store_ids uuid[])","CREATE OR REPLACE FUNCTION public.owner_set_manager_branches(p_manager_id uuid, p_store_ids uuid[])
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  v_role text;
+  v_status text;
+  v_previous_store uuid;
+  v_next_store uuid;
+  v_target_ids uuid[] := coalesce(p_store_ids, ARRAY[]::uuid[]);
+  v_changed integer := 0;
+BEGIN
+  IF auth.uid() IS NULL THEN RAISE EXCEPTION 'UNAUTHENTICATED'; END IF;
+  IF public.my_role() <> 'owner' THEN RAISE EXCEPTION 'FORBIDDEN'; END IF;
+  IF p_manager_id IS NULL THEN RAISE EXCEPTION 'MANAGER_REQUIRED'; END IF;
+
+  SELECT p.role::text, p.employment_status::text, p.store_id
+    INTO v_role, v_status, v_previous_store
+  FROM public.profiles p
+  WHERE p.id = p_manager_id
+  FOR UPDATE;
+
+  IF NOT FOUND OR v_role <> 'manager' OR v_status <> 'active' THEN
+    RAISE EXCEPTION 'ACTIVE_MANAGER_REQUIRED';
+  END IF;
+  IF array_position(v_target_ids, NULL) IS NOT NULL THEN
+    RAISE EXCEPTION 'BRANCH_ID_INVALID';
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM unnest(v_target_ids) AS requested(store_id)
+    WHERE NOT public.is_store_owner(requested.store_id)
+  ) THEN
+    RAISE EXCEPTION 'FORBIDDEN_BRANCH_SCOPE';
+  END IF;
+  IF EXISTS (
+    SELECT 1 FROM public.store_memberships sm
+    WHERE sm.user_id = p_manager_id
+      AND sm.role = 'owner'::public.user_role
+      AND sm.is_active = true
+      AND public.is_store_owner(sm.store_id)
+  ) THEN
+    RAISE EXCEPTION 'TARGET_IS_OWNER';
+  END IF;
+
+  -- Deactivate only this caller's Manager assignments omitted from the submitted list.
+  UPDATE public.store_memberships sm
+  SET is_active = false,
+      left_at = coalesce(sm.left_at, now()),
+      updated_at = now()
+  WHERE sm.user_id = p_manager_id
+    AND sm.role = 'manager'::public.user_role
+    AND sm.is_active = true
+    AND public.is_store_owner(sm.store_id)
+    AND NOT (sm.store_id = ANY(v_target_ids));
+  GET DIAGNOSTICS v_changed = ROW_COUNT;
+
+  -- Activate or create exactly the Manager memberships requested by this Owner.
+  INSERT INTO public.store_memberships AS current_membership
+    (user_id, store_id, role, is_active, joined_at, left_at)
+  SELECT p_manager_id, requested.store_id, 'manager'::public.user_role, true, now(), NULL
+  FROM (SELECT DISTINCT unnest(v_target_ids) AS store_id) requested
+  ON CONFLICT (user_id, store_id) DO UPDATE
+  SET role = 'manager'::public.user_role,
+      is_active = true,
+      joined_at = CASE WHEN current_membership.is_active
+                       THEN current_membership.joined_at ELSE now() END,
+      left_at = NULL,
+      updated_at = now();
+
+  -- Keep the Manager's active branch context valid if this Owner removed it.
+  IF v_previous_store IS NULL AND cardinality(v_target_ids) > 0 THEN
+    SELECT requested.store_id INTO v_next_store
+    FROM (SELECT DISTINCT unnest(v_target_ids) AS store_id) requested
+    ORDER BY requested.store_id
+    LIMIT 1;
+    UPDATE public.profiles SET store_id = v_next_store, updated_at = now()
+    WHERE id = p_manager_id;
+  ELSIF v_previous_store IS NOT NULL
+     AND public.is_store_owner(v_previous_store)
+     AND NOT (v_previous_store = ANY(v_target_ids)) THEN
+    SELECT requested.store_id INTO v_next_store
+    FROM (SELECT DISTINCT unnest(v_target_ids) AS store_id) requested
+    ORDER BY requested.store_id
+    LIMIT 1;
+    IF v_next_store IS NULL THEN
+      SELECT sm.store_id INTO v_next_store
+      FROM public.store_memberships sm
+      WHERE sm.user_id = p_manager_id
+        AND sm.role = 'manager'::public.user_role
+        AND sm.is_active = true
+      ORDER BY sm.store_id
+      LIMIT 1;
+    END IF;
+    UPDATE public.profiles SET store_id = v_next_store, updated_at = now()
+    WHERE id = p_manager_id;
+  END IF;
+
+  INSERT INTO public.audit_logs(actor_id, store_id, action, entity_type, entity_id, new_data)
+  VALUES (
+    auth.uid(),
+    (SELECT p.store_id FROM public.profiles p WHERE p.id = auth.uid()),
+    'owner_set_manager_branches',
+    'manager_branch_memberships',
+    p_manager_id,
+    jsonb_build_object('manager_id', p_manager_id, 'store_ids', v_target_ids,
+                       'deactivated_count', v_changed)
+  );
+
+  RETURN jsonb_build_object('manager_id', p_manager_id, 'store_ids', v_target_ids,
+                            'deactivated_count', v_changed);
+END;
+$function$
+"
+02_function_def,"public.review_attendance_device(p_device_id uuid, p_action text, p_reason text)","CREATE OR REPLACE FUNCTION public.review_attendance_device(p_device_id uuid, p_action text, p_reason text DEFAULT NULL::text)
+ RETURNS boolean
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+declare
+  v_role text;
+  v_store uuid;
+  v_device_store uuid;
+  v_employee uuid;
+  v_status public.device_status;
+begin
+  select role::text,store_id into v_role,v_store
+  from public.profiles
+  where id=auth.uid() and employment_status='active';
+  if v_role is null then raise exception 'FORBIDDEN'; end if;
+  if v_role<>'owner' then raise exception 'OWNER_REQUIRED'; end if;
+
+  select d.employee_id,p.store_id,d.status into v_employee,v_device_store,v_status
+  from public.devices d
+  join public.profiles p on p.id=d.employee_id
+  where d.id=p_device_id
+  for update;
+  if not found then raise exception 'THIET_BI_NOT_FOUND'; end if;
+  if v_device_store is distinct from v_store then raise exception 'FORBIDDEN'; end if;
+
+  if lower(p_action)='approve' then
+    if v_status<>'pending' then raise exception 'THIET_BI_DA_XU_LY'; end if;
+    if exists(select 1 from public.devices where employee_id=v_employee and status='approved' and id<>p_device_id) then
+      raise exception 'NHAN_VIEN_DA_CO_THIET_BI_DUOC_DUYET';
+    end if;
+    update public.devices
+    set status='approved',approved_by=auth.uid(),approved_at=now(),rejected_reason=null,revoked_at=null,updated_at=now()
+    where id=p_device_id;
+  elsif lower(p_action)='reject' then
+    if v_status<>'pending' then raise exception 'THIET_BI_DA_XU_LY'; end if;
+    update public.devices
+    set status='rejected',rejected_reason=nullif(trim(coalesce(p_reason,'Từ chối bởi Owner')), ''),updated_at=now()
+    where id=p_device_id;
+  elsif lower(p_action)='revoke' then
+    if v_status<>'approved' then raise exception 'THIET_BI_CHUA_DUOC_DUYET'; end if;
+    update public.devices
+    set status='revoked',revoked_at=now(),updated_at=now()
+    where id=p_device_id;
+  else
+    raise exception 'ACTION_KHONG_HOP_LE';
+  end if;
+
+  insert into public.audit_logs(actor_id,action,entity_type,entity_id,new_data)
+  values(auth.uid(),'review_attendance_device','device',p_device_id,
+         jsonb_build_object('action',lower(p_action),'reason',nullif(trim(coalesce(p_reason,'')),'')));
+  return true;
+end;
+$function$
+"
+02_function_def,public.switch_active_store(p_store_id uuid),"CREATE OR REPLACE FUNCTION public.switch_active_store(p_store_id uuid)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+  v_uid uuid := auth.uid();
+  v_store public.stores%rowtype;
+  v_role text;
+BEGIN
+  IF v_uid IS NULL THEN RAISE EXCEPTION 'UNAUTHENTICATED'; END IF;
+  SELECT p.role::text INTO v_role
+  FROM public.profiles p
+  WHERE p.id = v_uid AND p.employment_status = 'active';
+
+  IF v_role = 'owner' THEN
+    SELECT s.* INTO v_store
+    FROM public.stores s
+    WHERE s.id = p_store_id AND public.is_store_owner(s.id);
+  ELSIF v_role = 'manager' THEN
+    SELECT s.* INTO v_store
+    FROM public.stores s
+    JOIN public.store_memberships sm ON sm.store_id = s.id
+    WHERE s.id = p_store_id
+      AND sm.user_id = v_uid
+      AND sm.role = 'manager'::public.user_role
+      AND sm.is_active = true;
+  ELSE
+    RAISE EXCEPTION 'FORBIDDEN';
+  END IF;
+
+  IF NOT FOUND THEN RAISE EXCEPTION 'FORBIDDEN'; END IF;
+  UPDATE public.profiles SET store_id = v_store.id, updated_at = now() WHERE id = v_uid;
+  RETURN jsonb_build_object('id', v_store.id, 'name', v_store.name, 'address', v_store.address);
+END;
+$function$
+"
