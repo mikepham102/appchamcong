@@ -88,7 +88,7 @@ Theo ảnh chụp 30/10: **28/28 bảng bật RLS**, 60 policy, 118 hàm (119 ch
 |---|---|---|---|
 | **0** | **Migration đa chi nhánh CHƯA áp dụng lên DB** (phát hiện 30/10) | **Nghiêm trọng** | Thiếu hàm `owner_set_manager_branches` và bảng `private.platform_admins`. `index.html` **có gọi** `owner_set_manager_branches` → thao tác "gán chi nhánh cho Manager" trong màn Quản trị **đang lỗi**. Cũng chưa rõ `switch_active_store` trên DB là bản cũ (chỉ Owner) hay bản mới |
 | 1 | Snapshot cũ `sql/snapshots/hongcha_schema.sql` (13/10) | Đã xử lý | Đã có `schema_2026-10-30.csv` làm chuẩn mới; file cũ chỉ giữ để đối chiếu |
-| 2 | Job `pg_cron` không nằm trong dữ liệu chụp | Cao | Chưa xác nhận job tự chốt đăng ký ca có tồn tại/đang bật |
+| 2 | Job `pg_cron` chưa được xác nhận | Cao | Hàm `auto_finalize_due_shift_registrations` **đã vá V84.30** (xác minh 30/10: `conflict_id :=` có trong `prosrc`). Còn thiếu: job cron có tồn tại và đang bật hay không |
 | 3 | Không có môi trường staging | Cao | Mọi thử nghiệm đang chạm dữ liệu thật |
 | 4 | Vài policy cũ so sánh trực tiếp `store_id = profiles.store_id` trong khi mô hình mới dùng `store_memberships` | Trung bình | Xem `schedules_employee_select_v21`, `manager_permissions_manager_read`, `weekly_shift_plan_insert` |
 | 5 | Frontend ghi trực tiếp bảng (`profiles`, `stores`, `payroll_penalty_rules`, `employee_bank_accounts`) thay vì RPC | Trung bình | Không có `audit_logs` cho các thay đổi này |
