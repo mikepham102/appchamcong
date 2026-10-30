@@ -8,8 +8,9 @@ Database đang chạy thật. Đọc `docs/DEPLOY.md` mục 5 trước khi chạ
 |---|---|---|
 | 1 | `HongCha_HRM_V84.29_Device_Cleanup_Migration.sql` | Hàm Owner xóa thiết bị chấm công đã thu hồi (chặn nếu có lịch sử chấm công) |
 | 2 | `HongCha_HRM_V84.29_Employee_Profile_Approval_Migration.sql` | Bảng + trigger + RPC duyệt yêu cầu sửa hồ sơ nhân viên |
-| 3 | `HongCha_HRM_Multi_Branch_Manager_Access_Migration.sql` | Manager đa chi nhánh, `switch_active_store`, `owner_set_manager_branches`, schema `private` |
-| 4 | `HongCha_HRM_V84.30_Shift_Registration_Auto_Finalize_Fix.sql` | Sửa hàm tự chốt đăng ký ca (đọc UUID scalar) |
+| 3 | `HongCha_HRM_Multi_Branch_Manager_Access_Migration.sql` | **BẢN GỐC — KHÔNG dùng để chạy**. Chỉ giữ làm lịch sử. Thiếu phần vá trigger nên Manager vẫn không chuyển chi nhánh được |
+| 4 | `HongCha_HRM_V84.30_Shift_Registration_Auto_Finalize_Fix.sql` | Sửa hàm tự chốt đăng ký ca (đọc UUID scalar) — **đã áp dụng** trên production |
+| 5 | `HongCha_HRM_V84.31_MultiBranch_Manager_Access_Apply.sql` | **BẢN ÁP DỤNG CHÍNH THỨC** cho đa chi nhánh: nội dung file 3 + vá trigger `enforce_manager_business_permission` + chốt an toàn không khóa quyền Manager |
 
 Thứ tự 1→2→3→4 là thứ tự đã áp dụng theo thời gian (15/10 → 18/10). Cả 4 file đều **additive** và có `BEGIN/COMMIT` + block `preflight`.
 
