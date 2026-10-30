@@ -86,9 +86,10 @@ Theo ảnh chụp 30/10: **28/28 bảng bật RLS**, 60 policy, 118 hàm (119 ch
 
 | # | Vấn đề | Mức độ | Ghi chú |
 |---|---|---|---|
-| **0** | **Migration đa chi nhánh CHƯA áp dụng lên DB** (phát hiện 30/10) | **Nghiêm trọng** | Thiếu hàm `owner_set_manager_branches` và bảng `private.platform_admins`. `index.html` **có gọi** `owner_set_manager_branches` → thao tác "gán chi nhánh cho Manager" trong màn Quản trị **đang lỗi**. Cũng chưa rõ `switch_active_store` trên DB là bản cũ (chỉ Owner) hay bản mới |
+| **0** | **Migration đa chi nhánh CHƯA áp dụng lên DB** (xác minh 30/10) | **Nghiêm trọng** | Thiếu hàm `owner_set_manager_branches` và bảng `private.platform_admins`. Đã kiểm tra `switch_active_store` trên DB: **bản cũ**, chỉ Owner được đổi (prosrc 672 ký tự, không có nhánh Manager) → Manager **không thể** chuyển chi nhánh. `index.html` có gọi `owner_set_manager_branches` → thao tác "gán chi nhánh cho Manager" **đang lỗi** |
 | 1 | Snapshot cũ `sql/snapshots/hongcha_schema.sql` (13/10) | Đã xử lý | Đã có `schema_2026-10-30.csv` làm chuẩn mới; file cũ chỉ giữ để đối chiếu |
-| 2 | Job `pg_cron` chưa được xác nhận | Cao | Hàm `auto_finalize_due_shift_registrations` **đã vá V84.30** (xác minh 30/10: `conflict_id :=` có trong `prosrc`). Còn thiếu: job cron có tồn tại và đang bật hay không |
+| 2 | Job `pg_cron` | Đã xác minh 30/10 | Có **6 job, tất cả `active = true`**: (3) `ensure_recurring_shift_registration_windows` 15 phút/lần; (7) `sync_shift_registration_automation` mỗi phút; (8) `auto_finalize_due_shift_registrations` mỗi phút — **hàm đã vá V84.30**; (9)+(10) `process_shift_registration_automation` mỗi phút; (15) `materialize_future_weekly_schedule_horizon_v1` 00:10 giờ VN |
+| 2b | **Job 9 và 10 trùng nhau** | Trung bình | Cùng lệnh `process_shift_registration_automation()`, cùng lịch mỗi phút (`*/1` = `*`) → chạy 2 lần/phút, có thể tranh khóa. Nên bỏ 1 job sau khi xác nhận |
 | 3 | Không có môi trường staging | Cao | Mọi thử nghiệm đang chạm dữ liệu thật |
 | 4 | Vài policy cũ so sánh trực tiếp `store_id = profiles.store_id` trong khi mô hình mới dùng `store_memberships` | Trung bình | Xem `schedules_employee_select_v21`, `manager_permissions_manager_read`, `weekly_shift_plan_insert` |
 | 5 | Frontend ghi trực tiếp bảng (`profiles`, `stores`, `payroll_penalty_rules`, `employee_bank_accounts`) thay vì RPC | Trung bình | Không có `audit_logs` cho các thay đổi này |
