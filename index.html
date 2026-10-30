@@ -2899,6 +2899,26 @@ let mainScheduleWeekAuxCache={};
 let adminAttendanceWeekCache={};
 let adminScheduleLoadToken=0, employeeScheduleLoadToken=0, mainScheduleLoadToken=0, adminAttendanceLoadToken=0, employeeAttendanceStateToken=0, salaryLoadToken=0;
 function el(id){return document.getElementById(id)}
+/* Cache RPC ngắn hạn: mở lại tab không phải chờ mạng; nhiều lời gọi cùng lúc
+   chỉ tạo 1 request. Chỉ cache phản hồi THÀNH CÔNG. */
+const hcRpcCache=new Map();
+function hcRpc(key,ttl,loader,force=false){
+  const now=Date.now(),hit=hcRpcCache.get(key);
+  if(!force){
+    if(hit?.promise)return hit.promise;
+    if(hit&&hit.res&&now-hit.at<ttl)return Promise.resolve(hit.res);
+  }
+  const promise=Promise.resolve().then(loader).then(res=>{
+    if(res&&!res.error)hcRpcCache.set(key,{at:Date.now(),res});
+    else hcRpcCache.delete(key);
+    return res;
+  }).catch(e=>{hcRpcCache.delete(key);throw e});
+  hcRpcCache.set(key,{at:hit?.at||0,res:hit?.res,promise});
+  return promise;
+}
+function hcRpcInvalidate(prefix){
+  for(const k of [...hcRpcCache.keys()])if(!prefix||k.startsWith(prefix))hcRpcCache.delete(k);
+}
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function toast(msg){const t=el('toast');if(!t)return;t.textContent=msg;t.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove('show'),2200)}
 function localToday(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Ho_Chi_Minh'}).format(new Date())}
@@ -3479,6 +3499,25 @@ function openAdminHome(){
  // Nút Quản trị chỉ mở TRANG DANH MỤC quản trị.
  // Không tự mở lại chức năng/popup trước đó. Người dùng tự chọn chức năng sau.
  navigate('admin',{adminHome:true});
+ prefetchAdminFinancePanels();
+}
+/* Tải trước dữ liệu nền cho 3 màn Phiếu phạt / Phiếu cộng / Ứng lương.
+   Chạy SAU khi trang quản trị đã hiện, chỉ 1 lần cho mỗi chi nhánh trong 5 phút
+   (nhờ hcRpc cache). Không chặn thao tác của người dùng. */
+let adminPrefetchStoreId=null;
+function prefetchAdminFinancePanels(){
+ if(!sb||!isStaffAdmin())return;
+ const storeId=getActiveStoreId()||'';
+ if(!storeId||adminPrefetchStoreId===storeId)return;
+ adminPrefetchStoreId=storeId;
+ setTimeout(()=>{
+   if(!sb||!isStaffAdmin())return;
+   try{
+     hcRpc('pen:ctx:'+storeId,300000,()=>sb.rpc('manager_owner_penalty_context_v85')).catch(()=>{});
+     hcRpc('bonus:ctx:'+storeId,300000,()=>sb.rpc('manager_owner_bonus_context_v1')).catch(()=>{});
+     hcRpc('adv:list:'+storeId,45000,()=>sb.rpc('manager_list_payroll_advance_requests')).catch(()=>{});
+   }catch(_){}
+ },900);
 }
 function navigate(id,opts={}){
  const s=session,p=profile;if(!s||!p){showLogin('Vui lòng đăng nhập để tiếp tục.');return}
@@ -5921,14 +5960,15 @@ function ensureBonusManagementMarkup(){
  const content=el('adminContent');
  if(content&&!el('adminBonuses'))content.insertAdjacentHTML('beforeend',`<div class="admin-pane" id="adminBonuses"><section class="card"><div class="row"><div><b>Phiếu cộng tiền</b><div class="muted">Phiếu chỉ được tính vào lương sau khi được duyệt và Owner tính kỳ lương tháng. Mục này không sửa dữ liệu chấm công hay lịch.</div></div><button class="btn light" type="button" onclick="loadBonusManagement()">Làm mới</button></div><div class="payroll-kpis ui-mt-10" id="bonusSummary"></div></section><section class="card ui-mt-10"><b>Tạo phiếu cộng thủ công</b><div class="muted ui-mt-4">Phiếu mới ở trạng thái chờ duyệt. Ngày áp dụng dùng để xếp vào đúng kỳ lương.</div><div class="formgrid ui-mt-10"><div class="field"><label for="bonusVoucherEmployee">Nhân viên</label><select id="bonusVoucherEmployee"><option value="">Đang tải danh sách…</option></select></div><div class="field"><label for="bonusVoucherDate">Ngày áp dụng</label><input id="bonusVoucherDate" type="date"/></div><div class="field"><label for="bonusVoucherAmount">Số tiền (đ)</label><input id="bonusVoucherAmount" type="number" min="1" step="1000" inputmode="numeric"/></div><div class="field full"><label for="bonusVoucherReason">Tên khoản cộng / lý do</label><input id="bonusVoucherReason" maxlength="640" placeholder="Ví dụ: Hỗ trợ thêm ca"/></div></div><button class="btn primary ui-mt-9" type="button" onclick="createStandaloneBonusVoucher()">＋ Tạo phiếu cộng</button></section><section class="card ui-mt-10"><b>Thưởng tự động đủ giờ công trong ngày</b><div class="muted ui-mt-4">Tính tổng phút làm đã checkout của nhân viên trong từng ngày. Khi đạt ngưỡng, hệ thống tạo tối đa một khoản cộng/người/ngày lúc Owner tính lương. Không tạo thưởng đủ giờ cho ngày đã áp dụng quy tắc lễ/Tết để tránh cộng trùng.</div><div class="formgrid ui-mt-10"><div class="field"><label for="bonusDailyHours">Số giờ tối thiểu</label><input id="bonusDailyHours" type="number" min="0.25" max="24" step="0.25" value="8"/></div><div class="field"><label for="bonusDailyAmount">Tiền cộng mỗi ngày (đ)</label><input id="bonusDailyAmount" type="number" min="0" step="1000" inputmode="numeric"/></div><label class="settings-toggle-card field full"><input class="hc-switch" role="switch" id="bonusDailyActive" type="checkbox"/><span><b>Bật thưởng đủ giờ</b><small>Chỉ đọc ca đã check-in, check-out và có giờ công hợp lệ.</small></span></label></div><button class="btn light ui-mt-9" type="button" onclick="saveFullDayBonusRule()">Lưu quy tắc thưởng đủ giờ</button></section><section class="card ui-mt-10"><div class="row"><div><b>Quy tắc lương ngày lễ/Tết</b><div class="muted">Áp dụng theo ngày công ở chi nhánh này. Phần tăng được ghi thành khoản cộng riêng khi tính kỳ lương.</div></div></div><input id="bonusHolidayRuleId" type="hidden"/><div class="formgrid ui-mt-10"><div class="field full"><label for="bonusHolidayLabel">Tên ngày lễ / Tết</label><input id="bonusHolidayLabel" maxlength="120" placeholder="Ví dụ: Tết Nguyên Đán"/></div><div class="field"><label for="bonusHolidayStart">Từ ngày</label><input id="bonusHolidayStart" type="date"/></div><div class="field"><label for="bonusHolidayEnd">Đến ngày</label><input id="bonusHolidayEnd" type="date"/></div><div class="field"><label for="bonusHolidayMode">Cách tính phần tăng</label><select id="bonusHolidayMode"><option value="multiplier">Hệ số tổng lương ngày (ví dụ ×2)</option><option value="percent">Tăng thêm % trên lương thường</option><option value="fixed_hour">Cộng tiền mỗi giờ làm</option><option value="fixed_shift">Cộng tiền mỗi ca</option><option value="fixed_day">Cộng tiền mỗi ngày</option></select></div><div class="field"><label for="bonusHolidayAmount">Hệ số / phần trăm / số tiền</label><input id="bonusHolidayAmount" type="number" min="0.01" step="0.01" inputmode="decimal"/></div></div><div class="muted ui-mt-4">Hệ số ×2 tương đương tổng lương ngày lễ bằng 2 lần lương thường (phần cộng thêm là 1 lần lương thường). Quy tắc ngày lễ không được chồng lấn ngày trong cùng chi nhánh.</div><div class="admin-actions"><button class="btn primary" type="button" onclick="saveHolidayPayRule()">Lưu quy tắc ngày lễ/Tết</button><button class="btn light" type="button" onclick="clearHolidayPayRuleForm()">Xóa nội dung nhập</button></div><div class="stack ui-mt-10" id="bonusHolidayRuleList"><div class="muted">Đang tải quy tắc…</div></div></section><section class="card ui-mt-10"><div class="row"><div><b>Lịch sử phiếu cộng</b><div class="field"><label for="bonusStatusFilter">Trạng thái</label><select id="bonusStatusFilter" onchange="loadBonusManagement()"><option value="all">Tất cả</option><option value="pending">Chờ duyệt</option><option value="approved">Đã duyệt</option><option value="rejected">Đã từ chối</option></select></div></div></div><div class="stack ui-mt-10" id="bonusVoucherList"><div class="muted">Đang tải phiếu…</div></div></section><div class="notice info ui-mt-10">Quy tắc tự động chỉ tạo phiếu lúc tính kỳ lương. Tính lại kỳ đang mở không nhân đôi phiếu nguồn; kỳ đã chốt/trả bị khóa.</div></div>`);
 }
-async function loadBonusManagement(){
+async function loadBonusManagement(forceRefresh=false){
  const target=el('bonusVoucherList');if(!target||!['owner','manager'].includes(profile?.role))return;
  target.innerHTML='<div class="muted">Đang tải phiếu cộng và quy tắc…</div>';
  const status=el('bonusStatusFilter')?.value||'all';
  try{
+  const storeKey=getActiveStoreId()||'';
   const [contextResult,listResult]=await Promise.all([
-   sb.rpc('manager_owner_bonus_context_v1'),
-   sb.rpc('manager_owner_list_bonus_vouchers_v1',{p_status:status,p_limit:100,p_offset:0})
+   hcRpc('bonus:ctx:'+storeKey,300000,()=>sb.rpc('manager_owner_bonus_context_v1'),forceRefresh),
+   hcRpc('bonus:list:'+storeKey+':'+status,60000,()=>sb.rpc('manager_owner_list_bonus_vouchers_v1',{p_status:status,p_limit:100,p_offset:0}),forceRefresh)
   ]);
   if(contextResult.error)throw contextResult.error;if(listResult.error)throw listResult.error;
   const context=contextResult.data||{},employees=Array.isArray(context.employees)?context.employees:[],rule=context.full_day_rule||null;
@@ -5950,21 +5990,21 @@ function editHolidayPayRule(id){const r=bonusHolidayRules.find(x=>x.id===id);if(
 async function saveFullDayBonusRule(){
  const hours=Number(el('bonusDailyHours')?.value||0),amount=Number(el('bonusDailyAmount')?.value||0),active=el('bonusDailyActive')?.checked===true;
  if(!Number.isFinite(hours)||hours<=0||hours>24||!Number.isFinite(amount)||amount<0||(active&&amount<=0)){toast('Nhập ngưỡng giờ hợp lệ và số tiền lớn hơn 0 khi bật quy tắc.');return}
- const {error}=await sb.rpc('manager_owner_save_full_day_bonus_rule_v1',{p_minimum_worked_minutes:Math.round(hours*60),p_amount:amount,p_is_active:active});if(error){toast(error.message||'Không lưu được quy tắc thưởng đủ giờ.');return}toast('Đã lưu quy tắc thưởng đủ giờ công.');await loadBonusManagement();
+ const {error}=await sb.rpc('manager_owner_save_full_day_bonus_rule_v1',{p_minimum_worked_minutes:Math.round(hours*60),p_amount:amount,p_is_active:active});if(error){toast(error.message||'Không lưu được quy tắc thưởng đủ giờ.');return}toast('Đã lưu quy tắc thưởng đủ giờ công.');await loadBonusManagement(true);
 }
 async function saveHolidayPayRule(){
  const ruleId=el('bonusHolidayRuleId')?.value||null,label=el('bonusHolidayLabel')?.value?.trim()||'',start=el('bonusHolidayStart')?.value,end=el('bonusHolidayEnd')?.value,mode=el('bonusHolidayMode')?.value,amount=Number(el('bonusHolidayAmount')?.value||0);
  if(!label||!start||!end||start>end||!Number.isFinite(amount)||amount<=0||(mode==='multiplier'&&amount<=1)){toast('Kiểm tra tên, ngày áp dụng và hệ số/số tiền. Hệ số phải lớn hơn 1.');return}
  const {error}=await sb.rpc('manager_owner_save_holiday_pay_rule_v1',{p_rule_id:ruleId,p_label:label,p_start_date:start,p_end_date:end,p_calculation_mode:mode,p_amount:amount,p_is_active:true});
- if(error){const message=String(error.message||'');toast(message.includes('HOLIDAY_RULE_DATES_OVERLAP')?'Khoảng ngày này bị trùng với quy tắc lễ/Tết khác trong chi nhánh.':message||'Không lưu được quy tắc ngày lễ/Tết.');return}clearHolidayPayRuleForm();toast('Đã lưu quy tắc lương ngày lễ/Tết.');await loadBonusManagement();
+ if(error){const message=String(error.message||'');toast(message.includes('HOLIDAY_RULE_DATES_OVERLAP')?'Khoảng ngày này bị trùng với quy tắc lễ/Tết khác trong chi nhánh.':message||'Không lưu được quy tắc ngày lễ/Tết.');return}clearHolidayPayRuleForm();toast('Đã lưu quy tắc lương ngày lễ/Tết.');await loadBonusManagement(true);
 }
-async function toggleHolidayPayRule(id){const r=bonusHolidayRules.find(x=>x.id===id);if(!r)return;const {error}=await sb.rpc('manager_owner_save_holiday_pay_rule_v1',{p_rule_id:r.id,p_label:r.label,p_start_date:r.start_date,p_end_date:r.end_date,p_calculation_mode:r.calculation_mode,p_amount:Number(r.amount),p_is_active:!r.is_active});if(error){toast(error.message||'Không cập nhật được quy tắc.');return}await loadBonusManagement()}
+async function toggleHolidayPayRule(id){const r=bonusHolidayRules.find(x=>x.id===id);if(!r)return;const {error}=await sb.rpc('manager_owner_save_holiday_pay_rule_v1',{p_rule_id:r.id,p_label:r.label,p_start_date:r.start_date,p_end_date:r.end_date,p_calculation_mode:r.calculation_mode,p_amount:Number(r.amount),p_is_active:!r.is_active});if(error){toast(error.message||'Không cập nhật được quy tắc.');return}await loadBonusManagement(true)}
 async function createStandaloneBonusVoucher(){
  const employee=el('bonusVoucherEmployee')?.value,amount=Number(el('bonusVoucherAmount')?.value||0),reason=el('bonusVoucherReason')?.value?.trim()||'',date=el('bonusVoucherDate')?.value;
  if(!employee||!date||!Number.isFinite(amount)||amount<=0||!reason){toast('Chọn nhân viên, ngày áp dụng, số tiền và lý do hợp lệ.');return}
- const {error}=await sb.rpc('manager_owner_add_bonus_standalone_v1',{p_employee_id:employee,p_amount:amount,p_reason:reason,p_effective_date:date});if(error){toast(error.message||'Không tạo được phiếu cộng.');return}el('bonusVoucherAmount').value='';el('bonusVoucherReason').value='';toast('Đã tạo phiếu cộng ở trạng thái chờ duyệt.');await loadBonusManagement();
+ const {error}=await sb.rpc('manager_owner_add_bonus_standalone_v1',{p_employee_id:employee,p_amount:amount,p_reason:reason,p_effective_date:date});if(error){toast(error.message||'Không tạo được phiếu cộng.');return}el('bonusVoucherAmount').value='';el('bonusVoucherReason').value='';toast('Đã tạo phiếu cộng ở trạng thái chờ duyệt.');await loadBonusManagement(true);
 }
-async function reviewBonusVoucher(id,action){const {error}=await sb.rpc('manager_owner_review_bonus_v1',{p_adjustment_id:id,p_action:action});if(error){toast(error.message||'Không thể xử lý phiếu cộng.');return}toast(action==='approve'?'Đã duyệt phiếu. Khoản cộng chỉ vào lương khi Owner tính đúng kỳ.':'Đã từ chối phiếu cộng.');await loadBonusManagement()}
+async function reviewBonusVoucher(id,action){const {error}=await sb.rpc('manager_owner_review_bonus_v1',{p_adjustment_id:id,p_action:action});if(error){toast(error.message||'Không thể xử lý phiếu cộng.');return}toast(action==='approve'?'Đã duyệt phiếu. Khoản cộng chỉ vào lương khi Owner tính đúng kỳ.':'Đã từ chối phiếu cộng.');await loadBonusManagement(true)}
 async function loadEmployeeAdvanceRequests(){
  const target=el('employeeAdvanceList');
  if(!target||profile?.role!=='employee'||!session?.user?.id)return;
@@ -6031,10 +6071,10 @@ async function submitEmployeeAdvanceRequest(){
  }catch(e){const errors={'TAM_UNG_VUOT_SO_LAN_THANG':'Bạn đã gửi đủ 2 phiếu tạm ứng trong tháng này.','TAM_UNG_VUOT_HAN_MUC_50_PERCENT':'Số tiền xin ứng vượt quá 50% tiền công đã thực hiện hoặc hạn mức còn lại.'};toast(errors[e?.message]||e?.message||'Không thể gửi phiếu tạm ứng.')}
  finally{setBusyButton(button,false,'Gửi phiếu xin tạm ứng')}
 }
-async function loadManagerAdvanceRequests(){
+async function loadManagerAdvanceRequests(forceRefresh=false){
  const target=el('managerAdvanceRequests');
  if(!target||!['owner','manager'].includes(profile?.role))return;
- const {data,error}=await sb.rpc('manager_list_payroll_advance_requests');
+ const {data,error}=await hcRpc('adv:list:'+(getActiveStoreId()||''),45000,()=>sb.rpc('manager_list_payroll_advance_requests'),forceRefresh);
  if(error){target.innerHTML='<div class="notice warn">Không tải được phiếu tạm ứng. Kiểm tra migration lương và quyền truy cập.</div>';return}
  target.innerHTML=data?.length?data.map(x=>`<div class="item"><div class="row"><div><b>${escapeHtml(x.employee_name||'Nhân viên')} · ${Number(x.amount||0).toLocaleString('vi-VN')}đ</b><div class="mini">${escapeHtml(x.reason||'')} · ${new Date(x.created_at).toLocaleString('vi-VN')}</div></div><span class="badge ${x.advance_status==='pending'?'wait':'ok'}">${x.advance_status==='pending'?'Chờ duyệt':'Đã duyệt · đang chờ kỳ lương mở'}</span></div>${x.advance_status==='pending'?`<div class="admin-actions"><button class="btn green" onclick="reviewPayrollAdvance('${x.adjustment_id}','approve')">Duyệt</button><button class="btn danger" onclick="reviewPayrollAdvance('${x.adjustment_id}','reject')">Từ chối</button></div>`:''}</div>`).join(''):'<div class="empty">Không có phiếu tạm ứng đang chờ hoặc chờ kỳ lương mở.</div>';
 }
@@ -6042,7 +6082,7 @@ async function reviewPayrollAdvance(id,action){
  const {data,error}=await sb.rpc('manager_review_payroll_advance',{p_adjustment_id:id,p_action:action});
  if(error){toast(error.message||'Không thể xử lý phiếu tạm ứng.');return}
  toast(action==='approve'?(data?.queued_for_next_open_period?'Đã duyệt phiếu; khoản tạm ứng đang chờ kỳ lương mở kế tiếp.':'Đã duyệt phiếu và xếp vào kỳ lương gần nhất đang mở.'):'Đã từ chối phiếu tạm ứng.');
- await loadManagerAdvanceRequests();
+ await loadManagerAdvanceRequests(true);
  if(profile?.role==='owner'&&payrollSelectedId)await selectPayrollPeriod(payrollSelectedId);
 }
 function syncPayrollPenaltyRuleForm(){
@@ -6051,10 +6091,10 @@ function syncPayrollPenaltyRuleForm(){
  if(input){input.disabled=type==='late'||type==='absence';if(input.disabled)input.value='0'}
  if(mode){const fixedOnly=type==='late_monthly'||type==='absence';mode.disabled=fixedOnly;if(fixedOnly)mode.value='fixed'}
 }
-async function loadPayrollPenaltyRules(){
+async function loadPayrollPenaltyRules(forceRefresh=false){
  const target=el('payrollPenaltyRuleList');
  if(!target||profile?.role!=='owner')return;
- const {data,error}=await sb.from('payroll_penalty_rules').select('id,rule_type,label,threshold_minutes,threshold_occurrences,amount_mode,amount,enabled').eq('store_id',getActiveStoreId()).order('created_at');
+ const {data,error}=await hcRpc('pen:rules:'+(getActiveStoreId()||''),300000,()=>sb.from('payroll_penalty_rules').select('id,rule_type,label,threshold_minutes,threshold_occurrences,amount_mode,amount,enabled').eq('store_id',getActiveStoreId()).order('created_at'),forceRefresh);
  if(error){target.innerHTML='<div class="notice warn">Không tải được quy tắc phạt. Kiểm tra quyền quản lý chi nhánh và migration V84.29.</div>';return}
  const labels={late:'Trễ mỗi lần',late_monthly:'Trễ theo tháng',early_leave:'Về sớm',absence:'Vắng ca'};
  target.innerHTML=data?.length?data.map(x=>`<div class="item"><div class="row"><div><b>${escapeHtml(x.label)}</b><div class="muted">${labels[x.rule_type]||x.rule_type}${x.rule_type==='late_monthly'?` · từ ${x.threshold_occurrences} lần/tháng`:x.rule_type==='early_leave'?` · trên ${x.threshold_minutes} phút về sớm`:x.rule_type==='late'?' · tính từ phút trễ vượt mức đã duyệt':''} · ${Number(x.amount).toLocaleString('vi-VN')}${x.amount_mode==='per_minute'?'đ/phút vượt':'đ'}</div></div><button class="btn ${x.enabled?'light':'green'}" onclick="togglePayrollPenaltyRule('${x.id}',${!x.enabled})">${x.enabled?'Tắt':'Bật'}</button></div></div>`).join(''):'<div class="empty">Chưa có điều kiện phạt tự động. Thêm từng điều kiện độc lập; có thể tạo một mức theo lần và một mức phụ thu theo số lần/tháng.</div>';
@@ -6063,7 +6103,7 @@ let penaltyHistoryOffset=0;
 let penaltyHistoryRows=[];
 let penaltyHistoryLoading=false;
 let penaltyHistoryHasMore=false;
-async function loadOwnerPenaltyManagement(loadMore=false){
+async function loadOwnerPenaltyManagement(loadMore=false,forceRefresh=false){
  if(!['owner','manager'].includes(profile?.role)||!sb||penaltyHistoryLoading)return;
  const periodSelect=el('ownerPenaltyAutoPeriod'),employeeSelect=el('ownerPenaltyEmployee'),pendingList=el('ownerPendingPenaltyList');
  if(!pendingList)return;
@@ -6077,10 +6117,10 @@ async function loadOwnerPenaltyManagement(loadMore=false){
   // so the panel waits for one round trip instead of two sequential RPCs.
   const contextRequest=loadMore
    ?Promise.resolve({data:null,error:null})
-   :sb.rpc('manager_owner_penalty_context_v85');
-  const listRequest=sb.rpc('manager_owner_list_penalties_v85',{
+   :hcRpc('pen:ctx:'+(getActiveStoreId()||''),300000,()=>sb.rpc('manager_owner_penalty_context_v85'),forceRefresh);
+  const listRequest=hcRpc('pen:list:'+(getActiveStoreId()||'')+':'+status+':'+requestOffset,60000,()=>sb.rpc('manager_owner_list_penalties_v85',{
    p_status:status,p_limit:100,p_offset:requestOffset
-  });
+  }),forceRefresh);
   const [contextResult,listResult]=await Promise.all([contextRequest,listRequest]);
   if(contextResult.error)throw contextResult.error;
   if(listResult.error)throw listResult.error;
@@ -6130,7 +6170,7 @@ async function createOwnerPenaltyVoucher(){
  if(error){toast(error.message||'Không tạo được phiếu phạt.');return}
  el('ownerPenaltyAmount').value='';el('ownerPenaltyTitle').value='';el('ownerPenaltyReason').value='';
  toast('Đã tạo phiếu phạt và chuyển sang trạng thái chờ duyệt.');
- await loadOwnerPenaltyManagement();
+ await loadOwnerPenaltyManagement(false,true);
 }
 async function reviewOwnerPenaltyVoucher(id,action){
  const {data,error}=await sb.rpc('manager_owner_review_penalty_v85',{p_adjustment_id:id,p_action:action});
@@ -6139,7 +6179,7 @@ async function reviewOwnerPenaltyVoucher(id,action){
  if(rejectedMessages[data?.status])toast(rejectedMessages[data.status]);
  else if(action==='approve')toast('Đã duyệt phiếu. Khoản phạt chỉ được xét vào lương khi Owner tính kỳ lương.');
  else toast('Đã từ chối phiếu phạt.');
- await loadOwnerPenaltyManagement();
+ await loadOwnerPenaltyManagement(false,true);
 }
 function filterPenaltyRenderedRows(){
  const q=(el('penaltyEmployeeFilter')?.value||'').trim().toLocaleLowerCase('vi');
@@ -6157,12 +6197,12 @@ async function savePayrollPenaltyRule(){
  if(error){toast(error.message||'Không lưu được điều kiện phạt.');return}
  el('payrollRuleLabel').value='';el('payrollRuleAmount').value='';
  toast('Đã thêm điều kiện phạt tự động.');
- await loadPayrollPenaltyRules();
+ await loadPayrollPenaltyRules(true);
 }
 async function togglePayrollPenaltyRule(id,enabled){
  const {error}=await sb.from('payroll_penalty_rules').update({enabled,updated_at:new Date().toISOString()}).eq('id',id).eq('store_id',getActiveStoreId());
  if(error){toast(error.message||'Không cập nhật được điều kiện phạt.');return}
- await loadPayrollPenaltyRules();
+ await loadPayrollPenaltyRules(true);
 }
 async function preparePayrollCalculation(periodId){
  const {error:assignError}=await sb.rpc('owner_assign_standalone_payroll_adjustments',{p_payroll_period_id:periodId});
@@ -6186,7 +6226,7 @@ async function generateAutomaticPenaltiesFromManagement(){
   const {data,error}=await sb.rpc('owner_generate_payroll_penalties',{p_payroll_period_id:periodId});
   if(error)throw error;
   const count=Number(data||0);msg.innerHTML=`<div class="notice ok">Đã tạo ${count} phiếu phạt tự động mới cho ${escapeHtml(periodLabel)}. Phiếu cần Owner duyệt trước khi được tính vào lương.</div>`;
-  await loadOwnerPenaltyManagement();
+  await loadOwnerPenaltyManagement(false,true);
  }catch(e){
   const raw=String(e?.message||'');
   const friendly=/KY_LUONG_NOT_FOUND/i.test(raw)?'Không tìm thấy kỳ lương đã chọn. Hãy tải lại danh sách kỳ.':/KY_LUONG_DA_CHOT/i.test(raw)?'Kỳ lương đã chốt nên không thể tạo thêm phiếu.':/FORBIDDEN_BRANCH/i.test(raw)?'Bạn không có quyền quản lý kỳ lương của chi nhánh này.':/FORBIDDEN/i.test(raw)?'Chỉ Owner được tạo phiếu phạt tự động.':`Không thể rà soát phiếu phạt: ${raw||'lỗi hệ thống'}`;

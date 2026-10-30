@@ -245,6 +245,22 @@ Chỉ giao diện. Không đổi nghiệp vụ, không đổi dữ liệu, khôn
 - Vẫn giữ: "Lưu đăng nhập", "Quên mật khẩu" (gửi email đặt lại), và màn hình "Đặt mật khẩu lần đầu" sau link mời.
 - Kiểm tra: `grep` xác nhận 0 tham chiếu còn lại; `node --check` PASS.
 
+---
+
+## V84.39 — Tăng tốc Phiếu phạt / Phiếu cộng / Ứng lương (30/10/2026)
+
+**Nguyên nhân:** mỗi lần mở 3 màn này app gọi lại **toàn bộ RPC** (kể cả phần "bối cảnh" nặng: danh sách kỳ lương + nhân viên + quy tắc), không có cache, và mở lại tab là chờ lại từ đầu.
+
+**Sửa (frontend):**
+- Thêm `hcRpc(key, ttl, loader)` — cache phản hồi **thành công** + **gộp các lời gọi trùng** đang bay (chỉ 1 request).
+- Áp dụng cho 6 truy vấn: bối cảnh phiếu phạt (5 phút), danh sách phiếu phạt (60 giây, theo trạng thái + offset), quy tắc phạt (5 phút), bối cảnh phiếu cộng (5 phút), danh sách phiếu cộng (60 giây), danh sách tạm ứng (45 giây).
+- **Tải trước khi mở Quản trị:** `prefetchAdminFinancePanels()` chạy sau 900 ms, tải sẵn 3 bối cảnh/ danh sách tạm ứng — nên bấm vào tab là có dữ liệu ngay. Chỉ 1 lần/chi nhánh/5 phút.
+- Sau mỗi thao tác tạo/duyệt/lưu quy tắc: buộc tải lại (`force`) để dữ liệu không bị cũ.
+- Không đổi dữ liệu, không đổi RPC, không cần chạy SQL.
+
+**Kết quả kỳ vọng:** lần đầu mở có thể vẫn chờ theo tốc độ mạng; mở lại tab và chuyển qua lại giữa 3 màn gần như tức thì.
+
+
 
 
 
