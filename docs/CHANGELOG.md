@@ -260,9 +260,23 @@ Chỉ giao diện. Không đổi nghiệp vụ, không đổi dữ liệu, khôn
 
 **Kết quả kỳ vọng:** lần đầu mở có thể vẫn chờ theo tốc độ mạng; mở lại tab và chuyển qua lại giữa 3 màn gần như tức thì.
 
+---
 
+## V84.40 — Làm tròn phút khi chấm công (30/10/2026)
 
+**Lỗi:** nhân viên vào `07:30:0x`, ca kết thúc `12:00` → app hiện **7h30 – 12h** nhưng ghi nhận **4h29p**. Nguyên nhân: hàm `attendance_punch` tính `floor((12:00 − 07:30:0x)/60)` → 269 phút, phần giây bị cắt.
 
+**Cách sửa (đúng quy tắc chủ dự án chốt):**
+| Thời điểm chấm | Ghi nhận | Trễ |
+|---|---|---|
+| `07:30:00` hoặc sớm hơn | `07:30` | 0 |
+| `07:30:02` | `07:31` | 1 phút |
+| Check-out `12:05:47` | `12:05` | — |
 
-
-
+- Check-in **làm tròn LÊN** phút (`v_in_at`), check-out **làm tròn XUỐNG** phút (`v_out_at`).
+- `late_minutes`, `worked_minutes`, `early_leave_minutes` tính từ giờ đã làm tròn → **hiển thị và tính lương luôn khớp**.
+- Giữ nguyên toàn bộ: kiểm tra thiết bị / GPS / khung giờ / handoff ca liền kề / mức chốt tối đa đến giờ kết thúc ca (V70).
+- **Bằng chứng thật vẫn còn:** `public.attendance_events.event_at` lưu giờ chấm **chính xác đến giây**.
+- **Không sửa dữ liệu chấm công đã có** — bản ghi 4h29 cũ giữ nguyên.
+- Migration tạo từ **đúng bản hàm đang chạy** (`sql/snapshots/attendance_punch_live.csv`), không dùng bản dump cũ.
+- File: `sql/migrations/HongCha_HRM_V84.40_Attendance_Rounding.sql` · rollback: `sql/rollback/HongCha_HRM_V84.40_Rollback.sql`
