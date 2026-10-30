@@ -308,3 +308,19 @@ Bọc cột trong `coalesce()` khiến PostgreSQL **không dùng được index*
 
 **Files:** `sql/migrations/HongCha_HRM_V84.41_Finance_RPC_Index.sql` · `sql/rollback/HongCha_HRM_V84.41_Rollback.sql`
 
+---
+
+## V84.42 — Sửa thanh tải bị kẹt ở Phiếu phạt / Ứng lương (30/10/2026)
+
+**Hiện tượng:** mở **Quản lý phạt** hoặc **Ứng lương** thấy vệt sáng chạy lặp mãi (thanh tải), dù nội dung bên dưới đã hiển thị và thao tác được. Mở sang **Phiếu cộng** rồi quay lại thì hết.
+
+**Nguyên nhân:** `adminTab()` bật class `is-loading` cho khung Quản trị, nhưng chỉ gắn lệnh tắt (`done`) cho các tab nằm trong danh sách nạp dữ liệu chung. `penalties` và `advances` **nạp dữ liệu riêng** (gọi thẳng, không `await`) nên **không bao giờ tắt** class → vệt sáng chạy vô hạn. Khi mở tab khác, `done()` của tab đó mới xoá class → nên quay lại thì "bình thường".
+
+**Sửa:**
+- Thêm `adminPaneLoading(task)` — bật thanh tải, **luôn tắt** trong `finally` (kể cả khi lỗi).
+- `penalties` / `advances` dùng wrapper này.
+- Khối nạp chung **không** bật thanh tải cho 2 tab đó nữa (tránh 2 nơi cùng quản lý).
+
+**Lưu ý:** đây là **lỗi hiển thị**, không phải tốc độ. Việc tăng tốc thật nằm ở V84.41 (bỏ `coalesce` + thêm index).
+
+
