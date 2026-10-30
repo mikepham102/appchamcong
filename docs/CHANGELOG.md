@@ -113,3 +113,18 @@ Không thay đổi nghiệp vụ, không thay đổi giao diện.
 
 **File nguồn (lần đầu được đưa vào git):** `supabase/functions/change-employee-password/index.ts`
 **Không cần sửa `index.html`** — chỉ deploy lại Edge Function.
+
+---
+
+## V84.32 — Đa chi nhánh hoàn chỉnh cho đổi mật khẩu + dọn cron (30/10/2026)
+
+### A. Edge Function `change-employee-password` — phạm vi chi nhánh
+- **Trước:** chỉ cho đổi mật khẩu khi `employee.store_id === caller.store_id` (Owner phải đang chọn đúng chi nhánh của nhân viên) → khi mở chi nhánh 2 sẽ bị `FORBIDDEN`.
+- **Sau:** kiểm tra quyền bằng `store_memberships` (`role = owner`, `is_active = true`) tại chi nhánh của nhân viên → Owner đổi được mật khẩu cho nhân viên ở **bất kỳ chi nhánh mình sở hữu**.
+- `audit_logs.store_id` ghi theo **chi nhánh của nhân viên** (kể cả khi Owner đang ở chi nhánh khác).
+- Bỏ yêu cầu `caller.store_id` (Owner có thể chưa chọn chi nhánh).
+- Vẫn giữ: chỉ Owner, chỉ tài khoản `role = employee`, chặn nhân viên đã `terminated`, độ dài 8–128.
+
+### B. Cron trùng lặp
+- `sql/maintenance/HongCha_HRM_V84.32_Remove_Duplicate_Cron_Job.sql` — bỏ job 10 (trùng job 9), có kiểm tra trước khi xóa.
+- Xác nhận an toàn: `shift_registration_windows` có `UNIQUE (store_id, week_start)` nên chạy trùng không thể sinh dữ liệu trùng.

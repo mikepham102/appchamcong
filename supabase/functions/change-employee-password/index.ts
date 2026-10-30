@@ -1,9 +1,14 @@
 // HongCha HRM — Edge Function: change-employee-password
 // V84.31 HOTFIX (30/10/2026)
+//   Sửa lỗi: bản cũ đọc `body["pass"+"word"]` trong khi app gửi `new_password`
+//   => giá trị luôn rỗng => mọi lần đổi mật khẩu đều trả PASSWORD_TOO_SHORT.
+//   Nay chấp nhận CẢ `new_password` và `password` (tương thích ngược).
 //
-// Lỗi đã sửa: bản cũ đọc `body["pass"+"word"]` trong khi app gửi `new_password`
-// => giá trị luôn rỗng => mọi lần đổi mật khẩu đều trả PASSWORD_TOO_SHORT.
-// Bản này chấp nhận CẢ `new_password` và `password` (tương thích ngược).
+// V84.32 (30/10/2026)
+//   Cho phép Owner đổi mật khẩu cho nhân viên ở BẤT KỲ chi nhánh nào họ sở hữu
+//   (trước đây bắt buộc Owner và nhân viên phải cùng `store_id` đang chọn).
+//   Quyền được kiểm tra bằng `store_memberships` role=owner, is_active=true.
+//   `audit_logs.store_id` ghi theo chi nhánh của nhân viên.
 //
 // Sửa thêm: ghi audit_logs thất bại KHÔNG còn làm hỏng kết quả đã thành công
 // (trước đây mật khẩu đã đổi nhưng API trả 500 PASSWORD_CHANGED_AUDIT_FAILED).
@@ -48,7 +53,6 @@ Deno.serve(async (req) => {
       .single();
     if (callerError || !caller) return json({ error: "PROFILE_NOT_FOUND" }, 403);
     if (caller.role !== "owner" || caller.employment_status !== "active") return json({ error: "FORBIDDEN" }, 403);
-    if (!caller.store_id) return json({ error: "CALLER_NO_STORE" }, 400);
 
     const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
     const employeeId = String(body["employee_id"] || "").trim();
@@ -67,8 +71,25 @@ Deno.serve(async (req) => {
       .eq("id", employeeId)
       .single();
     if (employeeError || !employee) return json({ error: "EMPLOYEE_NOT_FOUND" }, 404);
-    if (employee.store_id !== caller.store_id || employee.role !== "employee" || employee.employment_status === "terminated") {
+    if (employee.role !== "employee" || employee.employment_status === "terminated") {
       return json({ error: "FORBIDDEN" }, 403);
+    }
+    if (!employee.store_id) return json({ error: "EMPLOYEE_NO_BRANCH" }, 400);
+
+    // V84.32: Owner được đổi mật khẩu cho nhân viên ở BẤT KỲ chi nhánh nào họ sở hữu.
+    // Bản trước so sánh `employee.store_id !== caller.store_id` nên chặn nhầm khi
+    // Owner đang làm việc ở chi nhánh khác với chi nhánh của nhân viên.
+    const { data: branchAccess, error: branchError } = await admin
+      .from("store_memberships")
+      .select("id")
+      .eq("user_id", callerId)
+      .eq("store_id", employee.store_id)
+      .eq("role", "owner")
+      .eq("is_active", true)
+      .maybeSingle();
+
+    if (branchError || !branchAccess) {
+      return json({ error: "FORBIDDEN_BRANCH_SCOPE" }, 403);
     }
 
     const { error: updateError } = await admin.auth.admin.updateUserById(employeeId, { password: newCredential });
@@ -77,6 +98,7 @@ Deno.serve(async (req) => {
     // Audit là phụ: hỏng audit không được biến một thao tác THÀNH CÔNG thành lỗi.
     const { error: auditError } = await admin.from("audit_logs").insert({
       actor_id: callerId,
+      store_id: employee.store_id,
       action: "change_employee_password",
       entity_type: "profile",
       entity_id: employeeId,
