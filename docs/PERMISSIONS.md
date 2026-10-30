@@ -17,16 +17,16 @@ Nguyên tắc: **mọi quyền phải chặn ở database** (RLS hoặc RPC), kh
 | # | Nhóm | Mã quyền | Manager | Nội dung |
 |---|---|---|---|---|
 | 1 | Nhân sự | `employee_basic` | ✅ | Xem danh sách NV, hồ sơ cơ bản, lịch sử công |
-| 2 | Nhân sự | `employee_create` | ✅ | Tạo tài khoản NV + gửi email mời (**đã sửa V84.33**) |
-| 3 | Nhân sự | `employee_edit` | ✅ | Sửa họ tên, SĐT, địa chỉ, trạng thái làm việc của NV — **chưa có, cần thêm** |
+| 2 | Nhân sự | `employee_create` | ✅ | Tạo tài khoản NV + gửi email mời (**V84.33**) |
+| 3 | Nhân sự | `employee_edit` | ✅ | Sửa họ tên, SĐT, địa chỉ, trạng thái làm việc (**V84.34**) |
 | 4 | Lịch & ca | `schedule_manage` | ✅ | Mẫu ca, xếp ca, mở/đóng đăng ký ca |
 | 5 | Lịch & ca | `shift_registration` | ✅ | Duyệt/hủy đăng ký ca |
 | 6 | Chấm công | `attendance_process` | ✅ | Bổ sung công, xử lý quên check-out |
-| 7 | Chấm công | `device_manage` | ✅ | Duyệt/thu hồi thiết bị chấm công — **chưa có, cần thêm** |
-| 8 | Nghỉ phép | `leave_manage` | ✅ | Duyệt nghỉ phép, duyệt tạm ứng lương |
+| 7 | Chấm công | `device_manage` | ✅ | Duyệt/thu hồi thiết bị chấm công (**V84.34**) |
+| 8 | Nghỉ phép | `leave_manage` | ✅ | Duyệt nghỉ phép, yêu cầu đổi ca/đi trễ |
 | 9 | Lương | `payroll_view` | ✅ | Xem bảng lương, xem STK để chi trả |
-| 10 | Lương | `payroll_adjust` | ✅ | Phiếu phạt / cộng / tạm ứng — **chưa có, cần thêm** (hiện gắn nhầm vào `leave_manage`) |
-| 11 | Chi nhánh | `branch_gps` | ✅ | Sửa **địa chỉ + GPS + bán kính chấm công** của chi nhánh mình — **chưa có, cần thêm** |
+| 10 | Lương | `payroll_adjust` | ✅ | Phiếu phạt / cộng / tạm ứng (**V84.34**, tách khỏi `leave_manage`) |
+| 11 | Chi nhánh | `branch_gps` | ✅ | Sửa địa chỉ + GPS + bán kính chi nhánh mình (**V84.34**) |
 | 12 | Kiểm toán | `audit_view` | ✅ | Xem nhật ký thao tác trong chi nhánh |
 
 ## 3. Chỉ Owner (không cấp cho Manager)
@@ -60,15 +60,20 @@ Hệ quả: 1 chi nhánh có 2 Manager thì 2 người dùng chung bộ quyền.
 
 | Giai đoạn | Nội dung | Trạng thái |
 |---|---|---|
-| P1 | Sửa `create-employee` cho Manager có `employee_create` | ✅ Code xong, chờ deploy |
-| P2 | Thêm 4 khoá: `employee_edit`, `device_manage`, `payroll_adjust`, `branch_gps` (DB + UI + RPC) | ⏳ Chưa làm |
-| P3 | Tách `employee_salary` / `employee_bank_edit` khỏi luồng hiện tại; bổ sung audit log | ⏳ Chưa làm |
+| P1 | Sửa `create-employee` cho Manager có `employee_create` | ✅ Xong (V84.33) |
+| P2 | Thêm 4 khoá: `employee_edit`, `device_manage`, `payroll_adjust`, `branch_gps` | ✅ Xong code (V84.34) — chờ chạy SQL + deploy frontend |
+| P3 | Tách `employee_salary` / `employee_bank_edit`; bổ sung audit log cho các chỗ ghi trực tiếp | ⏳ Chưa làm |
 | P4 | Nút preset 2 mức + màn hình quyền gọn hơn | ⏳ Chưa làm |
 
-### Điểm cần sửa khi làm P2
+### Đã xử lý trong V84.34
 
-- `owner_save_manager_permissions_v2` có **danh sách khoá cứng** 8 giá trị → phải thêm 4 khoá mới, nếu không sẽ báo `QUYEN_KHONG_HOP_LE`.
-- `review_attendance_device()` đang chặn `v_role <> 'owner'` → cần bản cho Manager có `device_manage`.
-- `manager_permissions` dùng `leave_manage` cho phiếu phạt/cộng → chuyển sang `payroll_adjust` (giữ tương thích 1 thời gian).
-- `stores_owner_update` (RLS) đang chỉ cho Owner → cần policy/RPC riêng cho `branch_gps` (chỉ 4 cột: address, latitude, longitude, gps_radius_m).
-- `managerPermissionForTab` trong `index.html` đang ẩn toàn bộ tab "Chi nhánh" với Manager → cần màn hình riêng chỉ hiện phần GPS.
+- `owner_save_manager_permissions_v2`: whitelist mở rộng 8 → **12 khoá**.
+- `owner_get_manager_permissions`: bộ mặc định 12 khoá (4 khoá mới bật sẵn).
+- Migration bật sẵn 4 quyền mới cho **mọi chi nhánh đang có** (không ghi đè giá trị cũ).
+- `review_attendance_device`: Manager có `device_manage` duyệt/từ chối/thu hồi được.
+- `enforce_manager_business_permission`: Manager sửa được hồ sơ nhân viên cùng chi nhánh (chỉ 4 cột: họ tên, SĐT, địa chỉ, trạng thái) khi có `employee_edit`.
+- Trigger mới `trg_guard_manager_payroll_adjust`: chặn Manager thêm/sửa/xoá phiếu phạt–cộng–tạm ứng nếu thiếu `payroll_adjust`.
+- `manager_update_employee_profile` và `manager_update_branch_gps`: RPC mới, chỉ thao tác trong chi nhánh của chính Manager.
+- Frontend: 4 quyền mới trong màn hình cấu hình; tab Thiết bị / Cửa hàng mở cho Manager theo quyền; form cửa hàng khoá các ô ngoài GPS; phiếu phạt/cộng/tạm ứng chuyển sang `payroll_adjust`.
+- **Chuyển nhân viên sang chi nhánh khác** nay chỉ Owner (đúng thiết kế mục 3).
+

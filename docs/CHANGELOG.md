@@ -143,3 +143,28 @@ Không thay đổi nghiệp vụ, không thay đổi giao diện.
 ### Tài liệu
 - Thêm `docs/PERMISSIONS.md`: mô hình 3 tầng, 12 khoá quyền, danh sách chỉ-Owner, preset, lộ trình P1–P4.
 
+---
+
+## V84.34 — P2: 4 quyền vận hành mới cho Manager (30/10/2026)
+
+**Database** — `sql/migrations/HongCha_HRM_V84.34_Manager_P2_Permissions.sql`
+- Thêm 4 khoá quyền, **bật sẵn cho mọi chi nhánh hiện có** (không ghi đè cấu hình cũ):
+  `employee_edit`, `device_manage`, `payroll_adjust`, `branch_gps`.
+- `owner_save_manager_permissions_v2`: whitelist 8 → 12 khoá (nếu không sẽ báo `QUYEN_KHONG_HOP_LE`).
+- `owner_get_manager_permissions`: bộ mặc định 12 khoá.
+- `review_attendance_device`: thêm nhánh Manager (cần `device_manage`, cùng chi nhánh).
+- `enforce_manager_business_permission`: thêm nhánh "Manager sửa hồ sơ nhân viên cùng chi nhánh" — chỉ cho đổi `full_name`, `phone`, `address`, `employment_status`; chặn đổi `role`, `hourly_rate`, `store_id`, `email`.
+- Trigger mới `trg_guard_manager_payroll_adjust` trên `payroll_adjustments` — chặn Manager thao tác phiếu phạt/cộng/tạm ứng khi thiếu `payroll_adjust`.
+- RPC mới `manager_update_employee_profile(...)` và `manager_update_branch_gps(...)`, đều ghi `audit_logs`.
+
+**Frontend** — `index.html`
+- Màn cấu hình quyền Manager hiển thị 4 quyền mới.
+- Tab **Thiết bị** mở cho Manager có `device_manage`; tab **Cửa hàng** mở cho Manager có `branch_gps`.
+- Form cửa hàng: Manager chỉ sửa địa chỉ/GPS/bán kính; các ô tên quán, giờ đi trễ, giờ mở check-in, lương mặc định bị khoá.
+- Sửa nhân viên (Manager) gọi RPC mới, cho đổi **địa chỉ + trạng thái làm việc**; ô vai trò/lương/ngân hàng vẫn khoá.
+- Phiếu phạt / cộng / tạm ứng chuyển từ `leave_manage` sang `payroll_adjust`.
+- **Chuyển nhân viên sang chi nhánh khác: chỉ Owner**.
+
+**Không thay đổi:** đặt mức lương, sửa STK ngân hàng, tính/chốt kỳ lương, tạo/xóa chi nhánh, phân quyền, đổi vai trò.
+
+

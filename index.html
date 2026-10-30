@@ -3845,16 +3845,20 @@ const MANAGER_PERMISSION_DEFS=[
  {key:'employee_basic',label:'Hồ sơ cơ bản nhân viên',description:'Xem hồ sơ cơ bản và cập nhật họ tên/số điện thoại; không xem lương hoặc đổi vai trò.'},
  {key:'employee_create',label:'Mời/tạo tài khoản nhân viên',description:'Cho phép tạo tài khoản nhân viên mới; không cấp quyền đổi vai trò hoặc đơn giá lương.'},
  {key:'audit_view',label:'Xem nhật ký thao tác',description:'Đọc nhật ký hoạt động của cửa hàng; không thể sửa hoặc xóa nhật ký.'},
- {key:'payroll_view',label:'Xem và xuất bảng lương',description:'Chỉ xem kỳ lương đã có và xuất Excel; không được tạo/tính kỳ, sửa khoản lương hoặc chốt/trả lương.'}
+ {key:'payroll_view',label:'Xem và xuất bảng lương',description:'Chỉ xem kỳ lương đã có và xuất Excel; không được tạo/tính kỳ, sửa khoản lương hoặc chốt/trả lương.'},
+ {key:'employee_edit',label:'Sửa hồ sơ nhân viên',description:'Sửa họ tên, số điện thoại, địa chỉ và trạng thái làm việc của nhân viên cùng chi nhánh. Không sửa được lương, vai trò hay số tài khoản.'},
+ {key:'device_manage',label:'Duyệt thiết bị chấm công',description:'Duyệt, từ chối hoặc thu hồi thiết bị chấm công của nhân viên trong chi nhánh.'},
+ {key:'payroll_adjust',label:'Phiếu phạt / cộng / tạm ứng',description:'Tạo và duyệt phiếu phạt, phiếu cộng, phiếu tạm ứng. Không được tính hoặc chốt kỳ lương.'},
+ {key:'branch_gps',label:'Vị trí & bán kính chi nhánh',description:'Sửa địa chỉ, tọa độ GPS và bán kính chấm công của chi nhánh mình. Không tạo/xóa chi nhánh.'}
 ];
 let managerPermissionMap={};
 function closeAdminPane(){const c=el('adminContent'),back=el('adminSheetBackdrop');if(c){c.classList.remove('open');c.classList.remove('is-loading')}if(back)back.classList.remove('open');document.body.classList.remove('admin-sheet-open');document.querySelectorAll('#admin .admin-group-item').forEach(x=>x.classList.remove('active'));}
 function hasManagerPermission(key){return profile?.role==='owner'||(isBranchAdmin()&&managerPermissionMap[key]===true)}
 function managerPermissionForTab(tab){
- const keyByTab={leaves:'leave_manage',advances:'leave_manage',penalties:'leave_manage',bonuses:'leave_manage',templates:'schedule_manage',schedules:'schedule_manage',registrationSettings:'schedule_manage',audit:'audit_view'};
- if(tab==='employees')return hasManagerPermission('employee_basic')||hasManagerPermission('employee_create');
+ const keyByTab={leaves:'leave_manage',advances:'payroll_adjust',penalties:'payroll_adjust',bonuses:'payroll_adjust',templates:'schedule_manage',schedules:'schedule_manage',registrationSettings:'schedule_manage',audit:'audit_view',devices:'device_manage',store:'branch_gps'};
+ if(tab==='employees')return hasManagerPermission('employee_basic')||hasManagerPermission('employee_create')||hasManagerPermission('employee_edit');
  if(tab==='registrations')return hasManagerPermission('leave_manage')||hasManagerPermission('shift_registration');
- if(['branches','store','devices','managerPermissions'].includes(tab))return profile?.role==='owner';
+ if(['branches','managerPermissions','profileChanges'].includes(tab))return profile?.role==='owner';
  const key=keyByTab[tab];
  return key?hasManagerPermission(key):false;
 }
@@ -3980,7 +3984,7 @@ function ensureEmployeePrivateFields(){
 async function loadEmployeeTransferBranches(employeeId){
  const panel=el('employeeBranchTransferPanel'),select=el('employeeTargetBranch'),msg=el('employeeBranchTransferMsg'),btn=el('employeeBranchTransferBtn');
  if(!panel||!select)return;
- const canManage=['owner','manager'].includes(profile?.role)&&(profile?.role!=='manager'||hasManagerPermission('employee_create'));
+ const canManage=profile?.role==='owner';
  panel.classList.toggle('hidden',!canManage||employeeId===session?.user?.id);
  if(!canManage||employeeId===session?.user?.id)return;
  select.innerHTML='<option value="">Đang tải chi nhánh…</option>';select.disabled=true;btn.disabled=true;msg.innerHTML='';
@@ -4015,7 +4019,7 @@ function employeeTransferErrorMessage(error){
 async function transferEmployeeBranch(){
  const select=el('employeeTargetBranch'),msg=el('employeeBranchTransferMsg'),btn=el('employeeBranchTransferBtn');
  const employeeId=select?.dataset.employeeId,targetStoreId=select?.value,currentStoreId=select?.dataset.currentStoreId;
- if(!sb||!session||!profile||!['owner','manager'].includes(profile.role)||(profile.role==='manager'&&!hasManagerPermission('employee_create'))){msg.innerHTML='<div class="notice warn">Bạn không có quyền đổi chi nhánh nhân viên.</div>';return}
+ if(!sb||!session||!profile||profile.role!=='owner'){msg.innerHTML='<div class="notice warn">Chỉ chủ quán được đổi chi nhánh nhân viên.</div>';return}
  if(!employeeId||!targetStoreId){msg.innerHTML='<div class="notice warn">Vui lòng chọn chi nhánh đích.</div>';return}
  if(targetStoreId===currentStoreId){msg.innerHTML='<div class="notice info">Nhân viên đang thuộc chi nhánh này.</div>';return}
  const employee=window.__employeeRows?.get(employeeId);
@@ -4033,7 +4037,7 @@ async function transferEmployeeBranch(){
   const updated=window.__employeeRows?.get(employeeId);if(updated)openEmployeeModal(updated);
  }catch(e){msg.innerHTML='<div class="notice warn">'+escapeHtml(e.message||String(e))+'</div>';btn.disabled=false;select.disabled=false;}
 }
-function openEmployeeModal(x){ensureEmployeePrivateFields();bindBankFields(false);el('editEmployeeId').value=x.id;el('editEmployeeCurrentRate').value=Number(x.hourly_rate||0);el('editEmployeeName').value=x.full_name||'';el('editEmployeePhone').value=x.phone||'';el('editEmployeeAddress').value=x.address||'';el('editEmployeeBankName').value=x.bankAccount?.bank_name||'';el('editEmployeeBankNumber').value=x.bankAccount?.account_number||'';el('editEmployeeBankHolder').value=normalizeAccountHolder(x.bankAccount?.account_holder||'');el('editEmployeePrivateFields').classList.toggle('hidden',profile?.role!=='owner');el('editEmployeeBankFields').dataset.hasSavedAccount=x.bankAccount?'1':'';el('editEmployeeBankFields').classList.toggle('hidden',profile?.role!=='owner');el('editEmployeeRole').value=x.role||'employee';el('editEmployeeStatus').value=x.employment_status||'active';el('editEmployeeRate').value=x.hourly_rate||0;el('editEmployeeRateEffective').value=localToday();const manager=profile?.role==='manager';el('editEmployeeRole').disabled=manager;el('editEmployeeStatus').disabled=manager;el('editEmployeeRate').disabled=manager;const passwordBox=el('editEmployeePassword')?.closest('.password-box');if(passwordBox)passwordBox.classList.toggle('hidden',profile?.role!=='owner'||x.role!=='employee'||x.id===session?.user?.id);el('employeePasswordMsg').innerHTML='';el('employeeMsg').innerHTML='';el('employeeModal').classList.add('open');loadEmployeeTransferBranches(x.id)}
+function openEmployeeModal(x){ensureEmployeePrivateFields();bindBankFields(false);el('editEmployeeId').value=x.id;el('editEmployeeCurrentRate').value=Number(x.hourly_rate||0);el('editEmployeeName').value=x.full_name||'';el('editEmployeePhone').value=x.phone||'';el('editEmployeeAddress').value=x.address||'';el('editEmployeeBankName').value=x.bankAccount?.bank_name||'';el('editEmployeeBankNumber').value=x.bankAccount?.account_number||'';el('editEmployeeBankHolder').value=normalizeAccountHolder(x.bankAccount?.account_holder||'');el('editEmployeePrivateFields').classList.toggle('hidden',profile?.role!=='owner');el('editEmployeeBankFields').dataset.hasSavedAccount=x.bankAccount?'1':'';el('editEmployeeBankFields').classList.toggle('hidden',profile?.role!=='owner');el('editEmployeeRole').value=x.role||'employee';el('editEmployeeStatus').value=x.employment_status||'active';el('editEmployeeRate').value=x.hourly_rate||0;el('editEmployeeRateEffective').value=localToday();const manager=profile?.role==='manager';el('editEmployeeRole').disabled=manager;el('editEmployeeStatus').disabled=manager&&!hasManagerPermission('employee_edit');el('editEmployeeRate').disabled=manager;const passwordBox=el('editEmployeePassword')?.closest('.password-box');if(passwordBox)passwordBox.classList.toggle('hidden',profile?.role!=='owner'||x.role!=='employee'||x.id===session?.user?.id);el('employeePasswordMsg').innerHTML='';el('employeeMsg').innerHTML='';el('employeeModal').classList.add('open');loadEmployeeTransferBranches(x.id)}
 function closeEmployeeModal(){el('employeeModal').classList.remove('open')}
 function openCreateEmployee(){if(!profile||!['owner','manager'].includes(profile.role)||(profile.role==='manager'&&!hasManagerPermission('employee_create'))){toast('Owner chưa cấp quyền tạo tài khoản nhân viên.');return}el('newEmployeeName').value='';el('newEmployeeEmail').value='';el('newEmployeePhone').value='';el('newEmployeeRate').value=30000;el('createEmployeeMsg').innerHTML='';el('createEmployeeModal').classList.add('open')}
 function closeCreateEmployee(){el('createEmployeeModal').classList.remove('open')}
@@ -4162,10 +4166,20 @@ async function changeEmployeePassword(){
 async function saveEmployee(){
  const id=document.getElementById('editEmployeeId').value;
  if(profile.role==='manager'){
+   if(!hasManagerPermission('employee_edit')){toast('Bạn chưa được cấp quyền sửa hồ sơ nhân viên.');return}
    const name=document.getElementById('editEmployeeName').value.trim();
    if(!name){alert('Họ tên không được để trống.');return}
-   const {error}=await sb.rpc('manager_update_employee_contact',{p_employee_id:id,p_full_name:name,p_phone:document.getElementById('editEmployeePhone').value.trim()});
-   document.getElementById('employeeMsg').innerHTML=error?'<div class="notice warn">Quản lý chỉ được sửa thông tin liên hệ.</div>':'<div class="notice ok">Đã lưu thông tin nhân viên.</div>';
+   const statusVal=document.getElementById('editEmployeeStatus').value;
+   const addressVal=(document.getElementById('editEmployeeAddress')?.value||'').trim();
+   const {error}=await sb.rpc('manager_update_employee_profile',{
+     p_employee_id:id,
+     p_full_name:name,
+     p_phone:document.getElementById('editEmployeePhone').value.trim(),
+     p_address:addressVal,
+     p_employment_status:(['active','inactive','terminated'].includes(statusVal)?statusVal:null)
+   });
+   const errMap={'MANAGER_PERMISSION_DENIED':'Bạn chưa được cấp quyền sửa hồ sơ nhân viên.','FORBIDDEN':'Bạn không có quyền sửa nhân viên này.','THIEU_HO_TEN':'Họ tên không được để trống.','TRANG_THAI_KHONG_HOP_LE':'Trạng thái làm việc không hợp lệ.','STORE_NOT_FOUND':'Tài khoản của bạn chưa được gắn với chi nhánh.'};
+   document.getElementById('employeeMsg').innerHTML=error?`<div class="notice warn">${escapeHtml(errMap[String(error.message||'')]||'Không lưu được hồ sơ nhân viên. Vui lòng thử lại.')}</div>`:'<div class="notice ok">Đã lưu thông tin nhân viên.</div>';
    if(!error){closeEmployeeModal();await loadEmployees();}
    return;
  }
@@ -4797,7 +4811,7 @@ async function loadDevices(){
    return `<article class="device-row"><div class="device-person"><div class="device-avatar">${initials}</div><div class="device-person-copy"><b>${escapeHtml(x.profiles?.full_name||'Nhân viên')}</b><span>${escapeHtml(x.device_name||'Thiết bị')} · ${escapeHtml(x.platform||'')}</span><small>Mã ${escapeHtml(shortDeviceKey(x.device_key))} · ${escapeHtml(last)}</small></div></div><span class="badge ${tone} device-status">${label}</span>${actions}</article>`;
  }).join('');
 }
-async function reviewDevice(id,status){const action=status==='approved'?'approve':status==='rejected'?'reject':'revoke';if(profile?.role!=='owner'){toast('Chỉ Owner được quản lý thiết bị.');return}const reason=action==='reject'?(prompt('Lý do từ chối (có thể bỏ trống):','')??''):'';const {error}=await sb.rpc('review_attendance_device',{p_device_id:id,p_action:action,p_reason:reason});if(error){const raw=String(error.message||'');const friendly=raw.includes('NHAN_VIEN_DA_CO_THIET_BI_DUOC_DUYET')?'Nhân viên này đã có một thiết bị được duyệt. Nếu muốn đổi thiết bị, hãy thu hồi thiết bị đang được duyệt trước.':raw.includes('THIET_BI_DA_XU_LY')?'Yêu cầu thiết bị này đã được xử lý. Vui lòng làm mới danh sách.':raw.includes('THIET_BI_CHUA_DUOC_DUYET')?'Thiết bị này chưa được duyệt nên không thể thu hồi.':'Không thể cập nhật thiết bị. Vui lòng thử lại.';toast(friendly);return}toast(action==='approve'?'Đã duyệt thiết bị.':action==='reject'?'Đã từ chối thiết bị.':'Đã thu hồi thiết bị.');await loadDevices()}
+async function reviewDevice(id,status){const action=status==='approved'?'approve':status==='rejected'?'reject':'revoke';if(!(profile?.role==='owner'||(profile?.role==='manager'&&hasManagerPermission('device_manage')))){toast('Bạn chưa được cấp quyền quản lý thiết bị.');return}const reason=action==='reject'?(prompt('Lý do từ chối (có thể bỏ trống):','')??''):'';const {error}=await sb.rpc('review_attendance_device',{p_device_id:id,p_action:action,p_reason:reason});if(error){const raw=String(error.message||'');const friendly=raw.includes('NHAN_VIEN_DA_CO_THIET_BI_DUOC_DUYET')?'Nhân viên này đã có một thiết bị được duyệt. Nếu muốn đổi thiết bị, hãy thu hồi thiết bị đang được duyệt trước.':raw.includes('THIET_BI_DA_XU_LY')?'Yêu cầu thiết bị này đã được xử lý. Vui lòng làm mới danh sách.':raw.includes('THIET_BI_CHUA_DUOC_DUYET')?'Thiết bị này chưa được duyệt nên không thể thu hồi.':raw.includes('MANAGER_PERMISSION_DENIED')?'Bạn chưa được cấp quyền duyệt thiết bị.':'Không thể cập nhật thiết bị. Vui lòng thử lại.';toast(friendly);return}toast(action==='approve'?'Đã duyệt thiết bị.':action==='reject'?'Đã từ chối thiết bị.':'Đã thu hồi thiết bị.');await loadDevices()}
 async function deleteInactiveDevice(id){
  if(profile?.role!=='owner'){toast('Chỉ Owner được xóa thiết bị.');return}
  const device=(window.__adminDevices||[]).find(x=>x.id===id);
@@ -4941,8 +4955,23 @@ async function loadStore(){
  const lat=(data.latitude===null||data.latitude===undefined||data.latitude==='')?DEFAULT_STORE_LAT:data.latitude;const lng=(data.longitude===null||data.longitude===undefined||data.longitude==='')?DEFAULT_STORE_LNG:data.longitude;
 document.getElementById('storeName').value=data.name||'';document.getElementById('storeAddress').value=data.address||'';document.getElementById('storeLat').value=lat;document.getElementById('storeLng').value=lng;document.getElementById('storeRadius').value=data.gps_radius_m??DEFAULT_STORE_RADIUS;document.getElementById('storeGrace').value=data.late_grace_minutes??5;document.getElementById('storeEarly').value=data.checkin_early_minutes??60;document.getElementById('storeRate').value=data.hourly_default_rate??30000;
 if(data.latitude===null||data.latitude===undefined||data.longitude===null||data.longitude===undefined){document.getElementById('storeMsg').innerHTML='<div class="notice ok">Đã điền sẵn tọa độ quán: '+DEFAULT_STORE_LAT+', '+DEFAULT_STORE_LNG+'. Hãy bấm <b>Lưu cài đặt</b> để ghi vào Supabase.</div>';}
+if(profile?.role==='manager'){
+ ['storeName','storeGrace','storeEarly','storeRate'].forEach(id=>{const n=document.getElementById(id);if(n){n.readOnly=true;n.style.background='#F4F1EC'}});
+ const m=document.getElementById('storeMsg');if(m)m.innerHTML+='<div class="notice info">Bạn chỉ được sửa địa chỉ, tọa độ và bán kính chấm công. Các mục còn lại do chủ quán quản lý.</div>';
+}
 }
 async function saveStore(){
+ if(profile.role==='manager'){
+   if(!hasManagerPermission('branch_gps')){alert('Bạn chưa được cấp quyền sửa vị trí chi nhánh.');return}
+   const address=(document.getElementById('storeAddress').value||'').trim();
+   const lat=Number(document.getElementById('storeLat').value);
+   const lng=Number(document.getElementById('storeLng').value);
+   const radius=Number(document.getElementById('storeRadius').value);
+   const {error}=await sb.rpc('manager_update_branch_gps',{p_address:address,p_latitude:Number.isFinite(lat)?lat:null,p_longitude:Number.isFinite(lng)?lng:null,p_gps_radius_m:Number.isFinite(radius)?Math.round(radius):null});
+   const map={'MANAGER_PERMISSION_DENIED':'Bạn chưa được cấp quyền sửa vị trí chi nhánh.','TOA_DO_KHONG_HOP_LE':'Tọa độ không hợp lệ.','BAN_KINH_KHONG_HOP_LE':'Bán kính phải từ 20 đến 1000 mét.','STORE_NOT_FOUND':'Tài khoản chưa được gắn với chi nhánh.'};
+   document.getElementById('storeMsg').innerHTML=error?`<div class="notice warn">${escapeHtml(map[String(error.message||'')]||'Không lưu được vị trí chi nhánh.')}</div>`:'<div class="notice ok">Đã lưu vị trí chi nhánh.</div>';
+   return;
+ }
  if(profile.role!=='owner'){alert('Chỉ Owner được sửa cài đặt cửa hàng.');return}
  const payload={name:document.getElementById('storeName').value.trim(),address:document.getElementById('storeAddress').value.trim(),latitude:Number(document.getElementById('storeLat').value),longitude:Number(document.getElementById('storeLng').value),gps_radius_m:Number(document.getElementById('storeRadius').value),late_grace_minutes:Number(document.getElementById('storeGrace').value),checkin_early_minutes:Number(document.getElementById('storeEarly').value),hourly_default_rate:Number(document.getElementById('storeRate').value)};
  const {error}=await sb.from('stores').update(payload).eq('id',getActiveStoreId());document.getElementById('storeMsg').innerHTML=error?'<div class="notice warn">Có lỗi xảy ra. Vui lòng thử lại.</div>':'<div class="notice ok">Đã lưu cài đặt cửa hàng.</div>';
