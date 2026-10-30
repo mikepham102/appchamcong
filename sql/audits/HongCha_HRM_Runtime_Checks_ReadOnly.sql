@@ -24,19 +24,20 @@ limit 10;
 -- Ket qua: has_manager_logic = true => bản mới đã áp dụng.
 -- ============================================================
 select p.proname,
-       position('manager' in pg_get_functiondef(p.oid)) > 0 as has_manager_logic,
-       length(pg_get_functiondef(p.oid)) as dinh_nghia_dai
+       position('manager' in coalesce(p.prosrc, '')) > 0 as has_manager_logic,
+       length(coalesce(p.prosrc, '')) as do_dai_body
 from pg_proc p
 join pg_namespace n on n.oid = p.pronamespace
 where n.nspname = 'public'
-  and p.proname in ('switch_active_store', 'auto_finalize_due_shift_registrations');
+  and p.proname in ('switch_active_store', 'auto_finalize_due_shift_registrations')
+order by p.proname;
 
 -- ============================================================
 -- CÂU 4. auto_finalize_due_shift_registrations đã được vá V84.30 chưa?
 -- da_va_v8430 = true  => đã dùng biến conflict_id (bản đúng)
 -- ============================================================
-select proname,
-       position('conflict_id :=' in pg_get_functiondef(oid)) > 0 as da_va_v8430
+select p.proname,
+       position('conflict_id :=' in coalesce(p.prosrc, '')) > 0 as da_va_v8430
 from pg_proc p
 join pg_namespace n on n.oid = p.pronamespace
 where n.nspname = 'public'
