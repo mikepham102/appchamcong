@@ -1,14 +1,17 @@
--- HongCha HRM — ROLLBACK V84.31 (quay về trạng thái trước migration đa chi nhánh)
+-- HongCha HRM — ROLLBACK V84.31 (quay về trạng thái TRƯỚC migration đa chi nhánh)
 -- CHỈ chạy khi V84.31 gây lỗi và cần quay lui ngay.
--- Khôi phục 4 hàm về đúng định nghĩa đang chạy trước 30/10/2026.
--- Không xóa dữ liệu nghiệp vụ. Bảng private.platform_admins để nguyên.
+-- Nguồn: sql/snapshots/premig_v84.31_2026-10-30.csv (chụp trực tiếp từ production
+-- ngay trước khi chạy migration) => khôi phục CHÍNH XÁC trạng thái cũ.
+-- Không xóa dữ liệu. Bảng private.platform_admins để nguyên (không ảnh hưởng vận hành).
 
 BEGIN;
 
-CREATE OR REPLACE FUNCTION public.current_user_has_manager_permission(p_permission_key text) RETURNS boolean
-    LANGUAGE plpgsql STABLE SECURITY DEFINER
-    SET search_path TO 'public'
-    AS $$
+CREATE OR REPLACE FUNCTION public.current_user_has_manager_permission(p_permission_key text)
+ RETURNS boolean
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
 declare
   v_role text;
   v_store uuid;
@@ -24,12 +27,15 @@ begin
   where store_id=v_store and permission_key=p_permission_key;
   return coalesce(v_enabled,false);
 end;
-$$;
+$function$
 
-CREATE OR REPLACE FUNCTION public.get_my_manager_permissions() RETURNS TABLE(permission_key text, enabled boolean)
-    LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'public'
-    AS $$
+
+CREATE OR REPLACE FUNCTION public.get_my_manager_permissions()
+ RETURNS TABLE(permission_key text, enabled boolean)
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
 declare v_role text; v_store uuid;
 begin
   select role::text,store_id into v_role,v_store
@@ -42,12 +48,15 @@ begin
   where mp.store_id=v_store
   order by mp.permission_key;
 end;
-$$;
+$function$
 
-CREATE OR REPLACE FUNCTION public.switch_active_store(p_store_id uuid) RETURNS jsonb
-    LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'public'
-    AS $$
+
+CREATE OR REPLACE FUNCTION public.switch_active_store(p_store_id uuid)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
 declare
   v_uid uuid:=auth.uid();
   v_store public.stores%rowtype;
@@ -69,12 +78,15 @@ begin
 
   return jsonb_build_object('id',v_store.id,'name',v_store.name,'address',v_store.address);
 end;
-$$;
+$function$
 
-CREATE OR REPLACE FUNCTION public.enforce_manager_business_permission() RETURNS trigger
-    LANGUAGE plpgsql SECURITY DEFINER
-    SET search_path TO 'public'
-    AS $$
+
+CREATE OR REPLACE FUNCTION public.enforce_manager_business_permission()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
 declare
   v_permission text;
 begin
@@ -125,7 +137,8 @@ begin
   if tg_op='DELETE' then return old; end if;
   return new;
 end;
-$$;
+$function$
+
 -- Gỡ hàm mới (chỉ tồn tại từ V84.31)
 DROP FUNCTION IF EXISTS public.owner_set_manager_branches(uuid, uuid[]);
 
