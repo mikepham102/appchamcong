@@ -83,4 +83,17 @@ Ba migration trong `sql/migrations/`:
 
 ## Tính năng đã gỡ khỏi repo (vẫn khôi phục được bằng git)
 - `HongCha_HRM_V59_Native_App_Icon.html` — bản app V59 (347 KB), không còn được dùng. Khôi phục:
+---
+
+## Sau V84.30 — Dọn dẹp & ổn định (30/10/2026)
+
+Không thay đổi nghiệp vụ, không thay đổi giao diện.
+
+- Đồng bộ repo về đúng bản đang chạy: `index.html` khớp blob `718c2cba…` của commit `ebbfb76` (tag `v84.30`). Bản HTML cũ trong máy (commit `e39dbd0`) chỉ được lưu ở `_archive/`, không dùng để phát hành.
+- Xóa khỏi repo: `mnt/` (thư mục rác sandbox), `HongCha_HRM_V59_Native_App_Icon.html`, `README_V65…V74` (8 file), `DEPLOY_README.txt`. Tổng giảm 2.769 dòng / ~353 KB. Không file nào được app tham chiếu.
+- Gộp ghi chú phiên bản vào `docs/CHANGELOG.md`; thêm `README.md`, `docs/PROJECT.md`, `docs/DEPLOY.md`, `sql/README.md`, `.gitignore`.
+- Đưa 8 file SQL (migration + audit + snapshot) vào git — trước đây SQL chỉ nằm ngoài repo.
+- Sửa lỗi cú pháp CSS: bỏ 1 dấu `}` thừa ở cuối rule `.app-brand-center .brand-mark` (dòng 985). Gradient logo `#e50000 → #216345` **giữ nguyên** theo ý chủ dự án.
+- Kiểm tra sau sửa: JS `node --check` PASS; các block CSS cân bằng ngoặc; `index.html` chỉ đổi đúng 1 ký tự.
+
   `git log --oneline -- HongCha_HRM_V59_Native_App_Icon.html` rồi `git show <commit>:<file> > /tmp/v59.html`
