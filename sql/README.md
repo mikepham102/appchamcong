@@ -17,6 +17,9 @@ Thứ tự 1→2→3→4 là thứ tự đã áp dụng theo thời gian (15/10 
 ## audits/ — chỉ đọc, an toàn để chạy bất cứ lúc nào
 
 - `HongCha_HRM_Schema_Snapshot_ReadOnly.sql` — **chụp cấu trúc DB hiện tại** (bảng, cột, khóa, index, policy, hàm, trigger, quyền, enum, realtime). Chạy 1 lần trong SQL Editor → Download CSV → lưu `sql/snapshots/schema_<ngày>.csv`.
+- `HongCha_HRM_PreMigration_Snapshot_ReadOnly.sql` — **trước mỗi lần chạy migration**: số dòng từng bảng + định nghĩa các hàm sắp bị thay (dùng thay cho backup khi dùng gói Free).
+- `HongCha_HRM_Runtime_Checks_ReadOnly.sql` — kiểm tra cron job, phiên bản hàm `switch_active_store` / `auto_finalize_due_shift_registrations`.
+- `HongCha_HRM_MultiBranch_Safety_Preflight_ReadOnly.sql` — đếm mức độ an toàn trước khi chạy migration đa chi nhánh.
 - `HongCha_HRM_Multi_Branch_Audit_ReadOnly.sql` — kiểm kê cột / enum / RLS / policy / hàm.
 - `HongCha_HRM_Multi_Branch_Audit_Details_ReadOnly.sql` — bản chi tiết (định nghĩa hàm, constraint, toàn bộ policy).
 

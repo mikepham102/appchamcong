@@ -50,16 +50,38 @@ git checkout <commit_tốt> -- index.html && git commit -m "rollback index.html"
 
 ## 5. Quy tắc bắt buộc khi sửa database (Supabase)
 
-> Database đang chứa dữ liệu thật (chấm công, lương, ngân hàng). Không có môi trường staging.
+> Gói Supabase **Free không có backup tự động**. Quy trình thay thế ở mục 5b.
 
 1. **Chỉ thêm, không phá**: `CREATE TABLE IF NOT EXISTS`, `CREATE OR REPLACE FUNCTION`, `ADD COLUMN` (có default), `CREATE INDEX`.
    **Cấm**: `DROP TABLE/COLUMN`, `ALTER TYPE`, `TRUNCATE`, `DELETE`/`UPDATE` dữ liệu nghiệp vụ.
 2. Mỗi file SQL phải: bọc `BEGIN; … COMMIT;`, có block `DO $preflight$` kiểm tra bảng/hàm phụ thuộc tồn tại, chạy lại lần 2 không lỗi (idempotent).
-3. **Sao lưu trước**: Supabase → Database → Backups (gói có PITR thì ghi lại mốc thời gian trước khi chạy).
+3. **Sao lưu trước** (xem mục 5b).
 4. Chạy trong **giờ thấp điểm** (sau 22:00) và thông báo trước cho cửa hàng.
 5. Hàm `SECURITY DEFINER` phải có `SET search_path TO 'public'` và `REVOKE ALL … FROM PUBLIC, anon; GRANT EXECUTE … TO authenticated;`
 6. Sau khi chạy: kiểm tra lại bằng script trong `sql/audits/` (chỉ đọc) + test tay 3 vai trò.
 7. Lưu file migration vào `sql/migrations/` và commit — **không để SQL chỉ nằm trong Supabase SQL Editor**.
+
+### 5b. Khi không có backup (gói Free)
+
+**Nguyên tắc:** biết chính xác migration sửa gì trước khi lo backup.
+
+- Migration **chỉ sửa cấu trúc/hàm** (không INSERT/UPDATE/DELETE dữ liệu) → thứ cần khôi phục chỉ là **định nghĩa hàm cũ**, không phải dữ liệu.
+- Quy trình 5 bước:
+  1. Chạy `sql/audits/HongCha_HRM_PreMigration_Snapshot_ReadOnly.sql` → Download CSV → lưu `sql/snapshots/premig_<phiên bản>_<ngày>.csv` (gồm **số dòng từng bảng** + **định nghĩa 4 hàm sắp thay**).
+  2. Chạy migration (đã có `BEGIN/COMMIT` + `preflight`).
+  3. Chạy lại đúng script đó → lưu `..._after.csv`.
+  4. So 2 file: số dòng từng bảng phải **giống hệt**.
+  5. Nếu sai → chạy file rollback tương ứng trong `sql/rollback/`.
+- **Nếu vẫn muốn backup toàn bộ dữ liệu:** cài PostgreSQL client rồi dump:
+  ```bash
+  brew install libpq
+  export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+  pg_dump "postgresql://postgres:<MẬT_KHẨU_DB>@db.qwrcjxicudxlspxqfjkj.supabase.co:5432/postgres" \
+          -Fc -f ~/hongcha_backup_$(date +%Y%m%d).dump
+  ```
+  (mật khẩu: Supabase → Project Settings → Database → Reset database password)
+  File `.dump` phải lưu **ngoài repo GitHub** — có dữ liệu lương/ngân hàng.
+
 
 ## 6. Những việc KHÔNG được làm
 
