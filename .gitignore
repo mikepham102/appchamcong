@@ -1,0 +1,4 @@
+.DS_Store
+
+# Bản sao lưu cục bộ, không đưa lên GitHub (nội dung đã có trong lịch sử git)
+_archive/
