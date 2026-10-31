@@ -4805,6 +4805,13 @@ async function loadAdminSchedules(){
  ]);
  if(token!==adminScheduleLoadToken || selected!==adminSelectedDate)return;
  if(error){target.innerHTML='<div class="notice warn">Không tải được lịch. Vui lòng thử lại.</div>';return}
+ // Người ĐÃ ĐĂNG KÝ nhưng chưa được chốt (pending) — phải hiện để không bị hiểu nhầm là ca trống.
+ const dayScheduleIds=(data||[]).map(x=>x.id);
+ const {data:regRows}=dayScheduleIds.length
+   ?await sb.from('shift_registrations').select('id,schedule_id,employee_id,requested_at,profiles:employee_id(full_name,phone)').in('schedule_id',dayScheduleIds).eq('status','pending')
+   :{data:[]};
+ const regBySchedule=new Map();
+ (regRows||[]).forEach(r=>{if(!regBySchedule.has(r.schedule_id))regBySchedule.set(r.schedule_id,[]);regBySchedule.get(r.schedule_id).push(r)});
  const ids2=(data||[]).filter(x=>x.employee_id).map(x=>x.id); const {data:attRows2}=ids2.length?await sb.from('attendance').select('id,schedule_id,employee_id,check_in,check_out,late_minutes,early_leave_minutes,worked_minutes').in('schedule_id',ids2):{data:[]}; const amap2=new Map((attRows2||[]).map(a=>[a.schedule_id,a])); (data||[]).forEach(x=>x.attendance=amap2.get(x.id)||null);
  if(el('adminSelectedDateTitle'))el('adminSelectedDateTitle').textContent=selected===localToday()?'Hôm nay':prettyDate(selected);
  if(el('adminSelectedDateSub'))el('adminSelectedDateSub').textContent='Các ca trong ngày · '+(data||[]).length+' ca';
@@ -4818,7 +4825,7 @@ async function loadAdminSchedules(){
  const activeItems=(data||[]).filter(x=>x.status!=='cancelled');
  const assigned=activeItems.filter(x=>x.employee_id).length;
  const open=activeItems.filter(x=>x.status==='open'&&!x.employee_id).length;
- if(el('adminScheduleSummary'))el('adminScheduleSummary').innerHTML=`<div class="mini-stat"><b>${groups.size}</b><span>CA</span></div><div class="mini-stat"><b>${assigned}</b><span>ĐÃ XẾP NGƯỜI</span></div><div class="mini-stat"><b>${open}</b><span>VỊ TRÍ TRỐNG</span></div>`;
+ if(el('adminScheduleSummary'))el('adminScheduleSummary').innerHTML=`<div class="mini-stat"><b>${groups.size}</b><span>CA</span></div><div class="mini-stat"><b>${assigned}</b><span>ĐÃ XẾP NGƯỜI</span></div><div class="mini-stat"><b>${open}</b><span>VỊ TRÍ TRỐNG</span></div><div class="mini-stat"><b>${(regRows||[]).length}</b><span>ĐĂNG KÝ CHỜ CHỐT</span></div>`;
  target.innerHTML=groups.size?[...groups.values()].map(items=>{
    const first=items[0];
    const active=items.filter(x=>x.status!=='cancelled');
@@ -4830,9 +4837,11 @@ async function loadAdminSchedules(){
    const editBtn=isSupplemental&&!started?`<button type="button" class="icon-action" title="Sửa ca bổ sung" aria-label="Sửa ca bổ sung" onclick="openSupplementalEditModal('${first.id}')">✎</button>`:'';
    const deleteBtn=isSupplemental&&!started?`<button type="button" class="icon-action danger" title="Xóa ca bổ sung" aria-label="Xóa ca bổ sung" onclick="deleteSupplementalSchedule('${first.id}')">×</button>`:'';
    const cancel=!isSupplemental&&active.some(x=>x.status==='open'||x.status==='assigned')?`<button type="button" class="icon-action danger" title="Hủy ca" aria-label="Hủy ca" onclick="cancelSchedule('${first.id}')">×</button>`:'';
-   const personRows=assignedPeople.length?assignedPeople.map(x=>{const st=attendanceDisplayStatus(x,x.attendance);return `<div class="manager-shift-person"><div class="person-avatar">${escapeHtml((x.profiles?.full_name||'N').slice(0,1).toUpperCase())}</div><div class="person-main"><div class="person-name">${escapeHtml(x.profiles?.full_name||'Nhân viên')}</div><div class="person-meta">${escapeHtml(x.profiles?.phone||'')} · ${escapeHtml(st.meta)}</div></div><div class="manager-person-status"><span class="manager-status-chip ${st.tone}">${escapeHtml(st.label)}</span></div>${x.attendance?.check_in&&!x.attendance?.check_out&&x.work_date<localToday()&&['owner','manager'].includes(profile.role)?`<button type="button" class="icon-action" title="Xác nhận checkout" onclick="resolveMissingCheckout('${x.attendance.id}')">✓</button>`:''}</div>`}).join(''):'<div class="empty" style="padding:12px 14px">Chưa có nhân viên trong ca.</div>';
+   const groupRegs=[...new Map(active.flatMap(x=>(regBySchedule.get(x.id)||[])).map(r=>[r.employee_id,r])).values()];
+   const pendingRows=groupRegs.length?groupRegs.map(r=>`<div class="manager-shift-person"><div class="person-avatar">${escapeHtml((r.profiles?.full_name||'N').slice(0,1).toUpperCase())}</div><div class="person-main"><div class="person-name">${escapeHtml(r.profiles?.full_name||'Nhân viên')}</div><div class="person-meta">${escapeHtml(r.profiles?.phone||'')} · Đăng ký lúc ${new Date(r.requested_at).toLocaleString('vi-VN')}</div></div><div class="manager-person-status"><span class="manager-status-chip wait">Đã đăng ký · chờ chốt</span></div></div>`).join(''):'';
+   const personRows=assignedPeople.length?assignedPeople.map(x=>{const st=attendanceDisplayStatus(x,x.attendance);return `<div class="manager-shift-person"><div class="person-avatar">${escapeHtml((x.profiles?.full_name||'N').slice(0,1).toUpperCase())}</div><div class="person-main"><div class="person-name">${escapeHtml(x.profiles?.full_name||'Nhân viên')}</div><div class="person-meta">${escapeHtml(x.profiles?.phone||'')} · ${escapeHtml(st.meta)}</div></div><div class="manager-person-status"><span class="manager-status-chip ${st.tone}">${escapeHtml(st.label)}</span></div>${x.attendance?.check_in&&!x.attendance?.check_out&&x.work_date<localToday()&&['owner','manager'].includes(profile.role)?`<button type="button" class="icon-action" title="Xác nhận checkout" onclick="resolveMissingCheckout('${x.attendance.id}')">✓</button>`:''}</div>`}).join(''):(groupRegs.length?'':'<div class="empty" style="padding:12px 14px">Chưa có nhân viên trong ca.</div>');
    const displayName=isSupplemental?(first.custom_name||'Ca bổ sung'):'Ca';
-   return `<div class="manager-shift-row"><div class="manager-shift-head"><div class="manager-shift-title-line"><div class="manager-shift-name">${escapeHtml(displayName)}</div><div class="manager-shift-time">${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</div></div><div class="manager-shift-capacity">${active.length} vị trí · ${assignedPeople.length} nhân viên</div><div class="manager-shift-actions">${adjustBtn}${editBtn}${deleteBtn}${cancel}</div></div>${personRows}</div>`;
+   return `<div class="manager-shift-row"><div class="manager-shift-head"><div class="manager-shift-title-line"><div class="manager-shift-name">${escapeHtml(displayName)}</div><div class="manager-shift-time">${escapeHtml(time5(first.start_time))} – ${escapeHtml(time5(first.end_time))}</div></div><div class="manager-shift-capacity">${active.length} vị trí · ${assignedPeople.length} nhân viên${groupRegs.length?` · ${groupRegs.length} chờ chốt`:''}</div><div class="manager-shift-actions">${adjustBtn}${editBtn}${deleteBtn}${cancel}</div></div>${personRows}${pendingRows}</div>`;
  }).join(''):'<div class="empty-day"><b>Ngày này chưa có ca.</b><span>Bạn vẫn có thể chọn ngày khác hoặc tạo ca mới cho ngày này.</span></div>';
 }
 let scheduleAddTab='template';

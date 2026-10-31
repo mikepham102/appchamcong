@@ -372,6 +372,24 @@ Truy vấn dùng `effective_date` trong khoảng HOẶC (`effective_date` trốn
 ### Tài liệu
 - Thêm `docs/PAYROLL_WORKFLOW.md`: quy trình lương chuẩn HRM 7 bước, đối chiếu hiện trạng, 5 khoảng trống (P1 phiếu lương NV · P2 chốt công · P3 làm rõ 2 màn báo cáo · P4 Manager xem kỳ · P5 audit lần tính lương).
 
+---
+
+## V84.45 — Hiện người "đã đăng ký, chờ chốt" trong Lịch Quản trị (30/10/2026)
+
+**Hiện tượng:** ca tối Chủ nhật 8/11 có người đăng ký nhưng Lịch trong Quản trị hiện "Trống".
+
+**Nguyên nhân:** `loadAdminSchedule()` chỉ đọc `work_schedules` (+ chấm công), **không đọc `shift_registrations`**. Người đăng ký nhưng chưa được chốt (`pending`) không có `employee_id` trong ca ⇒ ca hiện trống. (Màn Lịch chính của nhân viên/quản lý thì đã hiện — riêng Lịch trong Quản trị thì thiếu.)
+
+**Đã sửa:**
+- Tải thêm `shift_registrations` trạng thái `pending` của các ca trong ngày.
+- Mỗi ca hiện thêm các dòng người **"Đã đăng ký · chờ chốt"** (kèm giờ đăng ký), phân biệt với người đã được xếp.
+- Tiêu đề ca ghi thêm `· N chờ chốt`.
+- Thêm ô thống kê **"ĐĂNG KÝ CHỜ CHỐT"** ở đầu lịch ngày.
+- Không đổi dữ liệu, không đổi nghiệp vụ.
+
+**Lưu ý nghiệp vụ:** đăng ký ≠ được xếp ca. Ca chỉ có người khi đăng ký được **duyệt** — tự động khi cửa sổ đóng (nếu bật `auto_approve`) hoặc Owner/Manager duyệt tay.
+
+
 
 
 
