@@ -404,6 +404,15 @@ Truy vấn dùng `effective_date` trong khoảng HOẶC (`effective_date` trốn
 
 Không đổi dữ liệu; không đổi UI.
 
+---
+
+## V84.47 — Nút Duyệt/Từ chối ngay trong Lịch Quản trị (30/10/2026)
+
+- Màn **Lịch trong Quản trị** hiển thị người đã đăng ký kèm 2 nút **Duyệt** / **Từ chối** (trước đây chỉ màn Lịch chính có).
+- Duyệt ngay trong Lịch gọi `review_shift_registration` → xếp nhân viên vào ca và làm mới cả 2 lịch.
+- Chỉ đọc thêm dữ liệu; không đổi nghiệp vụ.
+
+
 
 
 
