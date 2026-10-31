@@ -4764,7 +4764,9 @@ async function loadMainSchedule(){
     const editBtn=isSupplemental&&!started?`<button type="button" class="icon-action" title="Sửa ca bổ sung" aria-label="Sửa ca bổ sung" onclick="openSupplementalEditModal('${first.id}')">✎</button>`:'';
     const deleteBtn=isSupplemental&&!started?`<button type="button" class="icon-action danger" title="Xóa ca bổ sung" aria-label="Xóa ca bổ sung" onclick="deleteSupplementalSchedule('${first.id}')">×</button>`:'';
     const cancel=!isSupplemental&&!started&&!ended&&!assignedPeople.length?`<button type="button" class="icon-action danger" title="Hủy ca" aria-label="Hủy ca" onclick="cancelSchedule('${first.id}')">×</button>`:'';
-    const pendingPeople=pendingBySchedule.get(first.id)||[];
+    // Lấy người đăng ký của TẤT CẢ vị trí trong ca, không chỉ vị trí đầu tiên.
+    // (Trước đây chỉ đọc slot đầu -> người đăng ký vị trí khác bị ẩn khỏi Lịch.)
+    const pendingPeople=[...new Map(active.flatMap(x=>pendingBySchedule.get(x.id)||[]).map(r=>[r.employee_id,r])).values()];
     const pendingRows=pendingPeople.length?pendingPeople.map(r=>`<div class="manager-shift-person pending-person"><div class="person-avatar">${escapeHtml((r.profiles?.full_name||'N').slice(0,1).toUpperCase())}</div><div class="person-main"><div class="person-name">${escapeHtml(r.profiles?.full_name||'Nhân viên')}</div><div class="person-meta">${escapeHtml(r.profiles?.phone||'')} · Đang chờ xử lý đăng ký</div></div><div class="manager-person-status"><span class="manager-status-chip warn">Chờ xử lý</span></div><div class="manager-person-actions"><button type="button" class="btn green" onclick="reviewRegistration('${r.id}','approve')">Duyệt</button><button type="button" class="btn danger" onclick="reviewRegistration('${r.id}','reject')">Từ chối</button></div></div>`).join(''):'';
     const personRows=assignedPeople.length?assignedPeople.map(x=>{
       const st=scheduleTimeStatus(x),

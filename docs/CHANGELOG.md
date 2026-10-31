@@ -412,6 +412,30 @@ Không đổi dữ liệu; không đổi UI.
 - Duyệt ngay trong Lịch gọi `review_shift_registration` → xếp nhân viên vào ca và làm mới cả 2 lịch.
 - Chỉ đọc thêm dữ liệu; không đổi nghiệp vụ.
 
+---
+
+## V84.48 — Sửa lỗi ẩn người đăng ký ở ca nhiều vị trí (30/10/2026)
+
+**Hiện tượng:** ca tối CN 8/11 (17:30–22:30) có người đăng ký `pending` nhưng Lịch không hiện; các ca khác vẫn hiện.
+
+**Nguyên nhân (đối chiếu dữ liệu thật):** một ca có **nhiều vị trí** = nhiều dòng `work_schedules` cùng `shift_group_id`. Khi vẽ Lịch, app lấy người đăng ký chỉ theo **`first.id`** (vị trí đầu tiên của ca):
+
+```js
+const pendingPeople = pendingBySchedule.get(first.id) || [];   // ❌ chỉ 1 vị trí
+```
+
+Người đăng ký nằm ở **vị trí thứ 2** ⇒ không được đọc ⇒ không hiển thị. Dữ liệu hoàn toàn hợp lệ (`pending`, ca `open`, đúng chi nhánh).
+
+**Đã sửa:** gom người đăng ký của **tất cả vị trí trong ca** (khử trùng theo nhân viên):
+
+```js
+const pendingPeople=[...new Map(active.flatMap(x=>pendingBySchedule.get(x.id)||[]).map(r=>[r.employee_id,r])).values()];
+```
+
+- Màn Lịch chính và Lịch Quản trị đều hiển thị đúng.
+- Không đổi dữ liệu, không đổi nghiệp vụ.
+
+
 
 
 
