@@ -16,6 +16,7 @@ Database đang chạy thật. Đọc `docs/DEPLOY.md` mục 5 trước khi chạ
 | 8 | `HongCha_HRM_V84.40_Attendance_Rounding.sql` | Làm tròn phút khi chấm công: vào làm tròn LÊN, ra làm tròn XUỐNG; giờ công/trễ/về sớm tính theo giờ đã làm tròn |
 | 9 | `HongCha_HRM_V84.41_Finance_RPC_Index.sql` | Tăng tốc Phiếu phạt / Phiếu cộng / Ứng lương: bỏ `coalesce()` trong điều kiện lọc để dùng được index + thêm 4 index; Manager dùng `payroll_adjust` **hoặc** `leave_manage` |
 | 10 | `HongCha_HRM_V84.43_Manager_Penalty_Rules.sql` | Manager được cấu hình quy tắc phạt tự động (policy `payroll_penalty_rules_manager_manage`) |
+| 11 | `HongCha_HRM_V84.46_Shift_Conflict_Fix.sql` | Sửa lỗi "trùng ca" khi xếp người đã đăng ký: bỏ qua đăng ký chờ trong cùng ca + tự chốt đăng ký khi gán người |
 | 10 |  | Manager được cấu hình quy tắc phạt tự động (policy ) |
 
 Thứ tự 1→2→3→4 là thứ tự đã áp dụng theo thời gian (15/10 → 18/10). Cả 4 file đều **additive** và có `BEGIN/COMMIT` + block `preflight`.

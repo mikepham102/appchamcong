@@ -389,6 +389,22 @@ Truy vấn dùng `effective_date` trong khoảng HOẶC (`effective_date` trốn
 
 **Lưu ý nghiệp vụ:** đăng ký ≠ được xếp ca. Ca chỉ có người khi đăng ký được **duyệt** — tự động khi cửa sổ đóng (nếu bật `auto_approve`) hoặc Owner/Manager duyệt tay.
 
+---
+
+## V84.46 — Sửa lỗi "trùng ca" chặn xếp người đã đăng ký (30/10/2026)
+
+**Hiện tượng:** NV đăng ký ca thành công (chờ duyệt) nhưng ca vẫn trống; Owner bấm "Điều chỉnh" thêm chính NV đó vào ca thì báo **"Nhân viên đã có ca trùng giờ"**.
+
+**Nguyên nhân (đọc hàm production `employee_schedule_conflict`):** một ca có nhiều *vị trí* = nhiều dòng `work_schedules` cùng `shift_group_id`. Hàm coi **mọi đăng ký `pending` trùng giờ** là xung đột, chỉ loại trừ đúng 1 `schedule_id`. NV đăng ký vị trí A → Owner xếp vào vị trí B của **cùng ca** → đăng ký chờ ở A bị tính là trùng ⇒ chặn.
+
+**Đã sửa (SQL — V84.46):**
+1. `employee_schedule_conflict`: bỏ qua đăng ký chờ nằm **trong cùng `shift_group_id`** với ca đích (đó chính là ca đang xếp người). Các ca khác trùng giờ vẫn bị chặn như cũ.
+2. Trigger `trg_confirm_registration_on_assignment`: khi một ca được gán nhân viên, tự chuyển đăng ký chờ của NV đó **trong cùng ca** sang `approved` (có `reviewed_at`, `reviewed_by`) — không còn đăng ký treo.
+3. Preflight chốt an toàn: nếu thân hàm trên production đã khác cấu trúc đã biết → **dừng, không thay gì**.
+
+Không đổi dữ liệu; không đổi UI.
+
+
 
 
 
