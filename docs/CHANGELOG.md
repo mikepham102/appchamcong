@@ -451,6 +451,12 @@ const pendingPeople=[...new Map(active.flatMap(x=>pendingBySchedule.get(x.id)||[
 
 **Đã có từ trước (V84.34):** Manager duyệt/từ chối/thu hồi thiết bị qua `review_attendance_device`.
 
+### Bổ sung sau khi test (30/10/2026)
+- Danh sách thiết bị vẫn chỉ vẽ nút **Duyệt / Từ chối / Thu hồi / Xóa** khi `role==='owner'` (điều kiện thứ 4, nằm trong `loadDevices`) → Manager thấy "Chờ duyệt" mà không có nút.
+- Nay dùng chung điều kiện `canManageDevices` = Owner **hoặc** Manager có `device_manage` cho cả 4 nút.
+- Sửa luôn mô tả đầu trang: "Chỉ thiết bị được duyệt mới có thể dùng để chấm công."
+
+
 **Files:** `sql/migrations/HongCha_HRM_V84.49_Manager_Device_Delete.sql` · `sql/rollback/HongCha_HRM_V84.49_Rollback.sql`
 
 
