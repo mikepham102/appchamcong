@@ -3481,7 +3481,11 @@ function updateNavForRole(){
  const isStaff=isStaffAdmin(),isOwner=profile?.role==='owner';
  const create=document.querySelector('#adminEmployees .btn.primary');
  if(create)create.classList.toggle('hidden',!isStaff);
- document.querySelectorAll('#admin .admin-group-item[data-admin-tab="devices"],#admin .admin-group-item[data-admin-tab="store"],#admin .admin-group-item[data-admin-tab="profileChanges"]').forEach(x=>x.classList.toggle('hidden',!isOwner));
+ const canDevices=isOwner||(profile?.role==='manager'&&hasManagerPermission('device_manage'));
+ const canStore=isOwner||(profile?.role==='manager'&&hasManagerPermission('branch_gps'));
+ document.querySelectorAll('#admin .admin-group-item[data-admin-tab="devices"]').forEach(x=>x.classList.toggle('hidden',!canDevices));
+ document.querySelectorAll('#admin .admin-group-item[data-admin-tab="store"]').forEach(x=>x.classList.toggle('hidden',!canStore));
+ document.querySelectorAll('#admin .admin-group-item[data-admin-tab="profileChanges"]').forEach(x=>x.classList.toggle('hidden',!isOwner));
  const salaryNav=el('salaryNav');
  if(salaryNav)salaryNav.classList.toggle('hidden',profile?.role==='manager'&&!hasManagerPermission('payroll_view'));
  syncRoleContent();
@@ -3598,11 +3602,13 @@ async function loadOwnerOverview(){
   const todayAttendanceBySchedule=new Map(storeAtts.map(x=>[x.schedule_id,x]));
   const ownerTodaySummary=ownerAttendanceSummary(todayAssigned,todayAttendanceBySchedule);
   const ownerActionCount=ownerTodaySummary.needsAction;
-  if(el('statEmployees'))el('statEmployees').textContent=(emps||[]).length;if(el('statPending'))el('statPending').textContent=storeRegs.length+(profile.role==='owner'?storeDevs.length:0)+(leaves||[]).length+ownerActionCount;if(el('statShift'))el('statShift').textContent=(todayShifts||[]).filter(x=>x.status!=='cancelled').length;if(el('statLate'))el('statLate').textContent=storeAtts.filter(x=>Number(x.late_minutes||0)>0).length;
+  if(el('statEmployees'))el('statEmployees').textContent=(emps||[]).length;
+  const canDeviceTask=profile.role==='owner'||(profile.role==='manager'&&hasManagerPermission('device_manage'));
+  if(el('statPending'))el('statPending').textContent=storeRegs.length+(canDeviceTask?storeDevs.length:0)+(leaves||[]).length+ownerActionCount;if(el('statShift'))el('statShift').textContent=(todayShifts||[]).filter(x=>x.status!=='cancelled').length;if(el('statLate'))el('statLate').textContent=storeAtts.filter(x=>Number(x.late_minutes||0)>0).length;
   const pending=[];
   
   if((leaves||[]).length)pending.push(`<button type="button" class="owner-task" onclick="openOwnerTask('leaves')"><span class="owner-task-icon">OFF</span><span class="owner-task-copy"><b>Duyệt Off Ca</b><span>${leaves.length} yêu cầu nghỉ đang chờ.</span></span><span class="owner-task-count">${leaves.length}</span></button>`);
-  if(storeDevs.length&&profile.role==='owner')pending.push(`<button type="button" class="owner-task" onclick="openOwnerTask('devices')"><span class="owner-task-icon">⌁</span><span class="owner-task-copy"><b>Duyệt thiết bị</b><span>${storeDevs.length} thiết bị cần Owner xác nhận.</span></span><span class="owner-task-count">${storeDevs.length}</span></button>`);
+  if(storeDevs.length&&canDeviceTask)pending.push(`<button type="button" class="owner-task" onclick="openOwnerTask('devices')"><span class="owner-task-icon">⌁</span><span class="owner-task-copy"><b>Duyệt thiết bị</b><span>${storeDevs.length} thiết bị cần xác nhận.</span></span><span class="owner-task-count">${storeDevs.length}</span></button>`);
   if(ownerTodaySummary.missingCheckout)pending.push(`<button type="button" class="owner-task" onclick="openOwnerTask('missing_checkout')"><span class="owner-task-icon">!</span><span class="owner-task-copy"><b>Xử lý quên checkout</b><span>${ownerTodaySummary.missingCheckout} ca chưa checkout · cần bổ sung giờ ra.</span></span><span class="owner-task-count">${ownerTodaySummary.missingCheckout}</span></button>`);
   if(ownerTodaySummary.noCheckin)pending.push(`<button type="button" class="owner-task" onclick="openOwnerTask('attendance')"><span class="owner-task-icon">!</span><span class="owner-task-copy"><b>Ca chưa check-in</b><span>${ownerTodaySummary.noCheckin} ca đã đến giờ nhưng chưa chấm công.</span></span><span class="owner-task-count">${ownerTodaySummary.noCheckin}</span></button>`);
   if(el('ownerPending'))el('ownerPending').innerHTML=`<div class="owner-task-list">${pending.join('')||'<div class="notice ok">Không có việc chờ xử lý.</div>'}</div>`;
@@ -4967,7 +4973,8 @@ async function loadDevices(){
 }
 async function reviewDevice(id,status){const action=status==='approved'?'approve':status==='rejected'?'reject':'revoke';if(!(profile?.role==='owner'||(profile?.role==='manager'&&hasManagerPermission('device_manage')))){toast('Bạn chưa được cấp quyền quản lý thiết bị.');return}const reason=action==='reject'?(prompt('Lý do từ chối (có thể bỏ trống):','')??''):'';const {error}=await sb.rpc('review_attendance_device',{p_device_id:id,p_action:action,p_reason:reason});if(error){const raw=String(error.message||'');const friendly=raw.includes('NHAN_VIEN_DA_CO_THIET_BI_DUOC_DUYET')?'Nhân viên này đã có một thiết bị được duyệt. Nếu muốn đổi thiết bị, hãy thu hồi thiết bị đang được duyệt trước.':raw.includes('THIET_BI_DA_XU_LY')?'Yêu cầu thiết bị này đã được xử lý. Vui lòng làm mới danh sách.':raw.includes('THIET_BI_CHUA_DUOC_DUYET')?'Thiết bị này chưa được duyệt nên không thể thu hồi.':raw.includes('MANAGER_PERMISSION_DENIED')?'Bạn chưa được cấp quyền duyệt thiết bị.':'Không thể cập nhật thiết bị. Vui lòng thử lại.';toast(friendly);return}toast(action==='approve'?'Đã duyệt thiết bị.':action==='reject'?'Đã từ chối thiết bị.':'Đã thu hồi thiết bị.');await loadDevices()}
 async function deleteInactiveDevice(id){
- if(profile?.role!=='owner'){toast('Chỉ Owner được xóa thiết bị.');return}
+ const canDelete=profile?.role==='owner'||(profile?.role==='manager'&&hasManagerPermission('device_manage'));
+ if(!canDelete){toast('Bạn chưa được cấp quyền xóa thiết bị.');return}
  const device=(window.__adminDevices||[]).find(x=>x.id===id);
  const description=device?`${device.device_name||'Thiết bị'} của ${device.profiles?.full_name||'nhân viên này'}`:'thiết bị này';
  if(!confirm(`Xóa ${description} khỏi danh sách? Chỉ thiết bị đã thu hồi/từ chối và chưa gắn với lịch sử chấm công mới được xóa. Nếu thiết bị đã có lịch sử, hệ thống sẽ giữ nguyên bản ghi.`))return;

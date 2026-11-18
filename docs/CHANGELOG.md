@@ -435,6 +435,25 @@ const pendingPeople=[...new Map(active.flatMap(x=>pendingBySchedule.get(x.id)||[
 - Màn Lịch chính và Lịch Quản trị đều hiển thị đúng.
 - Không đổi dữ liệu, không đổi nghiệp vụ.
 
+---
+
+## V84.49 — Manager dùng được đầy đủ chức năng Thiết bị (30/10/2026)
+
+**Hiện tượng:** Owner đã cấp quyền `device_manage` nhưng Manager **không thấy** tab Thiết bị, không duyệt được, và "Việc cần xử lý" chỉ hiện cho Owner.
+
+**3 nguyên nhân độc lập:**
+
+| # | Nguyên nhân | Sửa |
+|---|---|---|
+| 1 | `updateNavForRole()` **ẩn cứng** tab Thiết bị/Cửa hàng với mọi tài khoản không phải Owner, đè lên logic quyền | Ẩn/hiện theo quyền: `device_manage` → tab Thiết bị; `branch_gps` → tab Chi nhánh; `profileChanges` vẫn Owner |
+| 2 | Trang chủ Owner/Manager chỉ thêm việc "Duyệt thiết bị" khi `role==='owner'` (cả ô đếm "cần xử lý") | Hiện khi Owner **hoặc** Manager có `device_manage` |
+| 3 | Hàm DB `owner_delete_inactive_attendance_device()` yêu cầu `role='owner'`; nút Xóa cũng chặn ở client | **V84.49**: cho phép Manager có `device_manage` cùng chi nhánh. Giữ nguyên: chỉ xóa thiết bị `revoked/rejected`, **từ chối** nếu đã có lịch sử chấm công, ghi `audit_logs` (thêm `actor_role`) |
+
+**Đã có từ trước (V84.34):** Manager duyệt/từ chối/thu hồi thiết bị qua `review_attendance_device`.
+
+**Files:** `sql/migrations/HongCha_HRM_V84.49_Manager_Device_Delete.sql` · `sql/rollback/HongCha_HRM_V84.49_Rollback.sql`
+
+
 
 
 
